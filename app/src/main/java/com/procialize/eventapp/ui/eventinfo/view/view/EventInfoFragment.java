@@ -1,14 +1,16 @@
-package com.procialize.eventapp.ui.eventinfo.view;
+package com.procialize.eventapp.ui.eventinfo.view.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.ui.eventinfo.viewmodel.EventInfoViewModel;
+import com.procialize.eventapp.ui.eventinfo.view.viewmodel.EventInfoViewModel;
 
 
 public class EventInfoFragment extends Fragment {
