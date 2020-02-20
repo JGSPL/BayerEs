@@ -1,4 +1,4 @@
-package com.procialize.eventapp.ui.notifications;
+package com.procialize.eventapp.ui.notification.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.ui.notification.viewmodel.NotificationsViewModel;
 
 public class NotificationsFragment extends Fragment {
 
@@ -23,13 +24,7 @@ public class NotificationsFragment extends Fragment {
         notificationsViewModel =
                 ViewModelProviders.of(this).get(NotificationsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
         return root;
     }
 }

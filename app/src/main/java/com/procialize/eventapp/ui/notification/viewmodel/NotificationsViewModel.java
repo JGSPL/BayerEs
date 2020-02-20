@@ -1,4 +1,4 @@
-package com.procialize.eventapp.ui.notifications;
+package com.procialize.eventapp.ui.notification.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

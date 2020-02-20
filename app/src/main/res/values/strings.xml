@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">TheEventApp</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Newsfeed</string>
+    <string name="title_agend">Agenda</string>
+    <string name="title_attendee">Attendee</string>
+    <string name="title_speaker">Speaker</string>
+    <string name="news_edit_title">What\'s on your mind?</string>
+    <string name="searchattendee">Type here to search Attendee</string>
+    <string name="searchevent">Type here to search Event</string>
+    <string name="searchspeaker">Type here to search Speaker</string>
+    <string name="pullrefresh">Pull Down to Refresh</string>
+    <string name="eventinfo_title">Event Info</string>
+    <string name="notification_title">Notiications</string>
+    <string name="travel_title">Travel Desk</string>
+    <string name="title_livepoll">Live Poll</string>
+    <string name="title_quiz">Quiz</string>
+    <string name="livepollblank">No active poll</string>
+    <string name="quizblank">No active quiz</string>
+
 </resources>
