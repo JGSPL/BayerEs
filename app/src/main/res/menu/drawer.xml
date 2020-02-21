@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_home"
+            android:checked="true"
+            android:icon="@drawable/home"
+            android:title="Home" />
+        <item
+            android:id="@+id/navigation_eventinfo"
+            android:icon="@drawable/ic_info"
+            android:title="Event Info" />
+
+        <item
+            android:id="@+id/navigation_notification"
+            android:icon="@drawable/notification_icon"
+            android:title="Notification" />
+        <item
+            android:id="@+id/navigation_mytravel"
+            android:icon="@drawable/ic_travel"
+            android:title="My Travel" />
+        <item
+            android:id="@+id/navigation_imagegallery"
+            android:icon="@drawable/gallery_icon"
+            android:title="Image Gallery" />
+        <item
+            android:id="@+id/navigation_qrbadge"
+            android:icon="@drawable/qr_badge"
+            android:title="QR Badge" />
+        <item
+            android:id="@+id/navigation_scanid"
+            android:icon="@drawable/ic_scan"
+            android:title="Scan ID Card" />
+        <item
+            android:id="@+id/navigation_quiz"
+            android:icon="@drawable/quiz"
+            android:title="Quiz" />
+        <item
+            android:id="@+id/navigation_livepoll"
+            android:icon="@drawable/live_poll"
+            android:title="Live Poll" />
+        <item
+            android:id="@+id/navigation_survey"
+            android:icon="@drawable/survey"
+            android:title="Survey" />
+        <item
+            android:id="@+id/navigation_videogallery"
+            android:icon="@drawable/gallery_videos"
+            android:title="Video Gallery" />
+        <item
+            android:id="@+id/navigation_document"
+            android:icon="@drawable/ic_documents"
+            android:title="Document" />
+        <item
+            android:id="@+id/navigation_qa"
+            android:icon="@drawable/ic_question"
+            android:title="Q &amp; A" />
+        <item
+            android:id="@+id/navigation_engagement"
+            android:icon="@drawable/engagement"
+            android:title="Engagement" />
+        <item
+            android:id="@+id/navigation_speaker"
+            android:icon="@drawable/speaker"
+            android:title="Speaker" />
+
+        <item
+            android:id="@+id/navigation_attendee"
+            android:icon="@drawable/attendees"
+            android:title="Attendee" />
+
+        <item
+            android:id="@+id/navigation_leaderboard"
+            android:icon="@drawable/leaderboard"
+            android:title="Leaderboard" />
+
+        <item
+            android:id="@+id/navigation_generalinfo"
+            android:icon="@drawable/general"
+            android:title="General Info" />
+
+        <item
+            android:id="@+id/navigation_sponsor"
+            android:icon="@drawable/sponsor"
+            android:title="Sponsors &amp; Parterners" />
+        <item
+            android:id="@+id/navigation_emergencycontact"
+            android:icon="@drawable/contact_us"
+            android:title="Emergency Contact" />
+        <item
+            android:id="@+id/navigation_privacy"
+            android:icon="@drawable/privacy_policy"
+            android:title="Privacy Policy" />
+        <item
+            android:id="@+id/navigation_eula"
+            android:icon="@drawable/eula"
+            android:title="EULA" />
+        <item
+            android:id="@+id/navigation_switch"
+            android:icon="@drawable/ic_switch"
+            android:title="Switch Event" />
+        <item
+            android:id="@+id/navigation_logout"
+            android:icon="@drawable/log_out"
+            android:title="Logout" />
+
+    </group>
+
+
+</menu>

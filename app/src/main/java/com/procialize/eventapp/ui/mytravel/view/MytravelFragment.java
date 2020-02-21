@@ -10,8 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.ui.home.view.HomeFragment;
-import com.procialize.eventapp.ui.home.viewmodel.HomeViewModel;
+
 import com.procialize.eventapp.ui.mytravel.viewmodel.MytravelViewModel;
 
 public class MytravelFragment extends Fragment {

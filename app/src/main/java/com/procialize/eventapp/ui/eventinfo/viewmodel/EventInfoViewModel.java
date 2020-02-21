@@ -1,4 +1,4 @@
-package com.procialize.eventapp.ui.eventinfo.view.viewmodel;
+package com.procialize.eventapp.ui.eventinfo.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 

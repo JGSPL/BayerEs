@@ -1,4 +1,4 @@
-package com.procialize.eventapp.ui.eventinfo.view.view;
+package com.procialize.eventapp.ui.eventinfo.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.ui.eventinfo.view.viewmodel.EventInfoViewModel;
-
+import com.procialize.eventapp.ui.eventinfo.viewmodel.EventInfoViewModel;
+import com.procialize.eventapp.ui.livepoll.viewmodel.LivePollViewModel;
 
 public class EventInfoFragment extends Fragment {
 
-    private EventInfoViewModel homeViewModel;
-
-    public static EventInfoFragment newInstance() {
-
-        return new EventInfoFragment();
-    }
+    EventInfoViewModel eventInfoViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel = ViewModelProviders.of(this).get(EventInfoViewModel.class);
+        eventInfoViewModel =
+                ViewModelProviders.of(this).get(EventInfoViewModel.class);
         View root = inflater.inflate(R.layout.fragment_eventinfo, container, false);
+
         return root;
     }
 }
