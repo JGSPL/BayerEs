@@ -7,6 +7,10 @@
     <string name="title_speaker">Speaker</string>
     <string name="title_dashboard">Home</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_leaderboard">Leaderboard</string>
+    <string name="title_document">Document</string>
+    <string name="title_generalinfo">General Info</string>
+    <string name="title_qrbadge">QR Badge</string>
     <string name="news_edit_title">What\'s on your mind?</string>
     <string name="searchattendee">Type here to search Attendee</string>
     <string name="searchevent">Type here to search Event</string>
@@ -14,6 +18,8 @@
     <string name="pullrefresh">Pull Down to Refresh</string>
     <string name="eventinfo_title">Event Info</string>
     <string name="notification_title">Notiications</string>
+    <string name="video_title">Video Gallery</string>
+    <string name="imagegallery_title">Image Gallery</string>
     <string name="travel_title">Travel Desk</string>
     <string name="title_livepoll">Live Poll</string>
     <string name="title_quiz">Quiz</string>

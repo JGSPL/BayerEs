@@ -1,18 +1,16 @@
-package com.procialize.eventapp.ui.home;
+package com.procialize.eventapp.ui.home.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.ui.home.viewmodel.HomeViewModel;
 
 public class HomeFragment extends Fragment {
 

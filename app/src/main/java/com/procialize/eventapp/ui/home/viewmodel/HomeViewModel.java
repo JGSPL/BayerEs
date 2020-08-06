@@ -1,4 +1,4 @@
-package com.procialize.eventapp.ui.home;
+package com.procialize.eventapp.ui.home.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     public static void runMe(View view, String message) {
         if (message != null) {
             view.getContext().startActivity(new Intent(view.getContext(), MainActivity.class));
+
         }
     }
 }
