@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.ui.livepoll.viewmodel.LivePollViewModel;
-import com.procialize.eventapp.ui.notification.viewmodel.NotificationsViewModel;
 
 public class LivePollFragment extends Fragment {
 

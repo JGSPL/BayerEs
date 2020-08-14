@@ -1,4 +1,4 @@
-package com.procialize.eventapp.utility;
+package com.procialize.eventapp.Utility;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;

@@ -1,4 +1,4 @@
-package com.procialize.eventapp.utility;
+package com.procialize.eventapp.Utility;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,9 +19,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static com.procialize.eventapp.constants.Constant.FOLDER_DIRECTORY;
-import static com.procialize.eventapp.constants.Constant.IMAGE_DIRECTORY;
-import static com.procialize.eventapp.constants.Constant.VIDEO_DIRECTORY;
+import static com.procialize.eventapp.Constants.Constant.FOLDER_DIRECTORY;
+import static com.procialize.eventapp.Constants.Constant.IMAGE_DIRECTORY;
+import static com.procialize.eventapp.Constants.Constant.VIDEO_DIRECTORY;
 
 public class CommonFunction {
 

@@ -1,4 +1,4 @@
-package com.procialize.eventapp.utility;
+package com.procialize.eventapp.Utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import static com.procialize.eventapp.utility.SharedPreferencesConstant.SHARED_PREF;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.SHARED_PREF;
 
 
 public class SharedPreference {

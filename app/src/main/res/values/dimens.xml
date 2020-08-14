@@ -5,6 +5,7 @@
     <dimen name="margin">10dp</dimen>
     <dimen name="marginsmall">5dp</dimen>
     <dimen name="textsizesmall">18sp</dimen>
+    <dimen name="textsizesmallest">10sp</dimen>
     <dimen name="textsizesmaller">14sp</dimen>
     <dimen name="textsizenormal">20sp</dimen>
     <dimen name="textsizebigger">30sp</dimen>

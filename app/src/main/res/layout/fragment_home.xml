@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/margin">
@@ -35,8 +33,8 @@
             android:layout_marginLeft="@dimen/margin"
             android:gravity="center_vertical"
             android:hint="@string/news_edit_title"
-            android:textColor="@color/black"
-            android:textSize="@dimen/textsizesmall" />
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/textsizesmaller" />
     </LinearLayout>
 
     <TextView
@@ -47,24 +45,33 @@
         android:layout_marginBottom="@dimen/marginsmall"
         android:gravity="center"
         android:text="@string/pullrefresh"
-        android:textSize="@dimen/textsizesmaller"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:textSize="@dimen/textsizesmallest"
         app:layout_constraintTop_toBottomOf="@+id/mindTv" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/feedrefresh"
+    <include
+        layout="@layout/newsfeed_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh">
+        app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_feed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <!--  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+          android:id="@+id/feedrefresh"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh">
+
+
+
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/recycler_feed"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" />
+      </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

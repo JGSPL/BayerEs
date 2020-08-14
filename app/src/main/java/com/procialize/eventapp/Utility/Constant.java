@@ -1,4 +1,4 @@
-package com.procialize.eventapp.utility;
+package com.procialize.eventapp.Utility;
 
 public  class Constant {
 

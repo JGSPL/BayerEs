@@ -9,10 +9,8 @@ import android.os.Bundle;
 
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.databinding.ActivityLoginBinding;
 import com.procialize.eventapp.databinding.ActivitySplashAcivityBinding;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
-import com.procialize.eventapp.ui.login.viewmodel.LoginViewModel;
 import com.procialize.eventapp.ui.splash.model.Splash;
 import com.procialize.eventapp.ui.splash.viewmodel.SplashViewModel;
 

@@ -5,6 +5,16 @@ public class Login {
     private String email;
     private String password;
 
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    private boolean isChecked;
+
     public Login(String email, String password) {
         this.email = email;
         this.password = password;
@@ -27,6 +37,4 @@ public class Login {
     public String getPassword() {
         return password;
     }
-
-
 }

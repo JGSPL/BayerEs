@@ -7,7 +7,14 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
+import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.ui.login.model.Login;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginViewModel extends BaseObservable {
     private Login login;
@@ -15,6 +22,7 @@ public class LoginViewModel extends BaseObservable {
 
     private String successMessage = "Login was successful";
     private String errorMessage = "Email or Password not valid";
+    private String termsandconditions = "Please Agreed to the terms and conditions";
 
 
     public String getUserEmail() {
@@ -75,21 +83,49 @@ public class LoginViewModel extends BaseObservable {
         login = new Login(getloginEmail(), getloginPassword());
     }
 
+   /* @Bindable
+    public boolean isSelected() {
+//       if()
+    }*/
+
     public void onLoginClicked() {
 
-        if (isInputDataValid())
-            setToastMessage(successMessage);
-        else
+        if (isInputDataValid()) {
+//            setToastMessage(successMessage);
+            userLogin(getloginEmail());
+        } else {
             setToastMessage(errorMessage);
+        }
     }
 
     public boolean isInputDataValid() {
-        if (getloginEmail()==null || getloginEmail().isEmpty())
+        if (getloginEmail() == null || getloginEmail().isEmpty())
             return false;
-        else if (getloginPassword()==null || getloginPassword().isEmpty())
+        else if (getloginPassword() == null || getloginPassword().isEmpty())
+            return false;
+        else if (TextUtils.isEmpty(getloginEmail()) || !Patterns.EMAIL_ADDRESS.matcher(getloginEmail()).matches() || getloginPassword().length() < 5)
             return false;
         else
-            return !TextUtils.isEmpty(getloginEmail()) || Patterns.EMAIL_ADDRESS.matcher(getloginEmail()).matches() || getloginPassword().length() > 5;
+            return true;
+    }
 
+    private void userLogin(String username) {
+
+        APIService mApiService = ApiUtils.getAPIService();
+        mApiService.LoginWithOrganizer("0", username).enqueue(new Callback<LoginOrganizer>() {
+            @Override
+            public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
+                if (response.isSuccessful()) {
+                    setToastMessage(successMessage);
+                } else {
+                    setToastMessage(errorMessage);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                setToastMessage(errorMessage);
+            }
+        });
     }
 }

@@ -1,13 +1,14 @@
 package com.procialize.eventapp.ui.login.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.BindingAdapter;
-import androidx.databinding.DataBindingUtil;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
+
+import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
@@ -27,8 +28,11 @@ public class LoginActivity extends AppCompatActivity {
     @BindingAdapter({"toastMessage"})
     public static void runMe(View view, String message) {
         if (message != null) {
-            view.getContext().startActivity(new Intent(view.getContext(), MainActivity.class));
-
+            if (message.equalsIgnoreCase("Login was successful")) {
+                view.getContext().startActivity(new Intent(view.getContext(), MainActivity.class));
+            } else {
+                Constant.displayToast(view.getContext(), message);
+            }
         }
     }
 }
