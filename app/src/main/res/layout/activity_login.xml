@@ -14,118 +14,221 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_login"
+        android:background="@color/splash_logo"
         android:keepScreenOn="true">
 
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginBottom="456dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            android:layout_width="315dp"
+            android:layout_height="87dp"
+            app:layout_constraintBottom_toTopOf="@+id/inEmail"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.379"
             app:srcCompat="@drawable/splashlogo" />
 
         <EditText
             android:id="@+id/inEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="384dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="324dp"
             android:background="@drawable/edit_background"
-            android:hint="Email"
-            android:inputType="textPersonName"
+            android:hint="Email/Mobile No."
             android:padding="10dp"
+            android:singleLine="true"
             android:text="@={viewModel.userEmail}"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textCursorDrawable="@color/white"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textCursorDrawable="@color/black"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.166"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
         <EditText
-            android:id="@+id/inPassword"
+            android:id="@+id/edit_otp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="320dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="324dp"
             android:background="@drawable/edit_background"
-            android:hint="Password"
-            android:inputType="textPassword"
+            android:hint="Enter OTP"
+            android:inputType="number"
             android:padding="10dp"
-            android:text="@={viewModel.userPassword}"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textCursorDrawable="@color/white"
+            android:singleLine="true"
+            android:text="@={viewModel.userOTP}"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textCursorDrawable="@color/black"
             android:textSize="10sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.166"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
+
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="132dp"
-            android:background="@color/white"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/blue"
             android:onClick="@{()-> viewModel.onLoginClicked()}"
-            android:text="LOGIN"
+            android:text="Submit"
             android:textAllCaps="false"
+            android:textColor="@color/white"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inEmail"
+            app:layout_constraintVertical_bias="0.104"
             bind:toastMessage="@{viewModel.toastMessage}" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/txt_designdevelop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:text="@string/designandeveloped"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="192dp"
-            android:buttonTint="@color/white"
-            android:gravity="center"
-            android:text="I Agree to the Terms &amp; Conditions "
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="@dimen/textsizesmallest"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintRight_toRightOf="parent" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txt_mobileno"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="264dp"
-            android:gravity="right"
-            android:text="Forgot Password"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:text="Email ID/Mobile No."
+            android:textColor="@color/txtcolor"
+            android:textSize="@dimen/textsizesmaller"
+            app:layout_constraintBottom_toTopOf="@+id/inEmail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.526"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:text="Login"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/textsizesmall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/txt_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:text="Enter OTP"
+            android:textColor="@color/txtcolor"
+            android:textSize="@dimen/textsizesmaller"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/inEmail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.526"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/liinear_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/inEmail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.531"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintVertical_bias="0.0">
+
+            <ImageView
+                android:id="@+id/imgback"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:onClick="@{()-> viewModel.onBackClicked()}"
+                android:src="@drawable/backarrow" />
+
+            <TextView
+                android:id="@+id/txt_headingOTP"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:gravity="center_vertical"
+                android:text="OTP"
+                android:textColor="@color/blue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_btnOtp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inEmail"
+            app:layout_constraintVertical_bias="0.109">
+
+            <Button
+                android:id="@+id/btn_OTPSubmit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="5"
+                android:background="@color/blue"
+                android:onClick="@{()-> viewModel.onOTPSubmitClicked()}"
+                android:text="Submit"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btn_resendOTP"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="5"
+                android:background="@drawable/buttonbackground"
+                android:onClick="@{()-> viewModel.onResendOTPClicked()}"
+                android:text="Resend OTP"
+                android:textColor="@color/blue" />
+        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

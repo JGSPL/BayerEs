@@ -1,11 +1,11 @@
 package com.procialize.eventapp.ui.splash.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;

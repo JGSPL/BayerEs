@@ -25,5 +25,6 @@
     <string name="title_quiz">Quiz</string>
     <string name="livepollblank">No active poll</string>
     <string name="quizblank">No active quiz</string>
+    <string name="designandeveloped">Design  Developed by Procialize</string>
 
 </resources>

@@ -3,6 +3,7 @@ package com.procialize.eventapp.Constants;
 
 
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.GetterSetter.validateOTP;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -15,4 +16,11 @@ public interface APIService {
     @FormUrlEncoded
     Call<LoginOrganizer> LoginWithOrganizer(@Field("organizer_id") String organizer_id,
                                             @Field("username") String username);
+
+
+    @POST("event_api_call/validateOTP")
+    @FormUrlEncoded
+    Call<validateOTP> validateOTP(@Field("organizer_id") String organizer_id,
+                                  @Field("username") String username,
+                                  @Field("otp") String otp);
 }
