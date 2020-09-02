@@ -15,7 +15,7 @@ public interface UploadMultimediaDao {
     @Query("SELECT * from tbl_upload_multimedia WHERE fld_is_uploaded='0' and fld_folderUniqueId=:folderUniqueId")
     LiveData<List<UploadMultimedia>> getMultimediaToUpload(String folderUniqueId);
 
-    @Query("SELECT * from tbl_upload_multimedia WHERE fld_compressedPath='' and fld_post_status==''")
+    @Query("SELECT * from tbl_upload_multimedia WHERE fld_compressedPath='' and fld_post_status=='' and fld_mime_type!='image/gif'")
     LiveData<List<UploadMultimedia>> getNonCompressesMultimedia();
 
     @Query("SELECT fld_folderUniqueId from tbl_upload_multimedia GROUP BY fld_folderUniqueId")

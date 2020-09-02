@@ -53,13 +53,26 @@ public class BackgroundServiceToCompressMedia extends IntentService {
 
         if (mediaList.size() > 0) {
 
+               /* if (mediaList.get(0).getMedia_type().equalsIgnoreCase("video")) {
+                    String strPath = mediaList.get(0).getMedia_file();
+                    executeCutVideoCommand(Uri.parse(strPath), 0);
+                } else {
+
+                    String strPath = mediaList.get(0).getMedia_file();
+                    compressImage(strPath, 0);
+                }*/
+
             if (mediaList.get(0).getMedia_type().equalsIgnoreCase("video")) {
-                String strPath = mediaList.get(0).getMedia_file();
-                executeCutVideoCommand(Uri.parse(strPath), 0);
+                executeCutVideoCommand(Uri.parse(mediaList.get(0).getMedia_file()), 0);
             } else {
-                String strPath = mediaList.get(0).getMedia_file();
-                compressImage(strPath, 0);
+                if (mediaList.get(0).getMedia_file().contains("gif")) {
+                    compressGif(0);
+                } else {
+                    compressImage(mediaList.get(0).getMedia_file(), 0);
+                }
+
             }
+
         }
         Log.d("countOfMedia", String.valueOf(mediaList.size()));
     }
@@ -110,8 +123,9 @@ public class BackgroundServiceToCompressMedia extends IntentService {
                         String originalPath = mediaList.get(mediaListposition).getMedia_file();
                         EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(outputPath, originalPath);
                         compressMedia(mediaListposition);
-                    }catch (Exception e)
-                    {e.printStackTrace();}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -260,80 +274,28 @@ public class BackgroundServiceToCompressMedia extends IntentService {
         }
     }
 
-    public String copyFile(String originalPath, String newPath) {
-        // your sd card
-        String sdCard = Environment.getExternalStorageDirectory().toString();
-
-        // the file to be moved or copied
-        File sourceLocation = new File(originalPath);
-
-        // make sure your target location folder exists!
-        File targetLocation = new File(newPath);
-
-        // just to take note of the location sources
-        Log.v(TAG, "sourceLocation: " + sourceLocation);
-        Log.v(TAG, "targetLocation: " + targetLocation);
-
-        try {
-
-            // 1 = move the file, 2 = copy the file
-            int actionChoice = 2;
-
-            // moving the file to another directory
-            if (actionChoice == 1) {
-
-                if (sourceLocation.renameTo(targetLocation)) {
-                    Log.v(TAG, "Move file successful.");
-                } else {
-                    Log.v(TAG, "Move file failed.");
-                }
-
-            }
-
-            // we will copy the file
-            else {
-
-                // make sure the target file exists
-
-                if (sourceLocation.exists()) {
-
-                    InputStream in = new FileInputStream(sourceLocation);
-                    OutputStream out = new FileOutputStream(targetLocation);
-
-                    // Copy the bits from instream to outstream
-                    byte[] buf = new byte[1024];
-                    int len;
-
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-
-                    in.close();
-                    out.close();
-
-                    Log.v(TAG, "Copy file successful.");
-
-                } else {
-                    Log.v(TAG, "Copy file failed. Source file missing.");
-                }
-
-            }
-
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
     public void compressMedia(int mediaListposition) {
         if (mediaList.size() > mediaListposition + 1) {
             if (mediaList.get(mediaListposition + 1).getMedia_type().equalsIgnoreCase("video")) {
                 executeCutVideoCommand(Uri.parse(mediaList.get(mediaListposition + 1).getMedia_file()), mediaListposition + 1);
             } else {
-                compressImage(mediaList.get(mediaListposition + 1).getMedia_file(), mediaListposition + 1);
+                if (mediaList.get(mediaListposition + 1).getMedia_file().contains("gif")) {
+                    compressGif(mediaListposition + 1);
+                } else {
+                    compressImage(mediaList.get(mediaListposition + 1).getMedia_file(), mediaListposition + 1);
+                }
             }
+        } else {
+            Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+        }
+    }
+
+    public void compressGif(int mediaListposition) {
+        String originalPath = mediaList.get(mediaListposition).getMedia_file();
+        EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(originalPath, originalPath);
+        if (mediaList.size() > mediaListposition + 1) {
+            compressMedia(mediaListposition + 1);
         } else {
             Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);

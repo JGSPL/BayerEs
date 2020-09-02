@@ -11,7 +11,7 @@ public class FetchNewsfeedMultiple {
     @Expose
     List<Header> header;
 
-    @SerializedName("detail")
+    @SerializedName("detailpreencrypt")
     @Expose
     List<Newsfeed_detail> newsfeed_detail;
 
@@ -23,7 +23,7 @@ public class FetchNewsfeedMultiple {
     @Expose
     List<Zoom_info> zoom_info;
 
-    @SerializedName("media_path")
+    @SerializedName("media_pathpreencrypt")
     @Expose
     private String media_path;
 

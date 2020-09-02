@@ -21,6 +21,8 @@ import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
 import java.util.ArrayList;
 
+import cn.jzvd.JzvdStd;
+
 public class NewsFeedDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btn_save, btn_share;
@@ -90,5 +92,11 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 //newsFeedDetailsViewModel.shareImage(this, strUrlPathForShare, strMediaTypeForShare);
                 break;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        JzvdStd.releaseAllVideos();
     }
 }

@@ -83,7 +83,7 @@ public class SwipeMultimediaAdapter extends PagerAdapter {
 
             if (firstLevelFilter.contains("gif")) {
                 progressBar.setVisibility(View.GONE);
-                Glide.with(videoview).load(firstLevelFilter).into(myImage);
+                Glide.with(videoview).load(firstLevelFilter.trim()).into(myImage);
             } else {
                 Glide.with(context)
                         .load(firstLevelFilter.trim())

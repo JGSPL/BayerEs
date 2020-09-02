@@ -1,6 +1,7 @@
 package com.procialize.eventapp.ui.newsfeed.networking;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -74,10 +75,14 @@ public class NewsfeedRepository {
         List<MultipartBody.Part> thumbParts = new ArrayList<>();
         for (int i = 0; i < resultList.size(); i++) {
             File file;
-            if (!resultList.get(i).getCompressedPath().isEmpty()) {
-                 file = new File(resultList.get(i).getCompressedPath());
-            } else {
-                 file = new File(resultList.get(i).getMedia_file());
+            if(resultList.get(i).getMimeType().contains("gif")){
+                file = new File(resultList.get(i).getMedia_file());
+            }else {
+                if (!resultList.get(i).getCompressedPath().isEmpty()) {
+                    file = new File(resultList.get(i).getCompressedPath());
+                } else {
+                    file = new File(resultList.get(i).getMedia_file());
+                }
             }
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse(resultList.get(i).getMimeType()), file));
             parts.add(filePart);
@@ -97,12 +102,14 @@ public class NewsfeedRepository {
                     @Override
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                         if (response.isSuccessful()) {
+                            Log.d("PostResponse",response.body().getHeader().get(0).getMsg());
                             newsDataUploaded.setValue(response.body());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                        Log.d("PostResponse",t.getMessage()+"==>Failure");
                         newsDataUploaded.setValue(null);
                     }
                 });

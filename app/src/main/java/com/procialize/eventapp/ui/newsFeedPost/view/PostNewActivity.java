@@ -175,7 +175,6 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
                                 String root = Environment.getExternalStorageDirectory().toString();
                                 File moviesDir = new File(root + Constant.FOLDER_DIRECTORY + Constant.VIDEO_DIRECTORY);
-                                ;
 
                                 if (from != null) {
                                     postNewsFeedViewModel.copyFile(mAlbumFiles.get(j).getPath(), from.getName(), moviesDir.toString());
