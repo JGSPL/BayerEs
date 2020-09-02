@@ -8,4 +8,12 @@
     <color name="blue">#008bde</color>
     <color name="splash_logo">#f5f5f5</color>
     <color name="txtcolor">#626262</color>
+    <color name="inactivetab">#4D4D4D</color>
+    <color name="activetab">#008bde</color>
+    <color name="linecolor">#C5C6C6</color>
+    <color name="transperent">@android:color/transparent</color>
+    <color name="grey_light">#f3f3f3</color>
+    <color name="background">#e6e6e6</color>
+    <color name="textcolorLight">#898989</color>
+    <color name="star_color">#fbc375</color>
 </resources>

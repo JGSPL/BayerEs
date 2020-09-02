@@ -6,6 +6,7 @@ import android.widget.Toast;
 public class Constant {
 
     public static final String BASE_URL = "https://stage-admin.procialize.live/baseapp/api/v1/";
+    public static String TENOR_URL = "https://api.tenor.com/v1/";
     public static final String KEY_PATH = "path";
     public static final String REQUEST_IMAGE = "IMAGE";
     public static final String REQUEST_VIDEO = "VIDEO";
@@ -13,7 +14,10 @@ public class Constant {
     public static final String FOLDER_DIRECTORY = "/MultiImageDemo";
     public static final String IMAGE_DIRECTORY = "/Images";
     public static final String VIDEO_DIRECTORY = "/Video";
+    public static final String BROADCAST_UPLOAD_MULTIMEDIA_ACTION = "com.procialize.eventsapp.UPLOAD_MULTIMEDIA";
+    public static final String MY_PREFS_NAME = "eventInfo";
 
+    public static final String NEWS_FEED_MEDIA_PATH = "newsFeedMediaPath";
     public static void displayToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }

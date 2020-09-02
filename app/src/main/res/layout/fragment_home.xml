@@ -1,42 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin">
+    android:id="@+id/cl_main"
+    android:layout_marginBottom="5dp">
 
     <LinearLayout
-        android:id="@+id/mindTv"
+        android:id="@+id/ll_whats_on_mind"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/edittexthmbg"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/black"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/profilestatus"
-            android:layout_width="80px"
-            android:layout_height="80px"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/marginsmall"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/profilepic_placeholder" />
-
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/mindInnerTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin"
-            android:gravity="center_vertical"
-            android:hint="@string/news_edit_title"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/textsizesmaller" />
+            android:layout_margin="1dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/profilestatus"
+                android:layout_width="80px"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/marginsmall"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profilepic_placeholder" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin"
+                android:gravity="center_vertical"
+                android:hint="@string/news_edit_title"
+                android:textColorHint="@color/black"
+                android:textSize="@dimen/textsizesmaller" />
+        </LinearLayout>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_uploding_multimedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:textSize="18dp"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:text="Uploading Multimedia...."
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_whats_on_mind"  />
     <TextView
         android:id="@+id/txt_pullrefresh"
         android:layout_width="match_parent"
@@ -46,32 +78,35 @@
         android:gravity="center"
         android:text="@string/pullrefresh"
         android:textColor="@color/white"
+        android:textSize="@dimen/textsizesmallest"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:textSize="@dimen/textsizesmallest"
-        app:layout_constraintTop_toBottomOf="@+id/mindTv" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_uploding_multimedia" />
 
-    <include
-        layout="@layout/newsfeed_item"
+    <!--
+        <include
+            layout="@layout/newsfeed_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh" />
+    -->
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/feedrefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh" />
-
-    <!--  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-          android:id="@+id/feedrefresh"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:layout_constraintLeft_toLeftOf="parent"
-          app:layout_constraintRight_toRightOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh">
 
 
-
-          <androidx.recyclerview.widget.RecyclerView
-              android:id="@+id/recycler_feed"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
-      </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_feed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

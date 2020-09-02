@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                 activityLoginBinding.inEmail.setVisibility(View.INVISIBLE);
             } else if (message.equalsIgnoreCase("Successfully Login")) {
                 view.getContext().startActivity(new Intent(view.getContext(), MainActivity.class));
-                finish();
+                //finish();
             } else {
                 Constant.displayToast(view.getContext(), message);
             }

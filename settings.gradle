@@ -1,2 +1,3 @@
+include ':jiaozivideoplayer'
 include ':app'
 rootProject.name='TheEventApp'

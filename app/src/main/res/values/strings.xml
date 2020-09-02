@@ -26,5 +26,9 @@
     <string name="livepollblank">No active poll</string>
     <string name="quizblank">No active quiz</string>
     <string name="designandeveloped">Design  Developed by Procialize</string>
+    <string name="typeMessage">Type here your message...</string>
+    <string name="post">Post</string>
+    <string name="no_matches_found">No Matches Found</string>
+
 
 </resources>

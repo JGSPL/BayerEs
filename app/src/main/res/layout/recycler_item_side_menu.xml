@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_column="1"
+            android:src="@drawable/ic_home"
+            android:tint="@color/black"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_menu"
+            android:layout_column="2"
+            android:text="Home"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:textSize="15dp"
+            android:textColor="@color/black"/>
+
+    </TableRow>
+
+</TableLayout>

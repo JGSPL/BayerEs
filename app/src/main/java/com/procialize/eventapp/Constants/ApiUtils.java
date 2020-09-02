@@ -10,4 +10,9 @@ public class ApiUtils {
 
         return RetrofitClient.getClient(Constant.BASE_URL).create(APIService.class);
     }
+
+
+    public static TenorApiService getTenorAPIService() {
+        return RetrofitClient.getClient(Constant.TENOR_URL).create(TenorApiService.class);
+    }
 }

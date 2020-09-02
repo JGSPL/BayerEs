@@ -13,6 +13,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
+import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.quiz.view.QuizFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static com.procialize.eventapp.Utility.Constant.*;
 
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout mContentFrame;
     Toolbar mToolbar;
     ImageView headerlogoIv;
+    RecyclerView rv_side_menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
         mNavigationView = findViewById(R.id.nav_view);
         mContentFrame = findViewById(R.id.fragment_frame);
+        rv_side_menu = findViewById(R.id.rv_side_menu);
         mToolbar = findViewById(R.id.toolbar);
 
 
@@ -88,11 +92,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
+                .commit();
 
+        /*
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_frame, HomeFragment.newInstance(), "")
-                .commit();
+                .commit();*/
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -104,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_frame, HomeFragment.newInstance(), "")
+                                .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
                                 .commit();
                         break;
                     case R.id.navigation_agenda:

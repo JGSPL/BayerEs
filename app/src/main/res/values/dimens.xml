@@ -12,4 +12,7 @@
     <dimen name="padding">25dp</dimen>
     <dimen name="elevation">3dp</dimen>
     <dimen name="padding_edit">5dp</dimen>
+    <dimen name="attendee_name_size">15dp</dimen>
+    <dimen name="attendee_designation_size">13dp</dimen>
+    <dimen name="date_time_size">10dp</dimen>
 </resources>
