@@ -1,7 +1,6 @@
 package com.procialize.eventapp.Constants;
 
 
-
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.validateOTP;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
@@ -47,4 +46,13 @@ public interface APIService {
                                       @Part("post_content") RequestBody post_content,
                                       @Part List<MultipartBody.Part> files,
                                       @Part List<MultipartBody.Part> thumbFiles);
+
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiI0YTE0NDI2NGU5MzQyNTI0NGRkNTAzMjNmYTIyNDM2MDFhYzlmYTY0IiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJ0aW1lIjoxNTk5MDI0NzU4LCJleHBpcnlfdGltZSI6MTU5OTAyODM1OH0.QrtQOm9fzLnl-8fYrTAzoiKxmbf86H6VSpq0zkn5wB4")
+    @POST("NewsFeed_api/PostComment")
+    @FormUrlEncoded
+    Call<LoginOrganizer> PostComment(
+                                    @Field("event_id") String Event_id,
+                                    @Field("news_feed_id") String news_feed_id,
+                                    @Field("comment_data") String comment_data,
+                                    @Field("type") String Type);
 }

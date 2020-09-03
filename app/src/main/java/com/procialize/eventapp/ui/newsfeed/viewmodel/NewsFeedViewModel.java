@@ -10,7 +10,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
+import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
@@ -36,7 +38,7 @@ public class NewsFeedViewModel extends ViewModel {
             return;
         }*/
         newsRepository = NewsfeedRepository.getInstance();
-        mutableLiveData = newsRepository.getNewsFeed("1", "10", "1");
+        mutableLiveData = newsRepository.getNewsFeed("1", "30", "1");
     }
 
     public LiveData<FetchNewsfeedMultiple> getNewsRepository() {
@@ -46,6 +48,20 @@ public class NewsFeedViewModel extends ViewModel {
     //---------------View News feed details--------------------------------
     public void openNewsFeedDetails(Activity activity, Newsfeed_detail feed, int position) {
         activity.startActivity(new Intent(activity, NewsFeedDetailsActivity.class)
+                .putExtra("Newsfeed_detail", (Serializable) feed)
+                .putExtra("position", "" + position));
+    }
+
+    //---------------View Comment details--------------------------------
+    public void openCommentPage(Activity activity, Newsfeed_detail feed, int position) {
+        activity.startActivity(new Intent(activity, CommentActivity.class)
+                .putExtra("Newsfeed_detail", (Serializable) feed)
+                .putExtra("position", "" + position));
+    }
+
+    //---------------View Like details--------------------------------
+    public void openLikePage(Activity activity, Newsfeed_detail feed, int position) {
+        activity.startActivity(new Intent(activity, LikeActivity.class)
                 .putExtra("Newsfeed_detail", (Serializable) feed)
                 .putExtra("position", "" + position));
     }
@@ -114,6 +130,5 @@ public class NewsFeedViewModel extends ViewModel {
     public LiveData<Boolean> getIsUpdating(){
         return mIsUpdating;
     }
-
 
 }

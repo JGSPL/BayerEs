@@ -19,6 +19,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.procialize.eventapp.Constants.Constant.FOLDER_DIRECTORY;
 import static com.procialize.eventapp.Constants.Constant.IMAGE_DIRECTORY;
@@ -110,5 +113,19 @@ public class CommonFunction {
             }
         }
         return false;
+    }
+
+    public static String convertDate(String Date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.util.Date sourceDate = null;
+        try {
+            sourceDate = dateFormat.parse(Date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
+        String targetdatevalue= targetFormat.format(sourceDate);
+        return targetdatevalue;
     }
 }

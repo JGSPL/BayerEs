@@ -46,6 +46,7 @@ public class PostNewsFeedViewModel extends ViewModel {
     private MutableLiveData<ArrayList<AlbumFile>> mutableLiveData = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> multimediaUploadLiveData = new MutableLiveData<>();
     MutableLiveData<Boolean> isInsertedIntoDB = new MutableLiveData<>();
+    MutableLiveData<Boolean> isValid = new MutableLiveData<>();
     PostNewsFeedRepository postNewsFeedRepository;
 
     public void init() {
@@ -137,14 +138,16 @@ public class PostNewsFeedViewModel extends ViewModel {
         return multimediaUploadLiveData;
     }
 
-    public void sendPost(String event_id, String status, ArrayList<SelectedImages> resultList){//, String[] mediaFile, String[] mediaFileThumb) {
-        postNewsFeedRepository = PostNewsFeedRepository.getInstance();
-        multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(event_id,status, resultList);//,mediaFile,mediaFileThumb);
+    public void sendPost(String event_id, String status, ArrayList<SelectedImages> resultList) {//, String[] mediaFile, String[] mediaFileThumb) {
+        if (!status.isEmpty()) {
+            postNewsFeedRepository = PostNewsFeedRepository.getInstance();
+            multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(event_id, status, resultList);//,mediaFile,mediaFileThumb);
+        }
     }
 
-    public void insertMultimediaIntoDB(Context context,String postStatus,ArrayList<SelectedImages> resultList) {
+    public void insertMultimediaIntoDB(Context context, String postStatus, ArrayList<SelectedImages> resultList) {
         postNewsFeedRepository = PostNewsFeedRepository.getInstance();
-        isInsertedIntoDB = postNewsFeedRepository.insertIntoDb(context,postStatus,resultList);
+        isInsertedIntoDB = postNewsFeedRepository.insertIntoDb(context, postStatus, resultList);
     }
 
     public MutableLiveData<Boolean> getDBStatus() {
@@ -153,6 +156,18 @@ public class PostNewsFeedViewModel extends ViewModel {
 
     public void startNewsFeedFragment(Activity activity) {
         activity.startActivity(new Intent(activity, MainActivity.class));
+    }
+
+    public void validation(String postStatus) {
+        if (postStatus.isEmpty()) {
+            isValid.setValue(false);
+        } else {
+            isValid.setValue(true);
+        }
+    }
+
+    public MutableLiveData<Boolean> getIsValid() {
+        return isValid;
     }
 
 }

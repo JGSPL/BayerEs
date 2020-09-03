@@ -80,7 +80,6 @@ public class Newsfeed_detail implements Serializable {
     List<News_feed_media> news_feed_media;
 
 
-
     public List<News_feed_media> getNews_feed_media() {
         return news_feed_media;
     }

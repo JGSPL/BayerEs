@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -65,6 +67,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     IntentFilter mFilter;
     ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
+
     public static NewsFeedFragment newInstance() {
 
         return new NewsFeedFragment();
@@ -128,7 +131,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                     String mediaPath = fetchNewsfeedMultiple.getMedia_path();
                     SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString(NEWS_FEED_MEDIA_PATH,mediaPath);
+                    editor.putString(NEWS_FEED_MEDIA_PATH, mediaPath);
                     editor.commit();
                     newsfeedAdapter.notifyDataSetChanged();
                 }
@@ -147,18 +150,17 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         newsfeedViewModel.getIsUpdating().observe(getActivity(), new Observer<Boolean>() {
                             @Override
                             public void onChanged(@Nullable Boolean aBoolean) {
-                                if(aBoolean){
+                                if (aBoolean) {
                                     showProgressBar();
-                                }
-                                else{
+                                } else {
                                     hideProgressBar();
                                 }
                             }
                         });
-
-                    } else {
-                        //uploadData();
-                    }
+                    } /*else {
+                        Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
+                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broadcastIntent);
+                    }*/
                 }
             });
         }
@@ -185,6 +187,16 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     @Override
     public void onContactSelected(Newsfeed_detail feed, int position) {
         newsfeedViewModel.openNewsFeedDetails(getActivity(), feed, position);
+    }
+
+    @Override
+    public void onCommentClick(Newsfeed_detail feed, int position) {
+        newsfeedViewModel.openCommentPage(getActivity(), feed, position);
+    }
+
+    @Override
+    public void onLikeClick(Newsfeed_detail feed, int position) {
+        newsfeedViewModel.openLikePage(getActivity(), feed, position);
     }
 
     @Override
@@ -226,8 +238,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         public void onChanged(List<UploadMultimedia> uploadMultimedia) {
                             if (uploadMultimedia.size() > 0) {
                                 String postText = uploadMultimedia.get(0).getPost_status();
-                                if(!postText.isEmpty())
-                                {
+                                if (!postText.isEmpty()) {
                                     uploadMultimedia.remove(0);
                                 }
                                 newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
@@ -256,11 +267,18 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
 
-    private void showProgressBar(){
+    private void showProgressBar() {
+        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(1000); //You can manage the blinking time with this parameter
+        anim.setStartOffset(20);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+        tv_uploding_multimedia.startAnimation(anim);
         tv_uploding_multimedia.setVisibility(View.VISIBLE);
     }
 
-    private void hideProgressBar(){
+    private void hideProgressBar() {
+        tv_uploding_multimedia.clearAnimation();
         tv_uploding_multimedia.setVisibility(View.GONE);
     }
 }

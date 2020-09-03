@@ -61,7 +61,6 @@ public class BackgroundServiceToCompressMedia extends IntentService {
                     String strPath = mediaList.get(0).getMedia_file();
                     compressImage(strPath, 0);
                 }*/
-
             if (mediaList.get(0).getMedia_type().equalsIgnoreCase("video")) {
                 executeCutVideoCommand(Uri.parse(mediaList.get(0).getMedia_file()), 0);
             } else {

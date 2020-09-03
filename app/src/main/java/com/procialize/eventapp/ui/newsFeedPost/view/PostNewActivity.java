@@ -263,22 +263,36 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                 if (cd.isConnectingToInternet()) {
                     String postText = et_post.getText().toString().trim();
                     if (resultList.size() == 0) {
-
-                        postNewsFeedViewModel.sendPost(event_id, postText, resultList);
-                        postNewsFeedViewModel.getStatus().observe(this, new Observer<LoginOrganizer>() {
+                        postNewsFeedViewModel.validation(postText);
+                        postNewsFeedViewModel.getIsValid().observe(this, new Observer<Boolean>() {
                             @Override
-                            public void onChanged(@Nullable LoginOrganizer result) {
-                                if (result != null) {
-                                    String status = result.getHeader().get(0).getType();
-                                    String message = result.getHeader().get(0).getMsg();
-                                    Snackbar.make(linear, message, Snackbar.LENGTH_LONG)
-                                            .show();
-                                } else {
-                                    Snackbar.make(linear, "Success", Snackbar.LENGTH_LONG)
+                            public void onChanged(Boolean aBoolean) {
+                                if(aBoolean)
+                                {
+                                    postNewsFeedViewModel.sendPost(event_id, postText, resultList);
+                                    postNewsFeedViewModel.getStatus().observe(PostNewActivity.this, new Observer<LoginOrganizer>() {
+                                        @Override
+                                        public void onChanged(@Nullable LoginOrganizer result) {
+                                            if (result != null) {
+                                                String status = result.getHeader().get(0).getType();
+                                                String message = result.getHeader().get(0).getMsg();
+                                                Snackbar.make(linear, message, Snackbar.LENGTH_LONG)
+                                                        .show();
+                                            } else {
+                                                Snackbar.make(linear, "Success", Snackbar.LENGTH_LONG)
+                                                        .show();
+                                            }
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    Snackbar.make(linear, "Please enter some status to post", Snackbar.LENGTH_LONG)
                                             .show();
                                 }
                             }
                         });
+
                     } else {
                         try {
                             /*eventAppDB = EventAppDB.getDatabase(this);
