@@ -29,6 +29,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.costumTools.ClickableViewPager;
 import com.procialize.eventapp.costumTools.ScaledImageView;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
@@ -101,12 +102,20 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 holder.profileIV.setImageResource(R.drawable.profilepic_placeholder);
             }
 
-            /*holder.root.setOnClickListener(new View.OnClickListener() {
+            String dateTime = feedData.getPost_date();
+            if (!dateTime.isEmpty()) {
+                String convertedDate = CommonFunction.convertDate(dateTime);
+                holder.dateTv.setText(convertedDate);
+            }
+
+            holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onContactSelected(feed_detail.get(position), position);
+                    if(feedData.getNews_feed_media().size()>0) {
+                        listener.onContactSelected(feed_detail.get(position), position);
+                    }
                 }
-            });*/
+            });
 
             if(feedData.getTotal_comments().equalsIgnoreCase("1"))
             {
@@ -122,6 +131,16 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             }else
             {
                 holder.tv_like.setText(feedData.getTotal_likes()+" Likes");
+
+                holder.vp_slider.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(feedData.getNews_feed_media().size()>0) {
+
+                            listener.onContactSelected(feed_detail.get(position), position);
+                        }
+                    }
+                });
             }
 
             holder.tv_comment.setOnClickListener(new View.OnClickListener() {
@@ -137,12 +156,22 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 }
             });
 
+            holder.moreIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.moreTvFollowOnClick(v, feed_detail.get(position), position);
+
+                }
+            });
+
             if (!feedData.getPost_status().isEmpty() && feedData.getPost_status() != null) {
                 holder.tv_status.setText(feedData.getPost_status());
                 holder.tv_status.setVisibility(View.VISIBLE);
             } else {
                 holder.tv_status.setVisibility(View.GONE);
             }
+
+
 
             if (feedData.getNews_feed_media().size() > 0) {
                 holder.vp_slider.setVisibility(View.VISIBLE);
@@ -207,6 +236,9 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         void onContactSelected(Newsfeed_detail feed, int position);
         void onCommentClick(Newsfeed_detail feed, int position);
         void onLikeClick(Newsfeed_detail feed, int position);
+        void onSliderClick (Newsfeed_detail feed, int position);
+        void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position);
+
     }
 
     public class NewsViewHolder extends RecyclerView.ViewHolder {

@@ -200,6 +200,19 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     @Override
+    public void onSliderClick(Newsfeed_detail feed, int position) {
+
+        newsfeedViewModel.openFeedDetails(getActivity(), feed, position);
+
+    }
+
+    @Override
+    public void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position) {
+        newsfeedViewModel.openMoreDetails(  getActivity(), feed, position);
+
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_whats_on_mind:

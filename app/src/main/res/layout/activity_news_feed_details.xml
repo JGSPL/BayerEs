@@ -10,11 +10,13 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            app:navigationIcon="@drawable/backarrow"
             android:layout_height="?attr/actionBarSize">
 
             <ImageView
@@ -55,7 +57,7 @@
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
-        <Button
+        <com.procialize.eventapp.fonts.RobotoButton
             android:id="@+id/btn_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,16 +67,18 @@
             android:layout_weight="1"
             android:minHeight="0dp"
             android:padding="15dp"
+            android:background="@color/activetab"
             android:text="Save"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/textsizesmall" />
 
-        <Button
+        <com.procialize.eventapp.fonts.RobotoButton
             android:id="@+id/btn_share"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2.5dp"
+            android:background="@color/activetab"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
