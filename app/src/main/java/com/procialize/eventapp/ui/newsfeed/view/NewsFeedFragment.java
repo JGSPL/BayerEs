@@ -74,7 +74,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ConnectionDetector connectionDetector;
     UploadMultimediaBackgroundReceiver mReceiver;
     IntentFilter mFilter;
-    ConstraintLayout cl_main;
+    public static ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
     String reaction_type;
 

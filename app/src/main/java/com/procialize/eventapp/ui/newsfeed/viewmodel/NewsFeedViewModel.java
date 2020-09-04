@@ -13,14 +13,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
+import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Database.EventAppDB;
+import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
+import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
 import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
@@ -29,6 +36,7 @@ import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompre
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
+import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -41,7 +49,7 @@ public class NewsFeedViewModel extends ViewModel {
     Dialog dialog, myDialog;
     private String ATTENDEE_STATUS = "0";
     private Activity activityVar;
-
+    ConnectionDetector connectionDetector;
     private MutableLiveData<FetchNewsfeedMultiple> mutableLiveData = new MutableLiveData<>();
     private NewsfeedRepository newsRepository;
     private LiveData<List<UploadMultimedia>> nonCompressedMultimediaMutableLiveData = new MutableLiveData<>();
@@ -54,6 +62,7 @@ public class NewsFeedViewModel extends ViewModel {
     MutableLiveData<LoginOrganizer> newsfeedHide = new MutableLiveData<>();
     //private MutableLiveData<Boolean> mIsUploading = new MutableLiveData<>();
     MutableLiveData<Boolean> isValid = new MutableLiveData<>();
+
 
     public void init(String pagesize, String pagenumber) {
        /* if (mutableLiveData != null) {
@@ -176,20 +185,52 @@ public class NewsFeedViewModel extends ViewModel {
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                newsfeedHide = newsRepository.DeletePost("1", feed.getNews_feed_id());
-                dialog.cancel();
+                if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
+                    newsfeedHide = newsRepository.DeletePost("1", feed.getNews_feed_id());
 
+                    newsRepository.getPostActivity().observe((LifecycleOwner) activity, new Observer<LoginOrganizer>() {
+                        @Override
+                        public void onChanged(LoginOrganizer loginOrganizer) {
+                            if (loginOrganizer != null) {
+                                List<Header> heaserList = loginOrganizer.getHeader();
+                                Snackbar.make(NewsFeedFragment.cl_main, heaserList.get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                dialog.cancel();
+
+                            }
+                        }
+                    });
+                } else {
+                    dialog.cancel();
+                    Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                }
             }
+
         });
 
 
         hideTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // ReportPostHide(eventid, feed.getNewsFeedId(), token, position);
                 newsRepository = NewsfeedRepository.getInstance();
-                newsfeedHide = newsRepository.PostHide("1", feed.getNews_feed_id());
-                dialog.cancel();
+
+                if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
+                    newsfeedHide = newsRepository.PostHide("1", feed.getNews_feed_id());
+
+                    newsRepository.getPostActivity().observe((LifecycleOwner) activity, new Observer<LoginOrganizer>() {
+                        @Override
+                        public void onChanged(LoginOrganizer loginOrganizer) {
+                            if (loginOrganizer != null) {
+                                List<Header> heaserList = loginOrganizer.getHeader();
+                                Snackbar.make(NewsFeedFragment.cl_main, heaserList.get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                dialog.cancel();
+
+                            }
+                        }
+                    });
+                } else {
+                    dialog.cancel();
+                    Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -356,11 +397,45 @@ public class NewsFeedViewModel extends ViewModel {
                     String msg = StringEscapeUtils.escapeJava(etmsg.getText().toString());
                     dialog.cancel();
                     if (from.equalsIgnoreCase("reportPost")) {
-                        newsfeedHide = newsRepository.ReportPost("1", id, msg);
-                        myDialog.cancel();
+
+                        if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
+                            newsfeedHide = newsRepository.ReportPost("1", id, msg);
+
+                            newsRepository.getPostActivity().observe((LifecycleOwner) activityVar, new Observer<LoginOrganizer>() {
+                                @Override
+                                public void onChanged(LoginOrganizer loginOrganizer) {
+                                    if (loginOrganizer != null) {
+                                        List<Header> heaserList = loginOrganizer.getHeader();
+                                        Snackbar.make(NewsFeedFragment.cl_main, heaserList.get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                        myDialog.cancel();
+
+                                    }
+                                }
+                            });
+                        } else {
+                            myDialog.cancel();
+                            Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                        }
                     }else if (from.equalsIgnoreCase("reportUser")) {
-                        newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
-                        myDialog.cancel();
+                        /*newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
+                        myDialog.cancel();*/
+                        if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
+                            newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
+                            newsRepository.getPostActivity().observe((LifecycleOwner) activityVar, new Observer<LoginOrganizer>() {
+                                @Override
+                                public void onChanged(LoginOrganizer loginOrganizer) {
+                                    if (loginOrganizer != null) {
+                                        List<Header> heaserList = loginOrganizer.getHeader();
+                                        Snackbar.make(NewsFeedFragment.cl_main, heaserList.get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                        myDialog.cancel();
+
+                                    }
+                                }
+                            });
+                        } else {
+                            myDialog.cancel();
+                            Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                 }
 

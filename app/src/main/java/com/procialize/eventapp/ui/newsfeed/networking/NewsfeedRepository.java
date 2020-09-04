@@ -3,12 +3,14 @@ package com.procialize.eventapp.ui.newsfeed.networking;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
@@ -147,6 +149,11 @@ public class NewsfeedRepository {
         });
         return reportPostUpdate;
     }
+    public LiveData<LoginOrganizer> getPostActivity() {
+        return reportPostUpdate;
+    }
+
+
 
     public MutableLiveData<LoginOrganizer> ReportPost(String id, String news_feed_id, String content) {
         newsfeedApi = ApiUtils.getAPIService();
