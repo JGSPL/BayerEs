@@ -188,6 +188,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
 
 
+
             if (feedData.getNews_feed_media().size() > 0) {
                 holder.vp_slider.setVisibility(View.VISIBLE);
                 holder.ll_dots.setVisibility(View.VISIBLE);
