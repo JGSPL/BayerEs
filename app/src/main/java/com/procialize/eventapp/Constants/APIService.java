@@ -64,4 +64,27 @@ public interface APIService {
                                     @Field("news_feed_id") String news_feed_id/*,
                                     @Field("pageSize") String pageSize,
                                     @Field("pageNumber") String pageNumber*/);
+
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJTaW5naCIsIm1vYmlsZSI6Ijk5ODczMTU2ODIiLCJlbWFpbCI6InByZWV0aUBwcm9jaWFsaXplLmluIiwicmVmcmVzaF90b2tlbiI6ImI3ZjkzOWExMjQ0MTU1MTc1OWNkYzIxYzgzNGM1OTc3OGRmODI1ZWYiLCJ1c2VyX3R5cGUiOiJBIiwidmVyaWZ5X290cCI6IjEiLCJwcm9maWxlX3BpYyI6IiBodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC9kZWZhdWx0LnBuZyIsInRpbWUiOjE1OTkxMDkxNjQsImV4cGlyeV90aW1lIjoxNTk5MTEyNzY0fQ.vci7HS2FtOh89l1AgRTKoilFl-rB-fBBsXO7neOsDX4")
+    @POST("NewsFeed_api/PostHide")
+    @FormUrlEncoded
+    Call<LoginOrganizer> PostHide(@Field("event_id") String event_id,
+                                                      @Field("news_feed_id") String news_feed_id);
+
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJTaW5naCIsIm1vYmlsZSI6Ijk5ODczMTU2ODIiLCJlbWFpbCI6InByZWV0aUBwcm9jaWFsaXplLmluIiwicmVmcmVzaF90b2tlbiI6ImI3ZjkzOWExMjQ0MTU1MTc1OWNkYzIxYzgzNGM1OTc3OGRmODI1ZWYiLCJ1c2VyX3R5cGUiOiJBIiwidmVyaWZ5X290cCI6IjEiLCJwcm9maWxlX3BpYyI6IiBodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC9kZWZhdWx0LnBuZyIsInRpbWUiOjE1OTkxMDkxNjQsImV4cGlyeV90aW1lIjoxNTk5MTEyNzY0fQ.vci7HS2FtOh89l1AgRTKoilFl-rB-fBBsXO7neOsDX4")
+    @POST("NewsFeed_api/ReportPost")
+    @FormUrlEncoded
+    Call<LoginOrganizer> ReportPost(@Field("event_id") String event_id,
+                                  @Field("news_feed_id") String news_feed_id,
+                                    @Field("content") String content);
+
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJTaW5naCIsIm1vYmlsZSI6Ijk5ODczMTU2ODIiLCJlbWFpbCI6InByZWV0aUBwcm9jaWFsaXplLmluIiwicmVmcmVzaF90b2tlbiI6ImI3ZjkzOWExMjQ0MTU1MTc1OWNkYzIxYzgzNGM1OTc3OGRmODI1ZWYiLCJ1c2VyX3R5cGUiOiJBIiwidmVyaWZ5X290cCI6IjEiLCJwcm9maWxlX3BpYyI6IiBodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC9kZWZhdWx0LnBuZyIsInRpbWUiOjE1OTkxMDkxNjQsImV4cGlyeV90aW1lIjoxNTk5MTEyNzY0fQ.vci7HS2FtOh89l1AgRTKoilFl-rB-fBBsXO7neOsDX4")
+    @POST("NewsFeed_api/ReportUser")
+    @FormUrlEncoded
+    Call<LoginOrganizer> ReportUser(@Field("event_id") String event_id,
+                                    @Field("reported_user_id") String reported_user_id,
+                                    @Field("news_feed_id") String news_feed_id,
+                                    @Field("content") String content);
+
+
 }

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +29,9 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.costumTools.ClickableViewPager;
 import com.procialize.eventapp.costumTools.ScaledImageView;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
@@ -50,6 +53,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     FeedAdapterListner listener;
     String mediaPath = "";
     public static int swipableAdapterPosition = 0;
+    ConnectionDetector cd;
 
     public NewsFeedAdapter(Context context, ArrayList<Newsfeed_detail> feed_detail, FeedAdapterListner listener) {
         this.context = context;
@@ -58,6 +62,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
         SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         mediaPath = prefs.getString(NEWS_FEED_MEDIA_PATH, "");
+        cd = new ConnectionDetector();
     }
 
     @NonNull
@@ -101,12 +106,20 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 holder.profileIV.setImageResource(R.drawable.profilepic_placeholder);
             }
 
-            /*holder.root.setOnClickListener(new View.OnClickListener() {
+            String dateTime = feedData.getPost_date();
+            if (!dateTime.isEmpty()) {
+                String convertedDate = CommonFunction.convertDate(dateTime);
+                holder.dateTv.setText(convertedDate);
+            }
+
+            holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onContactSelected(feed_detail.get(position), position);
+                    if(feedData.getNews_feed_media().size()>0) {
+                        listener.onContactSelected(feed_detail.get(position), position);
+                    }
                 }
-            });*/
+            });
 
             if(feedData.getTotal_comments().equalsIgnoreCase("1"))
             {
@@ -122,6 +135,16 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             }else
             {
                 holder.tv_like.setText(feedData.getTotal_likes()+" Likes");
+
+                holder.vp_slider.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(feedData.getNews_feed_media().size()>0) {
+
+                            listener.onContactSelected(feed_detail.get(position), position);
+                        }
+                    }
+                });
             }
 
             holder.tv_comment.setOnClickListener(new View.OnClickListener() {
@@ -143,12 +166,33 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 }
             });
 
+            holder.moreIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.moreTvFollowOnClick(v, feed_detail.get(position), position);
+
+                }
+            });
+
+            holder.iv_like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (cd.isConnectingToInternet()) {
+                        listener.likeTvViewOnClick(v, feed_detail.get(position), position, holder.iv_like, holder.tv_like);
+                    } else {
+                        Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
             if (!feedData.getPost_status().isEmpty() && feedData.getPost_status() != null) {
                 holder.tv_status.setText(feedData.getPost_status());
                 holder.tv_status.setVisibility(View.VISIBLE);
             } else {
                 holder.tv_status.setVisibility(View.GONE);
             }
+
+
 
             if (feedData.getNews_feed_media().size() > 0) {
                 holder.vp_slider.setVisibility(View.VISIBLE);
@@ -213,6 +257,10 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         void onContactSelected(Newsfeed_detail feed, int position);
         void onCommentClick(Newsfeed_detail feed, int position);
         void onLikeClick(Newsfeed_detail feed, int position);
+        void onSliderClick (Newsfeed_detail feed, int position);
+        void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position);
+        void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext);
+
     }
 
     public class NewsViewHolder extends RecyclerView.ViewHolder {
@@ -220,7 +268,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         TextView nameTv;
         TextView designationTv, tv_concat, companyTv, dateTv, tv_status, testdata;
         TextView tv_like, tv_comment;
-        ImageView moreIV, profileIV,iv_comments;
+        ImageView moreIV, profileIV,iv_comments, iv_like;
         ProgressBar progressView;
         ViewPager vp_slider;
         LinearLayout ll_dots, ll_bottom;
@@ -247,7 +295,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             vp_slider = itemView.findViewById(R.id.vp_slider);
 
             profileIV = itemView.findViewById(R.id.profileIV);
-
+            iv_like = itemView.findViewById(R.id.iv_like);
 
             progressView = itemView.findViewById(R.id.progressView);
             root = itemView.findViewById(R.id.root);
