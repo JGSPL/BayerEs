@@ -98,6 +98,12 @@ public class NewsFeedViewModel extends ViewModel {
                 .putExtra("position", "" + position));
     }
 
+    //---------------View Like Action mechanism--------------------------------
+    public void openLikeimg(  String event_id,String newsfeedid) {
+        newsRepository = NewsfeedRepository.getInstance();
+        newsfeedHide = newsRepository.PostLike(event_id, newsfeedid);
+    }
+
     ///------------------Open More dot features------------------
     public void openMoreDetails(Activity activity, Newsfeed_detail feed, int position) {
         activityVar = activity;

@@ -123,8 +123,8 @@ public class CommonFunction {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
+        SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy hh:mm aa");
+        //SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
         String targetdatevalue= targetFormat.format(sourceDate);
         return targetdatevalue;
     }
