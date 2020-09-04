@@ -13,6 +13,6 @@ public class ApiUtils {
 
 
     public static TenorApiService getTenorAPIService() {
-        return RetrofitClient.getClient(Constant.TENOR_URL).create(TenorApiService.class);
+        return TenorClient.getClient(Constant.TENOR_URL).create(TenorApiService.class);
     }
 }

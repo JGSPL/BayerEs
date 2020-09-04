@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -28,11 +29,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.GifEmojiAdapter;
+import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
+import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
 import com.procialize.eventapp.ui.newsFeedComment.model.GifResponse;
 import com.procialize.eventapp.ui.newsFeedComment.model.GifResult;
 import com.procialize.eventapp.ui.newsFeedComment.viewModel.CommentViewModel;
@@ -54,31 +60,34 @@ import retrofit2.Response;
 import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
 import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
 
-public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner {
+public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
 
     private static final String API_KEY = "TVG20YJW1MXR";
-    ImageView iv_gif, iv_back_gif;
+    ImageView iv_gif, iv_back_gif, iv_likes;
     EditText et_comment, et_search_gif;
     FrameLayout fl_gif_container, fl_post_comment;
     LinearLayout ll_comment_container,
             ll_media_dots, ll_main;
     CommentViewModel commentViewModel;
     String anon_id;
-    RecyclerView rv_gif;
+    RecyclerView rv_gif, rv_comments;
     ProgressBar pb_emoji;
     ViewPager vp_media;
     private String position;
     private Newsfeed_detail newsfeed_detail;
     public static int swipableAdapterPosition = 0;
-    private TextView tv_status, tv_name, tv_designation, tv_date_time;
+    private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments, tv_no_of_likes;
     String event_id = "1";
-
+    ConnectionDetector connectionDetector;
+    String commentText = "";
+    BottomSheetDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
         commentViewModel = ViewModelProviders.of(this).get(CommentViewModel.class);
+        connectionDetector = ConnectionDetector.getInstance(this);
 
         Intent intent = getIntent();
         try {
@@ -89,7 +98,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         iv_gif = findViewById(R.id.iv_gif);
+        iv_likes = findViewById(R.id.iv_likes);
         rv_gif = findViewById(R.id.rv_gif);
+        rv_comments = findViewById(R.id.rv_comments);
         pb_emoji = findViewById(R.id.pb_emoji);
         iv_gif.setOnClickListener(this);
         et_comment = findViewById(R.id.et_comment);
@@ -106,6 +117,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_name = findViewById(R.id.tv_name);
         tv_designation = findViewById(R.id.tv_designation);
         tv_date_time = findViewById(R.id.tv_date_time);
+        tv_no_of_comments = findViewById(R.id.tv_no_of_comments);
+        tv_no_of_likes = findViewById(R.id.tv_no_of_likes);
 
         String postStatus = newsfeed_detail.getPost_status().trim();
         if (!postStatus.trim().isEmpty()) {
@@ -140,7 +153,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         String dateTime = newsfeed_detail.getPost_date();
         if (!dateTime.isEmpty()) {
-           String convertedDate = CommonFunction.convertDate(dateTime);
+            String convertedDate = CommonFunction.convertDate(dateTime);
             tv_date_time.setText(convertedDate);
         }
 
@@ -177,6 +190,45 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             vp_media.setVisibility(View.GONE);
             ll_media_dots.setVisibility(View.GONE);
+        }
+
+        if (newsfeed_detail.getTotal_comments().equalsIgnoreCase("1")) {
+            tv_no_of_comments.setText(newsfeed_detail.getTotal_comments() + " Comment");
+        } else {
+            tv_no_of_comments.setText(newsfeed_detail.getTotal_comments() + " Comments");
+        }
+
+        if (newsfeed_detail.getTotal_likes().equalsIgnoreCase("1")) {
+            tv_no_of_likes.setText(newsfeed_detail.getTotal_likes() + " Like");
+        } else {
+            tv_no_of_likes.setText(newsfeed_detail.getTotal_likes() + " Likes");
+        }
+
+        if (newsfeed_detail.getLike_flag().equalsIgnoreCase("0")) {
+            iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
+        } else {
+            iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
+           /* int color = Color.parseColor(colorActive);
+            iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*/
+        }
+        getComments();
+    }
+
+    public void getComments() {
+        if (connectionDetector.isConnectingToInternet()) {
+            commentViewModel.getComment(event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
+            commentViewModel.getCommentList().observe(this, new Observer<Comment>() {
+                @Override
+                public void onChanged(Comment comment) {
+                    if (comment != null) {
+                        List<CommentDetail> commentList = comment.getCommentDetails();
+                        setupCommentAdapter(commentList);
+                        showCommentCount(commentList);
+                    }
+                }
+            });
+        } else {
+            Snackbar.make(ll_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -222,6 +274,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public void setupCommentAdapter(List<CommentDetail> commentList) {
+        CommentAdapter commentAdapter = new CommentAdapter(CommentActivity.this, commentList, CommentActivity.this);
+        rv_comments.setLayoutManager(new LinearLayoutManager(this));
+        rv_comments.setAdapter(commentAdapter);
+        commentAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -249,7 +308,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     });
 
                     //Get GIF images
-                    commentViewModel.GetGif(API_KEY, anon_id);
+                    commentViewModel.GetGif(API_KEY,anon_id);
                     commentViewModel.getGifList().observe(this, new Observer<GifResponse>() {
                         @Override
                         public void onChanged(GifResponse listMutableLiveData) {
@@ -257,6 +316,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             setupGifAdapter(listResult);
                         }
                     });
+
+
                 } else {
                     ll_comment_container.setVisibility(View.VISIBLE);
                     fl_gif_container.setVisibility(View.GONE);
@@ -269,18 +330,20 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.fl_post_comment:
-                String comment = et_comment.getText().toString();
-                commentViewModel.validation(comment);
+                commentText = et_comment.getText().toString();
+                commentViewModel.validation(commentText);
                 commentViewModel.getIsValid().observe(this, new Observer<Boolean>() {
                     @Override
                     public void onChanged(Boolean aBoolean) {
                         if (aBoolean) {
-                            commentViewModel.postComment(event_id, newsfeed_detail.getNews_feed_id(), comment, "1");
+                            commentViewModel.postComment(event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
                             commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                                 @Override
                                 public void onChanged(LoginOrganizer loginOrganizer) {
                                     Snackbar.make(ll_main, "Success", Snackbar.LENGTH_SHORT).show();
                                     et_comment.setText("");
+                                    commentText = et_comment.getText().toString();
+                                    getComments();
                                 }
                             });
                         } else {
@@ -306,6 +369,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void onGifSelected(GifResult result) {
         ll_comment_container.setVisibility(View.VISIBLE);
         fl_gif_container.setVisibility(View.GONE);
+
+        commentViewModel.postComment(event_id, newsfeed_detail.getNews_feed_id(), result.getMedia().get(0).getGif().getUrl(), "2");
+        commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
+            @Override
+            public void onChanged(LoginOrganizer loginOrganizer) {
+                Snackbar.make(ll_main, "Success", Snackbar.LENGTH_SHORT).show();
+                et_comment.setText("");
+                getComments();
+            }
+        });
     }
 
     private void setupPagerIndidcatorDots(int currentPage, LinearLayout ll_dots, int size) {
@@ -330,5 +403,87 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         } catch (Exception e) {
 
         }
+    }
+
+    public void showCommentCount(List<CommentDetail> commentList) {
+        if (commentList.size() == 1) {
+            tv_no_of_comments.setText(commentList.size() + " Comment");
+        } else {
+            tv_no_of_comments.setText(commentList.size() + " Comments");
+        }
+    }
+
+
+    @Override
+    public void onMoreSelected(final CommentDetail comment, final int position) {
+        dialog = new BottomSheetDialog(this);
+        dialog.setContentView(R.layout.botomcommentdialouge);
+        TextView reportTv = dialog.findViewById(R.id.reportTv);
+        TextView hideTv = dialog.findViewById(R.id.hideTv);
+        TextView deleteTv = dialog.findViewById(R.id.deleteTv);
+        TextView reportuserTv = dialog.findViewById(R.id.reportuserTv);
+        TextView cancelTv = dialog.findViewById(R.id.cancelTv);
+        /*if (user.get(SessionManager.ATTENDEE_STATUS).equalsIgnoreCase("1")) {
+            if (user_id.equalsIgnoreCase(comment.getAttendeeId())) {
+                deleteTv.setVisibility(View.VISIBLE);
+                reportuserTv.setVisibility(View.GONE);
+                hideTv.setVisibility(View.GONE);
+                reportTv.setVisibility(View.GONE);
+            } else {
+                deleteTv.setVisibility(View.VISIBLE);
+                reportuserTv.setVisibility(View.GONE);
+                hideTv.setVisibility(View.GONE);
+                reportTv.setVisibility(View.GONE);
+            }
+        } else if (user_id.equalsIgnoreCase(comment.getAttendeeId())) {
+            deleteTv.setVisibility(View.VISIBLE);
+            reportuserTv.setVisibility(View.GONE);
+            hideTv.setVisibility(View.GONE);
+            reportTv.setVisibility(View.GONE);
+        } else {
+            deleteTv.setVisibility(View.GONE);
+            reportuserTv.setVisibility(View.VISIBLE);
+            hideTv.setVisibility(View.VISIBLE);
+            reportTv.setVisibility(View.VISIBLE);
+        }
+*/
+
+        deleteTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //DeleteNewsFeedComment(event_id, newsfeed_detail.getNews_feed_id(), comment.getComment_id(), apikey, position);
+            }
+        });
+
+        hideTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // ReportCommentHide(event_id, comment.getComment_id(), apikey, position);
+            }
+        });
+
+        reportTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // showratedialouge("reportPost", comment.getComment_id());
+            }
+        });
+
+
+        reportuserTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //showratedialouge("reportUser", comment.getAttendeeId());
+            }
+        });
+
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

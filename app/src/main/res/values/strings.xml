@@ -29,6 +29,11 @@
     <string name="typeMessage">Type here your message...</string>
     <string name="post">Post</string>
     <string name="no_matches_found">No Matches Found</string>
-
+    <string name="cancel">Cancel</string>
+    <string name="deletecomment">Delete Comment</string>
+    <string name="reportcomment">Report Comment</string>
+    <string name="hidecomment">Hide Comment</string>
+    <string name="reportuser">Report User</string>
+    <string name="rate">Rate</string>
 
 </resources>

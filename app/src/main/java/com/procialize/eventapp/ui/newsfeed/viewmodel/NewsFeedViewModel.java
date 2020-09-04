@@ -3,6 +3,7 @@ package com.procialize.eventapp.ui.newsfeed.viewmodel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -33,10 +34,9 @@ public class NewsFeedViewModel extends ViewModel {
     MutableLiveData<LoginOrganizer> multimediaUploadLiveData = new MutableLiveData<>();
     MutableLiveData<Boolean> isUpdatedIntoDB = new MutableLiveData<>();
     private MutableLiveData<Boolean> mIsUpdating = new MutableLiveData<>();
+    //private MutableLiveData<Boolean> mIsUploading = new MutableLiveData<>();
+    MutableLiveData<Boolean> isValid = new MutableLiveData<>();
     public void init() {
-       /* if (mutableLiveData != null) {
-            return;
-        }*/
         newsRepository = NewsfeedRepository.getInstance();
         mutableLiveData = newsRepository.getNewsFeed("1", "30", "1");
     }
@@ -67,16 +67,23 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //--------------Start Background service to compress media------------------------
-    public void startBackgroundService(Activity activity, List<UploadMultimedia> uploadMultimedia) {
+    public void startBackgroundService(Activity activity){//, List<UploadMultimedia> uploadMultimedia) {
+        Log.d("Bg Service","Start Service");
         mIsUpdating.setValue(true);
         Intent intent = new Intent(activity, BackgroundServiceToCompressMedia.class);
-        intent.putExtra("MediaList", (Serializable) uploadMultimedia);
+        //intent.putExtra("MediaList", (Serializable) uploadMultimedia);
         activity.startService(intent);
+    }
+
+    public void stopBackgroundService(Activity activity){//, List<UploadMultimedia> uploadMultimedia) {
+        Log.d("Bg Service","Stop Service");
+        mIsUpdating.setValue(false);
     }
 
 
     //----------------Multimedia to compress------------------------
     public void getNonCompressesMultimedia(Activity activity) {
+       // mIsUploading.setValue(false);
         EventAppDB eventAppDB = EventAppDB.getDatabase(activity);
         nonCompressedMultimediaMutableLiveData = eventAppDB.uploadMultimediaDao().getNonCompressesMultimedia();
     }
@@ -107,14 +114,20 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //-------------call to upload newsfeed---------------------
-    public void sendPost(String event_id, String status, List<UploadMultimedia> resultList) {//, String[] mediaFile, String[] mediaFileThumb) {
+    public void sendPost(String event_id, String status, List<UploadMultimedia> resultList) {
+       // mIsUploading.setValue(true);
         NewsfeedRepository postNewsFeedRepository = NewsfeedRepository.getInstance();
         multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(event_id, status, resultList);//,mediaFile,mediaFileThumb);
     }
     public MutableLiveData<LoginOrganizer> getPostStatus() {
+       // mIsUploading.setValue(false);
         mIsUpdating.setValue(false);
         return multimediaUploadLiveData;
     }
+
+   /* public LiveData<Boolean> getIsUploading(){
+        return mIsUploading;
+    }*/
 
     //---------------Upldate uploaded flag to 1------------
     public void updateisUplodedIntoDB(Context context,String folderUniqueId) {
@@ -129,6 +142,18 @@ public class NewsFeedViewModel extends ViewModel {
     //----------------------------------------------------------------
     public LiveData<Boolean> getIsUpdating(){
         return mIsUpdating;
+    }
+
+    public void validation(String postStatus) {
+        if (postStatus.isEmpty()) {
+            isValid.setValue(false);
+        } else {
+            isValid.setValue(true);
+        }
+    }
+
+    public MutableLiveData<Boolean> getIsValid() {
+        return isValid;
     }
 
 }

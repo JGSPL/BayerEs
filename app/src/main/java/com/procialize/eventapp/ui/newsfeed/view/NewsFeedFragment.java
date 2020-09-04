@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -44,6 +45,7 @@ import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +79,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                              ViewGroup container, Bundle savedInstanceState) {
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
 
+        Log.d("On news feed fragment","Yes");
+
         root = inflater.inflate(R.layout.fragment_home, container, false);
         cl_main = root.findViewById(R.id.cl_main);
         recycler_feed = root.findViewById(R.id.recycler_feed);
@@ -98,27 +102,54 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
         init();
 
+        if (!CommonFunction.isMyServiceRunning(getActivity(), BackgroundServiceToCompressMedia.class)) {
+           /* Intent intent = new Intent(getActivity(), BackgroundServiceToCompressMedia.class);
+            getActivity().startService(intent);*/
+            /*newsfeedViewModel.getNonCompressesMultimedia(getActivity());
+            newsfeedViewModel.getNonCompressedMedia().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
+                @Override
+                public void onChanged(List<UploadMultimedia> uploadMultimedia) {
+                    Log.d("count_of_non_compressed", uploadMultimedia.size() + "");
+                    if (uploadMultimedia.size() > 0) {
+                        newsfeedViewModel.startBackgroundService(getActivity(), uploadMultimedia);
+                        newsfeedViewModel.getIsUpdating().observe(getActivity(), new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(@Nullable Boolean aBoolean) {
+                                if (aBoolean) {
+                                    showProgressBar();
+                                } else {
+                                    hideProgressBar();
+                                }
+                            }
+                        });
+                    } *//*else {
+                        Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
+                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broadcastIntent);
+                    }*//*
+                }
+            });*/
+        }
+        newsfeedViewModel.startBackgroundService(getActivity());
+        newsfeedViewModel.getIsUpdating().observe(getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean) {
+                    showProgressBar();
+                } else {
+                    hideProgressBar();
+                }
+            }
+        });
+        mReceiver = new UploadMultimediaBackgroundReceiver();
+        mFilter = new IntentFilter(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, mFilter);
+
         return root;
     }
 
     void init() {
-        newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
         if (connectionDetector.isConnectingToInternet()) {
             newsfeedViewModel.init();
-
-            /*newsfeedViewModel.getNewsRepository().observe(this, newsResponse -> {
-                List<Newsfeed_detail> feedList = newsResponse.getNewsfeed_detail();
-                if (newsfeedArrayList.size() > 0) {
-                    newsfeedArrayList.clear();
-                }
-                newsfeedArrayList.addAll(feedList);
-                String mediaPath = newsResponse.getMedia_path();
-                SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(NEWS_FEED_MEDIA_PATH,mediaPath);
-                editor.commit();
-                newsfeedAdapter.notifyDataSetChanged();
-            });*/
 
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
@@ -138,36 +169,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             });
         }
         setupRecyclerView();
-
-        if (!CommonFunction.isMyServiceRunning(getActivity(), BackgroundServiceToCompressMedia.class)) {
-            newsfeedViewModel.getNonCompressesMultimedia(getActivity());
-            newsfeedViewModel.getNonCompressedMedia().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
-                @Override
-                public void onChanged(List<UploadMultimedia> uploadMultimedia) {
-                    Log.d("count_of_non_compressed", uploadMultimedia.size() + "");
-                    if (uploadMultimedia.size() > 0) {
-                        newsfeedViewModel.startBackgroundService(getActivity(), uploadMultimedia);
-                        newsfeedViewModel.getIsUpdating().observe(getActivity(), new Observer<Boolean>() {
-                            @Override
-                            public void onChanged(@Nullable Boolean aBoolean) {
-                                if (aBoolean) {
-                                    showProgressBar();
-                                } else {
-                                    hideProgressBar();
-                                }
-                            }
-                        });
-                    } /*else {
-                        Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
-                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broadcastIntent);
-                    }*/
-                }
-            });
-        }
-
-        mReceiver = new UploadMultimediaBackgroundReceiver();
-        mFilter = new IntentFilter(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, mFilter);
 
 
     }
@@ -213,6 +214,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         public void onReceive(Context context, Intent intent) {
             // progressbarForSubmit.setVisibility(View.GONE);
             Log.d("service end", "service end");
+            newsfeedViewModel.stopBackgroundService(getActivity());
             uploadData();
            /* newsfeedViewModel.getMediaToUpload(getActivity());
             newsfeedViewModel.getMedia().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
@@ -226,13 +228,14 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     public void uploadData() {
+        Log.d("Service End upload","in upload");
         newsfeedViewModel.getFolderUniqueId(getActivity());
         newsfeedViewModel.getFolderIdList().observe(getActivity(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> folderUniqueIdList) {
                 for (int i = 0; i < folderUniqueIdList.size(); i++) {
-                    final String folderUniqueId = folderUniqueIdList.get(i).toString();
-                    newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueIdList.get(i).toString());
+                    final String folderUniqueId = folderUniqueIdList.get(i);
+                    newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueId);
                     newsfeedViewModel.getNewsFeedToUpload().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
                         @Override
                         public void onChanged(List<UploadMultimedia> uploadMultimedia) {
@@ -241,23 +244,31 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 if (!postText.isEmpty()) {
                                     uploadMultimedia.remove(0);
                                 }
-                                newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
-                                newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
+                         /*       newsfeedViewModel.getIsUploading().observe(getActivity(), new Observer<Boolean>() {
                                     @Override
-                                    public void onChanged(@Nullable LoginOrganizer result) {
-                                        if (result != null) {
+                                    public void onChanged(Boolean aBoolean) {
+                                        if(!aBoolean)
+                                        {*/
+                                            newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
+                                            newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
+                                                @Override
+                                                public void onChanged(@Nullable LoginOrganizer result) {
+                                                    if (result != null) {
 
-                                            newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
-                                            String status = result.getHeader().get(0).getType();
-                                            String message = result.getHeader().get(0).getMsg();
-                                            Snackbar.make(cl_main, message, Snackbar.LENGTH_LONG)
-                                                    .show();
-                                        } else {
-                                            Snackbar.make(cl_main, "Success", Snackbar.LENGTH_LONG)
-                                                    .show();
-                                        }
+                                                        newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
+                                                        String status = result.getHeader().get(0).getType();
+                                                        String message = result.getHeader().get(0).getMsg();
+                                                        Snackbar.make(cl_main, message, Snackbar.LENGTH_LONG)
+                                                                .show();
+                                                    } else {
+                                                        Snackbar.make(cl_main, "failure", Snackbar.LENGTH_LONG)
+                                                                .show();
+                                                    }
+                                                }
+                                            });
+                                       /* }
                                     }
-                                });
+                                });*/
                             }
                         }
                     });
