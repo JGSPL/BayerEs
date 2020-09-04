@@ -179,7 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin"
-                    android:text="sadsahdgahdgad"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
@@ -189,14 +189,13 @@
                     android:layout_height="250dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="0dp"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginBottom="5dp" />
 
                 <LinearLayout
                     android:id="@+id/ll_media_dots"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/vp_media"
-                    android:layout_marginBottom="20dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:orientation="horizontal" />
 
@@ -205,8 +204,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/vp_media"
                     android:gravity="center_vertical|center_horizontal"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/margin">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_no_of_likes"
@@ -215,7 +213,8 @@
                         android:layout_weight="1"
                         android:text="0 Likes"
                         android:textColor="@color/black"
-                        android:textSize="13dp" />
+                        android:textSize="13dp"
+                        android:padding="@dimen/margin"/>
 
 
                     <TextView
@@ -226,6 +225,7 @@
                         android:layout_weight="1"
                         android:gravity="right"
                         android:text="0 Comments"
+                        android:padding="@dimen/margin"
                         android:textColor="@color/black"
                         android:textSize="13dp" />
                 </LinearLayout>

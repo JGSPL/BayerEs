@@ -135,7 +135,6 @@ public class NewsfeedRepository {
                 if (response.isSuccessful()) {
                     reportPostUpdate.setValue(response.body());
                     newsRepository.getNewsFeed("1", "30", "1");
-
                 }
             }
 

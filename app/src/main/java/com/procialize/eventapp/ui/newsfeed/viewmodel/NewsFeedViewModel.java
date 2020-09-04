@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -29,6 +29,7 @@ import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompre
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
+
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -51,18 +52,18 @@ public class NewsFeedViewModel extends ViewModel {
     private MutableLiveData<Boolean> mIsUpdating = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsfeedReport = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsfeedHide = new MutableLiveData<>();
+    //private MutableLiveData<Boolean> mIsUploading = new MutableLiveData<>();
+    MutableLiveData<Boolean> isValid = new MutableLiveData<>();
 
-
-    public void init(String pagesize, String pagenumber)
-    {
+    public void init(String pagesize, String pagenumber) {
        /* if (mutableLiveData != null) {
             return;
         }*/
-    //private MutableLiveData<Boolean> mIsUploading = new MutableLiveData<>();
-    MutableLiveData<Boolean> isValid = new MutableLiveData<>();
-    public void init() {
+
+
         newsRepository = NewsfeedRepository.getInstance();
         mutableLiveData = newsRepository.getNewsFeed("1", pagesize, pagenumber);
+
     }
 
     public LiveData<FetchNewsfeedMultiple> getNewsRepository() {
@@ -202,7 +203,6 @@ public class NewsFeedViewModel extends ViewModel {
         blockuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                // ReportUserHide(eventid, feed.getAttendeeId(), token);
 
             }
@@ -233,7 +233,6 @@ public class NewsFeedViewModel extends ViewModel {
         Log.d("Bg Service","Stop Service");
         mIsUpdating.setValue(false);
     }
-
 
     //----------------Multimedia to compress------------------------
     public void getNonCompressesMultimedia(Activity activity) {
@@ -279,10 +278,6 @@ public class NewsFeedViewModel extends ViewModel {
         return multimediaUploadLiveData;
     }
 
-   /* public LiveData<Boolean> getIsUploading(){
-        return mIsUploading;
-    }*/
-
     //---------------Upldate uploaded flag to 1------------
     public void updateisUplodedIntoDB(Context context,String folderUniqueId) {
         NewsfeedRepository newsfeedRepository = NewsfeedRepository.getInstance();
@@ -296,18 +291,6 @@ public class NewsFeedViewModel extends ViewModel {
     //----------------------------------------------------------------
     public LiveData<Boolean> getIsUpdating(){
         return mIsUpdating;
-    }
-
-    public void validation(String postStatus) {
-        if (postStatus.isEmpty()) {
-            isValid.setValue(false);
-        } else {
-            isValid.setValue(true);
-        }
-    }
-
-    public MutableLiveData<Boolean> getIsValid() {
-        return isValid;
     }
 
     private void showratedialouge(final String from, final String id, final String attnId) {
@@ -379,6 +362,5 @@ public class NewsFeedViewModel extends ViewModel {
             }
         });
     }
-
 
 }

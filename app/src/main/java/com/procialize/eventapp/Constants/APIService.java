@@ -33,7 +33,7 @@ public interface APIService {
                                   @Field("otp") String otp);
 
 
-    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIxYjEyMzc3ZDQ1Zjc5OWFjYzAwY2EzOGQxN2RlNjc0OTgyNDQ1NTcyIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJ0aW1lIjoxNTk5MTEyNDI2LCJleHBpcnlfdGltZSI6MTU5OTExNjAyNn0.suwDnp-GbW-LXpeKpS6A53IYzu7N5_bayxqDHQO_EhM")
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
     @POST("NewsFeed_api/NewsFeedFetch")
     @FormUrlEncoded
     Call<FetchNewsfeedMultiple> NewsFeedFetchMultiple(@Field("event_id") String event_id,
@@ -41,14 +41,14 @@ public interface APIService {
                                                       @Field("pageNumber") String pageNumber);
 
     @Multipart
-    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIxYjEyMzc3ZDQ1Zjc5OWFjYzAwY2EzOGQxN2RlNjc0OTgyNDQ1NTcyIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJ0aW1lIjoxNTk5MTEyNDI2LCJleHBpcnlfdGltZSI6MTU5OTExNjAyNn0.suwDnp-GbW-LXpeKpS6A53IYzu7N5_bayxqDHQO_EhM")
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
     @POST("NewsFeed_api/PostNewsFeed")
     Call<LoginOrganizer> postNewsFeed(@Part("event_id") RequestBody description,
                                       @Part("post_content") RequestBody post_content,
                                       @Part List<MultipartBody.Part> files,
                                       @Part List<MultipartBody.Part> thumbFiles);
 
-    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIxYjEyMzc3ZDQ1Zjc5OWFjYzAwY2EzOGQxN2RlNjc0OTgyNDQ1NTcyIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJ0aW1lIjoxNTk5MTEyNDI2LCJleHBpcnlfdGltZSI6MTU5OTExNjAyNn0.suwDnp-GbW-LXpeKpS6A53IYzu7N5_bayxqDHQO_EhM")
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
     @POST("NewsFeed_api/PostComment")
     @FormUrlEncoded
     Call<LoginOrganizer> PostComment(
@@ -57,7 +57,21 @@ public interface APIService {
                                     @Field("comment_data") String comment_data,
                                     @Field("type") String Type);
 
-    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIxYjEyMzc3ZDQ1Zjc5OWFjYzAwY2EzOGQxN2RlNjc0OTgyNDQ1NTcyIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJ0aW1lIjoxNTk5MTEyNDI2LCJleHBpcnlfdGltZSI6MTU5OTExNjAyNn0.suwDnp-GbW-LXpeKpS6A53IYzu7N5_bayxqDHQO_EhM")
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
+    @POST("NewsFeed_api/DeleteComment")
+    @FormUrlEncoded
+    Call<LoginOrganizer> DeleteComment(
+                                    @Field("event_id") String event_id,
+                                    @Field("comment_id") String comment_id);
+
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
+    @POST("NewsFeed_api/CommentHide")
+    @FormUrlEncoded
+    Call<LoginOrganizer> CommentHide(
+                                    @Field("event_id") String event_id,
+                                    @Field("comment_id") String comment_id);
+
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
     @POST("NewsFeed_api/CommentFetch")
     @FormUrlEncoded
     Call<Comment> getComment(@Field("event_id") String event_id,
@@ -65,25 +79,33 @@ public interface APIService {
                                     @Field("pageSize") String pageSize,
                                     @Field("pageNumber") String pageNumber*/);
 
-    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJTaW5naCIsIm1vYmlsZSI6Ijk5ODczMTU2ODIiLCJlbWFpbCI6InByZWV0aUBwcm9jaWFsaXplLmluIiwicmVmcmVzaF90b2tlbiI6ImI3ZjkzOWExMjQ0MTU1MTc1OWNkYzIxYzgzNGM1OTc3OGRmODI1ZWYiLCJ1c2VyX3R5cGUiOiJBIiwidmVyaWZ5X290cCI6IjEiLCJwcm9maWxlX3BpYyI6IiBodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC9kZWZhdWx0LnBuZyIsInRpbWUiOjE1OTkxMDkxNjQsImV4cGlyeV90aW1lIjoxNTk5MTEyNzY0fQ.vci7HS2FtOh89l1AgRTKoilFl-rB-fBBsXO7neOsDX4")
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
     @POST("NewsFeed_api/PostHide")
     @FormUrlEncoded
     Call<LoginOrganizer> PostHide(@Field("event_id") String event_id,
                                                       @Field("news_feed_id") String news_feed_id);
 
-    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJTaW5naCIsIm1vYmlsZSI6Ijk5ODczMTU2ODIiLCJlbWFpbCI6InByZWV0aUBwcm9jaWFsaXplLmluIiwicmVmcmVzaF90b2tlbiI6ImI3ZjkzOWExMjQ0MTU1MTc1OWNkYzIxYzgzNGM1OTc3OGRmODI1ZWYiLCJ1c2VyX3R5cGUiOiJBIiwidmVyaWZ5X290cCI6IjEiLCJwcm9maWxlX3BpYyI6IiBodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC9kZWZhdWx0LnBuZyIsInRpbWUiOjE1OTkxMDkxNjQsImV4cGlyeV90aW1lIjoxNTk5MTEyNzY0fQ.vci7HS2FtOh89l1AgRTKoilFl-rB-fBBsXO7neOsDX4")
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
     @POST("NewsFeed_api/ReportPost")
     @FormUrlEncoded
     Call<LoginOrganizer> ReportPost(@Field("event_id") String event_id,
                                   @Field("news_feed_id") String news_feed_id,
                                     @Field("content") String content);
 
-    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJTaW5naCIsIm1vYmlsZSI6Ijk5ODczMTU2ODIiLCJlbWFpbCI6InByZWV0aUBwcm9jaWFsaXplLmluIiwicmVmcmVzaF90b2tlbiI6ImI3ZjkzOWExMjQ0MTU1MTc1OWNkYzIxYzgzNGM1OTc3OGRmODI1ZWYiLCJ1c2VyX3R5cGUiOiJBIiwidmVyaWZ5X290cCI6IjEiLCJwcm9maWxlX3BpYyI6IiBodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC9kZWZhdWx0LnBuZyIsInRpbWUiOjE1OTkxMDkxNjQsImV4cGlyeV90aW1lIjoxNTk5MTEyNzY0fQ.vci7HS2FtOh89l1AgRTKoilFl-rB-fBBsXO7neOsDX4")
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
     @POST("NewsFeed_api/ReportUser")
     @FormUrlEncoded
     Call<LoginOrganizer> ReportUser(@Field("event_id") String event_id,
                                     @Field("reported_user_id") String reported_user_id,
                                     @Field("news_feed_id") String news_feed_id,
+                                    @Field("content") String content);
+
+
+    @Headers("authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIyODU4ZjYwNmM0MzhjYjNhYWFhZDgxZmRkYjExMTAxYzVkOGIyODAxIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTE5NTU2NiwiZXhwaXJ5X3RpbWUiOjE1OTkxOTkxNjZ9.AZbmLYDr2P8l94uBgR-j4krryWNZZJzc6K_84mmbocg")
+    @POST("NewsFeed_api/ReportComment")
+    @FormUrlEncoded
+    Call<LoginOrganizer> ReportComment(@Field("event_id") String event_id,
+                                    @Field("comment_id") String comment_id,
                                     @Field("content") String content);
 
 

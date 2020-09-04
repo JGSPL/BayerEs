@@ -2,6 +2,7 @@ package com.procialize.eventapp.ui.newsFeedComment.view;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -9,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +24,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -49,6 +53,8 @@ import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.yanzhenjie.album.AlbumFile;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +69,7 @@ import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
 
     private static final String API_KEY = "TVG20YJW1MXR";
-    ImageView iv_gif, iv_back_gif, iv_likes;
+    ImageView iv_gif, iv_back_gif, iv_likes,iv_comments,iv_share;
     EditText et_comment, et_search_gif;
     FrameLayout fl_gif_container, fl_post_comment;
     LinearLayout ll_comment_container,
@@ -81,6 +87,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector connectionDetector;
     String commentText = "";
     BottomSheetDialog dialog;
+    Dialog contentDialog;
+    List<CommentDetail> commentList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +107,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         iv_gif = findViewById(R.id.iv_gif);
         iv_likes = findViewById(R.id.iv_likes);
+        iv_comments = findViewById(R.id.iv_comments);
+        iv_share = findViewById(R.id.iv_share);
         rv_gif = findViewById(R.id.rv_gif);
         rv_comments = findViewById(R.id.rv_comments);
         pb_emoji = findViewById(R.id.pb_emoji);
@@ -205,12 +215,15 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         if (newsfeed_detail.getLike_flag().equalsIgnoreCase("0")) {
-            iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
+            iv_likes.setImageDrawable(getResources().getDrawable(R.mipmap.inactive_like));
         } else {
             iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
            /* int color = Color.parseColor(colorActive);
             iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*/
         }
+
+        /*iv_comments.setImageDrawable(getResources().getDrawable(R.drawable.ic_comment));
+        iv_share.setImageDrawable(getResources().getDrawable(R.drawable.ic_share));*/
         getComments();
     }
 
@@ -221,7 +234,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 @Override
                 public void onChanged(Comment comment) {
                     if (comment != null) {
-                        List<CommentDetail> commentList = comment.getCommentDetails();
+                        commentList = comment.getCommentDetails();
                         setupCommentAdapter(commentList);
                         showCommentCount(commentList);
                     }
@@ -308,7 +321,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     });
 
                     //Get GIF images
-                    commentViewModel.GetGif(API_KEY,anon_id);
+                    commentViewModel.GetGif(API_KEY, anon_id);
                     commentViewModel.getGifList().observe(this, new Observer<GifResponse>() {
                         @Override
                         public void onChanged(GifResponse listMutableLiveData) {
@@ -413,10 +426,19 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-
     @Override
     public void onMoreSelected(final CommentDetail comment, final int position) {
-        dialog = new BottomSheetDialog(this);
+        if(connectionDetector.isConnectingToInternet()) {
+            openMoreOptions(this, newsfeed_detail, comment, position,ll_main);
+        }else
+        {
+            Snackbar.make(ll_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    public void openMoreOptions(Activity activity, Newsfeed_detail newsfeed_detail, CommentDetail commentDetail, int position, LinearLayout ll_main)
+    {
+        dialog = new BottomSheetDialog(activity);
         dialog.setContentView(R.layout.botomcommentdialouge);
         TextView reportTv = dialog.findViewById(R.id.reportTv);
         TextView hideTv = dialog.findViewById(R.id.hideTv);
@@ -451,29 +473,55 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //DeleteNewsFeedComment(event_id, newsfeed_detail.getNews_feed_id(), comment.getComment_id(), apikey, position);
+                commentViewModel.deleteComment(event_id, newsfeed_detail.getNews_feed_id(), commentDetail.getComment_id(),position);
+                commentViewModel.commentDelete().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
+                    @Override
+                    public void onChanged(LoginOrganizer loginOrganizer) {
+                        if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                            commentList.clear();
+                            dialog.dismiss();
+                            Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                            getComments();
+                        } else {
+                            dialog.dismiss();
+                            Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
         hideTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // ReportCommentHide(event_id, comment.getComment_id(), apikey, position);
+                commentViewModel.hideComment(event_id, commentDetail.getComment_id());
+                commentViewModel.commentHide().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
+                    @Override
+                    public void onChanged(LoginOrganizer loginOrganizer) {
+                        if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                            dialog.dismiss();
+                            Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                            getComments();
+                        } else {
+                            dialog.dismiss();
+                            Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // showratedialouge("reportPost", comment.getComment_id());
+                showContentdialouge("reportComment",commentDetail.getComment_id());
             }
         });
-
 
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showratedialouge("reportUser", comment.getAttendeeId());
+                showContentdialouge("reportUser",commentDetail.getComment_id());
             }
         });
 
@@ -485,5 +533,99 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         dialog.show();
+    }
+
+    private void showContentdialouge(final String from,final String commentId) {
+
+        contentDialog = new Dialog(this);
+        contentDialog.setContentView(R.layout.dialouge_msg_layout);
+        contentDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
+
+        contentDialog.show();
+
+
+        Button cancelbtn = contentDialog.findViewById(R.id.canclebtn);
+        Button ratebtn = contentDialog.findViewById(R.id.ratebtn);
+
+        final EditText etmsg = contentDialog.findViewById(R.id.etmsg);
+
+        final TextView counttv = contentDialog.findViewById(R.id.counttv);
+        final TextView nametv = contentDialog.findViewById(R.id.nametv);
+
+        nametv.setText("To " + "Admin");
+
+        etmsg.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                count = 250 - s.length();
+                counttv.setText(count + "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                contentDialog.dismiss();
+            }
+        });
+
+        ratebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (etmsg.getText().toString().length() > 0) {
+
+                    String content = StringEscapeUtils.escapeJava(etmsg.getText().toString());
+                    dialog.cancel();
+                    if (from.equalsIgnoreCase("reportUser")) {
+                        commentViewModel.reportUser("1", newsfeed_detail.getAttendee_id(), newsfeed_detail.getNews_feed_id(), content);
+                        commentViewModel.reportUserData().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
+                            @Override
+                            public void onChanged(LoginOrganizer loginOrganizer) {
+                                if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                                    contentDialog.dismiss();
+                                    Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                    getComments();
+                                } else {
+                                    contentDialog.dismiss();
+                                    Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                    else if (from.equalsIgnoreCase("reportComment")) {
+                        commentViewModel.reportComment("1", commentId, content);
+                        commentViewModel.reportCommentPostData().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
+                            @Override
+                            public void onChanged(LoginOrganizer loginOrganizer) {
+                                if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                                    contentDialog.dismiss();
+                                    Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                    getComments();
+                                } else {
+                                    contentDialog.dismiss();
+                                    Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
+                else {
+                    Snackbar.make(ll_main, "Please enter message", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

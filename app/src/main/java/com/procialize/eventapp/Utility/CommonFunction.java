@@ -124,7 +124,7 @@ public class CommonFunction {
             e.printStackTrace();
         }
 
-        SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
+        SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy hh:mm aa");
         String targetdatevalue= targetFormat.format(sourceDate);
         return targetdatevalue;
     }
