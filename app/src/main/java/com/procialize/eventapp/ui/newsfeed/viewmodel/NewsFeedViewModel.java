@@ -164,7 +164,7 @@ public class NewsFeedViewModel extends ViewModel {
                 }
 
             } else {
-                deleteTv.setVisibility(View.GONE);
+                deleteTv.setVisibility(View.VISIBLE);
                 editIV.setVisibility(View.GONE);
                 hideTv.setVisibility(View.VISIBLE);
                 reportTv.setVisibility(View.VISIBLE);
@@ -176,7 +176,9 @@ public class NewsFeedViewModel extends ViewModel {
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //PostDelete(eventid, feed.getNewsFeedId(), token, position);
+                newsfeedHide = newsRepository.DeletePost("1", feed.getNews_feed_id());
+                dialog.cancel();
+
             }
         });
 
@@ -303,7 +305,7 @@ public class NewsFeedViewModel extends ViewModel {
 
         myDialog = new Dialog(activityVar);
         myDialog.setContentView(R.layout.dialouge_msg_layout);
-        //myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
+        myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
 
         myDialog.show();
 
