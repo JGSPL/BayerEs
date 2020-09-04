@@ -42,7 +42,7 @@
                 android:layout_gravity="right|center"
                 android:layout_weight="1.5"
                 android:contentDescription="TODO"
-                android:src="@drawable/background_login" />
+                android:src="@drawable/ic_close" />
         </LinearLayout>
 
         <LinearLayout
@@ -125,7 +125,7 @@
                     android:background="@drawable/background_login"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
-                    android:textColor="@color/activetab"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     android:visibility="visible" />
 

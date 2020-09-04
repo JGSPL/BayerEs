@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +20,10 @@ import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.annotation.LongDef;
 import android.widget.ImageView;
 import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
@@ -67,8 +76,10 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ConnectionDetector connectionDetector;
     UploadMultimediaBackgroundReceiver mReceiver;
     IntentFilter mFilter;
-    ConstraintLayout cl_main;
+    public static ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
+    String reaction_type;
+
 
     public static NewsFeedFragment newInstance() {
 
@@ -214,7 +225,77 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
+        int count = Integer.parseInt(feed.getTotal_likes());
 
+        Drawable drawables = likeimage.getDrawable();
+        Bitmap bitmap = ((BitmapDrawable) drawables).getBitmap();
+
+        Bitmap bitmap2 = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_like)).getBitmap();
+
+
+//        if(!drawables[2].equals(R.drawable.ic_like)){
+        if (bitmap != bitmap2) {
+            reaction_type = "";
+            feed.setLike_flag("");
+            likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
+//            likeimage.setBackgroundResource(R.drawable.ic_like);
+            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
+                newsfeedViewModel.openLikeimg(eventid,feed.getNews_feed_id());
+            } else {
+                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+            try {
+
+                if (count > 0) {
+                    count = count - 1;
+                    feed.setTotal_likes(String.valueOf(count));
+
+                    if (count == 1) {
+                        liketext.setText(count + " Like");
+                    } else {
+                        liketext.setText(count + " Likes");
+                    }
+
+                    feed.setTotal_likes(String.valueOf(count));
+
+                } else {
+                    liketext.setText("0" + " Likes");
+                    feed.setTotal_likes("0");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            feed.setLike_flag("1");
+            likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
+           /*int color = Color.parseColor(colorActive);
+            likeimage.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*/
+            reaction_type = "0";
+            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
+                newsfeedViewModel.openLikeimg(eventid,feed.getNews_feed_id());
+            } else {
+                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+
+                count = count + 1;
+                if (count == 1) {
+                    liketext.setText(count + " Like");
+                } else {
+                    liketext.setText(count + " Likes");
+                }
+
+                feed.setTotal_likes(String.valueOf(count));
+
+                feed.setTotal_likes(String.valueOf(count));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override

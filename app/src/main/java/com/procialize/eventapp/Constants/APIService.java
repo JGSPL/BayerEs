@@ -20,6 +20,8 @@ import retrofit2.http.Part;
 
 public interface APIService {
 
+     String HeaderToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJTaW5naCIsIm1vYmlsZSI6Ijk5ODczMTU2ODIiLCJlbWFpbCI6InByZWV0aUBwcm9jaWFsaXplLmluIiwicmVmcmVzaF90b2tlbiI6IjVlMzE1ZWJlODZkYzAwZGY3NjAwNjY4NWM4OGZhZWJiNWIwNDA0MWQiLCJ1c2VyX3R5cGUiOiJBIiwidmVyaWZ5X290cCI6IjEiLCJwcm9maWxlX3BpYyI6IiBodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC9kZWZhdWx0LnBuZyIsImlzX2dvZCI6IjAiLCJ0aW1lIjoxNTk5MjAyNDI1LCJleHBpcnlfdGltZSI6MTU5OTIwNjAyNX0.7KeQtJX8DQhQltL2QQ-jCxd7OGFkau2x67g_SOb5CnA";
+
     @POST("event_api_call/commonLogin")
     @FormUrlEncoded
     Call<LoginOrganizer> LoginWithOrganizer(@Field("organizer_id") String organizer_id,
@@ -108,5 +110,17 @@ public interface APIService {
                                     @Field("comment_id") String comment_id,
                                     @Field("content") String content);
 
+    @Headers("authorization: "+HeaderToken)
+    @POST("NewsFeed_api/PostLike")
+    @FormUrlEncoded
+    Call<LoginOrganizer> PostLike(@Field("event_id") String event_id,
+                                    @Field("news_feed_id") String news_feed_id);
+
+
+    @Headers("authorization: "+HeaderToken)
+    @POST("NewsFeed_api/DeletePost")
+    @FormUrlEncoded
+    Call<LoginOrganizer> DeletePost(@Field("event_id") String event_id,
+                                  @Field("news_feed_id") String news_feed_id);
 
 }

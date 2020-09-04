@@ -3,12 +3,14 @@ package com.procialize.eventapp.ui.newsfeed.networking;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
@@ -146,6 +148,11 @@ public class NewsfeedRepository {
         });
         return reportPostUpdate;
     }
+    public LiveData<LoginOrganizer> getPostActivity() {
+        return reportPostUpdate;
+    }
+
+
 
     public MutableLiveData<LoginOrganizer> ReportPost(String id, String news_feed_id, String content) {
         newsfeedApi = ApiUtils.getAPIService();
@@ -175,6 +182,52 @@ public class NewsfeedRepository {
         newsfeedApi = ApiUtils.getAPIService();
 
         newsfeedApi.ReportUser(id,attn_id, news_feed_id,content).enqueue(new Callback<LoginOrganizer>() {
+            @Override
+            public void onResponse(Call<LoginOrganizer> call,
+                                   Response<LoginOrganizer> response) {
+                if (response.isSuccessful()) {
+                    reportPostUpdate.setValue(response.body());
+                    newsRepository.getNewsFeed("1", "30", "1");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                reportPostUpdate.setValue(null);
+
+            }
+        });
+        return reportPostUpdate;
+    }
+    public MutableLiveData<LoginOrganizer> DeletePost(String id, String news_feed_id) {
+        newsfeedApi = ApiUtils.getAPIService();
+
+        newsfeedApi.DeletePost(id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
+            @Override
+            public void onResponse(Call<LoginOrganizer> call,
+                                   Response<LoginOrganizer> response) {
+                if (response.isSuccessful()) {
+                    reportPostUpdate.setValue(response.body());
+                    newsRepository.getNewsFeed("1", "30", "1");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                reportPostUpdate.setValue(null);
+
+            }
+        });
+        return reportPostUpdate;
+    }
+
+
+    public MutableLiveData<LoginOrganizer> PostLike(String id, String news_feed_id) {
+        newsfeedApi = ApiUtils.getAPIService();
+
+        newsfeedApi.PostLike(id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {

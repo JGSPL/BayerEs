@@ -16,7 +16,7 @@
         <TextView
             android:id="@+id/deleteTv"
             android:gravity="center"
-            android:padding="@dimen/five_dp_padding"
+            android:padding="@dimen/padding"
             android:textSize="@dimen/textsizenormal"
             android:textColor="@color/black"
             android:text="@string/deletecomment"
@@ -31,7 +31,7 @@
         <TextView
             android:id="@+id/reportTv"
             android:gravity="center"
-            android:padding="@dimen/five_dp_padding"
+            android:padding="@dimen/padding"
             android:textSize="@dimen/textsizenormal"
             android:textColor="@color/black"
             android:text="@string/reportcomment"
@@ -47,7 +47,7 @@
         <TextView
             android:id="@+id/hideTv"
             android:gravity="center"
-            android:padding="@dimen/five_dp_padding"
+            android:padding="@dimen/padding"
             android:textSize="@dimen/textsizenormal"
             android:textColor="@color/black"
             android:text="@string/hidecomment"
@@ -62,7 +62,7 @@
         <TextView
             android:id="@+id/reportuserTv"
             android:gravity="center"
-            android:padding="@dimen/five_dp_padding"
+            android:padding="@dimen/padding"
             android:textSize="@dimen/textsizenormal"
             android:textColor="@color/black"
             android:text="@string/reportuser"
@@ -77,7 +77,7 @@
         <TextView
             android:id="@+id/cancelTv"
             android:gravity="center"
-            android:padding="@dimen/five_dp_padding"
+            android:padding="@dimen/padding"
             android:textSize="@dimen/textsizenormal"
             android:textColor="@color/black"
             android:text="@string/cancel"
