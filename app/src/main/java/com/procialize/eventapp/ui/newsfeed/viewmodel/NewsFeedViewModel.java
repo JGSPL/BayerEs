@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -24,13 +29,16 @@ import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.io.Serializable;
 import java.util.List;
 
 
 public class NewsFeedViewModel extends ViewModel {
-    Dialog dialog;
+    Dialog dialog, myDialog;
     private String ATTENDEE_STATUS = "0";
+    private Activity activityVar;
 
     private MutableLiveData<FetchNewsfeedMultiple> mutableLiveData = new MutableLiveData<>();
     private NewsfeedRepository newsRepository;
@@ -44,12 +52,13 @@ public class NewsFeedViewModel extends ViewModel {
     MutableLiveData<LoginOrganizer> newsfeedHide = new MutableLiveData<>();
 
 
-    public void init() {
+    public void init(String pagesize, String pagenumber)
+    {
        /* if (mutableLiveData != null) {
             return;
         }*/
         newsRepository = NewsfeedRepository.getInstance();
-        mutableLiveData = newsRepository.getNewsFeed("1", "30", "1");
+        mutableLiveData = newsRepository.getNewsFeed("1", pagesize, pagenumber);
     }
 
     public LiveData<FetchNewsfeedMultiple> getNewsRepository() {
@@ -86,9 +95,7 @@ public class NewsFeedViewModel extends ViewModel {
 
     ///------------------Open More dot features------------------
     public void openMoreDetails(Activity activity, Newsfeed_detail feed, int position) {
-        /*activity.startActivity(new Intent(activity, LikeActivity.class)
-                .putExtra("Newsfeed_detail", (Serializable) feed)
-                .putExtra("position", "" + position));*/
+        activityVar = activity;
         dialog = new BottomSheetDialog(activity);
         dialog.setContentView(R.layout.botomfeeddialouge);
 
@@ -176,7 +183,7 @@ public class NewsFeedViewModel extends ViewModel {
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showratedialouge("reportPost", feed.getNewsFeedId());
+                showratedialouge("reportPost", feed.getNews_feed_id(),feed.getAttendee_id());
             }
         });
 
@@ -184,7 +191,7 @@ public class NewsFeedViewModel extends ViewModel {
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showratedialouge("reportUser", feed.getAttendeeId());
+                showratedialouge("reportUser",feed.getNews_feed_id(), feed.getAttendee_id());
             }
         });
 
@@ -273,5 +280,76 @@ public class NewsFeedViewModel extends ViewModel {
     public LiveData<Boolean> getIsUpdating(){
         return mIsUpdating;
     }
+
+    private void showratedialouge(final String from, final String id, final String attnId) {
+
+        myDialog = new Dialog(activityVar);
+        myDialog.setContentView(R.layout.dialouge_msg_layout);
+        myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
+
+        myDialog.show();
+
+
+        Button cancelbtn = myDialog.findViewById(R.id.canclebtn);
+        Button ratebtn = myDialog.findViewById(R.id.ratebtn);
+
+        final EditText etmsg = myDialog.findViewById(R.id.etmsg);
+
+        final TextView counttv = myDialog.findViewById(R.id.counttv);
+        final TextView nametv = myDialog.findViewById(R.id.nametv);
+
+        nametv.setText("To " + "Admin");
+
+        etmsg.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                count = 250 - s.length();
+                counttv.setText(count + "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+            }
+        });
+
+        ratebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (etmsg.getText().toString().length() > 0) {
+
+                    String msg = StringEscapeUtils.escapeJava(etmsg.getText().toString());
+                    dialog.cancel();
+                    if (from.equalsIgnoreCase("reportPost")) {
+                        newsfeedHide = newsRepository.ReportPost("1", id, msg);
+                        myDialog.cancel();
+                    }else if (from.equalsIgnoreCase("reportUser")) {
+                        newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
+                        myDialog.cancel();
+                    }
+                }
+
+                else {
+                    Toast.makeText(activityVar, "Enter Something", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
 }

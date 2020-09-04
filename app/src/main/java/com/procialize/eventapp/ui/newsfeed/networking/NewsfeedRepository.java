@@ -157,6 +157,32 @@ public class NewsfeedRepository {
                                    Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
                     reportPostUpdate.setValue(response.body());
+                    newsRepository.getNewsFeed("1", "30", "1");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                reportPostUpdate.setValue(null);
+
+            }
+        });
+        return reportPostUpdate;
+    }
+
+
+    public MutableLiveData<LoginOrganizer> ReportUser(String id,String attn_id, String news_feed_id, String content) {
+        newsfeedApi = ApiUtils.getAPIService();
+
+        newsfeedApi.ReportUser(id,attn_id, news_feed_id,content).enqueue(new Callback<LoginOrganizer>() {
+            @Override
+            public void onResponse(Call<LoginOrganizer> call,
+                                   Response<LoginOrganizer> response) {
+                if (response.isSuccessful()) {
+                    reportPostUpdate.setValue(response.body());
+                    newsRepository.getNewsFeed("1", "30", "1");
+
                 }
             }
 
