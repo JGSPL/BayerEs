@@ -15,9 +15,9 @@ public class Comment {
 
     @SerializedName("detailpreencrypt")
     @Expose
-    List<CommentDetail> commentDetails; @
+    List<CommentDetail> commentDetails;
 
-    SerializedName("detailpreencrypt")
+    @SerializedName("total_records")
     @Expose
     String total_records;
 

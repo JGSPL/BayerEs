@@ -12,11 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import android.widget.ImageView;
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -40,23 +40,18 @@ import com.procialize.eventapp.ui.home.viewmodel.HomeViewModel;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
-import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
 import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
-import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAdapterListner, View.OnClickListener {
     ArrayList<Newsfeed_detail> newsfeedArrayList = new ArrayList<>();
@@ -74,15 +69,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     IntentFilter mFilter;
     ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
-    int totalPages = 0;
-    int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 2;
-    private int currentPage = PAGE_START;
-    private boolean isLoading = false;
-    private boolean isLastPage = false;
-    ConnectionDetector cd ;
-    LinearLayoutManager linearLayoutManager;
-    private static int TOTAL_PAGES = 5;
+
     public static NewsFeedFragment newInstance() {
 
         return new NewsFeedFragment();
@@ -91,6 +78,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
+
+        Log.d("On news feed fragment","Yes");
 
         root = inflater.inflate(R.layout.fragment_home, container, false);
         cl_main = root.findViewById(R.id.cl_main);
@@ -113,51 +102,10 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
         init();
 
-        return root;
-    }
-
-    void init() {
-        newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
-        if (connectionDetector.isConnectingToInternet()) {
-            newsfeedViewModel.init("","");
-
-            /*newsfeedViewModel.getNewsRepository().observe(this, newsResponse -> {
-                List<Newsfeed_detail> feedList = newsResponse.getNewsfeed_detail();
-                if (newsfeedArrayList.size() > 0) {
-                    newsfeedArrayList.clear();
-                }
-                newsfeedArrayList.addAll(feedList);
-                String mediaPath = newsResponse.getMedia_path();
-                SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(NEWS_FEED_MEDIA_PATH,mediaPath);
-                editor.commit();
-                newsfeedAdapter.notifyDataSetChanged();
-            });*/
-
-            newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
-                @Override
-                public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
-                    List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
-                    if (newsfeedArrayList.size() > 0) {
-                        newsfeedArrayList.clear();
-                    }
-                    newsfeedArrayList.addAll(feedList);
-                    String mediaPath = fetchNewsfeedMultiple.getMedia_path();
-                    SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString(NEWS_FEED_MEDIA_PATH, mediaPath);
-                    editor.commit();
-
-                    TOTAL_PAGES= Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
-                    newsfeedAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-        setupRecyclerView();
-
         if (!CommonFunction.isMyServiceRunning(getActivity(), BackgroundServiceToCompressMedia.class)) {
-            newsfeedViewModel.getNonCompressesMultimedia(getActivity());
+           /* Intent intent = new Intent(getActivity(), BackgroundServiceToCompressMedia.class);
+            getActivity().startService(intent);*/
+            /*newsfeedViewModel.getNonCompressesMultimedia(getActivity());
             newsfeedViewModel.getNonCompressedMedia().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
                 @Override
                 public void onChanged(List<UploadMultimedia> uploadMultimedia) {
@@ -174,58 +122,57 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 }
                             }
                         });
-                    } /*else {
+                    } *//*else {
                         Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
                         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(broadcastIntent);
-                    }*/
+                    }*//*
                 }
-            });
+            });*/
         }
-
+        newsfeedViewModel.startBackgroundService(getActivity());
+        newsfeedViewModel.getIsUpdating().observe(getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean) {
+                    showProgressBar();
+                } else {
+                    hideProgressBar();
+                }
+            }
+        });
         mReceiver = new UploadMultimediaBackgroundReceiver();
         mFilter = new IntentFilter(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, mFilter);
-        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recycler_feed.setLayoutManager(linearLayoutManager);
-        recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-            @Override
-            protected void loadMoreItems() {
-                isLoading = true;
-                currentPage += 1;
 
-                loadNextPage();
-            }
-
-            @Override
-            public int getTotalPageCount() {
-                return TOTAL_PAGES;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
-
-            @Override
-            public boolean isLoading() {
-                return isLoading;
-            }
-        });
-
-
-
+        return root;
     }
 
-    private void loadNextPage() {
-        Log.d("loadNextPage", "loadNextPage: " + currentPage);
+    void init() {
+        if (connectionDetector.isConnectingToInternet()) {
+            newsfeedViewModel.init("","");
 
-        newsfeedViewModel.init(String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
+            newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
+                @Override
+                public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
+                    List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
+                    if (newsfeedArrayList.size() > 0) {
+                        newsfeedArrayList.clear();
+                    }
+                    newsfeedArrayList.addAll(feedList);
+                    String mediaPath = fetchNewsfeedMultiple.getMedia_path();
+                    SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(NEWS_FEED_MEDIA_PATH, mediaPath);
+                    editor.commit();
+                    newsfeedAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+        setupRecyclerView();
+
     }
-
 
     private void setupRecyclerView() {
-
-
         if (newsfeedAdapter == null) {
             newsfeedAdapter = new NewsFeedAdapter(getContext(), newsfeedArrayList, NewsFeedFragment.this);
             recycler_feed.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -284,6 +231,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         public void onReceive(Context context, Intent intent) {
             // progressbarForSubmit.setVisibility(View.GONE);
             Log.d("service end", "service end");
+            newsfeedViewModel.stopBackgroundService(getActivity());
             uploadData();
            /* newsfeedViewModel.getMediaToUpload(getActivity());
             newsfeedViewModel.getMedia().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
@@ -297,13 +245,14 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     public void uploadData() {
+        Log.d("Service End upload","in upload");
         newsfeedViewModel.getFolderUniqueId(getActivity());
         newsfeedViewModel.getFolderIdList().observe(getActivity(), new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> folderUniqueIdList) {
                 for (int i = 0; i < folderUniqueIdList.size(); i++) {
-                    final String folderUniqueId = folderUniqueIdList.get(i).toString();
-                    newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueIdList.get(i).toString());
+                    final String folderUniqueId = folderUniqueIdList.get(i);
+                    newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueId);
                     newsfeedViewModel.getNewsFeedToUpload().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
                         @Override
                         public void onChanged(List<UploadMultimedia> uploadMultimedia) {
@@ -312,6 +261,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 if (!postText.isEmpty()) {
                                     uploadMultimedia.remove(0);
                                 }
+                         /*       newsfeedViewModel.getIsUploading().observe(getActivity(), new Observer<Boolean>() {
+                                    @Override
+                                    public void onChanged(Boolean aBoolean) {
+                                        if(!aBoolean)
+                                        {*/
                                 newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
                                 newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
                                     @Override
@@ -324,11 +278,14 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                             Snackbar.make(cl_main, message, Snackbar.LENGTH_LONG)
                                                     .show();
                                         } else {
-                                            Snackbar.make(cl_main, "Success", Snackbar.LENGTH_LONG)
+                                            Snackbar.make(cl_main, "failure", Snackbar.LENGTH_LONG)
                                                     .show();
                                         }
                                     }
                                 });
+                                       /* }
+                                    }
+                                });*/
                             }
                         }
                     });

@@ -262,37 +262,38 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_post:
                 if (cd.isConnectingToInternet()) {
                     String postText = et_post.getText().toString().trim();
+                    btn_post.setEnabled(false);
                     if (resultList.size() == 0) {
                         postNewsFeedViewModel.validation(postText);
                         postNewsFeedViewModel.getIsValid().observe(this, new Observer<Boolean>() {
                             @Override
                             public void onChanged(Boolean aBoolean) {
-                                if(aBoolean)
-                                {
+                                if (aBoolean) {
                                     postNewsFeedViewModel.sendPost(event_id, postText, resultList);
                                     postNewsFeedViewModel.getStatus().observe(PostNewActivity.this, new Observer<LoginOrganizer>() {
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {
                                             if (result != null) {
+                                                btn_post.setEnabled(true);
                                                 String status = result.getHeader().get(0).getType();
                                                 String message = result.getHeader().get(0).getMsg();
                                                 Snackbar.make(linear, message, Snackbar.LENGTH_LONG)
                                                         .show();
+                                                postNewsFeedViewModel.startNewsFeedFragment(PostNewActivity.this);
                                             } else {
-                                                Snackbar.make(linear, "Success", Snackbar.LENGTH_LONG)
+                                                btn_post.setEnabled(true);
+                                                Snackbar.make(linear, "Error occured, Please try after some time..", Snackbar.LENGTH_LONG)
                                                         .show();
                                             }
                                         }
                                     });
-                                }
-                                else
-                                {
+                                } else {
+                                    btn_post.setEnabled(true);
                                     Snackbar.make(linear, "Please enter some status to post", Snackbar.LENGTH_LONG)
                                             .show();
                                 }
                             }
                         });
-
                     } else {
                         try {
                             /*eventAppDB = EventAppDB.getDatabase(this);
@@ -314,7 +315,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
                                 eventAppDB.uploadMultimediaDao().insertMultimediaToUpload(uploadMultimedia);
                             }*/
-                            postNewsFeedViewModel.insertMultimediaIntoDB(this,postText,resultList);
+                            postNewsFeedViewModel.insertMultimediaIntoDB(this, postText, resultList);
                             postNewsFeedViewModel.getDBStatus().observe(this, new Observer<Boolean>() {
                                 @Override
                                 public void onChanged(Boolean aBoolean) {
@@ -328,6 +329,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     }
                 } else {
+                    btn_post.setEnabled(true);
                     Snackbar.make(linear, "No Internet Connection", Snackbar.LENGTH_LONG)
                             .show();
                 }

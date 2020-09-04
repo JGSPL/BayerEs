@@ -34,10 +34,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BackgroundServiceToCompressMedia extends IntentService {
     String TAG = "BackgroundServiceToCompressMedia";
-    private ArrayList<UploadMultimedia> mediaList;
+    private List<UploadMultimedia> mediaList;
     private FFmpeg ffmpeg;
 
     public BackgroundServiceToCompressMedia() {
@@ -49,7 +50,9 @@ public class BackgroundServiceToCompressMedia extends IntentService {
         Log.d("BackgroundService", "Service Started");
         Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
         loadFFMpegBinary();
-        mediaList = (ArrayList<UploadMultimedia>) intent.getSerializableExtra("MediaList");
+        EventAppDB eventAppDB = EventAppDB.getDatabase(this);
+        mediaList = eventAppDB.uploadMultimediaDao().getNonCompressesMultimediaBg();
+        //mediaList = (ArrayList<UploadMultimedia>) intent.getSerializableExtra("MediaList");
 
         if (mediaList.size() > 0) {
 
@@ -72,6 +75,11 @@ public class BackgroundServiceToCompressMedia extends IntentService {
 
             }
 
+        }
+        else
+        {
+            Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
         }
         Log.d("countOfMedia", String.valueOf(mediaList.size()));
     }
@@ -202,6 +210,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
     private void compressImage(String media_file, int mediaListposition) {
         try {
             Uri myUri = Uri.parse(media_file);
+            Log.d("Bg Service compression",mediaListposition+"");
 
             File auxFile = new File(myUri.toString());
             ExifInterface exif = new ExifInterface(auxFile.getPath());
@@ -221,7 +230,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
             mat.postRotate(angle);
 
             String root = Environment.getExternalStorageDirectory().toString();
-            File moviesDir = new File(root + "/VideoCompressDemo/originalImage/");
+            File moviesDir = new File(root +Constant.FOLDER_DIRECTORY+Constant.IMAGE_DIRECTORY);
             String path = myUri.getPath();
             int cut = path.lastIndexOf('/');
             if (cut != -1) {

@@ -21,6 +21,14 @@ public class CommentDetail {
     @Expose
     private String profile_picture;
 
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    @SerializedName("dateTime")
+    @Expose
+    private String dateTime;
+
     public String getComment_id() {
         return comment_id;
     }

@@ -31,6 +31,7 @@ public class GifRepository {
         }
         return gifRepository;
     }
+
     public MutableLiveData<String> getGifId(String key) {
         mAPItenorService = ApiUtils.getTenorAPIService();
         mAPItenorService.GifIdPost(key).enqueue(new Callback<GifId>() {
@@ -41,15 +42,17 @@ public class GifRepository {
                     Log.i("hit", "post submitted to API." + response.body().toString());
                     anon_id.setValue(response.body().getAnon_id());
                 } else {
-                   // Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_SHORT).show();
-                  //  emojibar.setVisibility(View.GONE);
+                    // Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_SHORT).show();
+                    //  emojibar.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<GifId> call, Throwable t) {
+                anon_id.setValue(null);
+                Log.d("failure","failure");
                 //Toast.makeText(getApplicationContext(), "Low network or no network", Toast.LENGTH_SHORT).show();
-               // emojibar.setVisibility(View.GONE);
+                // emojibar.setVisibility(View.GONE);
             }
         });
         return anon_id;

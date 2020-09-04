@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -17,6 +18,9 @@ public interface UploadMultimediaDao {
 
     @Query("SELECT * from tbl_upload_multimedia WHERE fld_compressedPath='' and fld_post_status=='' and fld_mime_type!='image/gif'")
     LiveData<List<UploadMultimedia>> getNonCompressesMultimedia();
+
+    @Query("SELECT * from tbl_upload_multimedia WHERE fld_compressedPath='' and fld_post_status=='' and fld_mime_type!='image/gif'")
+    List<UploadMultimedia> getNonCompressesMultimediaBg();
 
     @Query("SELECT fld_folderUniqueId from tbl_upload_multimedia GROUP BY fld_folderUniqueId")
     LiveData<List<String>> selectFolderUniqueId();
@@ -35,4 +39,7 @@ public interface UploadMultimediaDao {
 
     @Query("UPDATE tbl_upload_multimedia SET fld_is_uploaded='1' WHERE fld_folderUniqueId = :folderUniqueId")
     void updateIsUploded(String folderUniqueId);
+
+/*    @Query("DELETE FROM tbl_upload_multimedia WHERE fld_folderUniqueId = :folderUniqueId")
+    void updateIsUploded(String folderUniqueId);*/
 }

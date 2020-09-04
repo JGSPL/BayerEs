@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +30,7 @@ import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
 
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.Serializable;
@@ -50,15 +52,18 @@ public class NewsFeedViewModel extends ViewModel {
     private MutableLiveData<Boolean> mIsUpdating = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsfeedReport = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsfeedHide = new MutableLiveData<>();
+    //private MutableLiveData<Boolean> mIsUploading = new MutableLiveData<>();
+    MutableLiveData<Boolean> isValid = new MutableLiveData<>();
 
-
-    public void init(String pagesize, String pagenumber)
-    {
+    public void init(String pagesize, String pagenumber) {
        /* if (mutableLiveData != null) {
             return;
         }*/
+
+
         newsRepository = NewsfeedRepository.getInstance();
         mutableLiveData = newsRepository.getNewsFeed("1", pagesize, pagenumber);
+
     }
 
     public LiveData<FetchNewsfeedMultiple> getNewsRepository() {
@@ -198,7 +203,6 @@ public class NewsFeedViewModel extends ViewModel {
         blockuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                // ReportUserHide(eventid, feed.getAttendeeId(), token);
 
             }
@@ -217,16 +221,22 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //--------------Start Background service to compress media------------------------
-    public void startBackgroundService(Activity activity, List<UploadMultimedia> uploadMultimedia) {
+    public void startBackgroundService(Activity activity){//, List<UploadMultimedia> uploadMultimedia) {
+        Log.d("Bg Service","Start Service");
         mIsUpdating.setValue(true);
         Intent intent = new Intent(activity, BackgroundServiceToCompressMedia.class);
-        intent.putExtra("MediaList", (Serializable) uploadMultimedia);
+        //intent.putExtra("MediaList", (Serializable) uploadMultimedia);
         activity.startService(intent);
     }
 
+    public void stopBackgroundService(Activity activity){//, List<UploadMultimedia> uploadMultimedia) {
+        Log.d("Bg Service","Stop Service");
+        mIsUpdating.setValue(false);
+    }
 
     //----------------Multimedia to compress------------------------
     public void getNonCompressesMultimedia(Activity activity) {
+       // mIsUploading.setValue(false);
         EventAppDB eventAppDB = EventAppDB.getDatabase(activity);
         nonCompressedMultimediaMutableLiveData = eventAppDB.uploadMultimediaDao().getNonCompressesMultimedia();
     }
@@ -257,11 +267,13 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //-------------call to upload newsfeed---------------------
-    public void sendPost(String event_id, String status, List<UploadMultimedia> resultList) {//, String[] mediaFile, String[] mediaFileThumb) {
+    public void sendPost(String event_id, String status, List<UploadMultimedia> resultList) {
+       // mIsUploading.setValue(true);
         NewsfeedRepository postNewsFeedRepository = NewsfeedRepository.getInstance();
         multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(event_id, status, resultList);//,mediaFile,mediaFileThumb);
     }
     public MutableLiveData<LoginOrganizer> getPostStatus() {
+       // mIsUploading.setValue(false);
         mIsUpdating.setValue(false);
         return multimediaUploadLiveData;
     }
@@ -285,7 +297,7 @@ public class NewsFeedViewModel extends ViewModel {
 
         myDialog = new Dialog(activityVar);
         myDialog.setContentView(R.layout.dialouge_msg_layout);
-        myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
+        //myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
 
         myDialog.show();
 
@@ -350,6 +362,5 @@ public class NewsFeedViewModel extends ViewModel {
             }
         });
     }
-
 
 }

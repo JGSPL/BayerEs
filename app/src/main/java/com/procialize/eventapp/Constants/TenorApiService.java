@@ -9,9 +9,6 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-/**
- * Created by Naushad on 1/30/2018.
- */
 
 public interface TenorApiService {
 

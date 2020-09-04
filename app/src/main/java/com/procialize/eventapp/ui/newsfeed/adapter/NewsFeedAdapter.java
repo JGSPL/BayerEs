@@ -153,6 +153,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                     listener.onCommentClick(feed_detail.get(position), position);
                 }
             });
+            holder.iv_comments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onCommentClick(feed_detail.get(position), position);
+                }
+            });
             holder.tv_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -185,7 +191,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             } else {
                 holder.tv_status.setVisibility(View.GONE);
             }
-
 
 
 
@@ -263,7 +268,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         TextView nameTv;
         TextView designationTv, tv_concat, companyTv, dateTv, tv_status, testdata;
         TextView tv_like, tv_comment;
-        ImageView moreIV, profileIV, iv_like;
+        ImageView moreIV, profileIV,iv_comments, iv_like;
         ProgressBar progressView;
         ViewPager vp_slider;
         LinearLayout ll_dots, ll_bottom;
@@ -275,6 +280,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             nameTv = itemView.findViewById(R.id.nameTv);
             designationTv = itemView.findViewById(R.id.designationTv);
             moreIV = itemView.findViewById(R.id.moreIV);
+            iv_comments = itemView.findViewById(R.id.iv_comments);
             nameTv = itemView.findViewById(R.id.nameTv);
             companyTv = itemView.findViewById(R.id.companyTv);
             designationTv = itemView.findViewById(R.id.designationTv);
