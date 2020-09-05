@@ -313,8 +313,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         public void onReceive(Context context, Intent intent) {
             // progressbarForSubmit.setVisibility(View.GONE);
             Log.d("service end", "service end");
-            newsfeedViewModel.stopBackgroundService(getActivity());
-            uploadData();
+            try {
+                newsfeedViewModel.stopBackgroundService(getActivity());
+                uploadData();
            /* newsfeedViewModel.getMediaToUpload(getActivity());
             newsfeedViewModel.getMedia().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
                 @Override
@@ -323,58 +324,64 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                     uploadData();
                 }
             });*/
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
     public void uploadData() {
         Log.d("Service End upload","in upload");
-        newsfeedViewModel.getFolderUniqueId(getActivity());
-        newsfeedViewModel.getFolderIdList().observe(getActivity(), new Observer<List<String>>() {
-            @Override
-            public void onChanged(List<String> folderUniqueIdList) {
-                for (int i = 0; i < folderUniqueIdList.size(); i++) {
-                    final String folderUniqueId = folderUniqueIdList.get(i);
-                    newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueId);
-                    newsfeedViewModel.getNewsFeedToUpload().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
-                        @Override
-                        public void onChanged(List<UploadMultimedia> uploadMultimedia) {
-                            if (uploadMultimedia.size() > 0) {
-                                String postText = uploadMultimedia.get(0).getPost_status();
-                                if (!postText.isEmpty()) {
-                                    uploadMultimedia.remove(0);
-                                }
-
-                                newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
-                                newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
-                                    @Override
-                                    public void onChanged(@Nullable LoginOrganizer result) {
-                                        if (result != null) {
-
-                                            newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
-                                            String status = result.getHeader().get(0).getType();
-                                            String message = result.getHeader().get(0).getMsg();
-                                            Snackbar.make(cl_main, message, Snackbar.LENGTH_LONG)
-                                                    .show();
-                                        } else {
-                                            Snackbar.make(cl_main, "failure", Snackbar.LENGTH_LONG)
-                                                    .show();
-                                        }
-
-
-                                        if (newsfeedViewModel != null && newsfeedViewModel.getPostStatus().hasObservers()) {
-                                            newsfeedViewModel.getPostStatus().removeObservers(getActivity());
-                                        }
+        if(newsfeedViewModel!=null) {
+            newsfeedViewModel.getFolderUniqueId(getActivity());
+            newsfeedViewModel.getFolderIdList().observe(getActivity(), new Observer<List<String>>() {
+                @Override
+                public void onChanged(List<String> folderUniqueIdList) {
+                    for (int i = 0; i < folderUniqueIdList.size(); i++) {
+                        final String folderUniqueId = folderUniqueIdList.get(i);
+                        newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueId);
+                        newsfeedViewModel.getNewsFeedToUpload().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
+                            @Override
+                            public void onChanged(List<UploadMultimedia> uploadMultimedia) {
+                                if (uploadMultimedia.size() > 0) {
+                                    String postText = uploadMultimedia.get(0).getPost_status();
+                                    if (!postText.isEmpty()) {
+                                        uploadMultimedia.remove(0);
                                     }
 
-                                });
+                                    newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
+                                    newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
+                                        @Override
+                                        public void onChanged(@Nullable LoginOrganizer result) {
+                                            if (result != null) {
+
+                                                newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
+                                                String status = result.getHeader().get(0).getType();
+                                                String message = result.getHeader().get(0).getMsg();
+                                                Snackbar.make(cl_main, message, Snackbar.LENGTH_LONG)
+                                                        .show();
+                                            } else {
+                                                Snackbar.make(cl_main, "failure", Snackbar.LENGTH_LONG)
+                                                        .show();
+                                            }
+
+
+                                            if (newsfeedViewModel != null && newsfeedViewModel.getPostStatus().hasObservers()) {
+                                                newsfeedViewModel.getPostStatus().removeObservers(getActivity());
+                                            }
+                                        }
+
+                                    });
+                                }
+
                             }
+                        });
+                    }
 
-                        }
-                    });
                 }
-
-            }
-        });
+            });
+        }
 
     }
 
