@@ -7,6 +7,7 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
+import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
@@ -24,7 +25,7 @@ public class CommentRepository {
     private static CommentRepository commentRepository;
     MutableLiveData<LoginOrganizer> reportUser = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> reportComment = new MutableLiveData<>();
-
+    MutableLiveData<LikePost> likePost = new MutableLiveData<>();
     public static CommentRepository getInstance() {
         if (commentRepository == null) {
             commentRepository = new CommentRepository();
@@ -160,6 +161,26 @@ public class CommentRepository {
             }
         });
         return reportComment;
+    }
+
+    public MutableLiveData<LikePost> PostLike(String event_id, String news_feed_id) {
+        commentApi = ApiUtils.getAPIService();
+
+        commentApi.PostLikeFromComment(event_id, news_feed_id).enqueue(new Callback<LikePost>() {
+            @Override
+            public void onResponse(Call<LikePost> call, Response<LikePost> response) {
+                if (response.isSuccessful()) {
+                    likePost.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LikePost> call, Throwable t) {
+                likePost.setValue(null);
+
+            }
+        });
+        return likePost;
     }
 
 }

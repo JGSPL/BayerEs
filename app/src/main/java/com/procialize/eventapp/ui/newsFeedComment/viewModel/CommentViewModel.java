@@ -21,12 +21,14 @@ import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
 import com.procialize.eventapp.ui.newsFeedComment.model.GifResponse;
 import com.procialize.eventapp.ui.newsFeedComment.model.GifResult;
+import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.networking.CommentRepository;
 import com.procialize.eventapp.ui.newsFeedComment.networking.GifRepository;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.networking.PostNewsFeedRepository;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
+import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ public class CommentViewModel extends ViewModel {
     MutableLiveData<LoginOrganizer> commentHide = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> reportCommentPost = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> commentDelete = new MutableLiveData<>();
-
+    MutableLiveData<LikePost> likePost = new MutableLiveData<>();
     public void GetId(String key) {
         gifRepository = GifRepository.getInstance();
         anon_id = gifRepository.getGifId(key);
@@ -106,7 +108,6 @@ public class CommentViewModel extends ViewModel {
         return commentData;
     }
 
-
     public void deleteComment(String event_id, String news_feed_id, String comment_id, int position) {
         commentRepository = CommentRepository.getInstance();
         commentDelete = commentRepository.deleteNewsFeedComment(event_id,
@@ -149,5 +150,15 @@ public class CommentViewModel extends ViewModel {
 
     public LiveData<LoginOrganizer> reportCommentPostData() {
         return reportCommentPost;
+    }
+
+    //---------------Like Action mechanism--------------------------------
+    public void likePost(  String event_id,String newsfeedid) {
+        commentRepository =CommentRepository.getInstance();
+        likePost = commentRepository.PostLike(event_id, newsfeedid);
+    }
+
+    public LiveData<LikePost> likePostData() {
+        return likePost;
     }
 }
