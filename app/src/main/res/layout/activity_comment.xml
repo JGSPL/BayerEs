@@ -239,33 +239,30 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center_vertical|center_horizontal"
-                    android:orientation="horizontal">
-
+                    android:orientation="horizontal"
+                    android:layout_margin="10dp">
                     <ImageView
                         android:id="@+id/iv_likes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_weight="1"
-                        android:src="@mipmap/inactive_like"
-                        android:padding="@dimen/margin" />
-
+                        android:src="@drawable/ic_like"/>
                     <ImageView
                         android:id="@+id/iv_comments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_weight="1"
-                        android:src="@mipmap/comment"
-                        android:padding="@dimen/margin"/>
+                        android:src="@drawable/ic_comment"/>
+
 
                     <ImageView
                         android:id="@+id/iv_share"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_weight="1"
-                        android:src="@mipmap/share"
-                        android:padding="@dimen/margin"/>
+                        android:src="@drawable/ic_share"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

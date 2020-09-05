@@ -84,7 +84,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             }
 
             if (feedData.getProfile_pic() != null) {
-                Glide.with(context).load((feedData.getProfile_pic()))
+                Glide.with(context).load((feedData.getProfile_pic().trim()))
                         .placeholder(R.drawable.profilepic_placeholder)
                         .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).fitCenter()
                         .listener(new RequestListener<Drawable>() {
