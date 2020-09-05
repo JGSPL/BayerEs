@@ -16,6 +16,8 @@ public class Constant {
     public static final String VIDEO_DIRECTORY = "/Video";
     public static final String BROADCAST_UPLOAD_MULTIMEDIA_ACTION = "com.procialize.eventsapp.UPLOAD_MULTIMEDIA";
     public static final String MY_PREFS_NAME = "eventInfo";
+    public static String folderName = "EventApp";
+
 
     public static final String NEWS_FEED_MEDIA_PATH = "newsFeedMediaPath";
     public static void displayToast(Context context, String message) {

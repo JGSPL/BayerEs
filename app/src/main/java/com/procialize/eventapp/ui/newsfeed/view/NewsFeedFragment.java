@@ -1,7 +1,13 @@
 package com.procialize.eventapp.ui.newsfeed.view;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -10,7 +16,11 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +37,7 @@ import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -38,6 +49,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
@@ -49,16 +61,32 @@ import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompre
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
+import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
 import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter.swipableAdapterPosition;
 
 public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAdapterListner, View.OnClickListener {
     ArrayList<Newsfeed_detail> newsfeedArrayList = new ArrayList<>();
@@ -77,6 +105,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     public static ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
     String reaction_type;
+    String strPath;
+    private Dialog dialogShare;
 
     public static NewsFeedFragment newInstance() {
 
@@ -387,4 +417,280 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         tv_uploding_multimedia.clearAnimation();
         tv_uploding_multimedia.setVisibility(View.GONE);
     }
+
+    @Override
+    public void shareTvFollowOnClick(View v, Newsfeed_detail feedList, int position) {
+        final List<News_feed_media> newsFeedMedia = feedList.getNews_feed_media();
+        if (feedList != null) {
+            if (connectionDetector.isConnectingToInternet()) {
+                if (newsFeedMedia.size() > 0) {
+
+                    if (newsFeedMedia.size() < swipableAdapterPosition) {
+                        swipableAdapterPosition = 0;
+                    }
+                    if (newsFeedMedia.get(swipableAdapterPosition).getMedia_type().equalsIgnoreCase("Video")) {
+                        boolean isPresentFile = false;
+                        File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.folderName);
+                        if (dir.isDirectory()) {
+                            String[] children = dir.list();
+                            for (int i = 0; i < children.length; i++) {
+                                String filename = children[i].toString();
+                                if (newsFeedMedia.get(swipableAdapterPosition).getMedia_file().equals(filename)) {
+                                    isPresentFile = true;
+                                }
+                            }
+                        }
+
+                        if (!isPresentFile) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Download and Share");
+                            builder.setMessage("Video will be share only after download,\nDo you want to continue for download and share?");
+                            builder.setNegativeButton("NO",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            builder.setPositiveButton("YES",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                                            String newsFeedPath = prefs.getString(NEWS_FEED_MEDIA_PATH, "");
+                                            new DownloadFile().execute(/*ApiConstant.newsfeedwall*/newsFeedPath + newsFeedMedia.get(swipableAdapterPosition).getMedia_file());
+                                        }
+                                    });
+                            builder.show();
+
+                        } else if (isPresentFile) {
+                            String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.folderName + "/";
+                            //Create androiddeft folder if it does not exist
+                            File directory = new File(folder);
+                            if (!directory.exists()) {
+                                directory.mkdirs();
+                            }
+                            strPath = folder + newsFeedMedia.get(swipableAdapterPosition).getMedia_file();
+                              /*              ContentValues content = new ContentValues(4);
+                                            content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
+                                                    System.currentTimeMillis() / 1000);
+                                            content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                                            content.put(MediaStore.Video.Media.DATA, strPath);
+                                            ContentResolver resolver = getActivity().getContentResolver();
+                                            Uri uri =strPath; resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);*/
+                            Uri contentUri = FileProvider.getUriForFile(getActivity(),
+                                    BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));
+
+                            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                            sharingIntent.setType("video/*");
+                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Events app");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+                            sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                            startActivity(Intent.createChooser(sharingIntent, "Shared via Events app"));
+                        }
+                    } else {
+                        dialogShare = new Dialog(getActivity());
+                        dialogShare.show();
+                        SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                        // String newsFeedPath = prefs.getString(NEWS_FEED_MEDIA_PATH, "");
+                        String newsFeedPath = "https://stage-admin.procialize.live/baseapp/uploads/news_feed_media/";
+                        shareImage(feedList.getPost_date() + "\n" + feedList.getPost_status(), /*ApiConstant.newsfeedwall*/newsFeedPath + newsFeedMedia.get(swipableAdapterPosition).getMedia_file(), getContext());
+                    }
+                } else {
+                    shareTextUrl(feedList.getPost_date() + "\n" + feedList.getPost_status(), StringEscapeUtils.unescapeJava(feedList.getPost_status()));
+                }
+            }
+            else {
+                Toast.makeText(getActivity(), "No Internet Connection.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void shareImage(final String data, String url, final Context context) {
+        Picasso.with(context).load(url).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                dialogShare.dismiss();
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("image/*");
+                i.putExtra(Intent.EXTRA_SUBJECT, data);
+                i.putExtra(Intent.EXTRA_STREAM, getLocalBitmapUri(bitmap, context));
+
+                context.startActivity(Intent.createChooser(i, "Share Image"));
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            }
+        });
+    }
+
+    static public Uri getLocalBitmapUri(Bitmap bmp, Context context) {
+        Uri bmpUri = null;
+        try {
+            File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png");
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+//            bmpUri = Uri.fromFile(file);
+            bmpUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".android.fileprovider", file);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bmpUri;
+    }
+
+    private void shareTextUrl(String data, String url) {
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        // Add data to the intent, the receiving app will decide
+        // what to do with it.
+        share.putExtra(Intent.EXTRA_SUBJECT, data);
+        share.putExtra(Intent.EXTRA_TEXT, url);
+
+        startActivity(Intent.createChooser(share, "Share link!"));
+    }
+
+
+    private class DownloadFile extends AsyncTask<String, String, String> {
+
+        private ProgressDialog progressDialog;
+        private String fileName;
+
+        /**
+         * Before starting background thread
+         * Show Progress Bar Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.progressDialog = new ProgressDialog(getActivity());
+            this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            this.progressDialog.setCancelable(false);
+            this.progressDialog.show();
+        }
+
+        /**
+         * Downloading file in background thread
+         */
+        @Override
+        protected String doInBackground(String... f_url) {
+            int count;
+            try {
+                URL url = new URL(f_url[0]);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+                // getting file length
+                int lengthOfFile = connection.getContentLength();
+
+                // input stream to read file - with 8k buffer
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+                String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+                //Extract file name from URL
+                fileName = f_url[0].substring(f_url[0].lastIndexOf('/') + 1, f_url[0].length());
+                //Append timestamp to file name
+                //fileName = timestamp + "_" + fileName;
+                //External directory path to save file
+                //folder = Environment.getExternalStorageDirectory() + File.separator + "androiddeft/";
+                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.folderName + "/";
+
+
+                //Create androiddeft folder if it does not exist
+                File directory = new File(folder);
+
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                strPath = folder + fileName;
+                // Output stream to write file
+                OutputStream output = new FileOutputStream(folder + fileName);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    // After this onProgressUpdate will be called
+                    publishProgress("" + (int) ((total * 100) / lengthOfFile));
+                    Log.d("ImageMultipleActivity", "Progress: " + (int) ((total * 100) / lengthOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+                return "Download completed- check folder " + Constant.folderName;
+
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+            }
+
+            return "Something went wrong";
+        }
+
+        /**
+         * Updating progress bar
+         */
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+            progressDialog.setProgress(Integer.parseInt(progress[0]));
+        }
+
+
+        @Override
+        protected void onPostExecute(String message) {
+            // dismiss the dialog after the file was downloaded
+            this.progressDialog.dismiss();
+
+            // Display File path after downloading
+          /*  Toast.makeText(getActivity(),
+                    message, Toast.LENGTH_LONG).show();*/
+
+            Uri contentUri = FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));
+/*
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("video/*");
+            share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            // Add data to the intent, the receiving app will decide
+            // what to do with it.
+            share.putExtra(Intent.EXTRA_SUBJECT,"");
+            // share.putExtra(Intent.EXTRA_TEXT, ApiConstant.newsfeedwall + newsFeedMedia.get(swipableAdapterPosition).getMediaFile());
+            share.putExtra(Intent.EXTRA_STREAM, contentUri);
+            startActivity(Intent.createChooser(share, "Share link!"));*/
+
+            ContentValues content = new ContentValues(4);
+            content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
+                    System.currentTimeMillis() / 1000);
+            content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+            content.put(MediaStore.Video.Media.DATA, strPath);
+
+            ContentResolver resolver = getActivity().getContentResolver();
+            Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
+
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("video/*");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Video Share");
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(Intent.createChooser(sharingIntent, "Share Video"));
+
+        }
+    }
+
 }

@@ -185,6 +185,17 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 }
             });
 
+            holder.iv_share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (cd.isConnectingToInternet()) {
+                        listener.shareTvFollowOnClick(v, feed_detail.get(position), position);
+                    } else {
+                        Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
             if (!feedData.getPost_status().isEmpty() && feedData.getPost_status() != null) {
                 holder.tv_status.setText(feedData.getPost_status());
                 holder.tv_status.setVisibility(View.VISIBLE);
@@ -260,6 +271,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         void onSliderClick (Newsfeed_detail feed, int position);
         void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position);
         void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext);
+        void shareTvFollowOnClick(View v, Newsfeed_detail feedList, int position);
 
     }
 
@@ -268,7 +280,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         TextView nameTv;
         TextView designationTv, tv_concat, companyTv, dateTv, tv_status, testdata;
         TextView tv_like, tv_comment;
-        ImageView moreIV, profileIV,iv_comments, iv_like;
+        ImageView moreIV, profileIV,iv_comments, iv_like, iv_share;
         ProgressBar progressView;
         ViewPager vp_slider;
         LinearLayout ll_dots, ll_bottom;
@@ -288,6 +300,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             tv_concat = itemView.findViewById(R.id.tv_concat);
             tv_status = itemView.findViewById(R.id.tv_status);
             testdata = itemView.findViewById(R.id.testdata);
+            iv_share = itemView.findViewById(R.id.iv_share);
 
             tv_like = itemView.findViewById(R.id.tv_like);
             tv_comment = itemView.findViewById(R.id.tv_comment);
