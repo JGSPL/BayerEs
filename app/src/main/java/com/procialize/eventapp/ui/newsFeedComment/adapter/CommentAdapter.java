@@ -69,6 +69,25 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         //Newsfeed_detail feedData = feed_detail.get(position);
         CommentDetail comments = commentDetails.get(position);
 
+        if(comments.getProfile_picture().trim()!=null)
+        {
+            Glide.with(context)
+                    .load(comments.getProfile_picture().trim())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            holder.progressView.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            holder.progressView.setVisibility(View.GONE);
+                            return false;
+                        }
+                    }).into(holder.iv_profile);
+        }
+
         //holder.tv_name.setText(comments.getFirst_name()+" "+comments.getLast_name()+" "+comments.getComment());
         //String name1 = "<font color='"+colorActive+"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
         if (comments.getComment().contains("gif")) {
@@ -119,8 +138,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
         TextView tv_name, tv_date_time;
         FrameLayout fl_gif;
-        ImageView iv_gif, iv_options;
-        ProgressBar pb_gif;
+        ImageView iv_gif, iv_options,iv_profile;
+        ProgressBar pb_gif,progressView;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -129,7 +148,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
             fl_gif = itemView.findViewById(R.id.fl_gif);
             iv_gif = itemView.findViewById(R.id.iv_gif);
             iv_options = itemView.findViewById(R.id.iv_options);
+            iv_profile = itemView.findViewById(R.id.iv_profile);
             pb_gif = itemView.findViewById(R.id.pb_gif);
+            progressView = itemView.findViewById(R.id.progressView);
 
             iv_options.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -66,7 +66,7 @@ public class LikeAdapter  extends RecyclerView.Adapter<LikeAdapter.MyViewHolder>
         LikeDetail likeDetail = likeDetails.get(position);
 
         if (likeDetail.getProfile_picture() != null) {
-            Glide.with(context).load(likeDetail.getProfile_picture()).listener(new RequestListener<Drawable>() {
+            Glide.with(context).load(likeDetail.getProfile_picture().trim()).listener(new RequestListener<Drawable>() {
                 @Override
                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                     holder.iv_profile.setImageResource(R.drawable.profilepic_placeholder);

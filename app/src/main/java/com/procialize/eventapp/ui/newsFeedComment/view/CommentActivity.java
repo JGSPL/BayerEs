@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -33,6 +34,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
@@ -71,7 +77,7 @@ import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
 
     private static final String API_KEY = "TVG20YJW1MXR";
-    ImageView iv_gif, iv_back_gif, iv_likes, iv_comments, iv_share;
+    ImageView iv_gif, iv_back_gif, iv_likes, iv_comments, iv_share,iv_profile;
     EditText et_comment, et_search_gif;
     FrameLayout fl_gif_container, fl_post_comment;
     LinearLayout ll_comment_container,
@@ -111,6 +117,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         iv_gif = findViewById(R.id.iv_gif);
         iv_likes = findViewById(R.id.iv_likes);
+        iv_profile = findViewById(R.id.iv_profile);
         iv_comments = findViewById(R.id.iv_comments);
         iv_share = findViewById(R.id.iv_share);
         rv_gif = findViewById(R.id.rv_gif);
@@ -198,6 +205,25 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+
+        if(newsfeed_detail.getProfile_pic().trim()!=null) {
+            Glide.with(this)
+                    .load(newsfeed_detail.getProfile_pic().trim())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            //pro.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            //iv_profile.setVisibility(View.GONE);
+                            return false;
+                        }
+                    }).into(iv_profile);
+        }
+
         if (newsfeed_detail.getNews_feed_media().size() > 0) {
             vp_media.setVisibility(View.VISIBLE);
             ll_media_dots.setVisibility(View.VISIBLE);
@@ -220,7 +246,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         if (newsfeed_detail.getLike_flag().equalsIgnoreCase("0")) {
-            iv_likes.setImageDrawable(getResources().getDrawable(R.mipmap.inactive_like));
+            iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
         } else {
             iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
            /* int color = Color.parseColor(colorActive);
