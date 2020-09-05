@@ -7,6 +7,7 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
+import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,7 +16,7 @@ import retrofit2.Response;
 public class LikeRepository {
 
     MutableLiveData<LoginOrganizer> commentData = new MutableLiveData<>();
-    MutableLiveData<Comment> commentList = new MutableLiveData<>();
+    MutableLiveData<Like> likeList = new MutableLiveData<>();
     private static LikeRepository likeRepository;
 
     public static LikeRepository getInstance() {
@@ -25,31 +26,32 @@ public class LikeRepository {
         return likeRepository;
     }
 
-    private APIService commentApi;
+    private APIService likeApi;
 
     public LikeRepository() {
-        commentApi = ApiUtils.getAPIService();
+        likeApi = ApiUtils.getAPIService();
     }
 
 
-    /*public MutableLiveData<Comment> getLikeList(String event_id, String news_feed_id){//, String pageSize, String pageNumber) {
-        commentApi.getLikes(event_id,
-                news_feed_id)
-                .enqueue(new Callback<Comment>() {
+    public MutableLiveData<Like> getLikeList(String event_id, String news_feed_id, String pageSize, String pageNumber) {
+        likeApi.getLikes(event_id,
+                news_feed_id,pageSize,
+                pageNumber)
+                .enqueue(new Callback<Like>() {
                     @Override
-                    public void onResponse(Call<Comment> call, Response<Comment> response) {
+                    public void onResponse(Call<Like> call, Response<Like> response) {
                         if (response.isSuccessful()) {
-                            commentList.setValue(response.body());
+                            likeList.setValue(response.body());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<Comment> call, Throwable t) {
-                        commentList.setValue(null);
+                    public void onFailure(Call<Like> call, Throwable t) {
+                        likeList.setValue(null);
                     }
                 });
 
-        return commentList;
-    }*/
+        return likeList;
+    }
 
 }

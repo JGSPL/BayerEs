@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/ll_main"
     tools:context=".ui.newsFeedLike.view.LikeActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -52,12 +53,11 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-   <!-- <androidx.recyclerview.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_like"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/recycler_item_likes"/>-->
+        tools:listitem="@layout/recycler_item_likes"/>
 
-    <include layout="@layout/recycler_item_likes"/>
 
 </LinearLayout>

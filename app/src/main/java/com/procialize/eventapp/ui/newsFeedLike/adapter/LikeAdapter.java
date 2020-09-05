@@ -19,13 +19,15 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.ui.newsFeedLike.model.AttendeeList;
+import com.procialize.eventapp.ui.newsFeedLike.model.Like;
+import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
 
 import java.util.List;
 
 
 public class LikeAdapter  extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> {
 
-    private List<AttendeeList> attendeeListList;
+    private List<LikeDetail> likeDetails;
     private Context context;
     String MY_PREFS_NAME = "ProcializeInfo";
 
@@ -45,8 +47,8 @@ public class LikeAdapter  extends RecyclerView.Adapter<LikeAdapter.MyViewHolder>
     }
 
 
-    public LikeAdapter(Context context, List<AttendeeList> attendeeListList) {
-        this.attendeeListList = attendeeListList;
+    public LikeAdapter(Context context, List<LikeDetail> likeDetails) {
+        this.likeDetails = likeDetails;
         this.context = context;
 
     }
@@ -61,10 +63,10 @@ public class LikeAdapter  extends RecyclerView.Adapter<LikeAdapter.MyViewHolder>
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        AttendeeList attendeeList = attendeeListList.get(position);
+        LikeDetail likeDetail = likeDetails.get(position);
 
-        if (attendeeListList.get(position).getProfilePic() != null) {
-            Glide.with(context).load(attendeeListList.get(position).getProfilePic()).listener(new RequestListener<Drawable>() {
+        if (likeDetail.getProfile_picture() != null) {
+            Glide.with(context).load(likeDetail.getProfile_picture()).listener(new RequestListener<Drawable>() {
                 @Override
                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                     holder.iv_profile.setImageResource(R.drawable.profilepic_placeholder);
@@ -82,11 +84,11 @@ public class LikeAdapter  extends RecyclerView.Adapter<LikeAdapter.MyViewHolder>
             holder.iv_profile.setImageResource(R.drawable.profilepic_placeholder);
         }
 
-        holder.tv_name.setText(attendeeList.getFirstName() + " " + attendeeList.getLastName());
+        holder.tv_name.setText(likeDetail.getFirst_name() + " " + likeDetail.getLast_name());
     }
 
     @Override
     public int getItemCount() {
-        return attendeeListList.size();
+        return likeDetails.size();
     }
 }

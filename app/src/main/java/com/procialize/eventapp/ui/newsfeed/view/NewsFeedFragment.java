@@ -34,6 +34,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.LongDef;
+import android.widget.ImageView;
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -56,6 +58,7 @@ import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.ui.home.viewmodel.HomeViewModel;
+import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
@@ -107,6 +110,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     String reaction_type;
     String strPath;
     private Dialog dialogShare;
+
 
     public static NewsFeedFragment newInstance() {
 
@@ -369,11 +373,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 if (!postText.isEmpty()) {
                                     uploadMultimedia.remove(0);
                                 }
-                         /*       newsfeedViewModel.getIsUploading().observe(getActivity(), new Observer<Boolean>() {
-                                    @Override
-                                    public void onChanged(Boolean aBoolean) {
-                                        if(!aBoolean)
-                                        {*/
+
                                 newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
                                 newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
                                     @Override
@@ -389,17 +389,23 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                             Snackbar.make(cl_main, "failure", Snackbar.LENGTH_LONG)
                                                     .show();
                                         }
+
+
+                                        if (newsfeedViewModel != null && newsfeedViewModel.getPostStatus().hasObservers()) {
+                                            newsfeedViewModel.getPostStatus().removeObservers(getActivity());
+                                        }
                                     }
+
                                 });
-                                       /* }
-                                    }
-                                });*/
                             }
+
                         }
                     });
                 }
+
             }
         });
+
     }
 
 

@@ -9,6 +9,7 @@
     <dimen name="textsizesmaller">14sp</dimen>
     <dimen name="textsizenormal">20sp</dimen>
     <dimen name="textsizebigger">30sp</dimen>
+   <dimen name="five_dp_padding">5dp</dimen>
     <dimen name="padding">5dp</dimen>
     <dimen name="elevation">3dp</dimen>
     <dimen name="padding_edit">5dp</dimen>

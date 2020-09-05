@@ -39,6 +39,7 @@ import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 
 
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.Serializable;
@@ -63,8 +64,7 @@ public class NewsFeedViewModel extends ViewModel {
     //private MutableLiveData<Boolean> mIsUploading = new MutableLiveData<>();
     MutableLiveData<Boolean> isValid = new MutableLiveData<>();
 
-
-    public void init(String pagesize, String pagenumber) {
+     public void init(String pagesize, String pagenumber) {
        /* if (mutableLiveData != null) {
             return;
         }*/
