@@ -9,6 +9,7 @@ import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
+import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class CommentRepository {
     MutableLiveData<LoginOrganizer> reportUser = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> reportComment = new MutableLiveData<>();
     MutableLiveData<LikePost> likePost = new MutableLiveData<>();
+    MutableLiveData<FetchNewsfeedMultiple> newsfeedData = new MutableLiveData<>();
     public static CommentRepository getInstance() {
         if (commentRepository == null) {
             commentRepository = new CommentRepository();
@@ -181,6 +183,27 @@ public class CommentRepository {
             }
         });
         return likePost;
+    }
+
+    public MutableLiveData<FetchNewsfeedMultiple> getNewsFeedDetails(String eventId, String newsFeedId) {
+        commentApi = ApiUtils.getAPIService();
+
+        commentApi.NewsFeedDetailFetch(eventId,newsFeedId).enqueue(new Callback<FetchNewsfeedMultiple>() {
+            @Override
+            public void onResponse(Call<FetchNewsfeedMultiple> call,
+                                   Response<FetchNewsfeedMultiple> response) {
+                if (response.isSuccessful()) {
+                    newsfeedData.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
+                newsfeedData.setValue(null);
+
+            }
+        });
+        return newsfeedData;
     }
 
 }

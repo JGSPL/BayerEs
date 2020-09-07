@@ -167,7 +167,8 @@
             android:text=""
             android:textColor="@color/inactivetab"
             android:textColorLink="@android:color/holo_blue_dark"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/testdata"
@@ -184,7 +185,8 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/vp_slider"
                 android:layout_width="match_parent"
-                android:layout_height="320dp" />
+                android:layout_height="320dp"
+                android:visibility="gone"/>
 
 
             <LinearLayout

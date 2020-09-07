@@ -44,6 +44,12 @@ public interface APIService {
                                                       @Field("pageSize") String pageSize,
                                                       @Field("pageNumber") String pageNumber);
 
+    @Headers("authorization: "+HeaderToken)
+    @POST("NewsFeed_api/NewsFeedDetailFetch")
+    @FormUrlEncoded
+    Call<FetchNewsfeedMultiple> NewsFeedDetailFetch(@Field("event_id") String event_id,
+                                                      @Field("news_feed_id") String news_feed_id);
+
     @Multipart
     @Headers("authorization: "+HeaderToken)
     @POST("NewsFeed_api/PostNewsFeed")
