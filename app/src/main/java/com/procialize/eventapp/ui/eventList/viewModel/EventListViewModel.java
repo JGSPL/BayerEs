@@ -1,4 +1,4 @@
 package com.procialize.eventapp.ui.eventList.viewModel;
 
-public class eventListViewModel {
-}
+/*public class eventListViewModel {
+}*/
