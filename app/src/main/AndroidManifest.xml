@@ -98,6 +98,19 @@
             android:name=".ui.newsFeedPost.service.BackgroundServiceToCompressMedia"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.procialize.eventapp.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"
+                tools:replace="android:resource" />
+        </provider>
+
+
     </application>
 
 </manifest>

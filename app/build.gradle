@@ -63,6 +63,8 @@ dependencies {
     //Okhttp okhttpVersion
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
 
+
+
     //Video Play Library
     implementation project(path: ':jiaozivideoplayer')
 
@@ -75,6 +77,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation "com.squareup.okhttp3:okhttp:3.14.0"
+    implementation 'com.squareup.picasso:picasso:2.5.0'
+
 
     //Library to compress video
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'

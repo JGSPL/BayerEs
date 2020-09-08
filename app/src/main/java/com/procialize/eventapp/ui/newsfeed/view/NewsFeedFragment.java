@@ -331,7 +331,10 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
-        int count = Integer.parseInt(feed.getTotal_likes());
+
+        newsfeedViewModel.openLikeimg(getActivity(), eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
+
+       /* int count = Integer.parseInt(feed.getTotal_likes());
 
         Drawable drawables = likeimage.getDrawable();
         Bitmap bitmap = ((BitmapDrawable) drawables).getBitmap();
@@ -376,8 +379,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         } else {
             feed.setLike_flag("1");
             likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
-           /*int color = Color.parseColor(colorActive);
-            likeimage.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*/
+           *//*int color = Color.parseColor(colorActive);
+            likeimage.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*//*
             reaction_type = "0";
             if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
                 newsfeedViewModel.openLikeimg(eventid, feed.getNews_feed_id());
@@ -401,7 +404,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 e.printStackTrace();
             }
 
-        }
+        }*/
     }
 
     @Override

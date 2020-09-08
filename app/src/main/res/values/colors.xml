@@ -17,5 +17,8 @@
     <color name="textcolorLight">#898989</color>
     <color name="star_color">#fbc375</color>
     <color name="trans">#80000000</color>
+    <color name="colorgrey">#e6e6e6</color>
+
+    <color name="colorwhite">#ffffff</color>
 
 </resources>

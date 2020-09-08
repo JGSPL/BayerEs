@@ -122,8 +122,8 @@ public interface APIService {
     @Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/PostLike")
     @FormUrlEncoded
-    Call<LoginOrganizer> PostLike(@Field("event_id") String event_id,
-                                  @Field("news_feed_id") String news_feed_id);
+    Call<LikePost> PostLike(@Field("event_id") String event_id,
+                                    @Field("news_feed_id") String news_feed_id);
 
     @Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/PostLike")
