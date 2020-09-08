@@ -22,6 +22,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,8 +32,6 @@ import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
-import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
 
 public class NewsFeedDetailsPagerAdapter extends PagerAdapter {
 
@@ -49,8 +49,7 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter {
         this.images = images;
         this.imagesThumb = imagesThumb;
         inflater = LayoutInflater.from(context);
-        SharedPreferences prefs =context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        newsFeedPath = prefs.getString(NEWS_FEED_MEDIA_PATH,"");
+        newsFeedPath = SharedPreference.getPref(context, SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH);
     }
 
     @Override

@@ -49,6 +49,9 @@ import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.home.viewmodel.HomeViewModel;
 import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
@@ -65,11 +68,12 @@ import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
-import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
 public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAdapterListner, View.OnClickListener {
     ArrayList<Newsfeed_detail> newsfeedArrayList = new ArrayList<>();
@@ -182,11 +186,15 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                     newsfeedArrayList.addAll(feedList);
                     insertIntoDb(feedList);
                     String mediaPath = fetchNewsfeedMultiple.getMedia_path();
-                    SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString(NEWS_FEED_MEDIA_PATH, mediaPath);
-                    editor.commit();
-                    newsfeedAdapter.notifyDataSetChanged();
+
+                    HashMap<String,String> map = new HashMap<>();
+                    map.put(NEWS_FEED_MEDIA_PATH,mediaPath);
+                    SharedPreference.putPref(getActivity(),map);
+
+                    try {
+                        newsfeedAdapter.notifyDataSetChanged();
+                    }catch (Exception e)
+                    {e.printStackTrace();}
                 }
             });
         } else {
@@ -213,9 +221,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             @Override
             public void onChanged(List<TableNewsFeed> tableNewsFeeds) {
                 if (tableNewsFeeds != null) {
-                    /*if (newsfeedArrayList.size() > 0) {
+                    if (newsfeedArrayList.size() > 0) {
                         newsfeedArrayList.clear();
-                    }*/
+                    }
                     for (int i = 0; i < tableNewsFeeds.size(); i++) {
                         Newsfeed_detail newsfeed_detail = new Newsfeed_detail();
                         newsfeed_detail.setNews_feed_id(tableNewsFeeds.get(i).getNews_feed_id());
@@ -455,30 +463,23 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                                 newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
                                                 String status = result.getHeader().get(0).getType();
                                                 String message = result.getHeader().get(0).getMsg();
-                                                Snackbar.make(cl_main, message, Snackbar.LENGTH_LONG)
-                                                        .show();
+                                                Utility.createLongSnackBar(cl_main, message);
                                             } else {
-                                                Snackbar.make(cl_main, "failure", Snackbar.LENGTH_LONG)
-                                                        .show();
+                                                Utility.createLongSnackBar(cl_main, "failure");
                                             }
-
 
                                             if (newsfeedViewModel != null && newsfeedViewModel.getPostStatus().hasObservers()) {
                                                 newsfeedViewModel.getPostStatus().removeObservers(getActivity());
                                             }
                                         }
-
                                     });
                                 }
-
                             }
                         });
                     }
-
                 }
             });
         }
-
     }
 
 

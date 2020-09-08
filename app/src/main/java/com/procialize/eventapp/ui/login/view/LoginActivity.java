@@ -12,6 +12,7 @@ import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.login.viewmodel.LoginViewModel;
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                 activityLoginBinding.btnSubmit.setVisibility(View.INVISIBLE);
                 activityLoginBinding.inEmail.setVisibility(View.INVISIBLE);
             } else if (message.equalsIgnoreCase("Successfully Login")) {
-                view.getContext().startActivity(new Intent(view.getContext(), MainActivity.class));
+                view.getContext().startActivity(new Intent(view.getContext(), EventListActivity.class));
                 //finish();
             } else {
                 Constant.displayToast(view.getContext(), message);

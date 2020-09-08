@@ -1,7 +1,10 @@
 package com.procialize.eventapp.ui.newsFeedPost.service;
 
+import android.app.Application;
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +17,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
@@ -21,20 +26,35 @@ import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
+
+
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.DatagramSocket;
+import java.net.Socket;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.VIBRATE;
+import static android.Manifest.permission.WRITE_CONTACTS;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION_CODES.Q;
 
 public class BackgroundServiceToCompressMedia extends IntentService {
     String TAG = "BackgroundServiceToCompressMedia";
@@ -64,6 +84,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
                     String strPath = mediaList.get(0).getMedia_file();
                     compressImage(strPath, 0);
                 }*/
+
             if (mediaList.get(0).getMedia_type().equalsIgnoreCase("video")) {
                 executeCutVideoCommand(Uri.parse(mediaList.get(0).getMedia_file()), 0);
             } else {
@@ -75,9 +96,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
 
             }
 
-        }
-        else
-        {
+        } else {
             Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
         }
@@ -115,7 +134,13 @@ public class BackgroundServiceToCompressMedia extends IntentService {
      * Executing ffmpeg binary
      */
     private String execFFmpegBinary(final String[] command, final String outputPath, final int mediaListposition) {
+        /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q){
+            String originalPath = mediaList.get(mediaListposition).getMedia_file();
+            EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(outputPath, originalPath);
+            compressMedia(mediaListposition);
+        } else{*/
         try {
+
             ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                 @Override
                 public void onFailure(String s) {
@@ -155,6 +180,8 @@ public class BackgroundServiceToCompressMedia extends IntentService {
         } catch (FFmpegCommandAlreadyRunningException e) {
             e.printStackTrace();
         }
+        //}
+
         return outputPath;
     }
 
@@ -164,7 +191,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
      */
     private String executeCutVideoCommand(Uri selectedVideoUri, int mediaListposition) {
         String root = Environment.getExternalStorageDirectory().toString();
-        File moviesDir = new File(root + "/VideoCompressDemo/CompressedVideo");
+        File moviesDir = new File(root + Constant.FOLDER_DIRECTORY + Constant.VIDEO_DIRECTORY);//"/VideoCompressDemo/CompressedVideo");
 
         if (!moviesDir.exists()) {
             moviesDir.mkdirs();
@@ -187,8 +214,9 @@ public class BackgroundServiceToCompressMedia extends IntentService {
         String filePath = dest.getAbsolutePath();
 
         try {
+            AssetFileDescriptor afd = getAssets().openFd(selectedVideoUri.toString());
             MediaPlayer mp = new MediaPlayer();
-            mp.setDataSource(selectedVideoUri.toString());
+            mp.setDataSource(selectedVideoUri.toString());//afd.getFileDescriptor());
             mp.prepare();
             int width = mp.getVideoWidth();
 
@@ -198,6 +226,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
                 "-vcodec", "libx264", "-b:v", "300k", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
@@ -210,7 +239,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
     private void compressImage(String media_file, int mediaListposition) {
         try {
             Uri myUri = Uri.parse(media_file);
-            Log.d("Bg Service compression",mediaListposition+"");
+            Log.d("Bg Service compression", mediaListposition + "");
 
             File auxFile = new File(myUri.toString());
             ExifInterface exif = new ExifInterface(auxFile.getPath());
@@ -230,7 +259,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
             mat.postRotate(angle);
 
             String root = Environment.getExternalStorageDirectory().toString();
-            File moviesDir = new File(root +Constant.FOLDER_DIRECTORY+Constant.IMAGE_DIRECTORY);
+            File moviesDir = new File(root + Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY);
             String path = myUri.getPath();
             int cut = path.lastIndexOf('/');
             if (cut != -1) {

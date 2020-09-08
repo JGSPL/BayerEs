@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
@@ -76,7 +77,7 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         } else {
-            Snackbar.make(ll_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+            Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
     }
 

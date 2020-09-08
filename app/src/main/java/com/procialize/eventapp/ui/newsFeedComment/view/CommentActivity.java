@@ -45,6 +45,9 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.GifEmojiAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -72,8 +75,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
-import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
 
@@ -158,7 +159,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 });
             }
         } else {
-            Snackbar.make(ll_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+            Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
 
         String postStatus = newsfeed_detail.getPost_status().trim();
@@ -291,13 +292,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         } else {
-            Snackbar.make(ll_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+            Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
     }
 
     public void setupPagerAdapter() {
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        String mediaPath = prefs.getString(NEWS_FEED_MEDIA_PATH, "");
+
+        String mediaPath = SharedPreference.getPref(this, SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH);
 
         final ArrayList<String> imagesSelectednew = new ArrayList<>();
         final ArrayList<String> imagesSelectednew1 = new ArrayList<>();
@@ -406,14 +407,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                                 @Override
                                 public void onChanged(LoginOrganizer loginOrganizer) {
-                                    Snackbar.make(ll_main, "Success", Snackbar.LENGTH_SHORT).show();
+                                    Utility.createShortSnackBar(ll_main, "Success");
                                     et_comment.setText("");
                                     commentText = et_comment.getText().toString();
                                     getComments();
                                 }
                             });
                         } else {
-                            Snackbar.make(ll_main, "Please Enter Comment", Snackbar.LENGTH_SHORT).show();
+                            Utility.createShortSnackBar(ll_main, "Please Enter Comment");
                         }
                     }
                 });
@@ -443,13 +444,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                     noOfLikes = "0";
                                     likeStatus = "";
                                 }
-                                Snackbar.make(ll_main, likePost.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
-                            }
+                                Utility.createShortSnackBar(ll_main, likePost.getHeader().get(0).getMsg());
+                                }
                             if (commentViewModel != null && commentViewModel.likePostData().hasObservers()) {
                                 commentViewModel.likePostData().removeObservers(CommentActivity.this);
                             }
                         } else {
-                            Snackbar.make(ll_main, "Failure..", Snackbar.LENGTH_SHORT).show();
+                            Utility.createShortSnackBar(ll_main, "Failure..");
                         }
                     }
                 });
@@ -476,7 +477,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
             @Override
             public void onChanged(LoginOrganizer loginOrganizer) {
-                Snackbar.make(ll_main, "Success", Snackbar.LENGTH_SHORT).show();
+                Utility.createShortSnackBar(ll_main,"Success");
                 et_comment.setText("");
                 getComments();
             }
@@ -528,7 +529,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         if (connectionDetector.isConnectingToInternet()) {
             openMoreOptions(this, newsfeed_detail, comment, position, ll_main);
         } else {
-            Snackbar.make(ll_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+            Utility.createShortSnackBar(ll_main,"No Internet Connection");
         }
     }
 
@@ -575,11 +576,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                             commentList.clear();
                             dialog.dismiss();
-                            Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                            Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
                             getComments();
                         } else {
                             dialog.dismiss();
-                            Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                            Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
                         }
                     }
                 });
@@ -595,11 +596,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     public void onChanged(LoginOrganizer loginOrganizer) {
                         if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                             dialog.dismiss();
-                            Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                            Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
                             getComments();
                         } else {
                             dialog.dismiss();
-                            Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                            Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
                         }
                     }
                 });
@@ -691,11 +692,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             public void onChanged(LoginOrganizer loginOrganizer) {
                                 if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                                     contentDialog.dismiss();
-                                    Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
                                     getComments();
                                 } else {
                                     contentDialog.dismiss();
-                                    Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
                                 }
                             }
                         });
@@ -706,17 +707,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             public void onChanged(LoginOrganizer loginOrganizer) {
                                 if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                                     contentDialog.dismiss();
-                                    Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
-                                    getComments();
+                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());getComments();
                                 } else {
                                     contentDialog.dismiss();
-                                    Snackbar.make(ll_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
                                 }
                             }
                         });
                     }
                 } else {
-                    Snackbar.make(ll_main, "Please enter message", Snackbar.LENGTH_SHORT).show();
+                    Utility.createShortSnackBar(ll_main, "Please enter message");
                 }
             }
         });

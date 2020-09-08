@@ -35,6 +35,7 @@ import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedPost.adapter.ViewPagerMultimediaAdapter;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
@@ -277,20 +278,20 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                                 btn_post.setEnabled(true);
                                                 String status = result.getHeader().get(0).getType();
                                                 String message = result.getHeader().get(0).getMsg();
-                                                Snackbar.make(linear, message, Snackbar.LENGTH_LONG)
-                                                        .show();
+
+                                                Utility.createShortSnackBar(linear, message);
                                                 postNewsFeedViewModel.startNewsFeedFragment(PostNewActivity.this);
                                             } else {
                                                 btn_post.setEnabled(true);
-                                                Snackbar.make(linear, "Error occured, Please try after some time..", Snackbar.LENGTH_LONG)
-                                                        .show();
+
+                                                Utility.createShortSnackBar(linear, "Error occured, Please try after some time..");
                                             }
                                         }
                                     });
                                 } else {
                                     btn_post.setEnabled(true);
-                                    Snackbar.make(linear, "Please enter some status to post", Snackbar.LENGTH_LONG)
-                                            .show();
+                                    Utility.createShortSnackBar(linear, "Please enter some status to post");
+
                                 }
                             }
                         });
@@ -330,8 +331,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 } else {
                     btn_post.setEnabled(true);
-                    Snackbar.make(linear, "No Internet Connection", Snackbar.LENGTH_LONG)
-                            .show();
+                    Utility.createShortSnackBar(linear, "No Internet Connection");
                 }
                 break;
         }

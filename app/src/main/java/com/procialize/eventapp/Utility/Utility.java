@@ -6,11 +6,14 @@ import android.content.Context;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -27,12 +30,12 @@ public class Utility {
         this.fragmentManager = fragmentManager;
     }
 
-    public static void createShortToast(Context context,String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    public static void createShortSnackBar(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
     }
 
-    public static void createLongToast(Context context,String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    public static void createLongSnackBar(View view,String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     /*------------------------------------------------------*

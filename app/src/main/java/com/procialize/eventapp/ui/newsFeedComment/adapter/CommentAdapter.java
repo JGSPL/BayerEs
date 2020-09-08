@@ -40,9 +40,6 @@ import java.util.List;
 
 import cn.jzvd.JzvdStd;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
-import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsViewHolder> {
 

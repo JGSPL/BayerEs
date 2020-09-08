@@ -26,6 +26,7 @@ import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
 import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
@@ -194,7 +195,7 @@ public class NewsFeedViewModel extends ViewModel {
                         public void onChanged(LoginOrganizer loginOrganizer) {
                             if (loginOrganizer != null) {
                                 List<Header> heaserList = loginOrganizer.getHeader();
-                                Snackbar.make(NewsFeedFragment.cl_main, heaserList.get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
 
                             }
@@ -202,7 +203,7 @@ public class NewsFeedViewModel extends ViewModel {
                     });
                 } else {
                     dialog.cancel();
-                    Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                    Utility.createShortSnackBar(NewsFeedFragment.cl_main,"No Internet Connection");
                 }
             }
 
@@ -222,15 +223,14 @@ public class NewsFeedViewModel extends ViewModel {
                         public void onChanged(LoginOrganizer loginOrganizer) {
                             if (loginOrganizer != null) {
                                 List<Header> heaserList = loginOrganizer.getHeader();
-                                Snackbar.make(NewsFeedFragment.cl_main, heaserList.get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                Utility.createShortSnackBar(NewsFeedFragment.cl_main,heaserList.get(0).getMsg());
                                 dialog.cancel();
-
                             }
                         }
                     });
                 } else {
                     dialog.cancel();
-                    Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                    Utility.createShortSnackBar(NewsFeedFragment.cl_main,"No Internet Connection");
                 }
             }
         });
@@ -407,15 +407,15 @@ public class NewsFeedViewModel extends ViewModel {
                                 public void onChanged(LoginOrganizer loginOrganizer) {
                                     if (loginOrganizer != null) {
                                         List<Header> heaserList = loginOrganizer.getHeader();
-                                        Snackbar.make(NewsFeedFragment.cl_main, heaserList.get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
-                                        myDialog.cancel();
+                                        Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
+                                         myDialog.cancel();
 
                                     }
                                 }
                             });
                         } else {
                             myDialog.cancel();
-                            Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                            Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                         }
                     }else if (from.equalsIgnoreCase("reportUser")) {
                         /*newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
@@ -427,21 +427,21 @@ public class NewsFeedViewModel extends ViewModel {
                                 public void onChanged(LoginOrganizer loginOrganizer) {
                                     if (loginOrganizer != null) {
                                         List<Header> heaserList = loginOrganizer.getHeader();
-                                        Snackbar.make(NewsFeedFragment.cl_main, heaserList.get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                                        Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                         myDialog.cancel();
-
                                     }
                                 }
                             });
                         } else {
                             myDialog.cancel();
-                            Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+                            Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                         }
                     }
                 }
 
                 else {
-                    Toast.makeText(activityVar, "Enter Something", Toast.LENGTH_SHORT).show();
+                    Utility.createShortSnackBar(NewsFeedFragment.cl_main, "Enter Something");
+                   // Toast.makeText(activityVar, "Enter Something", Toast.LENGTH_SHORT).show();
                 }
             }
         });

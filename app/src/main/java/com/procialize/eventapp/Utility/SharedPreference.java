@@ -11,21 +11,14 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.SHARED_P
 
 public class SharedPreference {
 
-    Context context;
-
-    public SharedPreference(Context context) {
-        this.context = context;
-    }
 
 
     /*------------------------------------------------------*
      *             Shared Preferences Functions              *
      *-------------------------------------------------------*/
-    /*HashMap<String, String> map = new HashMap<String, String>();
-       map.put("key", "value");
-       putPref(map);*/
+
     //------ Write Shared Preferences
-    public void putPref(HashMap<String, String> map) {
+    public static void putPref(Context context,HashMap<String, String> map) {
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         Iterator iterator = map.entrySet().iterator();
@@ -39,19 +32,19 @@ public class SharedPreference {
     }
 
     //--- Read Preferences -----
-    public String getPref(String prefKey) {
+    public static String getPref(Context context,String prefKey) {
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         return preferences.getString(prefKey.trim(), "");
     }
 
     //--- Clear All Preferences ---
-    public void clearAllPref() {
+    public static void clearAllPref(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         preferences.edit().clear().commit();
     }
 
     //--- Clear single preferences ---
-    public void clearPref(String prefKey) {
+    public static void clearPref(Context context,String prefKey) {
         SharedPreferences preferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         preferences.edit().remove(prefKey).commit();
     }

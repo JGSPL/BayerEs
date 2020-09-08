@@ -32,6 +32,7 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.costumTools.ClickableViewPager;
 import com.procialize.eventapp.costumTools.ScaledImageView;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
@@ -42,9 +43,7 @@ import java.util.List;
 
 import cn.jzvd.JzvdStd;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
-import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsViewHolder> {
 
@@ -60,8 +59,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         this.feed_detail = feed_detail;
         this.listener = listener;
 
-        SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        mediaPath = prefs.getString(NEWS_FEED_MEDIA_PATH, "");
+
+
         cd = new ConnectionDetector();
     }
 
@@ -76,6 +75,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     public void onBindViewHolder(@NonNull final NewsViewHolder holder, final int position) {
         Newsfeed_detail feedData = feed_detail.get(position);
         try {
+            mediaPath = SharedPreference.getPref(context,NEWS_FEED_MEDIA_PATH);
+            
             holder.nameTv.setText(feedData.getFirst_name() + " " + feedData.getLast_name());
             if (feedData.getCity_id() != null && !(feedData.getCity_id().equalsIgnoreCase(""))) {
                 holder.designationTv.setText(feedData.getDesignation() + " - " + feedData.getCity_id());
