@@ -58,6 +58,7 @@ import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsFeedPost.viewModel.PostNewsFeedViewModel;
 import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
+import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.yanzhenjie.album.AlbumFile;
 
@@ -77,7 +78,7 @@ import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
 
     private static final String API_KEY = "TVG20YJW1MXR";
-    ImageView iv_gif, iv_back_gif, iv_likes, iv_comments, iv_share,iv_profile;
+    ImageView iv_gif, iv_back_gif, iv_likes, iv_comments, iv_share, iv_profile, iv_back;
     EditText et_comment, et_search_gif;
     FrameLayout fl_gif_container, fl_post_comment;
     LinearLayout ll_comment_container,
@@ -87,7 +88,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     RecyclerView rv_gif, rv_comments;
     ProgressBar pb_emoji;
     ViewPager vp_media;
-    private String position;
+    private String position, newsfeedId;
     private Newsfeed_detail newsfeed_detail;
     public static int swipableAdapterPosition = 0;
     private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments, tv_no_of_likes;
@@ -98,7 +99,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     Dialog contentDialog;
     List<CommentDetail> commentList = new ArrayList<>();
     String noOfLikes = "0";
-    String likeStatus="";
+    String likeStatus = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,11 +112,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = getIntent();
         try {
             newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
+            newsfeedId = intent.getStringExtra("newsfeedId");
             position = intent.getStringExtra("position");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        iv_back = findViewById(R.id.iv_back);
         iv_gif = findViewById(R.id.iv_gif);
         iv_likes = findViewById(R.id.iv_likes);
         iv_profile = findViewById(R.id.iv_profile);
@@ -131,6 +135,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         fl_gif_container = findViewById(R.id.fl_gif_container);
         fl_post_comment = findViewById(R.id.fl_post_comment);
         fl_post_comment.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
         ll_comment_container = findViewById(R.id.ll_comment_container);
         ll_media_dots = findViewById(R.id.ll_media_dots);
         ll_main = findViewById(R.id.ll_main);
@@ -141,6 +146,20 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_date_time = findViewById(R.id.tv_date_time);
         tv_no_of_comments = findViewById(R.id.tv_no_of_comments);
         tv_no_of_likes = findViewById(R.id.tv_no_of_likes);
+
+        if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
+            if (newsfeed_detail == null || newsfeed_detail.getAttendee_id() == null) {
+                commentViewModel.getNewsFeedDetails(event_id, newsfeedId);
+                commentViewModel.newsFeedDeatils().observe(this, new Observer<FetchNewsfeedMultiple>() {
+                    @Override
+                    public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
+                        newsfeed_detail = fetchNewsfeedMultiple.getNewsfeed_detail().get(0);
+                    }
+                });
+            }
+        } else {
+            Snackbar.make(ll_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+        }
 
         String postStatus = newsfeed_detail.getPost_status().trim();
         if (!postStatus.trim().isEmpty()) {
@@ -206,7 +225,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         });
 
 
-        if(newsfeed_detail.getProfile_pic().trim()!=null) {
+        if (newsfeed_detail.getProfile_pic().trim() != null) {
             Glide.with(this)
                     .load(newsfeed_detail.getProfile_pic().trim())
                     .listener(new RequestListener<Drawable>() {
@@ -328,6 +347,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_back:
+                onBackPressed();
+                break;
             case R.id.iv_gif:
                 ll_comment_container.setVisibility(View.GONE);
                 if (fl_gif_container.getVisibility() == View.GONE) {

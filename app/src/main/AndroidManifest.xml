@@ -20,15 +20,13 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
-        tools:ignore="LockedOrientationActivity"
-        tools:replace="allowBackup"
+        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.splash.view.SplashAcivity"
@@ -90,19 +88,6 @@
             android:name=".ui.newsFeedPost.service.BackgroundServiceToCompressMedia"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.procialize.eventapp.android.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            tools:replace="android:authorities">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"
-                tools:replace="android:resource" />
-        </provider>
-
     </application>
 
 </manifest>

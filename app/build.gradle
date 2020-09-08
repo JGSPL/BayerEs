@@ -88,6 +88,12 @@ dependencies {
 
 //Emoji
     implementation 'org.apache.commons:commons-lang3:3.6'
+
+    //video caching
+    implementation project(path: ':library')
+
+    //Jwt token
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
 }
 
 

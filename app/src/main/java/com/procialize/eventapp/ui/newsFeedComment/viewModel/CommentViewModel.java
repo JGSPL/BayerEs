@@ -26,6 +26,7 @@ import com.procialize.eventapp.ui.newsFeedComment.networking.CommentRepository;
 import com.procialize.eventapp.ui.newsFeedComment.networking.GifRepository;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.networking.PostNewsFeedRepository;
+import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
@@ -48,33 +49,62 @@ public class CommentViewModel extends ViewModel {
     MutableLiveData<LoginOrganizer> reportCommentPost = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> commentDelete = new MutableLiveData<>();
     MutableLiveData<LikePost> likePost = new MutableLiveData<>();
+    MutableLiveData<FetchNewsfeedMultiple> newsFeedDetails = new MutableLiveData<>();
+
+
+    //-----------------For Gif---------------------------------
+
+    /**
+     * Get Anon id for gif
+     * @param key
+     */
     public void GetId(String key) {
         gifRepository = GifRepository.getInstance();
         anon_id = gifRepository.getGifId(key);
     }
 
+    public LiveData<String> getAnonId() {
+        return anon_id;
+    }
+    /**
+     * Get Gif images
+     * @param key
+     * @param anon_id
+     */
     public void GetGif(String key, String anon_id) {
         gifRepository = GifRepository.getInstance();
         mutableLiveData = gifRepository.getResult(key, anon_id);
-    }
-
-    public void searchGif(String query, String key, String anon_id) {
-        gifRepository = GifRepository.getInstance();
-        searchGifmutableLiveData = gifRepository.searchGif(query, key, anon_id);
     }
 
     public LiveData<GifResponse> getGifList() {
         return mutableLiveData;
     }
 
+    /**
+     * Serach gif accroding to text
+     * @param query
+     * @param key
+     * @param anon_id
+     */
+    public void searchGif(String query, String key, String anon_id) {
+        gifRepository = GifRepository.getInstance();
+        searchGifmutableLiveData = gifRepository.searchGif(query, key, anon_id);
+    }
+
     public LiveData<GifResponse> searchGifList() {
         return searchGifmutableLiveData;
     }
 
-    public LiveData<String> getAnonId() {
-        return anon_id;
-    }
+    //-------------------------------------------------------
 
+
+    /** --To Post comment
+     *
+     * @param event_id
+     * @param news_feed_id
+     * @param comment_data
+     * @param comment_type
+     */
     public void postComment(String event_id, String news_feed_id, String comment_data, String comment_type) {//, String[] mediaFile, String[] mediaFileThumb) {
         if (!comment_data.isEmpty()) {
             commentRepository = CommentRepository.getInstance();
@@ -87,6 +117,10 @@ public class CommentViewModel extends ViewModel {
         return commentLiveData;
     }
 
+    /**
+     * Validation for comment
+     * @param postStatus
+     */
     public void validation(String postStatus) {
         if (postStatus.isEmpty()) {
             isValid.setValue(false);
@@ -99,6 +133,13 @@ public class CommentViewModel extends ViewModel {
         return isValid;
     }
 
+    /**
+     * Top get Comment List
+     * @param event_id
+     * @param news_feed_id
+     * @param pageSize
+     * @param pageNumber
+     */
     public void getComment(String event_id, String news_feed_id, String pageSize, String pageNumber) {
         commentRepository = CommentRepository.getInstance();
         commentData = commentRepository.getCommentList(event_id, news_feed_id);//, pageSize,pageNumber);
@@ -108,6 +149,13 @@ public class CommentViewModel extends ViewModel {
         return commentData;
     }
 
+    /**
+     * To delete comment
+     * @param event_id
+     * @param news_feed_id
+     * @param comment_id
+     * @param position
+     */
     public void deleteComment(String event_id, String news_feed_id, String comment_id, int position) {
         commentRepository = CommentRepository.getInstance();
         commentDelete = commentRepository.deleteNewsFeedComment(event_id,
@@ -121,6 +169,11 @@ public class CommentViewModel extends ViewModel {
         return commentDelete;
     }
 
+    /**
+     * To Hide Comment
+     * @param event_id
+     * @param comment_id
+     */
     public void hideComment(String event_id, String comment_id) {
         commentRepository = CommentRepository.getInstance();
         commentHide = commentRepository.hideComment(event_id,
@@ -132,6 +185,13 @@ public class CommentViewModel extends ViewModel {
         return commentHide;
     }
 
+    /**
+     * To Report User
+     * @param event_id
+     * @param reported_user_id
+     * @param news_feed_id
+     * @param content
+     */
     public void reportUser(String event_id,String reported_user_id,String news_feed_id,String content) {
         commentRepository = CommentRepository.getInstance();
         commentHide = commentRepository.reportUser( event_id, reported_user_id, news_feed_id, content);
@@ -142,6 +202,12 @@ public class CommentViewModel extends ViewModel {
         return commentHide;
     }
 
+    /**
+     *To Report Comment
+     * @param event_id
+     * @param reported_user_id
+     * @param content
+     */
     public void reportComment(String event_id,String reported_user_id,String content) {
         commentRepository = CommentRepository.getInstance();
         reportCommentPost = commentRepository.reportComment( event_id, reported_user_id, content);
@@ -152,7 +218,11 @@ public class CommentViewModel extends ViewModel {
         return reportCommentPost;
     }
 
-    //---------------Like Action mechanism--------------------------------
+    /**
+     * To like post
+     * @param event_id
+     * @param newsfeedid
+     */
     public void likePost(  String event_id,String newsfeedid) {
         commentRepository =CommentRepository.getInstance();
         likePost = commentRepository.PostLike(event_id, newsfeedid);
@@ -160,5 +230,21 @@ public class CommentViewModel extends ViewModel {
 
     public LiveData<LikePost> likePostData() {
         return likePost;
+    }
+
+    /**
+     * Fetch News feed deatils
+     * @param eventId
+     * @param newsFeedId
+     */
+
+    public void getNewsFeedDetails(String eventId,String newsFeedId)
+    {
+        commentRepository =CommentRepository.getInstance();
+        newsFeedDetails = commentRepository.getNewsFeedDetails(eventId, newsFeedId);
+    }
+
+    public LiveData<FetchNewsfeedMultiple> newsFeedDeatils() {
+        return newsFeedDetails;
     }
 }

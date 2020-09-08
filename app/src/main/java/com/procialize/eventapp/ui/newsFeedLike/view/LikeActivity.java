@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -26,7 +28,7 @@ import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
 import java.util.List;
 
-public class LikeActivity extends AppCompatActivity {
+public class LikeActivity extends AppCompatActivity implements View.OnClickListener {
 
     ConnectionDetector connectionDetector;
     private String position;
@@ -36,6 +38,7 @@ public class LikeActivity extends AppCompatActivity {
     private List<LikeDetail> likeList;
     RecyclerView rv_like;
     LinearLayout ll_main;
+    ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,8 @@ public class LikeActivity extends AppCompatActivity {
         connectionDetector = ConnectionDetector.getInstance(this);
         ll_main = findViewById(R.id.ll_main);
         rv_like = findViewById(R.id.rv_like);
+        iv_back = findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(this);
         Intent intent = getIntent();
         try {
             newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
@@ -83,4 +88,12 @@ public class LikeActivity extends AppCompatActivity {
         commentAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                onBackPressed();
+                break;
+        }
+    }
 }

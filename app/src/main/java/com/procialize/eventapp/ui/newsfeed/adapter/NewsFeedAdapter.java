@@ -115,31 +115,27 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(feedData.getNews_feed_media().size()>0) {
+                    if (feedData.getNews_feed_media().size() > 0) {
                         listener.onContactSelected(feed_detail.get(position), position);
                     }
                 }
             });
 
-            if(feedData.getTotal_comments().equalsIgnoreCase("1"))
-            {
-                holder.tv_comment.setText(feedData.getTotal_comments()+" Comment");
-            }else
-            {
-                holder.tv_comment.setText(feedData.getTotal_comments()+" Comments");
+            if (feedData.getTotal_comments().equalsIgnoreCase("1")) {
+                holder.tv_comment.setText(feedData.getTotal_comments() + " Comment");
+            } else {
+                holder.tv_comment.setText(feedData.getTotal_comments() + " Comments");
             }
 
-            if(feedData.getTotal_likes().equalsIgnoreCase("1"))
-            {
-                holder.tv_like.setText(feedData.getTotal_likes()+" Like");
-            }else
-            {
-                holder.tv_like.setText(feedData.getTotal_likes()+" Likes");
+            if (feedData.getTotal_likes().equalsIgnoreCase("1")) {
+                holder.tv_like.setText(feedData.getTotal_likes() + " Like");
+            } else {
+                holder.tv_like.setText(feedData.getTotal_likes() + " Likes");
 
                 holder.vp_slider.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(feedData.getNews_feed_media().size()>0) {
+                        if (feedData.getNews_feed_media().size() > 0) {
 
                             listener.onContactSelected(feed_detail.get(position), position);
                         }
@@ -185,17 +181,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 }
             });
 
-            holder.iv_share.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (cd.isConnectingToInternet()) {
-                        listener.shareTvFollowOnClick(v, feed_detail.get(position), position);
-                    } else {
-                        Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
             if (!feedData.getPost_status().isEmpty() && feedData.getPost_status() != null) {
                 holder.tv_status.setText(feedData.getPost_status());
                 holder.tv_status.setVisibility(View.VISIBLE);
@@ -204,55 +189,56 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             }
 
 
-
-            if (feedData.getNews_feed_media().size() > 0) {
-                holder.vp_slider.setVisibility(View.VISIBLE);
-                holder.ll_dots.setVisibility(View.VISIBLE);
-                List<News_feed_media> news_feed_media1 = feedData.getNews_feed_media();
-                final ArrayList<String> imagesSelectednew = new ArrayList<>();
-                final ArrayList<String> imagesSelectednew1 = new ArrayList<>();
-                for (int i = 0; i < news_feed_media1.size(); i++) {
-                    // imagesSelectednew.add(newsFeedPath /*ApiConstant.newsfeedwall*/ + news_feed_media1.get(i).getMediaFile());
-                    imagesSelectednew.add(mediaPath + news_feed_media1.get(i).getMedia_file());
-                    if (news_feed_media1.get(i).getMedia_file().contains("mp4")) {
-                        // imagesSelectednew1.add(newsFeedPath /*ApiConstant.newsfeedwall*/ + news_feed_media1.get(i).getThumb_image());
-                        imagesSelectednew1.add(mediaPath + news_feed_media1.get(i).getThumb_image());
-                    } else {
-                        imagesSelectednew1.add("");
+            if (feedData.getNews_feed_media() != null) {
+                if (feedData.getNews_feed_media().size() > 0) {
+                    holder.vp_slider.setVisibility(View.VISIBLE);
+                    holder.ll_dots.setVisibility(View.VISIBLE);
+                    List<News_feed_media> news_feed_media1 = feedData.getNews_feed_media();
+                    final ArrayList<String> imagesSelectednew = new ArrayList<>();
+                    final ArrayList<String> imagesSelectednew1 = new ArrayList<>();
+                    for (int i = 0; i < news_feed_media1.size(); i++) {
+                        // imagesSelectednew.add(newsFeedPath /*ApiConstant.newsfeedwall*/ + news_feed_media1.get(i).getMediaFile());
+                        imagesSelectednew.add(mediaPath + news_feed_media1.get(i).getMedia_file());
+                        if (news_feed_media1.get(i).getMedia_file().contains("mp4")) {
+                            // imagesSelectednew1.add(newsFeedPath /*ApiConstant.newsfeedwall*/ + news_feed_media1.get(i).getThumb_image());
+                            imagesSelectednew1.add(mediaPath + news_feed_media1.get(i).getThumb_image());
+                        } else {
+                            imagesSelectednew1.add("");
+                        }
                     }
-                }
 
-                final SwipeMultimediaAdapter swipepagerAdapter = new SwipeMultimediaAdapter(context, imagesSelectednew, imagesSelectednew1, news_feed_media1);
-                holder.vp_slider.setAdapter(swipepagerAdapter);
-                swipepagerAdapter.notifyDataSetChanged();
-                holder.vp_slider.setCurrentItem(0);
+                    final SwipeMultimediaAdapter swipepagerAdapter = new SwipeMultimediaAdapter(context, imagesSelectednew, imagesSelectednew1, news_feed_media1);
+                    holder.vp_slider.setAdapter(swipepagerAdapter);
+                    swipepagerAdapter.notifyDataSetChanged();
+                    holder.vp_slider.setCurrentItem(0);
 
-                if (imagesSelectednew.size() > 1) {
-                    setupPagerIndidcatorDots(0, holder.ll_dots, imagesSelectednew.size());
-                    holder.vp_slider.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                        @Override
-                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                            JzvdStd.goOnPlayOnPause();
-                        }
+                    if (imagesSelectednew.size() > 1) {
+                        setupPagerIndidcatorDots(0, holder.ll_dots, imagesSelectednew.size());
+                        holder.vp_slider.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                            @Override
+                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                                JzvdStd.goOnPlayOnPause();
+                            }
 
-                        @Override
-                        public void onPageSelected(int position1) {
-                            JzvdStd.goOnPlayOnPause();
-                            swipableAdapterPosition = position1;
-                            setupPagerIndidcatorDots(position1, holder.ll_dots, imagesSelectednew.size());
-                        }
+                            @Override
+                            public void onPageSelected(int position1) {
+                                JzvdStd.goOnPlayOnPause();
+                                swipableAdapterPosition = position1;
+                                setupPagerIndidcatorDots(position1, holder.ll_dots, imagesSelectednew.size());
+                            }
 
-                        @Override
-                        public void onPageScrollStateChanged(int state) {
-                            JzvdStd.goOnPlayOnPause();
-                        }
-                    });
-                } else {
+                            @Override
+                            public void onPageScrollStateChanged(int state) {
+                                JzvdStd.goOnPlayOnPause();
+                            }
+                        });
+                    } else {
+                        holder.ll_dots.setVisibility(View.GONE);
+                    }
+                } else /*if (feedData.getNews_feed_media().size() == 0)*/ {
                     holder.ll_dots.setVisibility(View.GONE);
+                    holder.vp_slider.setVisibility(View.GONE);
                 }
-            } else if (feedData.getNews_feed_media().size() == 0) {
-                holder.ll_dots.setVisibility(View.GONE);
-                holder.vp_slider.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -264,14 +250,28 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         return feed_detail.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     public interface FeedAdapterListner {
         void onContactSelected(Newsfeed_detail feed, int position);
+
         void onCommentClick(Newsfeed_detail feed, int position);
+
         void onLikeClick(Newsfeed_detail feed, int position);
-        void onSliderClick (Newsfeed_detail feed, int position);
+
+        void onSliderClick(Newsfeed_detail feed, int position);
+
         void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position);
+
         void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext);
-        void shareTvFollowOnClick(View v, Newsfeed_detail feedList, int position);
 
     }
 
@@ -280,7 +280,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         TextView nameTv;
         TextView designationTv, tv_concat, companyTv, dateTv, tv_status, testdata;
         TextView tv_like, tv_comment;
-        ImageView moreIV, profileIV,iv_comments, iv_like, iv_share;
+        ImageView moreIV, profileIV, iv_comments, iv_like;
         ProgressBar progressView;
         ViewPager vp_slider;
         LinearLayout ll_dots, ll_bottom;
@@ -300,7 +300,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             tv_concat = itemView.findViewById(R.id.tv_concat);
             tv_status = itemView.findViewById(R.id.tv_status);
             testdata = itemView.findViewById(R.id.testdata);
-            iv_share = itemView.findViewById(R.id.iv_share);
 
             tv_like = itemView.findViewById(R.id.tv_like);
             tv_comment = itemView.findViewById(R.id.tv_comment);

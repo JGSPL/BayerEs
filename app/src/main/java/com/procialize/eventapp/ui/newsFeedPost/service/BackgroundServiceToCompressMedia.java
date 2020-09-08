@@ -48,7 +48,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         Log.d("BackgroundService", "Service Started");
-        Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Service started", Toast.LENGTH_SHORT).show();
         loadFFMpegBinary();
         EventAppDB eventAppDB = EventAppDB.getDatabase(this);
         mediaList = eventAppDB.uploadMultimediaDao().getNonCompressesMultimediaBg();
