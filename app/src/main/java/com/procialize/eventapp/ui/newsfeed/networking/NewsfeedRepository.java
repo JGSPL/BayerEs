@@ -11,6 +11,7 @@ import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
+import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
@@ -31,6 +32,8 @@ public class NewsfeedRepository {
     MutableLiveData<FetchNewsfeedMultiple> newsData = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsDataUploaded = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> reportPostUpdate = new MutableLiveData<>();
+    MutableLiveData<LikePost> liketPostUpdate = new MutableLiveData<>();
+
 
     MutableLiveData<Boolean> isUpdated = new MutableLiveData<>();
 
@@ -148,10 +151,13 @@ public class NewsfeedRepository {
         });
         return reportPostUpdate;
     }
+    public LiveData<LikePost> getLikeActivity() {
+        return liketPostUpdate;
+    }
+
     public LiveData<LoginOrganizer> getPostActivity() {
         return reportPostUpdate;
     }
-
 
 
     public MutableLiveData<LoginOrganizer> ReportPost(String id, String news_feed_id, String content) {
@@ -224,28 +230,31 @@ public class NewsfeedRepository {
     }
 
 
-    public MutableLiveData<LoginOrganizer> PostLike(String id, String news_feed_id) {
+    public MutableLiveData<LikePost> PostLike(String id, String news_feed_id) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.PostLike(id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
+        newsfeedApi.PostLike(id, news_feed_id).enqueue(new Callback<LikePost>() {
             @Override
-            public void onResponse(Call<LoginOrganizer> call,
-                                   Response<LoginOrganizer> response) {
+            public void onResponse(Call<LikePost> call,
+                                   Response<LikePost> response) {
                 if (response.isSuccessful()) {
-                    reportPostUpdate.setValue(response.body());
+                    liketPostUpdate.setValue(response.body());
                     newsRepository.getNewsFeed("1", "30", "1");
 
                 }
             }
 
             @Override
-            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
-                reportPostUpdate.setValue(null);
+            public void onFailure(Call<LikePost> call, Throwable t) {
+                liketPostUpdate.setValue(null);
 
             }
         });
-        return reportPostUpdate;
+        return liketPostUpdate;
     }
 
+    public LiveData<LikePost> likePostData() {
+        return liketPostUpdate;
+    }
 
 }

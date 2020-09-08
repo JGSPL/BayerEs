@@ -37,13 +37,14 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_weight="1" />
 
     <LinearLayout
         android:id="@+id/ll_media_dots"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:layout_below="@+id/vp_media"
         android:layout_marginBottom="10dp"
         android:gravity="center_vertical|center_horizontal"

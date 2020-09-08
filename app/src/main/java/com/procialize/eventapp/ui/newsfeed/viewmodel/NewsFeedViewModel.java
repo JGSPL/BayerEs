@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
+import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
@@ -61,9 +63,12 @@ public class NewsFeedViewModel extends ViewModel {
     private MutableLiveData<Boolean> mIsUpdating = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsfeedReport = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsfeedHide = new MutableLiveData<>();
+    MutableLiveData<LikePost> newsfeedLike= new MutableLiveData<>();
+
     //private MutableLiveData<Boolean> mIsUploading = new MutableLiveData<>();
     MutableLiveData<Boolean> isValid = new MutableLiveData<>();
-
+    String noOfLikes = "0";
+    String likeStatus="";
      public void init(String pagesize, String pagenumber) {
        /* if (mutableLiveData != null) {
             return;
@@ -108,9 +113,63 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //---------------View Like Action mechanism--------------------------------
-    public void openLikeimg(  String event_id,String newsfeedid) {
+    public void openLikeimg(Activity activity, String event_id, String newsfeedid, View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
+         activityVar = activity;
         newsRepository = NewsfeedRepository.getInstance();
-        newsfeedHide = newsRepository.PostLike(event_id, newsfeedid);
+        if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
+            newsfeedLike = newsRepository.PostLike(event_id, newsfeedid);
+
+         newsRepository.getLikeActivity().observe((LifecycleOwner) activityVar, new Observer<LikePost>() {
+              @Override
+              public void onChanged(LikePost loginOrganizer) {
+                if (loginOrganizer != null) {
+
+                    List<Header> heaserList = loginOrganizer.getHeader();
+                        String status = heaserList.get(0).getType();
+                        if (status.equalsIgnoreCase("success")) {
+                            likeStatus = loginOrganizer.getLike_status();
+                            noOfLikes = liketext.getText().toString().split(" ")[0];
+                            if (likeStatus.equalsIgnoreCase("1")) {
+                                //newsFeedFragment.showLikeCount(Integer.parseInt(noOfLikes) + 1);
+                                int LikeCount = Integer.parseInt(noOfLikes) + 1;
+                                if (LikeCount == 1) {
+                                    liketext.setText(LikeCount + " Like");
+                                } else {
+                                    liketext.setText(LikeCount + " Likes");
+                                }
+                                likeimage.setImageDrawable(activityVar.getDrawable(R.drawable.ic_active_like));
+                                noOfLikes = "0";
+                                likeStatus = "";
+                            } else {
+                                if (Integer.parseInt(noOfLikes) > 0) {
+                                    int LikeCount = Integer.parseInt(noOfLikes) + 1;
+                                    if (LikeCount == 1) {
+                                        liketext.setText(LikeCount + " Like");
+                                    } else {
+                                        liketext.setText(LikeCount + " Likes");
+                                    }
+                                    likeimage.setImageDrawable(activityVar.getDrawable(R.drawable.ic_like));
+                                    noOfLikes = "0";
+                                }
+                                noOfLikes = "0";
+                                likeStatus = "";
+                            }
+                            Snackbar.make(NewsFeedFragment.cl_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                        }
+                        /*if (commentViewModel != null && commentViewModel.likePostData().hasObservers()) {
+                            commentViewModel.likePostData().removeObservers(CommentActivity.this);
+                        }*/
+                    }
+
+                    Snackbar.make(NewsFeedFragment.cl_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+
+                  }
+
+          });
+        } else {
+        Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+        }
+
     }
 
     ///------------------Open More dot features------------------

@@ -22,7 +22,7 @@ import retrofit2.http.Part;
 
 public interface APIService {
 
-     String HeaderToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiJjYWU1MzljNGViMzcwMTI4ZTc3MDIwY2M0ZTdmOTRlMmRhZDIxYjUwIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTI4MjIxNCwiZXhwaXJ5X3RpbWUiOjE1OTkyODU4MTR9.kXZylcC-mT6sv94wGQJbzyEhTAF63plIsglnU0GFZOQ";
+     String HeaderToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJTaW5naCIsIm1vYmlsZSI6Ijk5ODczMTU2ODIiLCJlbWFpbCI6InByZWV0aUBwcm9jaWFsaXplLmluIiwicmVmcmVzaF90b2tlbiI6ImEwM2VjMGM5NjhkZjk5NWFhNjhlZjg0MmRjMjdiZWJhMTQ5MWYxN2YiLCJ1c2VyX3R5cGUiOiJBIiwidmVyaWZ5X290cCI6IjEiLCJwcm9maWxlX3BpYyI6Imh0dHBzOlwvXC9zdGFnZS1hZG1pbi5wcm9jaWFsaXplLmxpdmVcL2Jhc2VhcHBcL3VwbG9hZHNcL3VzZXJcL2RlZmF1bHQucG5nIiwiaXNfZ29kIjoiMCIsInRpbWUiOjE1OTk0NDY2NTYsImV4cGlyeV90aW1lIjoxNTk5NDUwMjU2fQ.XA4Nk1eyepk39S5NIxHYeI3AkqPXDmSHWO_d1rZWvJs";
 
     @POST("event_api_call/commonLogin")
     @FormUrlEncoded
@@ -115,7 +115,7 @@ public interface APIService {
     @Headers("authorization: "+HeaderToken)
     @POST("NewsFeed_api/PostLike")
     @FormUrlEncoded
-    Call<LoginOrganizer> PostLike(@Field("event_id") String event_id,
+    Call<LikePost> PostLike(@Field("event_id") String event_id,
                                     @Field("news_feed_id") String news_feed_id);
 
     @Headers("authorization: "+HeaderToken)

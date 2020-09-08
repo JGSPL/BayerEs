@@ -21,7 +21,9 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 
 import java.io.Serializable;
@@ -132,8 +134,25 @@ public class SwipeMultimediaAdapter extends PagerAdapter {
 
         view.addView(myImageLayout, 0);
 
+        myImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
+                    if(news_feed_media.size()>0) {
+
+                        Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
+                        edit.putExtra("position", position);
+                        edit.putExtra("media_list", ( Serializable ) news_feed_media);
+                        context.startActivity(edit);
+                    }
+                }
+            }
+        });
+
         return myImageLayout;
     }
+
+
 
     @Override
     public boolean isViewFromObject(View view, Object object) {

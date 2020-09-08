@@ -110,7 +110,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     String reaction_type;
     String strPath;
     private Dialog dialogShare;
-
+    TextView txtLike;
 
     public static NewsFeedFragment newInstance() {
 
@@ -228,7 +228,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void onContactSelected(Newsfeed_detail feed, int position) {
-        newsfeedViewModel.openNewsFeedDetails(getActivity(), feed, position);
+        //newsfeedViewModel.openNewsFeedDetails(getActivity(), feed, position);
     }
 
     @Override
@@ -256,7 +256,10 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
-        int count = Integer.parseInt(feed.getTotal_likes());
+
+        newsfeedViewModel.openLikeimg(getActivity(), eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
+
+       /* int count = Integer.parseInt(feed.getTotal_likes());
 
         Drawable drawables = likeimage.getDrawable();
         Bitmap bitmap = ((BitmapDrawable) drawables).getBitmap();
@@ -270,11 +273,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             feed.setLike_flag("");
             likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
 //            likeimage.setBackgroundResource(R.drawable.ic_like);
-            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
-                newsfeedViewModel.openLikeimg(eventid,feed.getNews_feed_id());
-            } else {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
+                newsfeedViewModel.openLikeimg(getActivity(), eventid,feed.getNews_feed_id());
+
             try {
 
                 if (count > 0) {
@@ -301,14 +301,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         } else {
             feed.setLike_flag("1");
             likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
-           /*int color = Color.parseColor(colorActive);
-            likeimage.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*/
-            reaction_type = "0";
-            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
-                newsfeedViewModel.openLikeimg(eventid,feed.getNews_feed_id());
-            } else {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
+         //   reaction_type = "0";
+                newsfeedViewModel.openLikeimg(getActivity(), eventid,feed.getNews_feed_id());
+
 
             try {
 
@@ -326,7 +321,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 e.printStackTrace();
             }
 
-        }
+        }*/
     }
 
     @Override
@@ -484,13 +479,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 directory.mkdirs();
                             }
                             strPath = folder + newsFeedMedia.get(swipableAdapterPosition).getMedia_file();
-                              /*              ContentValues content = new ContentValues(4);
-                                            content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
-                                                    System.currentTimeMillis() / 1000);
-                                            content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                                            content.put(MediaStore.Video.Media.DATA, strPath);
-                                            ContentResolver resolver = getActivity().getContentResolver();
-                                            Uri uri =strPath; resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);*/
                             Uri contentUri = FileProvider.getUriForFile(getActivity(),
                                     BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));
 
@@ -505,9 +493,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         dialogShare = new Dialog(getActivity());
                         dialogShare.show();
                         SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                        // String newsFeedPath = prefs.getString(NEWS_FEED_MEDIA_PATH, "");
-                        String newsFeedPath = "https://stage-admin.procialize.live/baseapp/uploads/news_feed_media/";
-                        shareImage(feedList.getPost_date() + "\n" + feedList.getPost_status(), /*ApiConstant.newsfeedwall*/newsFeedPath + newsFeedMedia.get(swipableAdapterPosition).getMedia_file(), getContext());
+                         String newsFeedPath = prefs.getString(NEWS_FEED_MEDIA_PATH, "");
+                        //String newsFeedPath = "https://stage-admin.procialize.live/baseapp/uploads/news_feed_media/";
+                        shareImage(feedList.getPost_date() + "\n" + feedList.getPost_status(), /*ApiConstant.newsfeedwall*/newsFeedPath.trim() + newsFeedMedia.get(swipableAdapterPosition).getMedia_file(), getContext());
                     }
                 } else {
                     shareTextUrl(feedList.getPost_date() + "\n" + feedList.getPost_status(), StringEscapeUtils.unescapeJava(feedList.getPost_status()));
@@ -704,6 +692,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             startActivity(Intent.createChooser(sharingIntent, "Share Video"));
 
         }
+
+
     }
+
 
 }
