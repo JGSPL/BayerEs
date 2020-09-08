@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.ui.newsFeedDetails.adapter.NewsFeedDetailsPagerAdapter;
 import com.procialize.eventapp.ui.newsFeedDetails.viewModel.NewsFeedDetailsViewModel;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
@@ -61,8 +62,8 @@ import java.util.List;
 import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
-import static com.procialize.eventapp.Constants.Constant.NEWS_FEED_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
 public class NewsFeedDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -97,9 +98,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             e.printStackTrace();
         }
 
-        SharedPreferences prefs = this.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-         newsFeedPath = prefs.getString(NEWS_FEED_MEDIA_PATH, "");
-
+        newsFeedPath = SharedPreference.getPref(this,NEWS_FEED_MEDIA_PATH);
 
         btn_save = findViewById(R.id.btn_save);
         btn_share = findViewById(R.id.btn_share);
@@ -281,7 +280,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
                         if (type.equals("Video")) {
                             boolean isPresentFile = false;
-                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.folderName);
+                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY);
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
                                 for (int i = 0; i < children.length; i++) {
@@ -393,7 +392,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 //fileName = timestamp + "_" + fileName;
                 //External directory path to save file
                 //folder = Environment.getExternalStorageDirectory() + File.separator + "androiddeft/";
-                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.folderName + "/";
+                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + "/";
 
 
                 //Create androiddeft folder if it does not exist
@@ -428,7 +427,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 // closing streams
                 output.close();
                 input.close();
-                return "Download completed- check folder " + Constant.folderName;
+                return "Download completed- check folder " + Constant.FOLDER_DIRECTORY;
 
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
