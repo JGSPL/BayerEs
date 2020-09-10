@@ -6,20 +6,26 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.adapter.EventAdapter;
 import com.procialize.eventapp.ui.eventList.model.Event;
 import com.procialize.eventapp.ui.eventList.model.EventList;
+import com.procialize.eventapp.ui.eventList.model.LoginUserInfo;
+import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.eventList.viewModel.EventListViewModel;
 
 import java.util.HashMap;
@@ -35,10 +41,25 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     RecyclerView rv_event_list;
     EventAdapter eventAdapter;
     EditText et_search;
+    String eventid = "1",  device_token = "111111",  platform,  device, osVersion,  appVersion, deviceId;
+    SessionManager session;
+    String gcmRegID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
+
+        platform = "android";
+        device = Build.MODEL;
+        osVersion = Build.VERSION.RELEASE;
+        appVersion = "Version" + BuildConfig.VERSION_NAME;
+        deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
+
+        session = new SessionManager(getApplicationContext());
+
 
         ll_main = findViewById(R.id.ll_main);
         et_search = findViewById(R.id.et_search);
@@ -95,8 +116,38 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         eventAdapter.notifyDataSetChanged();
     }
 
+
+
     @Override
     public void onMoreSelected(EventList event, int position) {
-        eventListViewModel.openProfilePage(this,event,position);
+        if (cd.isConnectingToInternet()) {
+            eventListViewModel.updateUserData(eventid,device_token,platform,device,osVersion,appVersion,session);
+
+
+            eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
+                @Override
+                public void onChanged(UpdateDeviceInfo event) {
+                    List<LoginUserInfo> userData = event.getLoginUserInfoList();
+                    String fname = userData.get(0).getFirst_name();
+                    String lName = userData.get(0).getLast_name();
+                    String designation = userData.get(0).getDesignation();
+                    String company = userData.get(0).getCompany_name();
+                    String attnId = userData.get(0).getAttendee_id();
+                    String profilePic = userData.get(0).getProfile_picture();
+                    String city = userData.get(0).getCity();
+                    String is_god = userData.get(0).getIs_god();
+                    String emailId = userData.get(0).getEmail();
+                    session.createLoginSession(fname,lName,emailId,"",company,designation, "",city,profilePic,attnId,"",is_god);
+
+                    eventListViewModel.openProfilePage(EventListActivity.this,userData,position);
+
+                }
+            });
+        } else {
+            Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
+        }
+
+
     }
+
 }

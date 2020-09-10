@@ -8,9 +8,10 @@ public class Constant {
     public static final String BASE_URL = "https://stage-admin.procialize.live/baseapp/api/v1/";
     public static final String TENOR_URL = "https://api.tenor.com/v1/";
     public static final String KEY_PATH = "path";
-    public static final String REQUEST_IMAGE = "IMAGE";
-    public static final String REQUEST_VIDEO = "VIDEO";
-    public static final String REQUEST_CAMERA = "CAMERA";
+    public static final int REQUEST_IMAGE = 2;
+    public static final int REQUEST_VIDEO = 3;
+    public static final int SELECT_FILE = 4;
+    public static final int REQUEST_CAMERA = 1;
     public static final String FOLDER_DIRECTORY = "/EventApp";
     public static final String IMAGE_DIRECTORY = "/Images";
     public static final String VIDEO_DIRECTORY = "/Video";

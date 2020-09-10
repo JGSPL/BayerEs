@@ -53,6 +53,20 @@ public class EventList implements Serializable {
     @Expose
     private String color_five;
 
+    public EventList(String event_id, String name, String logo, String backgroundImage, String color_one, String color_two, String color_three, String color_four, String color_five) {
+        this.event_id = event_id;
+        this.name = name;
+        this.event_image = logo;
+        this.background_image = backgroundImage;
+        this.color_one = color_one;
+        this.color_two = color_two;
+        this.color_three = color_three;
+        this.color_four = color_four;
+        this.color_five = color_five;
+
+    }
+
+
     public String getEvent_id() {
         return event_id;
     }

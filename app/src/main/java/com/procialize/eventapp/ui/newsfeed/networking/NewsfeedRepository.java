@@ -10,9 +10,7 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
-import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
-import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 
@@ -33,7 +31,7 @@ public class NewsfeedRepository {
     MutableLiveData<LoginOrganizer> newsDataUploaded = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> reportPostUpdate = new MutableLiveData<>();
     MutableLiveData<LikePost> liketPostUpdate = new MutableLiveData<>();
-
+    String token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIwNTE0M2JmOTI0NzcwYTk5MTdlZjNhMWU5MjY4MGE3NTU5M2M1NDZiIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiJodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC8xNTk5NTczNjM0ODMzNC5qcGciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTcyNzQ0MiwiZXhwaXJ5X3RpbWUiOjE1OTk3MzEwNDJ9.HcJDPuJMtS_o8Q6FrzUmHWNulrPzNcAzAhodkCa9E0M";
 
     MutableLiveData<Boolean> isUpdated = new MutableLiveData<>();
 
@@ -53,7 +51,7 @@ public class NewsfeedRepository {
     public MutableLiveData<FetchNewsfeedMultiple> getNewsFeed(String id, String pageSize, String pageNumber) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.NewsFeedFetchMultiple(id, pageSize, pageNumber).enqueue(new Callback<FetchNewsfeedMultiple>() {
+        newsfeedApi.NewsFeedFetchMultiple(token,id, pageSize, pageNumber).enqueue(new Callback<FetchNewsfeedMultiple>() {
             @Override
             public void onResponse(Call<FetchNewsfeedMultiple> call,
                                    Response<FetchNewsfeedMultiple> response) {
@@ -81,9 +79,9 @@ public class NewsfeedRepository {
         List<MultipartBody.Part> thumbParts = new ArrayList<>();
         for (int i = 0; i < resultList.size(); i++) {
             File file;
-            if(resultList.get(i).getMimeType().contains("gif")){
+            if (resultList.get(i).getMimeType().contains("gif")) {
                 file = new File(resultList.get(i).getMedia_file());
-            }else {
+            } else {
                 if (!resultList.get(i).getCompressedPath().isEmpty()) {
                     file = new File(resultList.get(i).getCompressedPath());
                 } else {
@@ -108,14 +106,14 @@ public class NewsfeedRepository {
                     @Override
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                         if (response.isSuccessful()) {
-                            Log.d("PostResponse",response.body().getHeader().get(0).getMsg());
+                            Log.d("PostResponse", response.body().getHeader().get(0).getMsg());
                             newsDataUploaded.setValue(response.body());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<LoginOrganizer> call, Throwable t) {
-                        Log.d("PostResponse",t.getMessage()+"==>Failure");
+                        Log.d("PostResponse", t.getMessage() + "==>Failure");
                         newsDataUploaded.setValue(null);
                     }
                 });
@@ -151,6 +149,7 @@ public class NewsfeedRepository {
         });
         return reportPostUpdate;
     }
+
     public LiveData<LikePost> getLikeActivity() {
         return liketPostUpdate;
     }
@@ -163,7 +162,7 @@ public class NewsfeedRepository {
     public MutableLiveData<LoginOrganizer> ReportPost(String id, String news_feed_id, String content) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.ReportPost(id, news_feed_id,content).enqueue(new Callback<LoginOrganizer>() {
+        newsfeedApi.ReportPost(id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
@@ -184,10 +183,10 @@ public class NewsfeedRepository {
     }
 
 
-    public MutableLiveData<LoginOrganizer> ReportUser(String id,String attn_id, String news_feed_id, String content) {
+    public MutableLiveData<LoginOrganizer> ReportUser(String id, String attn_id, String news_feed_id, String content) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.ReportUser(id,attn_id, news_feed_id,content).enqueue(new Callback<LoginOrganizer>() {
+        newsfeedApi.ReportUser(id, attn_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
@@ -206,6 +205,7 @@ public class NewsfeedRepository {
         });
         return reportPostUpdate;
     }
+
     public MutableLiveData<LoginOrganizer> DeletePost(String id, String news_feed_id) {
         newsfeedApi = ApiUtils.getAPIService();
 

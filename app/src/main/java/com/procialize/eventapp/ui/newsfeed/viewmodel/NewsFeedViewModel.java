@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -28,8 +27,6 @@ import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
-import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;

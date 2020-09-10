@@ -41,6 +41,14 @@ public class CommentRepository {
         commentApi = ApiUtils.getAPIService();
     }
 
+    /**
+     *
+     * @param event_id
+     * @param news_feed_id
+     * @param comment_data
+     * @param commentType
+     * @return
+     */
     public MutableLiveData<LoginOrganizer> postComment(String event_id, String news_feed_id, String comment_data, String commentType) {
         commentApi.PostComment(event_id,
                 news_feed_id,
@@ -63,6 +71,14 @@ public class CommentRepository {
         return commentData;
     }
 
+    /**
+     *
+     * @param event_id
+     * @param news_feed_id
+     * @param comment_id
+     * @param position
+     * @return
+     */
     public MutableLiveData<LoginOrganizer> deleteNewsFeedComment(String event_id, String news_feed_id, String comment_id, int position) {
         commentApi = ApiUtils.getAPIService();
         commentApi.DeleteComment(event_id, comment_id).enqueue(new Callback<LoginOrganizer>() {
@@ -82,6 +98,12 @@ public class CommentRepository {
         return deleteCommentData;
     }
 
+    /**
+     *
+     * @param event_id
+     * @param comment_id
+     * @return
+     */
     public MutableLiveData<LoginOrganizer> hideComment(String event_id, String comment_id) {
         commentApi = ApiUtils.getAPIService();
         commentApi.CommentHide(event_id, comment_id).enqueue(new Callback<LoginOrganizer>() {
@@ -101,6 +123,12 @@ public class CommentRepository {
         return hideCommentData;
     }
 
+    /**
+     *
+     * @param event_id
+     * @param news_feed_id
+     * @return
+     */
     public MutableLiveData<Comment> getCommentList(String event_id, String news_feed_id) {//, String pageSize, String pageNumber) {
         commentApi.getComment(event_id,
                 news_feed_id/*,
@@ -123,6 +151,14 @@ public class CommentRepository {
         return commentList;
     }
 
+    /**
+     *
+     * @param event_id
+     * @param reported_user_id
+     * @param news_feed_id
+     * @param content
+     * @return
+     */
     public MutableLiveData<LoginOrganizer> reportUser(String event_id,String reported_user_id,String news_feed_id,String content) {
         commentApi = ApiUtils.getAPIService();
 
@@ -144,6 +180,13 @@ public class CommentRepository {
         return reportUser;
     }
 
+    /**
+     *
+     * @param event_id
+     * @param comment_id
+     * @param content
+     * @return
+     */
     public MutableLiveData<LoginOrganizer> reportComment(String event_id,String comment_id,String content) {
         commentApi = ApiUtils.getAPIService();
 
@@ -165,6 +208,12 @@ public class CommentRepository {
         return reportComment;
     }
 
+    /**
+     *
+     * @param event_id
+     * @param news_feed_id
+     * @return
+     */
     public MutableLiveData<LikePost> PostLike(String event_id, String news_feed_id) {
         commentApi = ApiUtils.getAPIService();
 
@@ -185,6 +234,12 @@ public class CommentRepository {
         return likePost;
     }
 
+    /**
+     *
+     * @param eventId
+     * @param newsFeedId
+     * @return
+     */
     public MutableLiveData<FetchNewsfeedMultiple> getNewsFeedDetails(String eventId, String newsFeedId) {
         commentApi = ApiUtils.getAPIService();
 

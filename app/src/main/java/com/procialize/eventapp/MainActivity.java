@@ -33,6 +33,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.sql.Timestamp;
+
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -75,11 +77,33 @@ public class MainActivity extends AppCompatActivity {
         setUpToolbar();
         setUpNavDrawer();
 
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiJjYWU1MzljNGViMzcwMTI4ZTc3MDIwY2M0ZTdmOTRlMmRhZDIxYjUwIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTI4MjIxNCwiZXhwaXJ5X3RpbWUiOjE1OTkyODU4MTR9.kXZylcC-mT6sv94wGQJbzyEhTAF63plIsglnU0GFZOQ";
+        //String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiJjYWU1MzljNGViMzcwMTI4ZTc3MDIwY2M0ZTdmOTRlMmRhZDIxYjUwIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTI4MjIxNCwiZXhwaXJ5X3RpbWUiOjE1OTkyODU4MTR9.kXZylcC-mT6sv94wGQJbzyEhTAF63plIsglnU0GFZOQ";
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIxYTE0NDljYzM5ZDVhZjFlMTkwYzRkNGQ3ZGJmMzc2ZGE4NmQ3ZjE2IiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiJodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC8xNTk5NTczNjM0ODMzNC5qcGciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTY0NDg3MCwiZXhwaXJ5X3RpbWUiOjE1OTk2NDg0NzB9.2wPbwyM65sb0ipQKMZgbTQlBtPNEhIjzHCdKR6VXgRg";
         JWT jwt = new JWT(token);
+        //String mobile = jwt.getClaim("mobile").asString();
+        String first_name = jwt.getClaim("first_name").asString();
+        String middle_name = jwt.getClaim("middle_name").asString();
+        String last_name = jwt.getClaim("last_name").asString();
         String mobile = jwt.getClaim("mobile").asString();
-        boolean isExpired = jwt.isExpired(10);
+        String email = jwt.getClaim("email").asString();
+        String refresh_token = jwt.getClaim("refresh_token").asString();
+        String user_type = jwt.getClaim("user_type").asString();
+        String verify_otp = jwt.getClaim("verify_otp").asString();
+        String profile_pic = jwt.getClaim("profile_pic").asString();
+        String is_god = jwt.getClaim("is_god").asString();
+        String time = jwt.getClaim("time").asString();
+        String expiry_time = jwt.getClaim("expiry_time").asString();
 
+        Timestamp timestamp_open = new Timestamp(Long.parseLong(time));
+        Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expiry_time));
+       /* boolean isExpired = jwt.isExpired(10);
+        try {
+            String deocdedToken = Utility.decoded(token);
+            String deocdedToken1 = deocdedToken;
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {

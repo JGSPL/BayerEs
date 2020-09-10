@@ -1,5 +1,7 @@
 package com.procialize.eventapp.ui.login.viewmodel;
 
+import android.view.View;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
@@ -9,7 +11,10 @@ import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.validateOTP;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
+import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.login.model.Login;
+import com.procialize.eventapp.ui.login.view.LoginActivity;
+import com.procialize.eventapp.ui.splash.view.SplashAcivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -115,6 +120,8 @@ public class LoginViewModel extends BaseObservable {
     }
 
     public void onBackClicked() {
+        activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
+        activityLoginBinding.linearOTPView.setVisibility(View.GONE);
     }
 
     public void onOTPSubmitClicked() {
@@ -144,9 +151,10 @@ public class LoginViewModel extends BaseObservable {
             public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
                     setToastMessage(response.body().getHeader().get(0).getMsg());
-
                 } else {
-                    setToastMessage(response.body().getHeader().get(0).getMsg());
+                    if(response!=null) {
+                        setToastMessage(response.body().getHeader().get(0).getMsg());
+                    }
                 }
             }
 
@@ -158,16 +166,16 @@ public class LoginViewModel extends BaseObservable {
     }
 
     private void otpValidate(String username, String otp) {
-
-
         mApiService.validateOTP("0", username, otp).enqueue(new Callback<validateOTP>() {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
                     setToastMessage(response.body().getHeader().get(0).getMsg());
-
+                    LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
                 } else {
-                    setToastMessage(response.body().getHeader().get(0).getMsg());
+                    if(response!=null) {
+                        setToastMessage(response.body().getHeader().get(0).getMsg());
+                    }
                 }
             }
 
@@ -177,6 +185,4 @@ public class LoginViewModel extends BaseObservable {
             }
         });
     }
-
-
 }

@@ -3,7 +3,9 @@ package com.procialize.eventapp.ui.eventList.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LoginUserInfo {
+import java.io.Serializable;
+
+public class LoginUserInfo implements Serializable {
 
     @SerializedName("attendee_id")
     @Expose

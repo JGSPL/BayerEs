@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.procialize.eventapp"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -82,7 +82,6 @@ dependencies {
 
     //Library to compress video
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
-
     // Room components
     implementation "androidx.room:room-runtime:2.2.0"
     annotationProcessor "androidx.room:room-compiler:2.2.0"
@@ -100,6 +99,9 @@ dependencies {
 
     //Jwt token
     implementation 'com.auth0.android:jwtdecode:2.0.0'
+
+    //Cropping
+    implementation 'com.github.yalantis:ucrop:2.2.2-native'
 }
 
 

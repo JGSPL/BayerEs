@@ -85,8 +85,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     SwipeRefreshLayout feedrefresh;
     LinearLayout ll_whats_on_mind;
     String eventid = "1";
-    String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiJlNTcwY2JhMTMxODUwYjgzYjc4ZjE4M2FlZDI0MmM3MjI3YzQ1MTVhIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJ0aW1lIjoxNTk4ODUxMTU3LCJleHBpcnlfdGltZSI6MTU5ODg1NDc1N30.QtQwWAr8TKKGAqLwTbJtosSxDhrDrhdyH_sH1A-0qes";
-    ConnectionDetector connectionDetector;
+   ConnectionDetector connectionDetector;
     UploadMultimediaBackgroundReceiver mReceiver;
     IntentFilter mFilter;
     public static ConstraintLayout cl_main;
@@ -179,22 +178,25 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
                 public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
-                    List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
-                    if (newsfeedArrayList.size() > 0) {
-                        newsfeedArrayList.clear();
+                    if (fetchNewsfeedMultiple != null) {
+                        List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
+                        if (newsfeedArrayList.size() > 0) {
+                            newsfeedArrayList.clear();
+                        }
+                        newsfeedArrayList.addAll(feedList);
+                        insertIntoDb(feedList);
+                        String mediaPath = fetchNewsfeedMultiple.getMedia_path();
+
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(NEWS_FEED_MEDIA_PATH, mediaPath);
+                        SharedPreference.putPref(getActivity(), map);
+
+                        try {
+                            newsfeedAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                    newsfeedArrayList.addAll(feedList);
-                    insertIntoDb(feedList);
-                    String mediaPath = fetchNewsfeedMultiple.getMedia_path();
-
-                    HashMap<String,String> map = new HashMap<>();
-                    map.put(NEWS_FEED_MEDIA_PATH,mediaPath);
-                    SharedPreference.putPref(getActivity(),map);
-
-                    try {
-                        newsfeedAdapter.notifyDataSetChanged();
-                    }catch (Exception e)
-                    {e.printStackTrace();}
                 }
             });
         } else {

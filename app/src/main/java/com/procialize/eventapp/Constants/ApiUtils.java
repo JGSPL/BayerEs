@@ -15,4 +15,8 @@ public class ApiUtils {
     public static TenorApiService getTenorAPIService() {
         return TenorClient.getClient(Constant.TENOR_URL).create(TenorApiService.class);
     }
+
+    public static String storeHeaderToken(String Token) {
+        return Token;
+    }
 }
