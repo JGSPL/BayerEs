@@ -101,6 +101,7 @@ dependencies {
     implementation 'com.auth0.android:jwtdecode:2.0.0'
 
     //Cropping
+    //implementation 'com.github.yalantis:ucrop:2.2.2-native'
     implementation 'com.github.yalantis:ucrop:2.2.2-native'
 }
 

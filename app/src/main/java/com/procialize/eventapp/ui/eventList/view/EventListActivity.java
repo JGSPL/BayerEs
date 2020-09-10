@@ -6,12 +6,15 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -27,6 +30,7 @@ import com.procialize.eventapp.ui.eventList.model.EventList;
 import com.procialize.eventapp.ui.eventList.model.LoginUserInfo;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.eventList.viewModel.EventListViewModel;
+import com.procialize.eventapp.ui.login.view.LoginActivity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +48,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     String eventid = "1",  device_token = "111111",  platform,  device, osVersion,  appVersion, deviceId;
     SessionManager session;
     String gcmRegID;
+    ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
 
         session = new SessionManager(getApplicationContext());
 
+        iv_back = findViewById(R.id.iv_back);
 
         ll_main = findViewById(R.id.ll_main);
         et_search = findViewById(R.id.et_search);
@@ -104,6 +110,16 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                 } catch (Exception e) {
 
                 }
+
+            }
+        });
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                session.logoutUser();
+                startActivity(new Intent(EventListActivity.this, LoginActivity.class));
+                finishAffinity();
 
             }
         });
