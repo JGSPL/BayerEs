@@ -1,7 +1,5 @@
 package com.procialize.eventapp.ui.login.viewmodel;
 
-import android.view.View;
-
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -16,7 +14,6 @@ import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.login.model.Login;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
-import com.procialize.eventapp.ui.splash.view.SplashAcivity;
 
 import java.util.HashMap;
 
@@ -140,8 +137,9 @@ public class LoginViewModel extends BaseObservable {
     }
 
     public void onBackClicked() {
-        activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
-        activityLoginBinding.linearOTPView.setVisibility(View.GONE);
+       /* activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
+        activityLoginBinding.linearOTPView.setVisibility(View.GONE);*/
+        setToastMessage("back");
     }
 
     public void onOTPSubmitClicked() {
@@ -193,8 +191,15 @@ public class LoginViewModel extends BaseObservable {
                     setToastMessage(response.body().getHeader().get(0).getMsg());
                     LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
                 } else {
-                    if(response!=null) {
-                        setToastMessage(response.body().getHeader().get(0).getMsg());
+                    if (response.body() != null) {
+                        if (response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
+                            setToastMessage("Invalid credentials!");
+                        } else {
+                            setToastMessage(response.body().getHeader().get(0).getMsg());
+                        }
+
+                    } else {
+                        setToastMessage("Invalid credentials!");
                     }
                 }
             }
