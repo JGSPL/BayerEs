@@ -1,26 +1,11 @@
 package com.procialize.eventapp.ui.profile.view;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -33,6 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -41,10 +32,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.newsFeedComment.viewModel.CommentViewModel;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
@@ -57,9 +46,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.procialize.eventapp.Constants.Constant.REQUEST_CAMERA;
 import static com.procialize.eventapp.Constants.Constant.SELECT_FILE;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_CAMERA;
@@ -72,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public static final int RequestPermissionCode = 101;
     LinearLayout ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobile, ll_main;
     EditText et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile;
-    ImageView iv_profile, iv_change_profile;
+    ImageView iv_profile, iv_change_profile, iv_back;
     TextView tv_profile_pic;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
@@ -111,6 +97,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         ll_city = findViewById(R.id.ll_city);
         ll_email = findViewById(R.id.ll_email);
         ll_mobile = findViewById(R.id.ll_mobile);
+        iv_back = findViewById(R.id.iv_back);
 
         iv_profile = findViewById(R.id.iv_profile);
         iv_change_profile = findViewById(R.id.iv_change_profile);
@@ -126,6 +113,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         btn_save = findViewById(R.id.btn_save);
         btn_save.setOnClickListener(this);
         iv_change_profile.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
 
         if (connectionDetector.isConnectingToInternet()) {
             profileActivityViewModel.getProfile(event_id);
@@ -198,9 +186,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             if (profile.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                                 Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
                                 profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                            }
-                            else
-                            {
+                            } else {
                                 Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
                             }
                         } else {
@@ -219,6 +205,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 selectImage();
 
                 break;
+            case R.id.iv_back:
+                onBackPressed();
+
+                break;
         }
     }
 
@@ -235,7 +225,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask = "Take Photo";
                     if (result) {
-                        boolean cameraResult =  Utility.checkCameraPermission(ProfileActivity.this);
+                        boolean cameraResult = Utility.checkCameraPermission(ProfileActivity.this);
                         if (cameraResult) {
                             profileActivityViewModel.cameraIntent(ProfileActivity.this);
                         }
@@ -480,8 +470,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CAMERA :
-                {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -490,8 +479,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                 }
                 return;
-            }case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE :
-                {
+            }
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
