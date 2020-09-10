@@ -9,7 +9,6 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 
 import com.procialize.eventapp.Constants.Constant;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
 import com.procialize.eventapp.session.SessionManager;
@@ -45,6 +44,9 @@ public class LoginActivity extends AppCompatActivity {
                 activityLoginBinding.txtMobileno.setVisibility(View.INVISIBLE);
                 activityLoginBinding.btnSubmit.setVisibility(View.INVISIBLE);
                 activityLoginBinding.inEmail.setVisibility(View.INVISIBLE);*/
+            } else if (message.equalsIgnoreCase("back")) {
+                activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
+                activityLoginBinding.linearOTPView.setVisibility(View.GONE);
             } else if (message.equalsIgnoreCase("Successfully Login")) {
                 view.getContext().startActivity(new Intent(view.getContext(), EventListActivity.class));
                 //finish();
