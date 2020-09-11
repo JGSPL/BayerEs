@@ -9,6 +9,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.MainActivity;
+import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.ui.eventList.model.EventList;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 
@@ -18,40 +20,37 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_BACKGROUD;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_NAME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_CITY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_COMPANY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_DESIGNATION;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_EMAIL;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_FNAME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_GCM_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_LNAME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBILE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.SHARED_PREF;
 
 
 public class SessionManager {
-    // User name (make variable public to access from outside)
-    public static final String MY_PREFS_NAME = "ProcializeInfo";
-    public static final String KEY_FNAME = "name";
-    public static final String KEY_LNAME = "lname";
-    // Email address (make variable public to access from outside)
-    public static final String KEY_EMAIL = "email";
-    // Email address (make variable public to access from outside)
-    public static final String KEY_PASSWORD = "password";
-    // Designation  (make variable public to access from outside)
-    public static final String KEY_DESIGNATION = "designation";
-    // Company  (make variable public to access from outside)
-    public static final String KEY_COMPANY = "company";
-    // mobile (make variable public to access from outside)
-    public static final String KEY_MOBILE = "mobile";
-    // TOKEN (make variable public to access from outside)
-    public static final String KEY_TOKEN = "api_access_token";
-    public static final String EVENT_ID = "event_id";
-
-    public static final String KEY_CITY = "city";
-    public static final String KEY_GCM_ID = "gcm_id";
-    // country (make variable public to access from outside)
-    // PIC (make variable public to access from outside)
-    public static final String KEY_PROFILE_PIC = "profile_pic";
-    public static final String KEY_ATTENDEE_ID = "id";
-    public static final String ATTENDEE_STATUS = "attendee_status";
-    public static final String AUTHERISATION_KEY = "autherisationKey";
-
+    public static final String MY_PREFS_NAME = SHARED_PREF;
     // Sharedpref file name
-    private static final String PREF_NAME = "Pref";
-    // All Shared Preferences Keys
-    private static final String IS_LOGIN = "IsLoggedIn";
+    private static final String PREF_NAME = SHARED_PREF;
     // Shared Preferences
     static SharedPreferences pref;
     // Editor for Shared preferences
@@ -124,43 +123,18 @@ public class SessionManager {
                                    String password, String attendee_status) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
-
-        // Storing name in pref
         editor.putString(KEY_FNAME, fstname);
         editor.putString(KEY_LNAME, lstname);
-
-        // Storing email in pref
         editor.putString(KEY_EMAIL, email);
-
-        // Storing mobile in pref
         editor.putString(KEY_MOBILE, mobile);
-
-        // Storing company in pref
         editor.putString(KEY_COMPANY, company);
-
-
-        // Storing designation in pref
         editor.putString(KEY_DESIGNATION, designation);
-
-        // Storing token in pref
         editor.putString(KEY_TOKEN, token);
-
-        // Storing city in pref
         editor.putString(KEY_CITY, city);
-
-
-        // Storing pic in pref
         editor.putString(KEY_PROFILE_PIC, pic);
-
-        // Storing pic in pref
         editor.putString(KEY_ATTENDEE_ID, id);
-
-
-        // Storing password in pref
         editor.putString(KEY_PASSWORD, password);
         editor.putString(ATTENDEE_STATUS, attendee_status);
-
-        // commit changes
         editor.commit();
     }
 
@@ -263,28 +237,16 @@ public class SessionManager {
     public void createProfileSession(String name, String company, String designation, String pic, String lastname, String city,
                                      String email, String mobno, String attendee_type) {
 
-        // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
-
-        // Storing name in pref
         editor.putString(KEY_FNAME, name);
-
-        // Storing company in pref
         editor.putString(KEY_COMPANY, company);
-
-        // Storing designation in pref
         editor.putString(KEY_DESIGNATION, designation);
         editor.putString(KEY_LNAME, lastname);
-
-        // Storing pic in pref
         editor.putString(KEY_PROFILE_PIC, pic);
-
         editor.putString(KEY_CITY, city);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_MOBILE, mobno);
         editor.putString(ATTENDEE_STATUS, attendee_type);
-
-        // commit changes
         editor.commit();
     }
 
@@ -299,19 +261,14 @@ public class SessionManager {
     }
 
     public void storeGcmID(String gcmRegID) {
-        // Storing eventId in pref
         editor.putString(KEY_GCM_ID, gcmRegID);
-        // commit changes
         editor.commit();
     }
 
     public String getAuthHeaderKey() {
-
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
-
         String authKey = pref.getString(AUTHERISATION_KEY, "");
-
         return authKey;
     }
 
@@ -340,18 +297,16 @@ public class SessionManager {
 
 
     public void saveCurrentEvent(EventList userEvent) {
-        SharedPreferences prefs = _context.getSharedPreferences(SessionManager.MY_PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(EVENT_ID, userEvent.getEvent_id()).commit();
-        editor.putString("eventnamestr", userEvent.getName()).commit();
-        editor.putString("logoImg", userEvent.getHeader_image()).commit();
-        editor.putString("eventback", userEvent.getBackground_image()).commit();
-        editor.putString("color1", userEvent.getColor_one()).commit();
-        editor.putString("color2", userEvent.getColor_two()).commit();
-        editor.putString("color3", userEvent.getColor_three()).commit();
-        editor.putString("color4", userEvent.getColor_four()).commit();
-        editor.putString("color5", userEvent.getColor_five()).commit();
-
-        editor.apply();
+        HashMap<String,String> map = new HashMap<>();
+        map.put(EVENT_ID, userEvent.getEvent_id());
+        map.put(EVENT_NAME, userEvent.getName());
+        map.put(EVENT_LOGO, userEvent.getHeader_image());
+        map.put(EVENT_BACKGROUD, userEvent.getBackground_image());
+        map.put(EVENT_COLOR_1, userEvent.getColor_one());
+        map.put(EVENT_COLOR_2, userEvent.getColor_two());
+        map.put(EVENT_COLOR_3, userEvent.getColor_three());
+        map.put(EVENT_COLOR_4, userEvent.getColor_four());
+        map.put(EVENT_COLOR_5, userEvent.getColor_five());
+        SharedPreference.putPref(_context,map);
     }
 }

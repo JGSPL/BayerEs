@@ -139,6 +139,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     public void onMoreSelected(EventList event, int position) {
         if (cd.isConnectingToInternet()) {
             String eventId = event.getEvent_id();
+
+            session.saveCurrentEvent(event);
             eventListViewModel.updateUserData(api_token,eventId, device_token, platform, device, osVersion, appVersion, session);
 
             eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
@@ -154,10 +156,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     String city = userData.get(0).getCity();
                     String is_god = userData.get(0).getIs_god();
                     String emailId = userData.get(0).getEmail();*/
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+
                             HashMap<String, String> map = new HashMap<>();
                             map.put(KEY_FNAME,userData.get(0).getFirst_name());
                             map.put(KEY_LNAME, userData.get(0).getLast_name());
@@ -178,9 +177,6 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                             //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
 
                             eventListViewModel.openProfilePage(EventListActivity.this, userData, position);
-                        }
-                    }, 100);
-
 
                 }
             });

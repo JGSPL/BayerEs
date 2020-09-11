@@ -23,4 +23,15 @@ public final class SharedPreferencesConstant {
     public static final String ATTENDEE_STATUS = "attendee_status";
     public static final String AUTHERISATION_KEY = "autherisationKey";
     public static final String IS_LOGIN = "IsLoggedIn";
+
+    public static final String EVENT_NAME = "eventnamestr";
+    public static final String EVENT_LOGO = "logoImg";
+    public static final String EVENT_BACKGROUD = "eventback";
+    public static final String EVENT_COLOR_1 = "color1";
+    public static final String EVENT_COLOR_2 = "color2";
+    public static final String EVENT_COLOR_3 = "color3";
+    public static final String EVENT_COLOR_4 = "color4";
+    public static final String EVENT_COLOR_5 = "color5";
+
+
 }

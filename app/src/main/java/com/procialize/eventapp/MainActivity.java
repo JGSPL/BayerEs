@@ -51,6 +51,8 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.procialize.eventapp.Utility.Constant.colorSecondary;
 import static com.procialize.eventapp.Utility.Constant.colorunselect;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String lName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
         String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
         String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
-        //
+
         LinearLayout outer = findViewById(R.id.my);
         ImageView iv_profile = outer.findViewById(R.id.iv_profile);
         TextView tv_name = outer.findViewById(R.id.tv_name);
@@ -234,6 +236,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             headerlogoIv = findViewById(R.id.headerlogoIv);
+
+            String eventLogo =  SharedPreference.getPref(MainActivity.this,EVENT_LOGO);
+            String eventListMediaPath =  SharedPreference.getPref(MainActivity.this,EVENT_LIST_MEDIA_PATH);
+            Glide.with(MainActivity.this)
+                    .load(eventListMediaPath+eventLogo)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(headerlogoIv);
+
         }
     }
 
