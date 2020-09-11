@@ -3,8 +3,12 @@ package com.procialize.eventapp.ui.splash.viewmodel;
 import android.content.Context;
 import android.os.Handler;
 
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.splash.view.SplashAcivity;
+
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
 public class SplashViewModel extends SplashAcivity{
 
@@ -24,9 +28,9 @@ public class SplashViewModel extends SplashAcivity{
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                if(session.isLoggedIn() == true) {
+                String isLogin = SharedPreference.getPref(context,IS_LOGIN);
+                if(isLogin.equalsIgnoreCase("true")) {
                     openMainActivity(context);
-
                 }else{
                     openLoginActivity(context);
 

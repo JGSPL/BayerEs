@@ -6,11 +6,11 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="14"
-8-->E:\Git2020\EventAppMVVM\library\src\main\AndroidManifest.xml
+8-->F:\AndroidWorkspace\NewEventApp\EventAppMVVM\library\src\main\AndroidManifest.xml
 9        android:targetSdkVersion="28" />
-9-->E:\Git2020\EventAppMVVM\library\src\main\AndroidManifest.xml
+9-->F:\AndroidWorkspace\NewEventApp\EventAppMVVM\library\src\main\AndroidManifest.xml
 10
 11    <application />
-11-->E:\Git2020\EventAppMVVM\library\src\main\AndroidManifest.xml:4:5-20
+11-->F:\AndroidWorkspace\NewEventApp\EventAppMVVM\library\src\main\AndroidManifest.xml:4:5-20
 12
 13</manifest>
