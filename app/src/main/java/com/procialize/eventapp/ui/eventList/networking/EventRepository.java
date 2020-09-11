@@ -7,8 +7,6 @@ import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.model.Event;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
-import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
-import com.procialize.eventapp.ui.newsFeedComment.networking.CommentRepository;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,7 +18,7 @@ public class EventRepository {
 
     MutableLiveData<UpdateDeviceInfo> updateLoginUserList = new MutableLiveData<>();
 
-    String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIwNTE0M2JmOTI0NzcwYTk5MTdlZjNhMWU5MjY4MGE3NTU5M2M1NDZiIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiJodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC8xNTk5NTczNjM0ODMzNC5qcGciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTcyNzQ0MiwiZXhwaXJ5X3RpbWUiOjE1OTk3MzEwNDJ9.HcJDPuJMtS_o8Q6FrzUmHWNulrPzNcAzAhodkCa9E0M";
+
     public static EventRepository getInstance() {
         if (eventRepository == null) {
             eventRepository = new EventRepository();
@@ -34,9 +32,8 @@ public class EventRepository {
         eventApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<Event> getEventList(String organizer_id, String search_text) {//, String pageSize, String pageNumber) {
-        eventApi.getEventList(token,organizer_id,
-                search_text)
+    public MutableLiveData<Event> getEventList(String token,String organizer_id, String search_text) {//, String pageSize, String pageNumber) {
+        eventApi.getEventList(token, organizer_id,search_text)
                 .enqueue(new Callback<Event>() {
                     @Override
                     public void onResponse(Call<Event> call, Response<Event> response) {
@@ -55,10 +52,9 @@ public class EventRepository {
     }
 
 
-
-    public MutableLiveData<UpdateDeviceInfo> UpdateUserInfo(String eventid, String device_token, String platform, String device,
+    public MutableLiveData<UpdateDeviceInfo> UpdateUserInfo(String token, String eventid, String device_token, String platform, String device,
                                                             String osVersion, String appVersion, SessionManager sessionManager) {
-        eventApi.updateDeviceInfo(eventid, device_token, platform, device, osVersion, appVersion)
+        eventApi.updateDeviceInfo(token, eventid, device_token, platform, device, osVersion, appVersion)
                 .enqueue(new Callback<UpdateDeviceInfo>() {
                     @Override
                     public void onResponse(Call<UpdateDeviceInfo> call, Response<UpdateDeviceInfo> response) {

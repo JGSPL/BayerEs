@@ -31,7 +31,6 @@ public class NewsfeedRepository {
     MutableLiveData<LoginOrganizer> newsDataUploaded = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> reportPostUpdate = new MutableLiveData<>();
     MutableLiveData<LikePost> liketPostUpdate = new MutableLiveData<>();
-    String token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIwNTE0M2JmOTI0NzcwYTk5MTdlZjNhMWU5MjY4MGE3NTU5M2M1NDZiIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiJodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC8xNTk5NTczNjM0ODMzNC5qcGciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTcyNzQ0MiwiZXhwaXJ5X3RpbWUiOjE1OTk3MzEwNDJ9.HcJDPuJMtS_o8Q6FrzUmHWNulrPzNcAzAhodkCa9E0M";
 
     MutableLiveData<Boolean> isUpdated = new MutableLiveData<>();
 
@@ -48,10 +47,10 @@ public class NewsfeedRepository {
         newsfeedApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<FetchNewsfeedMultiple> getNewsFeed(String id, String pageSize, String pageNumber) {
+    public MutableLiveData<FetchNewsfeedMultiple> getNewsFeed(String token, String event_id, String pageSize, String pageNumber) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.NewsFeedFetchMultiple(token,id, pageSize, pageNumber).enqueue(new Callback<FetchNewsfeedMultiple>() {
+        newsfeedApi.NewsFeedFetchMultiple(token, event_id, pageSize, pageNumber).enqueue(new Callback<FetchNewsfeedMultiple>() {
             @Override
             public void onResponse(Call<FetchNewsfeedMultiple> call,
                                    Response<FetchNewsfeedMultiple> response) {
@@ -71,7 +70,7 @@ public class NewsfeedRepository {
 
     private APIService postNewsFeedApi;
 
-    public MutableLiveData<LoginOrganizer> postNewsFeed(String event_id, String Post_content, List<UploadMultimedia> resultList) {
+    public MutableLiveData<LoginOrganizer> postNewsFeed(String token, String event_id, String Post_content, List<UploadMultimedia> resultList) {
         postNewsFeedApi = ApiUtils.getAPIService();
         RequestBody mevent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
         RequestBody mPost_content = RequestBody.create(MediaType.parse("text/plain"), Post_content);
@@ -101,7 +100,7 @@ public class NewsfeedRepository {
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("media_file_thumb[]", fileName + ".png", RequestBody.create(MediaType.parse("image/png"), file));
             thumbParts.add(filePart);
         }
-        postNewsFeedApi.postNewsFeed(mevent_id, mPost_content, parts, thumbParts)//,Media_file,Media_file_thumb)
+        postNewsFeedApi.postNewsFeed(token, mevent_id, mPost_content, parts, thumbParts)//,Media_file,Media_file_thumb)
                 .enqueue(new Callback<LoginOrganizer>() {
                     @Override
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
@@ -128,16 +127,16 @@ public class NewsfeedRepository {
         return isUpdated;
     }
 
-    public MutableLiveData<LoginOrganizer> PostHide(String id, String news_feed_id) {
+    public MutableLiveData<LoginOrganizer> PostHide(String token, String event_id, String news_feed_id) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.PostHide(id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
+        newsfeedApi.PostHide(token, event_id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
                     reportPostUpdate.setValue(response.body());
-                    newsRepository.getNewsFeed("1", "30", "1");
+                    newsRepository.getNewsFeed(token, event_id, "30", "1");
                 }
             }
 
@@ -159,16 +158,16 @@ public class NewsfeedRepository {
     }
 
 
-    public MutableLiveData<LoginOrganizer> ReportPost(String id, String news_feed_id, String content) {
+    public MutableLiveData<LoginOrganizer> ReportPost(String token, String event_id, String news_feed_id, String content) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.ReportPost(id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
+        newsfeedApi.ReportPost(token, event_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
                     reportPostUpdate.setValue(response.body());
-                    newsRepository.getNewsFeed("1", "30", "1");
+                    newsRepository.getNewsFeed(token, event_id, "30", "1");
 
                 }
             }
@@ -183,16 +182,16 @@ public class NewsfeedRepository {
     }
 
 
-    public MutableLiveData<LoginOrganizer> ReportUser(String id, String attn_id, String news_feed_id, String content) {
+    public MutableLiveData<LoginOrganizer> ReportUser(String token, String event_id, String attn_id, String news_feed_id, String content) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.ReportUser(id, attn_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
+        newsfeedApi.ReportUser(token, event_id, attn_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
                     reportPostUpdate.setValue(response.body());
-                    newsRepository.getNewsFeed("1", "30", "1");
+                    newsRepository.getNewsFeed(token, event_id, "30", "1");
 
                 }
             }
@@ -206,16 +205,16 @@ public class NewsfeedRepository {
         return reportPostUpdate;
     }
 
-    public MutableLiveData<LoginOrganizer> DeletePost(String id, String news_feed_id) {
+    public MutableLiveData<LoginOrganizer> DeletePost(String token, String event_id, String news_feed_id) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.DeletePost(id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
+        newsfeedApi.DeletePost(token, event_id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
                     reportPostUpdate.setValue(response.body());
-                    newsRepository.getNewsFeed("1", "30", "1");
+                    newsRepository.getNewsFeed(token, event_id, "30", "1");
 
                 }
             }
@@ -230,16 +229,16 @@ public class NewsfeedRepository {
     }
 
 
-    public MutableLiveData<LikePost> PostLike(String id, String news_feed_id) {
+    public MutableLiveData<LikePost> PostLike(String token, String event_id, String news_feed_id) {
         newsfeedApi = ApiUtils.getAPIService();
 
-        newsfeedApi.PostLike(id, news_feed_id).enqueue(new Callback<LikePost>() {
+        newsfeedApi.PostLike(token, event_id, news_feed_id).enqueue(new Callback<LikePost>() {
             @Override
             public void onResponse(Call<LikePost> call,
                                    Response<LikePost> response) {
                 if (response.isSuccessful()) {
                     liketPostUpdate.setValue(response.body());
-                    newsRepository.getNewsFeed("1", "30", "1");
+                    newsRepository.getNewsFeed(token,event_id, "30", "1");
 
                 }
             }

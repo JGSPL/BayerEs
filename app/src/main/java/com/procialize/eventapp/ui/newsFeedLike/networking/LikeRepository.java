@@ -33,8 +33,8 @@ public class LikeRepository {
     }
 
 
-    public MutableLiveData<Like> getLikeList(String event_id, String news_feed_id, String pageSize, String pageNumber) {
-        likeApi.getLikes(event_id,
+    public MutableLiveData<Like> getLikeList(String token,String event_id, String news_feed_id, String pageSize, String pageNumber) {
+        likeApi.getLikes(token,event_id,
                 news_feed_id,pageSize,
                 pageNumber)
                 .enqueue(new Callback<Like>() {

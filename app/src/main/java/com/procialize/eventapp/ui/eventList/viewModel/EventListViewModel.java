@@ -28,9 +28,9 @@ public class EventListViewModel extends ViewModel {
     MutableLiveData<Event> eventData = new MutableLiveData<>();
     MutableLiveData<UpdateDeviceInfo> updateData = new MutableLiveData<>();
 
-    public void getEvent(String organizer_id, String search_text) {
+    public void getEvent(String token,String organizer_id, String search_text) {
         eventRepository = EventRepository.getInstance();
-        eventData = eventRepository.getEventList(organizer_id, search_text);
+        eventData = eventRepository.getEventList(token,organizer_id, search_text);
     }
 
 
@@ -40,10 +40,10 @@ public class EventListViewModel extends ViewModel {
 
     //-------------Update User data ---------------------
 
-    public void updateUserData(String eventid, String device_token, String platform, String device,
+    public void updateUserData(String token,String eventid, String device_token, String platform, String device,
                                String osVersion, String appVersion, SessionManager sessionManager) {
         eventRepository = EventRepository.getInstance();
-        updateData = eventRepository.UpdateUserInfo(eventid, device_token, platform, device, osVersion, appVersion, sessionManager);
+        updateData = eventRepository.UpdateUserInfo(token,eventid, device_token, platform, device, osVersion, appVersion, sessionManager);
     }
 
 

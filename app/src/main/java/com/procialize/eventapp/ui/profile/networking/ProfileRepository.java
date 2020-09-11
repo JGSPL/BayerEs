@@ -29,8 +29,7 @@ public class ProfileRepository {
     private static ProfileRepository profileRepository;
     MutableLiveData<Profile> profileMutableLiveData = new MutableLiveData<>();
     MultipartBody.Part body;
-    String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIwNTE0M2JmOTI0NzcwYTk5MTdlZjNhMWU5MjY4MGE3NTU5M2M1NDZiIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiJodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC8xNTk5NTczNjM0ODMzNC5qcGciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTcyNzQ0MiwiZXhwaXJ5X3RpbWUiOjE1OTk3MzEwNDJ9.HcJDPuJMtS_o8Q6FrzUmHWNulrPzNcAzAhodkCa9E0M";
-    public static ProfileRepository getInstance() {
+   public static ProfileRepository getInstance() {
         if (profileRepository == null) {
             profileRepository = new ProfileRepository();
         }
@@ -47,7 +46,7 @@ public class ProfileRepository {
      * @param event_id
      * @return
      */
-    public MutableLiveData<Profile> getProfile(String event_id) {
+    public MutableLiveData<Profile> getProfile(String token,String event_id) {
         profileApi = ApiUtils.getAPIService();
         profileApi.getProfile(token,event_id).enqueue(new Callback<Profile>() {
             @Override
@@ -70,7 +69,7 @@ public class ProfileRepository {
      * @param event_id
      * @return
      */
-    public MutableLiveData<Profile> updateProfile(String event_id, String first_name, String last_name, String
+    public MutableLiveData<Profile> updateProfile(String token,String event_id, String first_name, String last_name, String
             designation, String city, String email, String mobile, String company_name, String profile_pic) {
         RequestBody mEvent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
         RequestBody mFirst_name = RequestBody.create(MediaType.parse("text/plain"), first_name);
@@ -86,7 +85,7 @@ public class ProfileRepository {
             File file = new File(profile_pic);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/png"), file);
             body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
-            profileApi.updateProfile(mEvent_id, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile,mCompany_name,body).enqueue(new Callback<Profile>() {
+            profileApi.updateProfile(token,mEvent_id, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile,mCompany_name,body).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     if (response.isSuccessful()) {
@@ -102,7 +101,7 @@ public class ProfileRepository {
         }
         else
         {
-            profileApi.updateProfile(mEvent_id, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile,mCompany_name).enqueue(new Callback<Profile>() {
+            profileApi.updateProfile(token,mEvent_id, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile,mCompany_name).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     if (response.isSuccessful()) {

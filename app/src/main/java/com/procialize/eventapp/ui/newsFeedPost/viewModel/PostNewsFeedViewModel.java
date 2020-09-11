@@ -138,10 +138,10 @@ public class PostNewsFeedViewModel extends ViewModel {
         return multimediaUploadLiveData;
     }
 
-    public void sendPost(String event_id, String status, ArrayList<SelectedImages> resultList) {//, String[] mediaFile, String[] mediaFileThumb) {
+    public void sendPost(String token,String event_id, String status, ArrayList<SelectedImages> resultList) {//, String[] mediaFile, String[] mediaFileThumb) {
         if (!status.isEmpty()) {
             postNewsFeedRepository = PostNewsFeedRepository.getInstance();
-            multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(event_id, status, resultList);//,mediaFile,mediaFileThumb);
+            multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(token,event_id, status, resultList);//,mediaFile,mediaFileThumb);
         }
     }
 
