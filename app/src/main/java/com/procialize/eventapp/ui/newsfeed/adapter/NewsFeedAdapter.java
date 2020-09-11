@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,6 +36,7 @@ import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.costumTools.ClickableViewPager;
 import com.procialize.eventapp.costumTools.ScaledImageView;
+import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
@@ -53,12 +55,18 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     String mediaPath = "";
     public static int swipableAdapterPosition = 0;
     ConnectionDetector cd;
+    private PaginationAdapterCallback mCallback;
+    private boolean retryPageLoad = false;
+    private boolean isLoadingAdded = false;
+    public NewsFeedAdapter() {
 
+    }
     public NewsFeedAdapter(Context context, ArrayList<Newsfeed_detail> feed_detail, FeedAdapterListner listener) {
         this.context = context;
         this.feed_detail = feed_detail;
         this.listener = listener;
 
+      //  this.mCallback = (PaginationAdapterCallback) context;
 
 
         cd = new ConnectionDetector();
@@ -75,6 +83,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     public void onBindViewHolder(@NonNull final NewsViewHolder holder, final int position) {
         Newsfeed_detail feedData = feed_detail.get(position);
         try {
+
+            if(feedData.getFirst_name().equalsIgnoreCase("null")){
+                holder.root.setVisibility(View.GONE);
+            }else{
+                holder.root.setVisibility(View.VISIBLE);
+            }
             mediaPath = SharedPreference.getPref(context,NEWS_FEED_MEDIA_PATH);
             
             holder.nameTv.setText(feedData.getFirst_name() + " " + feedData.getLast_name());
@@ -340,5 +354,78 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         } catch (Exception e) {
 
         }
+    }
+
+    public void add(Newsfeed_detail r) {
+        feed_detail.add(r);
+        //notifyItemInserted(attendeeLists.size() - 1);
+        notifyItemInserted(feed_detail.size() - 1);
+    }
+
+    public void addAll(List<Newsfeed_detail> moveResults) {
+        for (Newsfeed_detail result : moveResults) {
+            add(result);
+        }
+    }
+
+    public void remove(Newsfeed_detail r) {
+        int position = feed_detail.indexOf(r);
+        if (position > -1) {
+            feed_detail.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void clear() {
+        isLoadingAdded = false;
+        while (getItemCount() > 0) {
+            remove(getItem(0));
+        }
+    }
+
+    public boolean isEmpty() {
+        return getItemCount() == 0;
+    }
+
+
+    public void addLoadingFooter() {
+        isLoadingAdded = true;
+        add(new Newsfeed_detail());
+    }
+
+    public void removeLoadingFooter() {
+        try {
+            isLoadingAdded = false;
+
+            int position = feed_detail.size() - 1;
+            Newsfeed_detail result = getItem(position);
+
+            if (result != null) {
+                feed_detail.remove(position);
+                notifyItemRemoved(position);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Newsfeed_detail getItem(int position) {
+        return feed_detail.get(position);
+    }
+
+    /**
+     * Displays Pagination retry footer view along with appropriate errorMsg
+     *
+     * @param show
+     * @param errorMsg to display if page load fails
+     */
+    public void showRetry(boolean show, @Nullable String errorMsg) {
+        retryPageLoad = show;
+        notifyItemChanged(feed_detail.size() - 1);
+    }
+
+
+    public List<Newsfeed_detail> getNewsFeedList() {
+        return feed_detail;
     }
 }
