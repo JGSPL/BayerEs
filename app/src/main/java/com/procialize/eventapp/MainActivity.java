@@ -1,29 +1,22 @@
 package com.procialize.eventapp;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.auth0.android.jwt.JWT;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
-import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
-import com.procialize.eventapp.ui.home.view.HomeFragment;
-import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
-import com.procialize.eventapp.ui.quiz.view.QuizFragment;
-import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
-
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -33,18 +26,34 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.auth0.android.jwt.JWT;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
+import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
+import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
+import com.procialize.eventapp.ui.home.view.HomeFragment;
+import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
+import com.procialize.eventapp.ui.profile.view.ProfileActivity;
+import com.procialize.eventapp.ui.quiz.view.QuizFragment;
+import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
+
 import java.sql.Timestamp;
 
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.VIBRATE;
-import static android.Manifest.permission.WRITE_CONTACTS;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.procialize.eventapp.Utility.Constant.*;
+import static com.procialize.eventapp.Utility.Constant.colorSecondary;
+import static com.procialize.eventapp.Utility.Constant.colorunselect;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int RequestPermissionCode = 7;
     private DrawerLayout mDrawerLayout;
     NavigationView mNavigationView;
@@ -54,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +83,35 @@ public class MainActivity extends AppCompatActivity {
             //Calling method to enable permission.
             RequestMultiplePermission();
         }*/
+
+        String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
+        String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
+        String lName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
+        String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
+        String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
+        //
+        LinearLayout outer = findViewById(R.id.my);
+        ImageView iv_profile = outer.findViewById(R.id.iv_profile);
+        TextView tv_name = outer.findViewById(R.id.tv_name);
+        ImageView iv_edit = outer.findViewById(R.id.iv_edit);
+        iv_edit.setOnClickListener(this);
+        TextView tv_designation = outer.findViewById(R.id.tv_designation);
+        tv_name.setText(fName + " " + lName);
+        tv_designation.setText(designation + " - " + city);
+
+        Glide.with(MainActivity.this)
+                .load(profilePic)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(iv_profile);
 
         setUpToolbar();
         setUpNavDrawer();
@@ -96,14 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         Timestamp timestamp_open = new Timestamp(Long.parseLong(time));
         Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expiry_time));
-       /* boolean isExpired = jwt.isExpired(10);
-        try {
-            String deocdedToken = Utility.decoded(token);
-            String deocdedToken1 = deocdedToken;
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }*/
+
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -257,49 +289,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
 
-
-    public boolean CheckingPermissionIsEnabledOrNot() {
-
-        int FirstPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-        int SecondPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
-
-        return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
-                SecondPermissionResult == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void RequestMultiplePermission() {
-        // Creating String Array with Permissions.
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]
-                {
-                        WRITE_EXTERNAL_STORAGE,
-                        READ_EXTERNAL_STORAGE
-                }, RequestPermissionCode);
-
-    }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-
-            case RequestPermissionCode:
-
-                if (grantResults.length > 0) {
-
-                    boolean readstoragepermjission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean writestoragepermission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                    if (readstoragepermjission && writestoragepermission) {
-//                        Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Please give permission", Toast.LENGTH_LONG).show();
-                        RequestMultiplePermission();
-                    }
-                }
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_edit:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
         }
     }

@@ -31,9 +31,16 @@ public class LoginUserInfo implements Serializable {
     @SerializedName("city")
     @Expose
     private String city;
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
     @SerializedName("is_god")
     @Expose
     private String is_god;
+
+    public String getMobile() {
+        return mobile;
+    }
 
     public String getAttendee_id() {
         return attendee_id;
