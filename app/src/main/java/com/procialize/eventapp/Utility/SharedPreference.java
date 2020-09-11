@@ -3,14 +3,16 @@ package com.procialize.eventapp.Utility;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.procialize.eventapp.Constants.AutherisationKey;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.SHARED_PREF;
 
 
 public class SharedPreference {
-
 
 
     /*------------------------------------------------------*

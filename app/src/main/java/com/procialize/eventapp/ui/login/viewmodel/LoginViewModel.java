@@ -1,5 +1,7 @@
 package com.procialize.eventapp.ui.login.viewmodel;
 
+import android.content.Context;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -39,7 +41,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKE
 
 public class LoginViewModel extends BaseObservable {
     private Login login;
-
+    Context context;
     ActivityLoginBinding activityLoginBinding;
     private String successMessage = "Login was successful";
     private String errorMessage = "Email or Mobile No. not valid";
@@ -117,7 +119,8 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.loginPassword);
     }
 
-    public LoginViewModel() {
+    public LoginViewModel(Context context) {
+        this.context=context;
         login = new Login(getloginEmail(), getloginPassword());
     }
 
@@ -189,7 +192,10 @@ public class LoginViewModel extends BaseObservable {
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
                     setToastMessage(response.body().getHeader().get(0).getMsg());
-                    LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
+                    //LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
+                    HashMap<String,String> map = new HashMap<>();
+                    map.put(AUTHERISATION_KEY,response.body().getTokenpreenrypt());
+                    SharedPreference.putPref(context,map);
                 } else {
                     if (response.body() != null) {
                         if (response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {

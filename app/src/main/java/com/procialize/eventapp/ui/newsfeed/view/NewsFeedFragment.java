@@ -72,6 +72,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
@@ -84,13 +86,13 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     View root;
     SwipeRefreshLayout feedrefresh;
     LinearLayout ll_whats_on_mind;
-    String eventid = "1";
+    String eventid;
    ConnectionDetector connectionDetector;
     UploadMultimediaBackgroundReceiver mReceiver;
     IntentFilter mFilter;
     public static ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
-    String reaction_type;
+    String api_token;
 
 
     public static NewsFeedFragment newInstance() {
@@ -102,6 +104,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                              ViewGroup container, Bundle savedInstanceState) {
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
         newsFeedDatabaseViewModel = ViewModelProviders.of(this).get(NewsFeedDatabaseViewModel.class);
+
+        api_token = SharedPreference.getPref(getActivity(),AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(getActivity(),EVENT_ID);
 
         Log.d("On news feed fragment", "Yes");
 
@@ -173,7 +178,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
-            newsfeedViewModel.init("", "");
+            newsfeedViewModel.init(api_token,eventid,"", "");
 
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
@@ -327,14 +332,14 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position) {
-        newsfeedViewModel.openMoreDetails(getActivity(), feed, position);
+        newsfeedViewModel.openMoreDetails(getActivity(), feed, position,api_token,eventid);
 
     }
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
 
-        newsfeedViewModel.openLikeimg(getActivity(), eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
+        newsfeedViewModel.openLikeimg(getActivity(),api_token, eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
 
        /* int count = Integer.parseInt(feed.getTotal_likes());
 
@@ -459,7 +464,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                         uploadMultimedia.remove(0);
                                     }
 
-                                    newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
+                                    newsfeedViewModel.sendPost(api_token,eventid, postText, uploadMultimedia);
                                     newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {

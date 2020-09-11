@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -29,23 +30,29 @@ import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
 import java.util.List;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+
 public class LikeActivity extends AppCompatActivity implements View.OnClickListener {
 
     ConnectionDetector connectionDetector;
     private String position;
     private Newsfeed_detail newsfeed_detail;
     LikeViewModel likeViewModel;
-    String event_id = "1";
+    String event_id;
     private List<LikeDetail> likeList;
     RecyclerView rv_like;
     LinearLayout ll_main;
     ImageView iv_back;
+    String api_token = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_like);
 
+        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this,EVENT_ID);
         likeViewModel = ViewModelProviders.of(this).get(LikeViewModel.class);
         connectionDetector = ConnectionDetector.getInstance(this);
         ll_main = findViewById(R.id.ll_main);
@@ -65,7 +72,7 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
 
     public void geLikes() {
         if (connectionDetector.isConnectingToInternet()) {
-            likeViewModel.getLike(event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
+            likeViewModel.getLike(api_token,event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
             likeViewModel.getLikeList().observe(this, new Observer<Like>() {
                 @Override
                 public void onChanged(Like like) {

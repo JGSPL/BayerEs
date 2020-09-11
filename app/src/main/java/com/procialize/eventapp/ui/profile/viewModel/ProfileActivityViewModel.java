@@ -38,9 +38,9 @@ public class ProfileActivityViewModel extends ViewModel {
      *
      * @param event_id
      */
-    public void getProfile(String event_id) {
+    public void getProfile(String token,String event_id) {
         profileRepository = ProfileRepository.getInstance();
-        profileData = profileRepository.getProfile(event_id);//, pageSize,pageNumber);
+        profileData = profileRepository.getProfile(token,event_id);//, pageSize,pageNumber);
     }
 
     public LiveData<Profile> getProfileDetails() {
@@ -61,10 +61,10 @@ public class ProfileActivityViewModel extends ViewModel {
      * @param profile_pic
      */
 
-    public void updateProfile(String event_id, String first_name, String last_name, String
+    public void updateProfile(String token,String event_id, String first_name, String last_name, String
             designation, String city, String email, String mobile, String company_name, String profile_pic) {
         profileRepository = ProfileRepository.getInstance();
-        updateProfile = profileRepository.updateProfile(
+        updateProfile = profileRepository.updateProfile(token,
                 event_id,
                 first_name,
                 last_name,

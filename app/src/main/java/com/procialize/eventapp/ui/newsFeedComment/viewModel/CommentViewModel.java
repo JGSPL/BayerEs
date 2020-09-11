@@ -44,7 +44,6 @@ public class CommentViewModel extends ViewModel {
     MutableLiveData<LoginOrganizer> commentLiveData = new MutableLiveData<>();
     MutableLiveData<Comment> commentData = new MutableLiveData<>();
     MutableLiveData<Boolean> isValid = new MutableLiveData<>();
-    String event_id = "1";
     MutableLiveData<LoginOrganizer> commentHide = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> reportCommentPost = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> commentDelete = new MutableLiveData<>();
@@ -105,10 +104,10 @@ public class CommentViewModel extends ViewModel {
      * @param comment_data
      * @param comment_type
      */
-    public void postComment(String event_id, String news_feed_id, String comment_data, String comment_type) {//, String[] mediaFile, String[] mediaFileThumb) {
+    public void postComment(String token, String event_id, String news_feed_id, String comment_data, String comment_type) {//, String[] mediaFile, String[] mediaFileThumb) {
         if (!comment_data.isEmpty()) {
             commentRepository = CommentRepository.getInstance();
-            commentLiveData = commentRepository.postComment(event_id, news_feed_id, comment_data, comment_type);
+            commentLiveData = commentRepository.postComment(token,event_id, news_feed_id, comment_data, comment_type);
         }
     }
 
@@ -140,9 +139,9 @@ public class CommentViewModel extends ViewModel {
      * @param pageSize
      * @param pageNumber
      */
-    public void getComment(String event_id, String news_feed_id, String pageSize, String pageNumber) {
+    public void getComment(String token,String event_id, String news_feed_id, String pageSize, String pageNumber) {
         commentRepository = CommentRepository.getInstance();
-        commentData = commentRepository.getCommentList(event_id, news_feed_id);//, pageSize,pageNumber);
+        commentData = commentRepository.getCommentList(token,event_id, news_feed_id);//, pageSize,pageNumber);
     }
 
     public LiveData<Comment> getCommentList() {
@@ -156,9 +155,9 @@ public class CommentViewModel extends ViewModel {
      * @param comment_id
      * @param position
      */
-    public void deleteComment(String event_id, String news_feed_id, String comment_id, int position) {
+    public void deleteComment(String token,String event_id, String news_feed_id, String comment_id, int position) {
         commentRepository = CommentRepository.getInstance();
-        commentDelete = commentRepository.deleteNewsFeedComment(event_id,
+        commentDelete = commentRepository.deleteNewsFeedComment(token,event_id,
                 news_feed_id,
                 comment_id,
                 position);
@@ -174,9 +173,9 @@ public class CommentViewModel extends ViewModel {
      * @param event_id
      * @param comment_id
      */
-    public void hideComment(String event_id, String comment_id) {
+    public void hideComment(String token, String event_id, String comment_id) {
         commentRepository = CommentRepository.getInstance();
-        commentHide = commentRepository.hideComment(event_id,
+        commentHide = commentRepository.hideComment(token,event_id,
                 comment_id);
 
     }
@@ -192,9 +191,9 @@ public class CommentViewModel extends ViewModel {
      * @param news_feed_id
      * @param content
      */
-    public void reportUser(String event_id,String reported_user_id,String news_feed_id,String content) {
+    public void reportUser(String token,String event_id,String reported_user_id,String news_feed_id,String content) {
         commentRepository = CommentRepository.getInstance();
-        commentHide = commentRepository.reportUser( event_id, reported_user_id, news_feed_id, content);
+        commentHide = commentRepository.reportUser(token, event_id, reported_user_id, news_feed_id, content);
 
     }
 
@@ -208,9 +207,9 @@ public class CommentViewModel extends ViewModel {
      * @param reported_user_id
      * @param content
      */
-    public void reportComment(String event_id,String reported_user_id,String content) {
+    public void reportComment(String token,String event_id,String reported_user_id,String content) {
         commentRepository = CommentRepository.getInstance();
-        reportCommentPost = commentRepository.reportComment( event_id, reported_user_id, content);
+        reportCommentPost = commentRepository.reportComment( token,event_id, reported_user_id, content);
 
     }
 
@@ -223,9 +222,9 @@ public class CommentViewModel extends ViewModel {
      * @param event_id
      * @param newsfeedid
      */
-    public void likePost(  String event_id,String newsfeedid) {
+    public void likePost(  String token,String event_id,String newsfeedid) {
         commentRepository =CommentRepository.getInstance();
-        likePost = commentRepository.PostLike(event_id, newsfeedid);
+        likePost = commentRepository.PostLike(token,event_id, newsfeedid);
     }
 
     public LiveData<LikePost> likePostData() {
@@ -238,10 +237,10 @@ public class CommentViewModel extends ViewModel {
      * @param newsFeedId
      */
 
-    public void getNewsFeedDetails(String eventId,String newsFeedId)
+    public void getNewsFeedDetails(String token,String eventId,String newsFeedId)
     {
         commentRepository =CommentRepository.getInstance();
-        newsFeedDetails = commentRepository.getNewsFeedDetails(eventId, newsFeedId);
+        newsFeedDetails = commentRepository.getNewsFeedDetails(token,eventId, newsFeedId);
     }
 
     public LiveData<FetchNewsfeedMultiple> newsFeedDeatils() {

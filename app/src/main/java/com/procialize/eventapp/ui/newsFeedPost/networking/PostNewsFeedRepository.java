@@ -51,7 +51,7 @@ public class PostNewsFeedRepository {
         postNewsFeedApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<LoginOrganizer> postNewsFeed(String event_id, String Post_content, List<SelectedImages> resultList) {
+    public MutableLiveData<LoginOrganizer> postNewsFeed(String token,String event_id, String Post_content, List<SelectedImages> resultList) {
         postNewsFeedApi = ApiUtils.getAPIService();
         RequestBody mevent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
         RequestBody mPost_content = RequestBody.create(MediaType.parse("text/plain"), Post_content);
@@ -68,7 +68,7 @@ public class PostNewsFeedRepository {
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("media_file_thumb[]", file.getName(), RequestBody.create(MediaType.parse("image/png"), file));
             thumbParts.add(filePart);
         }
-        postNewsFeedApi.postNewsFeed(mevent_id, mPost_content, parts, thumbParts)//,Media_file,Media_file_thumb)
+        postNewsFeedApi.postNewsFeed(token,mevent_id, mPost_content, parts, thumbParts)//,Media_file,Media_file_thumb)
                 .enqueue(new Callback<LoginOrganizer>() {
                     @Override
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {

@@ -75,6 +75,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
 
@@ -93,14 +96,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private Newsfeed_detail newsfeed_detail;
     public static int swipableAdapterPosition = 0;
     private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments, tv_no_of_likes;
-    String event_id = "1";
+    String event_id;
     ConnectionDetector connectionDetector;
     String commentText = "";
     BottomSheetDialog dialog;
     Dialog contentDialog;
     List<CommentDetail> commentList = new ArrayList<>();
-    String noOfLikes = "0";
-    String likeStatus = "";
+    String noOfLikes = "0",likeStatus = "",api_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +111,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         commentViewModel = ViewModelProviders.of(this).get(CommentViewModel.class);
         connectionDetector = ConnectionDetector.getInstance(this);
-
+        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this,EVENT_ID);
         Intent intent = getIntent();
         try {
             newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
@@ -150,7 +153,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
             if (newsfeed_detail == null || newsfeed_detail.getAttendee_id() == null) {
-                commentViewModel.getNewsFeedDetails(event_id, newsfeedId);
+                commentViewModel.getNewsFeedDetails(api_token,event_id, newsfeedId);
                 commentViewModel.newsFeedDeatils().observe(this, new Observer<FetchNewsfeedMultiple>() {
                     @Override
                     public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
@@ -280,7 +283,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     public void getComments() {
         if (connectionDetector.isConnectingToInternet()) {
-            commentViewModel.getComment(event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
+            commentViewModel.getComment(api_token,event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
             commentViewModel.getCommentList().observe(this, new Observer<Comment>() {
                 @Override
                 public void onChanged(Comment comment) {
@@ -403,7 +406,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onChanged(Boolean aBoolean) {
                         if (aBoolean) {
-                            commentViewModel.postComment(event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
+                            commentViewModel.postComment(api_token,event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
                             commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                                 @Override
                                 public void onChanged(LoginOrganizer loginOrganizer) {
@@ -421,7 +424,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.iv_likes:
                 noOfLikes = "0";
-                commentViewModel.likePost(event_id, newsfeed_detail.getNews_feed_id());
+                commentViewModel.likePost(api_token,event_id, newsfeed_detail.getNews_feed_id());
                 commentViewModel.likePostData().observe(CommentActivity.this, new Observer<LikePost>() {
                     @Override
                     public void onChanged(LikePost likePost) {
@@ -473,7 +476,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         ll_comment_container.setVisibility(View.VISIBLE);
         fl_gif_container.setVisibility(View.GONE);
 
-        commentViewModel.postComment(event_id, newsfeed_detail.getNews_feed_id(), result.getMedia().get(0).getGif().getUrl(), "2");
+        commentViewModel.postComment(api_token,event_id, newsfeed_detail.getNews_feed_id(), result.getMedia().get(0).getGif().getUrl(), "2");
         commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
             @Override
             public void onChanged(LoginOrganizer loginOrganizer) {
@@ -569,7 +572,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                commentViewModel.deleteComment(event_id, newsfeed_detail.getNews_feed_id(), commentDetail.getComment_id(), position);
+                commentViewModel.deleteComment(api_token,event_id, newsfeed_detail.getNews_feed_id(), commentDetail.getComment_id(), position);
                 commentViewModel.commentDelete().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                     @Override
                     public void onChanged(LoginOrganizer loginOrganizer) {
@@ -590,7 +593,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         hideTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                commentViewModel.hideComment(event_id, commentDetail.getComment_id());
+                commentViewModel.hideComment(api_token,event_id, commentDetail.getComment_id());
                 commentViewModel.commentHide().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                     @Override
                     public void onChanged(LoginOrganizer loginOrganizer) {
@@ -686,7 +689,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     String content = StringEscapeUtils.escapeJava(etmsg.getText().toString());
                     dialog.cancel();
                     if (from.equalsIgnoreCase("reportUser")) {
-                        commentViewModel.reportUser("1", newsfeed_detail.getAttendee_id(), newsfeed_detail.getNews_feed_id(), content);
+                        commentViewModel.reportUser(api_token,event_id, newsfeed_detail.getAttendee_id(), newsfeed_detail.getNews_feed_id(), content);
                         commentViewModel.reportUserData().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                             @Override
                             public void onChanged(LoginOrganizer loginOrganizer) {
@@ -701,7 +704,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         });
                     } else if (from.equalsIgnoreCase("reportComment")) {
-                        commentViewModel.reportComment("1", commentId, content);
+                        commentViewModel.reportComment(api_token,event_id, commentId, content);
                         commentViewModel.reportCommentPostData().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                             @Override
                             public void onChanged(LoginOrganizer loginOrganizer) {

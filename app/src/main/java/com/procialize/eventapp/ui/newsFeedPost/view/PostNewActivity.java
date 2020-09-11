@@ -35,6 +35,7 @@ import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedPost.adapter.ViewPagerMultimediaAdapter;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
@@ -57,6 +58,9 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+
 public class PostNewActivity extends AppCompatActivity implements View.OnClickListener {
 
     LinearLayout ll_upload_media, ll_media_dots, linear;
@@ -74,7 +78,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector cd;
     EventAppDB eventAppDB;
 
-    String event_id = "1";
+    String event_id,api_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,9 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_post_new);
 
         eventAppDB = EventAppDB.getDatabase(this);
+        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this,EVENT_ID);
+
         Log.d("tot_count", String.valueOf(eventAppDB.uploadMultimediaDao().getRowCount()));
         postNewsFeedViewModel = ViewModelProviders.of(this).get(PostNewsFeedViewModel.class);
         cd = ConnectionDetector.getInstance(this);
@@ -270,7 +277,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                             @Override
                             public void onChanged(Boolean aBoolean) {
                                 if (aBoolean) {
-                                    postNewsFeedViewModel.sendPost(event_id, postText, resultList);
+                                    postNewsFeedViewModel.sendPost(api_token,event_id, postText, resultList);
                                     postNewsFeedViewModel.getStatus().observe(PostNewActivity.this, new Observer<LoginOrganizer>() {
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {
