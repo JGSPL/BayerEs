@@ -1,5 +1,7 @@
 package com.procialize.eventapp.ui.login.viewmodel;
 
+import android.content.Context;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -39,7 +41,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKE
 
 public class LoginViewModel extends BaseObservable {
     private Login login;
-
+    Context context;
     ActivityLoginBinding activityLoginBinding;
     private String successMessage = "Login was successful";
     private String errorMessage = "Email or Mobile No. not valid";
@@ -117,7 +119,8 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.loginPassword);
     }
 
-    public LoginViewModel() {
+    public LoginViewModel(Context context) {
+        this.context=context;
         login = new Login(getloginEmail(), getloginPassword());
     }
 

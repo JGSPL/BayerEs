@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        activityLoginBinding.setViewModel(new LoginViewModel());
+        activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this));
         activityLoginBinding.executePendingBindings();
     }
 
