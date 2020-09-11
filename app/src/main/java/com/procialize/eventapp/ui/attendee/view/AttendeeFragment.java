@@ -124,14 +124,14 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
 
 
-        pullrefresh.setTextColor(Color.parseColor(colorActive));
+       // pullrefresh.setTextColor(Color.parseColor(colorActive));
 
 
         mAPIService = ApiUtils.getAPIService();
 
         searchBtn = root.findViewById(R.id.searchBtn);
         searchBtn.setTextColor(getResources().getColor(R.color.colorwhite));
-        searchBtn.setBackgroundColor(Color.parseColor(colorActive));
+        //searchBtn.setBackgroundColor(Color.parseColor(colorActive));
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,8 +150,8 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         if (cd.isConnectingToInternet()) {
             strAttendeeName =  searchEt.getText().toString().trim();
-            attendeeAdapter.getAttendeeListFiltered().clear();
-            attendeeAdapter.notifyDataSetChanged();
+            /*attendeeAdapter.getAttendeeListFiltered().clear();
+            attendeeAdapter.notifyDataSetChanged();*/
             loadFirstPage();
         } else {
             /*db = procializeDB.getReadableDatabase();

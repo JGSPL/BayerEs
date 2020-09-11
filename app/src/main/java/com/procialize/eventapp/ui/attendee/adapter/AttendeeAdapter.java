@@ -37,7 +37,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyViewHolder> {
 
     //List<EventSettingList> eventSettingLists;
-    String attendee_design, attendee_company, attendee_location, attendee_mobile, attendee_save_contact;
+    String attendee_design = "1", attendee_company = "1", attendee_location = "1", attendee_mobile = "1", attendee_save_contact = "1";
     String MY_PREFS_NAME = "ProcializeInfo";
     String MY_PREFS_LOGIN = "ProcializeLogin";
     String colorActive;
@@ -51,7 +51,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
 
     public AttendeeAdapter(Context context,List<Attendee> commentList, AttendeeAdapterListner listener) {
         attendeeListFiltered = new ArrayList<>();
-        attendeeListFiltered = commentList;
+        this.attendeeListFiltered = commentList;
         this.listener = listener;
         this.context = context;
         SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
