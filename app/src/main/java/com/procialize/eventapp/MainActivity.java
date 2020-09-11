@@ -39,7 +39,9 @@ import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
+import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.quiz.view.QuizFragment;
@@ -221,6 +223,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 .replace(R.id.fragment_frame, SpeakerFragment.newInstance(), "")
                                 .commit();
                         break;
+                    case R.id.navigation_logout:
+                        //Logout from app
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        finishAffinity();
+                        break;
+
                 }
 
                 return true;

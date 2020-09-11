@@ -57,6 +57,7 @@ import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
+import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
@@ -76,6 +77,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERIS
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAdapterListner, View.OnClickListener {
     ArrayList<Newsfeed_detail> newsfeedArrayList = new ArrayList<>();
@@ -94,7 +96,16 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     private TextView tv_uploding_multimedia;
     String api_token;
 
+    int totalPages = 0;
+    int newsFeedPageNumber = 1;
+    int newsFeedPageSize = 2;
 
+    private int currentPage = PAGE_START;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+    ConnectionDetector cd ;
+    LinearLayoutManager linearLayoutManager;
+    private static int TOTAL_PAGES = 5;
     public static NewsFeedFragment newInstance() {
 
         return new NewsFeedFragment();
@@ -191,6 +202,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         newsfeedArrayList.addAll(feedList);
                         insertIntoDb(feedList);
                         String mediaPath = fetchNewsfeedMultiple.getMedia_path();
+                        totalPages = Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
 
                         HashMap<String, String> map = new HashMap<>();
                         map.put(NEWS_FEED_MEDIA_PATH, mediaPath);
@@ -215,7 +227,41 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             }
         }, 100);
 
+        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recycler_feed.setLayoutManager(linearLayoutManager);
+
+        recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+
+                loadNextPage();
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return TOTAL_PAGES;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
     }
+
+    private void loadNextPage() {
+        Log.d("loadNextPage", "loadNextPage: " + currentPage);
+
+        newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
+    }
+
 
     public void insertIntoDb(List<Newsfeed_detail> feedList) {
         newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
@@ -341,78 +387,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
         newsfeedViewModel.openLikeimg(getActivity(),api_token, eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
 
-       /* int count = Integer.parseInt(feed.getTotal_likes());
-
-        Drawable drawables = likeimage.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable) drawables).getBitmap();
-
-        Bitmap bitmap2 = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_like)).getBitmap();
-
-
-//        if(!drawables[2].equals(R.drawable.ic_like)){
-        if (bitmap != bitmap2) {
-            reaction_type = "";
-            feed.setLike_flag("");
-            likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
-//            likeimage.setBackgroundResource(R.drawable.ic_like);
-            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
-                newsfeedViewModel.openLikeimg(eventid, feed.getNews_feed_id());
-            } else {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
-            try {
-
-                if (count > 0) {
-                    count = count - 1;
-                    feed.setTotal_likes(String.valueOf(count));
-
-                    if (count == 1) {
-                        liketext.setText(count + " Like");
-                    } else {
-                        liketext.setText(count + " Likes");
-                    }
-
-                    feed.setTotal_likes(String.valueOf(count));
-
-                } else {
-                    liketext.setText("0" + " Likes");
-                    feed.setTotal_likes("0");
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            feed.setLike_flag("1");
-            likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
-           *//*int color = Color.parseColor(colorActive);
-            likeimage.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*//*
-            reaction_type = "0";
-            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
-                newsfeedViewModel.openLikeimg(eventid, feed.getNews_feed_id());
-            } else {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
-
-            try {
-
-                count = count + 1;
-                if (count == 1) {
-                    liketext.setText(count + " Like");
-                } else {
-                    liketext.setText(count + " Likes");
-                }
-
-                feed.setTotal_likes(String.valueOf(count));
-
-                feed.setTotal_likes(String.valueOf(count));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }*/
-    }
+   }
 
     @Override
     public void onClick(View v) {
