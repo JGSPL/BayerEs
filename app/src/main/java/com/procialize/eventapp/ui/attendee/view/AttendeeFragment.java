@@ -293,6 +293,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             @Override
             public void onChanged(FetchAttendee event) {
                 List<Attendee> eventLists = event.getAttandeeList();
+            progressBar.setVisibility(View.GONE);
 
                 setupEventAdapter(eventLists);
             }

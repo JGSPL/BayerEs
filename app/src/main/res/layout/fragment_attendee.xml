@@ -60,6 +60,13 @@
         android:text="@string/pullrefresh"
         android:textSize="@dimen/textsizesmaller"
          />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/loader"
+        android:visibility="gone" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_attendee"
