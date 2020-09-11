@@ -4,6 +4,7 @@ package com.procialize.eventapp.Constants;
 import com.google.gson.JsonObject;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.validateOTP;
+import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.eventList.model.Event;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -206,4 +207,12 @@ public interface APIService{
                                 @Part("email") RequestBody email,
                                 @Part("mobile") RequestBody mobile,
                                 @Part("company_name") RequestBody company_name);
+
+    //Attendee Api
+    // @Headers("authorization: " + HeaderToken)
+    @POST("Attendee_api/AttendeeList")
+    @FormUrlEncoded
+    Call<FetchAttendee> AttendeeList(@Header("authorization") String auth,
+                                     @Field("event_id") String organizer_id,
+                                     @Field("search_text") String search_text);
 }

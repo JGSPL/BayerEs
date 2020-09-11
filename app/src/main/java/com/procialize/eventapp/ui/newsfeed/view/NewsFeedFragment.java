@@ -336,78 +336,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
         newsfeedViewModel.openLikeimg(getActivity(), eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
 
-       /* int count = Integer.parseInt(feed.getTotal_likes());
-
-        Drawable drawables = likeimage.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable) drawables).getBitmap();
-
-        Bitmap bitmap2 = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_like)).getBitmap();
-
-
-//        if(!drawables[2].equals(R.drawable.ic_like)){
-        if (bitmap != bitmap2) {
-            reaction_type = "";
-            feed.setLike_flag("");
-            likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
-//            likeimage.setBackgroundResource(R.drawable.ic_like);
-            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
-                newsfeedViewModel.openLikeimg(eventid, feed.getNews_feed_id());
-            } else {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
-            try {
-
-                if (count > 0) {
-                    count = count - 1;
-                    feed.setTotal_likes(String.valueOf(count));
-
-                    if (count == 1) {
-                        liketext.setText(count + " Like");
-                    } else {
-                        liketext.setText(count + " Likes");
-                    }
-
-                    feed.setTotal_likes(String.valueOf(count));
-
-                } else {
-                    liketext.setText("0" + " Likes");
-                    feed.setTotal_likes("0");
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            feed.setLike_flag("1");
-            likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
-           *//*int color = Color.parseColor(colorActive);
-            likeimage.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*//*
-            reaction_type = "0";
-            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
-                newsfeedViewModel.openLikeimg(eventid, feed.getNews_feed_id());
-            } else {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
-
-            try {
-
-                count = count + 1;
-                if (count == 1) {
-                    liketext.setText(count + " Like");
-                } else {
-                    liketext.setText(count + " Likes");
-                }
-
-                feed.setTotal_likes(String.valueOf(count));
-
-                feed.setTotal_likes(String.valueOf(count));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }*/
-    }
+   }
 
     @Override
     public void onClick(View v) {
