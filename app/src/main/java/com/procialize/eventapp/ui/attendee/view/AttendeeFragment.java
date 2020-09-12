@@ -56,6 +56,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
@@ -81,13 +83,13 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     private List<Attendee> attendeeList;
     private List<Attendee> attendeesDBList;
     LinearLayout linear;
-    String token;
+    String api_token;
     Attendee attendeeTmp;
     Boolean isVisible = false;
     public static Activity activity;
-    int totalPages = 0;
+    int totalPages = 100;
     int attendeePageNumber = 1;
-    int attendeePageSize = 1000;
+    int attendeePageSize = 10;
     AttendeeViewModel attendeeViewModel;
 
     private int currentPage = PAGE_START;
@@ -106,6 +108,10 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_attendee, container, false);
         attendeerecycler = root.findViewById(R.id.recycler_attendee);
+
+        api_token = SharedPreference.getPref(getActivity(),AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(getActivity(),EVENT_ID);
+
         searchEt = root.findViewById(R.id.searchEt);
         attendeefeedrefresh = root.findViewById(R.id.swiperefresh_attendee);
         progressBar = root.findViewById(R.id.progressBar);
@@ -143,15 +149,17 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         });
         SessionManager sessionManager = new SessionManager(getContext());
 
-        // token
-        token = sessionManager.getAuthHeaderKey();
+        // api_token
+        api_token = sessionManager.getAuthHeaderKey();
 
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         if (cd.isConnectingToInternet()) {
             strAttendeeName =  searchEt.getText().toString().trim();
-            /*attendeeAdapter.getAttendeeListFiltered().clear();
-            attendeeAdapter.notifyDataSetChanged();*/
+            if(attendeeAdapter!=null) {
+                attendeeAdapter.getAttendeeListFiltered().clear();
+                attendeeAdapter.notifyDataSetChanged();
+            }
             loadFirstPage();
         } else {
             /*db = procializeDB.getReadableDatabase();
@@ -163,7 +171,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
 
 
-/*
         attendeerecycler.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
             protected void loadMoreItems() {
@@ -175,7 +182,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
                     loadNextPage();
                 } else {
-                    int totalPages_db = 0;
+                    /*int totalPages_db = 0;
                     int totRecords = dbHelper.getAttendeeDetails().size();
                     if ((int) (totRecords % attendeePageSize) == 0) {
                         totalPages_db = (int) (totRecords / attendeePageSize);
@@ -198,7 +205,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                             attendeeAdapter.addLoadingFooter();
                         else
                             isLastPage = true;
-                    }
+                    }*/
                 }
             }
 
@@ -217,7 +224,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 return isLoading;
             }
         });
-*/
+
 
         try {
             searchEt.addTextChangedListener(new TextWatcher() {
@@ -288,7 +295,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         // To ensure list is visible when retry button in error view is clicked
         currentPage = PAGE_START;
-        attendeeViewModel.getAttendee(token,"1", "");
+        attendeeViewModel.getAttendee(api_token,eventid, "", String.valueOf(attendeePageNumber),String.valueOf(attendeePageSize));
         attendeeViewModel.getEventList().observe(this, new Observer<FetchAttendee>() {
             @Override
             public void onChanged(FetchAttendee event) {
@@ -310,9 +317,26 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     private void loadNextPage() {
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
+        attendeeViewModel.getAttendee(api_token,eventid, "", String.valueOf(attendeePageNumber),String.valueOf(attendeePageSize));
+        attendeeViewModel.getEventList().observe(this, new Observer<FetchAttendee>() {
+            @Override
+            public void onChanged(FetchAttendee event) {
+                List<Attendee> eventLists = event.getAttandeeList();
+                progressBar.setVisibility(View.GONE);
+                attendeeAdapter.removeLoadingFooter();
+                isLoading = false;
 
+                List<Attendee> results = event.getAttandeeList();
+                attendeeAdapter.addAll(results);
+                if (currentPage != totalPages)
+                    attendeeAdapter.addLoadingFooter();
+                else
+                    isLastPage = true;
+              //  setupEventAdapter(eventLists);
+            }
+        });
 /*
-        mAPIService.AttendeeFetchPost(token, eventid, "" + attendeePageSize, "" + currentPage, strAttendeeName).enqueue(new Callback<FetchAttendee>() {
+        mAPIService.AttendeeFetchPost(api_token, eventid, "" + attendeePageSize, "" + currentPage, strAttendeeName).enqueue(new Callback<FetchAttendee>() {
             @Override
             public void onResponse(Call<FetchAttendee> call, Response<FetchAttendee> response) {
 //                Log.i(TAG, "onResponse: " + currentPage

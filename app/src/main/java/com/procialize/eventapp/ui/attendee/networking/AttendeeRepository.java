@@ -28,9 +28,9 @@ public class AttendeeRepository {
         eventApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<FetchAttendee> getAttendeeList(String token ,String organizer_id, String search_text) {//, String pageSize, String pageNumber) {
+    public MutableLiveData<FetchAttendee> getAttendeeList(String token ,String organizer_id, String search_text, String pagenumber, String pageSizr) {//, String pageSize, String pageNumber) {
         eventApi.AttendeeList(token,organizer_id,
-                search_text)
+                search_text, pagenumber, pageSizr)
                 .enqueue(new Callback<FetchAttendee>() {
                     @Override
                     public void onResponse(Call<FetchAttendee> call, Response<FetchAttendee> response) {

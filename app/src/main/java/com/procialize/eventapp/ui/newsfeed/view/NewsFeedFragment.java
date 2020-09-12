@@ -98,7 +98,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 2;
+    int newsFeedPageSize = 10;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
