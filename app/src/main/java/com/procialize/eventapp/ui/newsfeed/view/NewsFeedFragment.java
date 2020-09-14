@@ -43,13 +43,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.home.viewmodel.HomeViewModel;
@@ -95,7 +102,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     public static ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
     String api_token;
-
+ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
     int newsFeedPageSize = 2;
@@ -124,12 +131,26 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         root = inflater.inflate(R.layout.fragment_home, container, false);
         cl_main = root.findViewById(R.id.cl_main);
         recycler_feed = root.findViewById(R.id.recycler_feed);
+        iv_profile = root.findViewById(R.id.iv_profile);
         feedrefresh = root.findViewById(R.id.feedrefresh);
         ll_whats_on_mind = root.findViewById(R.id.ll_whats_on_mind);
         ll_whats_on_mind.setOnClickListener(this);
         tv_uploding_multimedia = root.findViewById(R.id.tv_uploding_multimedia);
         connectionDetector = ConnectionDetector.getInstance(getActivity());
+        String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
+        Glide.with(getActivity())
+                .load(profilePic)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
 
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(iv_profile);
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -379,14 +400,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     @Override
     public void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position) {
         newsfeedViewModel.openMoreDetails(getActivity(), feed, position,api_token,eventid);
-
     }
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
-
         newsfeedViewModel.openLikeimg(getActivity(),api_token, eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
-
    }
 
     @Override

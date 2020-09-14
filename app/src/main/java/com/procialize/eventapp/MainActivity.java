@@ -1,7 +1,6 @@
 package com.procialize.eventapp;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -12,15 +11,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -34,6 +31,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
@@ -49,8 +47,6 @@ import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 import java.sql.Timestamp;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.procialize.eventapp.Utility.Constant.colorSecondary;
 import static com.procialize.eventapp.Utility.Constant.colorunselect;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
@@ -67,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-
+    TableRow tr_switch_event;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,26 +115,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setUpToolbar();
         setUpNavDrawer();
-
-        //String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiJjYWU1MzljNGViMzcwMTI4ZTc3MDIwY2M0ZTdmOTRlMmRhZDIxYjUwIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiIgaHR0cHM6XC9cL3N0YWdlLWFkbWluLnByb2NpYWxpemUubGl2ZVwvYmFzZWFwcFwvdXBsb2Fkc1wvdXNlclwvZGVmYXVsdC5wbmciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTI4MjIxNCwiZXhwaXJ5X3RpbWUiOjE1OTkyODU4MTR9.kXZylcC-mT6sv94wGQJbzyEhTAF63plIsglnU0GFZOQ";
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIxYTE0NDljYzM5ZDVhZjFlMTkwYzRkNGQ3ZGJmMzc2ZGE4NmQ3ZjE2IiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiJodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC8xNTk5NTczNjM0ODMzNC5qcGciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTY0NDg3MCwiZXhwaXJ5X3RpbWUiOjE1OTk2NDg0NzB9.2wPbwyM65sb0ipQKMZgbTQlBtPNEhIjzHCdKR6VXgRg";
-        JWT jwt = new JWT(token);
-        //String mobile = jwt.getClaim("mobile").asString();
-        String first_name = jwt.getClaim("first_name").asString();
-        String middle_name = jwt.getClaim("middle_name").asString();
-        String last_name = jwt.getClaim("last_name").asString();
-        String mobile = jwt.getClaim("mobile").asString();
-        String email = jwt.getClaim("email").asString();
-        String refresh_token = jwt.getClaim("refresh_token").asString();
-        String user_type = jwt.getClaim("user_type").asString();
-        String verify_otp = jwt.getClaim("verify_otp").asString();
-        String profile_pic = jwt.getClaim("profile_pic").asString();
-        String is_god = jwt.getClaim("is_god").asString();
-        String time = jwt.getClaim("time").asString();
-        String expiry_time = jwt.getClaim("expiry_time").asString();
-
-        Timestamp timestamp_open = new Timestamp(Long.parseLong(time));
-        Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expiry_time));
+        tr_switch_event = findViewById(R.id.tr_switch_event);
+        tr_switch_event.setOnClickListener(this);
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -243,12 +221,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+            mToolbar.showOverflowMenu();
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
-            String eventLogo =  SharedPreference.getPref(MainActivity.this,EVENT_LOGO);
-            String eventListMediaPath =  SharedPreference.getPref(MainActivity.this,EVENT_LIST_MEDIA_PATH);
+            String eventLogo = SharedPreference.getPref(MainActivity.this, EVENT_LOGO);
+            String eventListMediaPath = SharedPreference.getPref(MainActivity.this, EVENT_LIST_MEDIA_PATH);
             Glide.with(MainActivity.this)
-                    .load(eventListMediaPath+eventLogo)
+                    .load(eventListMediaPath + eventLogo)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -327,6 +306,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.iv_edit:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                break;
+            case R.id.tr_switch_event:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, EventListActivity.class));
+                SharedPreference.clearAllPref(this);
                 break;
         }
     }
