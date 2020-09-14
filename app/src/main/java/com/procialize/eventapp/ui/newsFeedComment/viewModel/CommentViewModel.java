@@ -246,4 +246,14 @@ public class CommentViewModel extends ViewModel {
     public LiveData<FetchNewsfeedMultiple> newsFeedDeatils() {
         return newsFeedDetails;
     }
+
+    /**
+     * Save Media
+     */
+    public void saveMedia()
+    {
+
+    }
+
+
 }

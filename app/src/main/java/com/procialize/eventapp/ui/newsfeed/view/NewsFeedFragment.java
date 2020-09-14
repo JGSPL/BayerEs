@@ -1,10 +1,17 @@
 package com.procialize.eventapp.ui.newsfeed.view;
 
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -19,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -60,6 +68,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
@@ -78,12 +88,12 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     UploadMultimediaBackgroundReceiver mReceiver;
     IntentFilter mFilter;
     public static ConstraintLayout cl_main;
-    private TextView tv_uploding_multimedia;
+    private TextView tv_uploding_multimedia,tv_whats_on_mind;
     String api_token;
     ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 5;
+    int newsFeedPageSize = 20;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -96,6 +106,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         return new NewsFeedFragment();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
@@ -113,6 +124,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         feedrefresh = root.findViewById(R.id.feedrefresh);
         ll_whats_on_mind = root.findViewById(R.id.ll_whats_on_mind);
         ll_whats_on_mind.setOnClickListener(this);
+        tv_whats_on_mind = root.findViewById(R.id.tv_whats_on_mind);
         tv_uploding_multimedia = root.findViewById(R.id.tv_uploding_multimedia);
         connectionDetector = ConnectionDetector.getInstance(getActivity());
         if (newsfeedAdapter == null) {
@@ -148,6 +160,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         });
 
         init();
+
+        tv_whats_on_mind.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_4)));
+        tv_whats_on_mind.setAlpha(0.4f);
 
         if (!CommonFunction.isMyServiceRunning(getActivity(), BackgroundServiceToCompressMedia.class)) {
            /* Intent intent = new Intent(getActivity(), BackgroundServiceToCompressMedia.class);
@@ -240,7 +255,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recycler_feed.setLayoutManager(linearLayoutManager);
 
-        recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+       /* recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
             protected void loadMoreItems() {
                 isLoading = true;
@@ -263,7 +278,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             public boolean isLoading() {
                 return isLoading;
             }
-        });
+        });*/
     }
 
     private void loadNextPage() {
@@ -395,8 +410,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     @Override
-    public void onCommentClick(Newsfeed_detail feed, int position) {
-        newsfeedViewModel.openCommentPage(getActivity(), feed, position);
+    public void onCommentClick(Newsfeed_detail feed, int position,int swipeablePosition) {
+        newsfeedViewModel.openCommentPage(getActivity(), feed, position,swipeablePosition);
     }
 
     @Override

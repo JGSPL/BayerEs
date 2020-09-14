@@ -39,6 +39,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.procialize.eventapp.Constants.Constant;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
@@ -47,6 +48,7 @@ import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
+import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.quiz.view.QuizFragment;
@@ -57,6 +59,7 @@ import java.sql.Timestamp;
 
 import static com.procialize.eventapp.Utility.Constant.colorSecondary;
 import static com.procialize.eventapp.Utility.Constant.colorunselect;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
@@ -86,7 +89,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mToolbar = findViewById(R.id.toolbar);
         ll_main = findViewById(R.id.ll_main);
 
-        try {
+        CommonFunction.showBackgroundImage(this,ll_main);
+
+/*        try {
 
             File mypath = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "/" + Constant.FOLDER_DIRECTORY + "/" + "background.jpg");
             Resources res = getResources();
@@ -95,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ll_main.setBackgroundDrawable(bd);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
@@ -187,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         // Switch to page one
-
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
@@ -260,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-            mToolbar.getNavigationIcon().setTint(Color.parseColor(colorSecondary));
+            mToolbar.getNavigationIcon().setTint(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4)));
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -275,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     },
                     new int[]{
                             Color.parseColor(colorunselect),
-                            Color.parseColor(colorSecondary)
+                            Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4))
                     });
 
             ColorStateList textColorStates = new ColorStateList(
@@ -285,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     },
                     new int[]{
                             Color.parseColor(colorunselect),
-                            Color.parseColor(colorSecondary)
+                            Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4))
                     });
 
             navView.setItemIconTintList(iconsColorStates);

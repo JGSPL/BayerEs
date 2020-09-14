@@ -170,13 +170,13 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             holder.tv_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onCommentClick(feed_detail.get(position), position);
+                    listener.onCommentClick(feed_detail.get(position), position,swipableAdapterPosition);
                 }
             });
             holder.iv_comments.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onCommentClick(feed_detail.get(position), position);
+                    listener.onCommentClick(feed_detail.get(position), position,swipableAdapterPosition);
                 }
             });
             holder.tv_like.setOnClickListener(new View.OnClickListener() {
@@ -287,7 +287,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     public interface FeedAdapterListner {
         void onContactSelected(Newsfeed_detail feed, int position);
 
-        void onCommentClick(Newsfeed_detail feed, int position);
+        void onCommentClick(Newsfeed_detail feed, int position, int swipeablePosition);
 
         void onLikeClick(Newsfeed_detail feed, int position);
 

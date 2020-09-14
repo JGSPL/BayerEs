@@ -35,6 +35,7 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
@@ -139,6 +140,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this,EVENT_ID);
 
+        CommonFunction.showBackgroundImage(this,ll_main);
         if (connectionDetector.isConnectingToInternet()) {
             profileActivityViewModel.getProfile(api_token,event_id);
             profileActivityViewModel.getProfileDetails().observe(this, new Observer<Profile>() {

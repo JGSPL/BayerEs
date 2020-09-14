@@ -97,11 +97,11 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //---------------View Comment details--------------------------------
-    public void openCommentPage(Activity activity, Newsfeed_detail feed, int position) {
+    public void openCommentPage(Activity activity, Newsfeed_detail feed, int position,int swipeablePosition) {
         activity.startActivity(new Intent(activity, CommentActivity.class)
                 .putExtra("Newsfeed_detail", (Serializable) feed)
                 .putExtra("newsfeedId",feed.getNews_feed_id())
-                .putExtra("position", "" + position));
+                .putExtra("position", "" + swipeablePosition));
     }
 
     //---------------View Like details--------------------------------

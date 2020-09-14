@@ -1,24 +1,23 @@
 package com.procialize.eventapp.ui.newsFeedComment.view;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -34,14 +33,26 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.snackbar.Snackbar;
+import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
@@ -56,27 +67,39 @@ import com.procialize.eventapp.ui.newsFeedComment.model.GifResponse;
 import com.procialize.eventapp.ui.newsFeedComment.model.GifResult;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.viewModel.CommentViewModel;
-import com.procialize.eventapp.ui.newsFeedDetails.adapter.NewsFeedDetailsPagerAdapter;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
-import com.procialize.eventapp.ui.newsFeedLike.model.Like;
-import com.procialize.eventapp.ui.newsFeedPost.viewModel.PostNewsFeedViewModel;
+import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
-import com.yanzhenjie.album.AlbumFile;
+import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.jzvd.JzvdStd;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
+import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
+import static java.security.AccessController.getContext;
 
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
@@ -86,13 +109,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     EditText et_comment, et_search_gif;
     FrameLayout fl_gif_container, fl_post_comment;
     LinearLayout ll_comment_container,
-            ll_media_dots, ll_main;
+            ll_media_dots, ll_main,ll_root;
     CommentViewModel commentViewModel;
     String anon_id;
     RecyclerView rv_gif, rv_comments;
     ProgressBar pb_emoji;
     ViewPager vp_media;
-    private String position, newsfeedId;
+    private String mediaPosition, newsfeedId;
     private Newsfeed_detail newsfeed_detail;
     public static int swipableAdapterPosition = 0;
     private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments, tv_no_of_likes;
@@ -102,22 +125,29 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     BottomSheetDialog dialog;
     Dialog contentDialog;
     List<CommentDetail> commentList = new ArrayList<>();
-    String noOfLikes = "0",likeStatus = "",api_token;
-
+    String noOfLikes = "0", likeStatus = "", api_token;
+    private String strPath, eventColor1,eventColor2,eventColor3,eventColor4,eventColor5;
+    public Dialog dialogShare;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
+        eventColor1 = SharedPreference.getPref(this, EVENT_COLOR_1);
+        eventColor2 = SharedPreference.getPref(this, EVENT_COLOR_2);
+        eventColor3 = SharedPreference.getPref(this, EVENT_COLOR_3);
+        eventColor4 = SharedPreference.getPref(this, EVENT_COLOR_4);
+        eventColor5 = SharedPreference.getPref(this, EVENT_COLOR_5);
+
         commentViewModel = ViewModelProviders.of(this).get(CommentViewModel.class);
         connectionDetector = ConnectionDetector.getInstance(this);
-        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
-        event_id = SharedPreference.getPref(this,EVENT_ID);
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this, EVENT_ID);
         Intent intent = getIntent();
         try {
             newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
             newsfeedId = intent.getStringExtra("newsfeedId");
-            position = intent.getStringExtra("position");
+            mediaPosition = intent.getStringExtra("position");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -143,6 +173,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         ll_comment_container = findViewById(R.id.ll_comment_container);
         ll_media_dots = findViewById(R.id.ll_media_dots);
         ll_main = findViewById(R.id.ll_main);
+        ll_root = findViewById(R.id.ll_root);
         vp_media = findViewById(R.id.vp_media);
         tv_status = findViewById(R.id.tv_status);
         tv_name = findViewById(R.id.tv_name);
@@ -151,9 +182,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_no_of_comments = findViewById(R.id.tv_no_of_comments);
         tv_no_of_likes = findViewById(R.id.tv_no_of_likes);
 
+        CommonFunction.showBackgroundImage(this,ll_main);
+
+        iv_share.setOnClickListener(this);
+
         if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
             if (newsfeed_detail == null || newsfeed_detail.getAttendee_id() == null) {
-                commentViewModel.getNewsFeedDetails(api_token,event_id, newsfeedId);
+                commentViewModel.getNewsFeedDetails(api_token, event_id, newsfeedId);
                 commentViewModel.newsFeedDeatils().observe(this, new Observer<FetchNewsfeedMultiple>() {
                     @Override
                     public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
@@ -279,11 +314,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         /*iv_comments.setImageDrawable(getResources().getDrawable(R.drawable.ic_comment));
         iv_share.setImageDrawable(getResources().getDrawable(R.drawable.ic_share));*/
         getComments();
+        setDynamicColor();
     }
 
     public void getComments() {
         if (connectionDetector.isConnectingToInternet()) {
-            commentViewModel.getComment(api_token,event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
+            commentViewModel.getComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
             commentViewModel.getCommentList().observe(this, new Observer<Comment>() {
                 @Override
                 public void onChanged(Comment comment) {
@@ -314,7 +350,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         SwipeMultimediaAdapter swipepagerAdapter = new SwipeMultimediaAdapter(CommentActivity.this, imagesSelectednew, imagesSelectednew1, newsfeed_detail.getNews_feed_media());
         vp_media.setAdapter(swipepagerAdapter);
         swipepagerAdapter.notifyDataSetChanged();
-        vp_media.setCurrentItem(Integer.parseInt(position));
+        vp_media.setCurrentItem(Integer.parseInt(mediaPosition));
 
         if (imagesSelectednew.size() > 1) {
             setupPagerIndidcatorDots(0, ll_media_dots, imagesSelectednew.size());
@@ -339,6 +375,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             ll_media_dots.setVisibility(View.GONE);
         }
+
+
     }
 
     public void setupCommentAdapter(List<CommentDetail> commentList) {
@@ -406,7 +444,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onChanged(Boolean aBoolean) {
                         if (aBoolean) {
-                            commentViewModel.postComment(api_token,event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
+                            commentViewModel.postComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
                             commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                                 @Override
                                 public void onChanged(LoginOrganizer loginOrganizer) {
@@ -424,7 +462,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.iv_likes:
                 noOfLikes = "0";
-                commentViewModel.likePost(api_token,event_id, newsfeed_detail.getNews_feed_id());
+                commentViewModel.likePost(api_token, event_id, newsfeed_detail.getNews_feed_id());
                 commentViewModel.likePostData().observe(CommentActivity.this, new Observer<LikePost>() {
                     @Override
                     public void onChanged(LikePost likePost) {
@@ -448,7 +486,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                     likeStatus = "";
                                 }
                                 Utility.createShortSnackBar(ll_main, likePost.getHeader().get(0).getMsg());
-                                }
+                            }
                             if (commentViewModel != null && commentViewModel.likePostData().hasObservers()) {
                                 commentViewModel.likePostData().removeObservers(CommentActivity.this);
                             }
@@ -457,6 +495,83 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     }
                 });
+                break;
+            case R.id.iv_share:
+                if (connectionDetector.isConnectingToInternet()) {
+                    if (newsfeed_detail.getNews_feed_media().size() > 0) {
+
+                        if (newsfeed_detail.getNews_feed_media().size() < swipableAdapterPosition) {
+                            swipableAdapterPosition = 0;
+                        }
+                        if (newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_type().equalsIgnoreCase("Video")) {
+                            boolean isPresentFile = false;
+                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY+Constant.VIDEO_DIRECTORY);
+                            if (dir.isDirectory()) {
+                                String[] children = dir.list();
+                                for (int i = 0; i < children.length; i++) {
+                                    String filename = children[i].toString();
+                                    if (newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file().equals(filename)) {
+                                        isPresentFile = true;
+                                    }
+                                }
+                            }
+
+                            if (!isPresentFile) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle("Download and Share");
+                                builder.setMessage("Video will be share only after download,\nDo you want to continue for download and share?");
+                                builder.setNegativeButton("NO",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                builder.setPositiveButton("YES",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                String newsFeedPath =  SharedPreference.getPref(CommentActivity.this,NEWS_FEED_MEDIA_PATH);
+                                                new DownloadFile().execute(/*ApiConstant.newsfeedwall*/newsFeedPath + newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file());
+                                            }
+                                        });
+                                builder.show();
+
+                            } else if (isPresentFile) {
+                                String folder = Environment.getExternalStorageDirectory().toString() + "/" +  Constant.FOLDER_DIRECTORY+Constant.VIDEO_DIRECTORY + "/";
+                                //Create androiddeft folder if it does not exist
+                                File directory = new File(folder);
+                                if (!directory.exists()) {
+                                    directory.mkdirs();
+                                }
+                                strPath = folder + newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file();
+                              /*              ContentValues content = new ContentValues(4);
+                                            content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
+                                                    System.currentTimeMillis() / 1000);
+                                            content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                                            content.put(MediaStore.Video.Media.DATA, strPath);
+                                            ContentResolver resolver = getActivity().getContentResolver();
+                                            Uri uri =strPath; resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);*/
+                                Uri contentUri = FileProvider.getUriForFile(CommentActivity.this,
+                                        BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));
+
+                                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                                sharingIntent.setType("video/*");
+                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via MRGE app");
+                                sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+                                sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                                startActivity(Intent.createChooser(sharingIntent, "Shared via MRGE app"));
+                            }
+                        } else {
+                            dialogShare = new Dialog(this);
+                            dialogShare.show();
+                            String newsFeedPath =  SharedPreference.getPref(CommentActivity.this,NEWS_FEED_MEDIA_PATH);
+                            shareImage(newsfeed_detail.getPost_date() + "\n" + newsfeed_detail.getPost_status(), newsFeedPath + newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file(), this);
+                        }
+                    } else {
+                        shareTextUrl(newsfeed_detail.getPost_date()+ "\n" +newsfeed_detail.getPost_status(), StringEscapeUtils.unescapeJava(newsfeed_detail.getPost_status()));
+                    }
+                }
                 break;
         }
     }
@@ -476,11 +591,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         ll_comment_container.setVisibility(View.VISIBLE);
         fl_gif_container.setVisibility(View.GONE);
 
-        commentViewModel.postComment(api_token,event_id, newsfeed_detail.getNews_feed_id(), result.getMedia().get(0).getGif().getUrl(), "2");
+        commentViewModel.postComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), result.getMedia().get(0).getGif().getUrl(), "2");
         commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
             @Override
             public void onChanged(LoginOrganizer loginOrganizer) {
-                Utility.createShortSnackBar(ll_main,"Success");
+                Utility.createShortSnackBar(ll_main, "Success");
                 et_comment.setText("");
                 getComments();
             }
@@ -532,7 +647,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         if (connectionDetector.isConnectingToInternet()) {
             openMoreOptions(this, newsfeed_detail, comment, position, ll_main);
         } else {
-            Utility.createShortSnackBar(ll_main,"No Internet Connection");
+            Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
     }
 
@@ -572,7 +687,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                commentViewModel.deleteComment(api_token,event_id, newsfeed_detail.getNews_feed_id(), commentDetail.getComment_id(), position);
+                commentViewModel.deleteComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), commentDetail.getComment_id(), position);
                 commentViewModel.commentDelete().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                     @Override
                     public void onChanged(LoginOrganizer loginOrganizer) {
@@ -593,7 +708,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         hideTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                commentViewModel.hideComment(api_token,event_id, commentDetail.getComment_id());
+                commentViewModel.hideComment(api_token, event_id, commentDetail.getComment_id());
                 commentViewModel.commentHide().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                     @Override
                     public void onChanged(LoginOrganizer loginOrganizer) {
@@ -689,7 +804,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     String content = StringEscapeUtils.escapeJava(etmsg.getText().toString());
                     dialog.cancel();
                     if (from.equalsIgnoreCase("reportUser")) {
-                        commentViewModel.reportUser(api_token,event_id, newsfeed_detail.getAttendee_id(), newsfeed_detail.getNews_feed_id(), content);
+                        commentViewModel.reportUser(api_token, event_id, newsfeed_detail.getAttendee_id(), newsfeed_detail.getNews_feed_id(), content);
                         commentViewModel.reportUserData().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                             @Override
                             public void onChanged(LoginOrganizer loginOrganizer) {
@@ -704,13 +819,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         });
                     } else if (from.equalsIgnoreCase("reportComment")) {
-                        commentViewModel.reportComment(api_token,event_id, commentId, content);
+                        commentViewModel.reportComment(api_token, event_id, commentId, content);
                         commentViewModel.reportCommentPostData().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                             @Override
                             public void onChanged(LoginOrganizer loginOrganizer) {
                                 if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                                     contentDialog.dismiss();
-                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());getComments();
+                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
+                                    getComments();
                                 } else {
                                     contentDialog.dismiss();
                                     Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
@@ -725,5 +841,179 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    public void shareImage(final String data, String url, final Context context) {
+        Picasso.with(context).load(url).into(new com.squareup.picasso.Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                dialogShare.dismiss();
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("image/*");
+                i.putExtra(Intent.EXTRA_SUBJECT, data);
+                i.putExtra(Intent.EXTRA_STREAM, getLocalBitmapUri(bitmap, context));
 
+                context.startActivity(Intent.createChooser(i, "Share Image"));
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            }
+        });
+    }
+
+
+    private void shareTextUrl(String data, String url) {
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        // Add data to the intent, the receiving app will decide
+        // what to do with it.
+        share.putExtra(Intent.EXTRA_SUBJECT, data);
+        share.putExtra(Intent.EXTRA_TEXT, url);
+
+        startActivity(Intent.createChooser(share, "Share link!"));
+    }
+
+    private class DownloadFile extends AsyncTask<String, String, String> {
+
+        private ProgressDialog progressDialog;
+        private String fileName;
+
+        /**
+         * Before starting background thread
+         * Show Progress Bar Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.progressDialog = new ProgressDialog(CommentActivity.this);
+            this.progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            this.progressDialog.setCancelable(false);
+            this.progressDialog.show();
+        }
+
+        /**
+         * Downloading file in background thread
+         */
+        @Override
+        protected String doInBackground(String... f_url) {
+            int count;
+            try {
+                URL url = new URL(f_url[0]);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+
+                // getting file length
+                int lengthOfFile = connection.getContentLength();
+
+                // input stream to read file - with 8k buffer
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+                String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+                //Extract file name from URL
+                fileName = f_url[0].substring(f_url[0].lastIndexOf('/') + 1, f_url[0].length());
+                //Append timestamp to file name
+                //fileName = timestamp + "_" + fileName;
+                //External directory path to save file
+                //folder = Environment.getExternalStorageDirectory() + File.separator + "androiddeft/";
+                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + "/";
+
+
+                //Create androiddeft folder if it does not exist
+                File directory = new File(folder);
+
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                strPath = folder + fileName;
+                // Output stream to write file
+                OutputStream output = new FileOutputStream(folder + fileName);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    // After this onProgressUpdate will be called
+                    publishProgress("" + (int) ((total * 100) / lengthOfFile));
+                    Log.d("NewsFeedDetailsActivity", "Progress: " + (int) ((total * 100) / lengthOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+                return "Download completed- check folder " + Constant.FOLDER_DIRECTORY;
+
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+            }
+
+            return "Something went wrong";
+        }
+
+        /**
+         * Updating progress bar
+         */
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+            progressDialog.setProgress(Integer.parseInt(progress[0]));
+        }
+
+
+        @Override
+        protected void onPostExecute(String message) {
+            // dismiss the dialog after the file was downloaded
+            this.progressDialog.dismiss();
+
+                ContentValues content = new ContentValues(4);
+                content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
+                        System.currentTimeMillis() / 1000);
+                content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                content.put(MediaStore.Video.Media.DATA, strPath);
+
+                ContentResolver resolver = getContentResolver();
+                Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
+
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("video/*");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+        }
+    }
+
+    public void setDynamicColor() {
+        tv_name.setTextColor(Color.parseColor(eventColor1));
+        tv_status.setTextColor(Color.parseColor(eventColor3));
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+        tv_date_time.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        tv_designation.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        tv_no_of_likes.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        tv_no_of_comments.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        ll_root.setBackgroundColor(Color.parseColor(eventColor2));
+
+        int color = Color.parseColor( eventColor3);
+        //moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        iv_share.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        //moreIV.setAlpha(150);
+        iv_likes.setAlpha(150);
+        iv_comments.setAlpha(150);
+        iv_share.setAlpha(150);
+    }
 }
