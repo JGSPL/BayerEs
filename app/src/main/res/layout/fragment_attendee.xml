@@ -26,18 +26,16 @@
             android:padding="8dp"
             android:textColor="@color/black"
             android:textSize="@dimen/textsizesmall"
-            android:layout_weight="9"/>
+            android:layout_weight="9" />
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:id="@+id/linBorder"
             android:layout_weight="1"
-            android:layout_gravity="right"
             android:layout_marginRight="10dp"
-
             android:background="@color/colorwhite"
-            android:alpha="0.9">
+            android:alpha="0.9"
+            android:layout_gravity="center_horizontal">
             <com.procialize.eventapp.fonts.RobotoTextview
                 android:id="@+id/searchBtn"
                 android:layout_width="match_parent"
@@ -45,7 +43,8 @@
                 android:gravity="center"
                 android:layout_margin="2dp"
                 android:drawableLeft="@drawable/ic_search"
-                />
+               android:layout_gravity="center"
+                android:background="@color/colorwhite"/>
         </LinearLayout>
 
     </LinearLayout>
