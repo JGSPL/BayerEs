@@ -70,7 +70,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     Attendee attendeeTmp;
     Boolean isVisible = false;
     public static Activity activity;
-    int totalPages = 100;
+    int totalPages = 20000;
     int attendeePageNumber = 1;
     int attendeePageSize = 10;
     AttendeeViewModel attendeeViewModel;
