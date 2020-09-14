@@ -24,15 +24,13 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
-import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.ui.eventList.model.EventList;
-import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EXPIRY_TIME;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.NewsViewHolder>  implements Filterable {
 
@@ -93,6 +91,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.NewsViewHold
         holder.ll_main_event_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 listener.onMoreSelected(events,position);
             }
         });

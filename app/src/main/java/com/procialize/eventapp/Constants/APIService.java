@@ -1,6 +1,7 @@
 package com.procialize.eventapp.Constants;
 
 
+import com.google.gson.JsonObject;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.validateOTP;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
@@ -11,8 +12,11 @@ import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.profile.model.Profile;
+import com.procialize.eventapp.ui.splash.view.SplashAcivity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -20,13 +24,14 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 
-public interface APIService {
+public interface APIService{
 
     String HeaderToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIwNTE0M2JmOTI0NzcwYTk5MTdlZjNhMWU5MjY4MGE3NTU5M2M1NDZiIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiJodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC8xNTk5NTczNjM0ODMzNC5qcGciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTcyNzQ0MiwiZXhwaXJ5X3RpbWUiOjE1OTk3MzEwNDJ9.HcJDPuJMtS_o8Q6FrzUmHWNulrPzNcAzAhodkCa9E0M";
 
@@ -159,6 +164,13 @@ public interface APIService {
                         @Field("pageNumber") String pageNumber);
 
     // @Headers("authorization: " + HeaderToken)
+    @POST("event_api_call/refreshToken")
+    @FormUrlEncoded
+    Call<validateOTP> getRefreashToken(@Field("organizer_id") String organizer_id,
+                                    @Field("username") String username,
+                                    @Field("otp") String otp,
+                                    @Field("access_token") String access_token);
+
     @POST("event_api_call/eventList")
     @FormUrlEncoded
     Call<Event> getEventList(@Header("authorization") String auth,

@@ -9,9 +9,11 @@ import com.procialize.eventapp.BR;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.validateOTP;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
@@ -193,8 +195,14 @@ public class LoginViewModel extends BaseObservable {
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
                     setToastMessage(response.body().getHeader().get(0).getMsg());
+                    LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
+                    RefreashToken refreashToken = new RefreashToken(context);
+                    String data = refreashToken.decryptedData(response.body().getToken().toString().trim());
+                    refreashToken.decodeRefreashToken(data);
+
                     //LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
                     HashMap<String,String> map = new HashMap<>();
+                    map.put(SharedPreferencesConstant.OTP, otp);
                     map.put(AUTHERISATION_KEY,response.body().getTokenpreenrypt());
                     SharedPreference.putPref(context,map);
                 } else {
