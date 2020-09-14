@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +34,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
@@ -44,10 +47,27 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.eventapp.Constants.Constant.REQUEST_CAMERA;
 import static com.procialize.eventapp.Constants.Constant.SELECT_FILE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_CITY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_COMPANY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_DESIGNATION;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_EMAIL;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_FNAME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_GCM_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_LNAME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBILE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_CAMERA;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static com.procialize.eventapp.Utility.Utility.getImageUri;
@@ -62,13 +82,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     TextView tv_profile_pic;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
-    String event_id = "1", profile_pic = "";
+    String event_id , profile_pic = "";
     ProgressBar progressView;
     private String userChoosenTask = "";
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
-
+    String api_token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,8 +135,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         iv_change_profile.setOnClickListener(this);
         iv_back.setOnClickListener(this);
 
+        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this,EVENT_ID);
+
         if (connectionDetector.isConnectingToInternet()) {
-            profileActivityViewModel.getProfile(event_id);
+            profileActivityViewModel.getProfile(api_token,event_id);
             profileActivityViewModel.getProfileDetails().observe(this, new Observer<Profile>() {
                 @Override
                 public void onChanged(Profile profile) {
@@ -171,7 +194,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 String mobile = et_mobile.getText().toString().trim();
                 String profile_pic = tv_profile_pic.getText().toString();
 
-                profileActivityViewModel.updateProfile(event_id,
+                profileActivityViewModel.updateProfile(api_token,event_id,
                         first_name,
                         last_name,
                         designation,
@@ -184,8 +207,33 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     public void onChanged(Profile profile) {
                         if (profile != null) {
                             if (profile.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+
                                 Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
-                                profileActivityViewModel.openMainActivity(ProfileActivity.this);
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        HashMap<String, String> map = new HashMap<>();
+                                        map.put(KEY_FNAME,profile.getProfileDetails().get(0).getFirst_name());
+                                        map.put(KEY_LNAME, profile.getProfileDetails().get(0).getLast_name());
+                                        map.put(KEY_EMAIL, profile.getProfileDetails().get(0).getEmail());
+                                        map.put(KEY_PASSWORD, "");
+                                        map.put(KEY_DESIGNATION, profile.getProfileDetails().get(0).getDesignation());
+                                        map.put(KEY_COMPANY, profile.getProfileDetails().get(0).getCompany_name());
+                                        map.put(KEY_MOBILE, profile.getProfileDetails().get(0).getMobile());
+                                        map.put(KEY_TOKEN, "");
+                                        map.put(KEY_CITY, profile.getProfileDetails().get(0).getCity());
+                                        map.put(KEY_GCM_ID, "");
+                                        map.put(KEY_PROFILE_PIC, profile.getProfileDetails().get(0).getProfile_picture());
+                                        map.put(KEY_ATTENDEE_ID, profile.getProfileDetails().get(0).getAttendee_id());
+                                        map.put(ATTENDEE_STATUS, profile.getProfileDetails().get(0).getIs_god());
+                                        map.put(IS_LOGIN, "true");
+                                        SharedPreference.putPref(ProfileActivity.this, map);
+
+                                        profileActivityViewModel.openMainActivity(ProfileActivity.this);
+                                    }
+                                }, 100);
+
                             } else {
                                 Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
                             }

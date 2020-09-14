@@ -49,8 +49,8 @@ public class CommentRepository {
      * @param commentType
      * @return
      */
-    public MutableLiveData<LoginOrganizer> postComment(String event_id, String news_feed_id, String comment_data, String commentType) {
-        commentApi.PostComment(event_id,
+    public MutableLiveData<LoginOrganizer> postComment(String token,String event_id, String news_feed_id, String comment_data, String commentType) {
+        commentApi.PostComment(token,event_id,
                 news_feed_id,
                 comment_data,
                 commentType)
@@ -79,9 +79,9 @@ public class CommentRepository {
      * @param position
      * @return
      */
-    public MutableLiveData<LoginOrganizer> deleteNewsFeedComment(String event_id, String news_feed_id, String comment_id, int position) {
+    public MutableLiveData<LoginOrganizer> deleteNewsFeedComment(String token,String event_id, String news_feed_id, String comment_id, int position) {
         commentApi = ApiUtils.getAPIService();
-        commentApi.DeleteComment(event_id, comment_id).enqueue(new Callback<LoginOrganizer>() {
+        commentApi.DeleteComment(token,event_id, comment_id).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
@@ -104,9 +104,9 @@ public class CommentRepository {
      * @param comment_id
      * @return
      */
-    public MutableLiveData<LoginOrganizer> hideComment(String event_id, String comment_id) {
+    public MutableLiveData<LoginOrganizer> hideComment(String token, String event_id, String comment_id) {
         commentApi = ApiUtils.getAPIService();
-        commentApi.CommentHide(event_id, comment_id).enqueue(new Callback<LoginOrganizer>() {
+        commentApi.CommentHide(token,event_id, comment_id).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
@@ -129,8 +129,8 @@ public class CommentRepository {
      * @param news_feed_id
      * @return
      */
-    public MutableLiveData<Comment> getCommentList(String event_id, String news_feed_id) {//, String pageSize, String pageNumber) {
-        commentApi.getComment(event_id,
+    public MutableLiveData<Comment> getCommentList(String token,String event_id, String news_feed_id) {//, String pageSize, String pageNumber) {
+        commentApi.getComment(token,event_id,
                 news_feed_id/*,
                 pageSize,
                 pageNumber*/)
@@ -159,10 +159,10 @@ public class CommentRepository {
      * @param content
      * @return
      */
-    public MutableLiveData<LoginOrganizer> reportUser(String event_id,String reported_user_id,String news_feed_id,String content) {
+    public MutableLiveData<LoginOrganizer> reportUser(String token,String event_id,String reported_user_id,String news_feed_id,String content) {
         commentApi = ApiUtils.getAPIService();
 
-        commentApi.ReportUser(event_id, reported_user_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
+        commentApi.ReportUser(token,event_id, reported_user_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
@@ -187,10 +187,10 @@ public class CommentRepository {
      * @param content
      * @return
      */
-    public MutableLiveData<LoginOrganizer> reportComment(String event_id,String comment_id,String content) {
+    public MutableLiveData<LoginOrganizer> reportComment(String token,String event_id,String comment_id,String content) {
         commentApi = ApiUtils.getAPIService();
 
-        commentApi.ReportComment(event_id, comment_id,  content).enqueue(new Callback<LoginOrganizer>() {
+        commentApi.ReportComment(token,event_id, comment_id,  content).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
@@ -214,10 +214,10 @@ public class CommentRepository {
      * @param news_feed_id
      * @return
      */
-    public MutableLiveData<LikePost> PostLike(String event_id, String news_feed_id) {
+    public MutableLiveData<LikePost> PostLike(String token,String event_id, String news_feed_id) {
         commentApi = ApiUtils.getAPIService();
 
-        commentApi.PostLikeFromComment(event_id, news_feed_id).enqueue(new Callback<LikePost>() {
+        commentApi.PostLikeFromComment(token,event_id, news_feed_id).enqueue(new Callback<LikePost>() {
             @Override
             public void onResponse(Call<LikePost> call, Response<LikePost> response) {
                 if (response.isSuccessful()) {
@@ -240,10 +240,10 @@ public class CommentRepository {
      * @param newsFeedId
      * @return
      */
-    public MutableLiveData<FetchNewsfeedMultiple> getNewsFeedDetails(String eventId, String newsFeedId) {
+    public MutableLiveData<FetchNewsfeedMultiple> getNewsFeedDetails(String token,String eventId, String newsFeedId) {
         commentApi = ApiUtils.getAPIService();
 
-        commentApi.NewsFeedDetailFetch(eventId,newsFeedId).enqueue(new Callback<FetchNewsfeedMultiple>() {
+        commentApi.NewsFeedDetailFetch(token,eventId,newsFeedId).enqueue(new Callback<FetchNewsfeedMultiple>() {
             @Override
             public void onResponse(Call<FetchNewsfeedMultiple> call,
                                    Response<FetchNewsfeedMultiple> response) {

@@ -32,6 +32,8 @@ import static com.procialize.eventapp.Constants.Constant.VIDEO_DIRECTORY;
 
 public class CommonFunction {
 
+
+
     public static String saveImage(Context context, Bitmap myBitmap, String imageName) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);

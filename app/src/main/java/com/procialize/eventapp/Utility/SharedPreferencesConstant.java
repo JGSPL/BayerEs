@@ -30,4 +30,15 @@ public final class SharedPreferencesConstant {
     public static final String VERIFY_OTP = "verify_otp";
     public static final String MIDDLE_NAME = "middle_name";
     public static final String OTP = "otp";
+
+    public static final String EVENT_NAME = "eventnamestr";
+    public static final String EVENT_LOGO = "logoImg";
+    public static final String EVENT_BACKGROUD = "eventback";
+    public static final String EVENT_COLOR_1 = "color1";
+    public static final String EVENT_COLOR_2 = "color2";
+    public static final String EVENT_COLOR_3 = "color3";
+    public static final String EVENT_COLOR_4 = "color4";
+    public static final String EVENT_COLOR_5 = "color5";
+
+
 }

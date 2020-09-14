@@ -2,6 +2,7 @@ package com.procialize.eventapp.ui.eventList.view;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,9 +59,9 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     RecyclerView rv_event_list;
     EventAdapter eventAdapter;
     EditText et_search;
-    String eventid = "1", device_token = "111111", platform, device, osVersion, appVersion, deviceId;
+    String event_id , device_token = "111111", platform, device, osVersion, appVersion, deviceId;
     SessionManager session;
-    String gcmRegID;
+    String api_token="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
 
         session = new SessionManager(getApplicationContext());
 
+        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this,EVENT_ID);
 
         ll_main = findViewById(R.id.ll_main);
         et_search = findViewById(R.id.et_search);
@@ -97,6 +100,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             }
 
             eventListViewModel.getEvent("0", "");
+            eventListViewModel.getEvent(api_token,"0", "");
             eventListViewModel.getEventList().observe(this, new Observer<Event>() {
                 @Override
                 public void onChanged(Event event) {
@@ -148,8 +152,10 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     @Override
     public void onMoreSelected(EventList event, int position) {
         if (cd.isConnectingToInternet()) {
-            eventListViewModel.updateUserData(eventid, device_token, platform, device, osVersion, appVersion, session);
+            String eventId = event.getEvent_id();
 
+            session.saveCurrentEvent(event);
+            eventListViewModel.updateUserData(api_token,eventId, device_token, platform, device, osVersion, appVersion, session);
 
             eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
                 @Override
@@ -165,25 +171,26 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     String is_god = userData.get(0).getIs_god();
                     String emailId = userData.get(0).getEmail();*/
 
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(KEY_FNAME,userData.get(0).getFirst_name());
-                    map.put(KEY_LNAME, userData.get(0).getLast_name());
-                    map.put(KEY_EMAIL, userData.get(0).getEmail());
-                    map.put(KEY_PASSWORD, "");
-                    map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
-                    map.put(KEY_COMPANY, userData.get(0).getCompany_name());
-                    map.put(KEY_MOBILE, userData.get(0).getMobile());
-                    map.put(KEY_TOKEN, "");
-                    map.put(KEY_CITY, userData.get(0).getCity());
-                    map.put(KEY_GCM_ID, "");
-                    map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
-                    map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
-                    map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
-                    map.put(IS_LOGIN, "true");
-                    SharedPreference.putPref(EventListActivity.this, map);
-                    //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put(KEY_FNAME,userData.get(0).getFirst_name());
+                            map.put(KEY_LNAME, userData.get(0).getLast_name());
+                            map.put(KEY_EMAIL, userData.get(0).getEmail());
+                            map.put(KEY_PASSWORD, "");
+                            map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
+                            map.put(KEY_COMPANY, userData.get(0).getCompany_name());
+                            map.put(KEY_MOBILE, userData.get(0).getMobile());
+                            map.put(KEY_TOKEN, "");
+                            map.put(KEY_CITY, userData.get(0).getCity());
+                            map.put(KEY_GCM_ID, "");
+                            map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
+                            map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
+                            map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
+                            map.put(IS_LOGIN, "true");
+                            map.put(EVENT_ID, eventId);
+                            SharedPreference.putPref(EventListActivity.this, map);
+                            //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
 
-                    eventListViewModel.openProfilePage(EventListActivity.this, userData, position);
+                            eventListViewModel.openProfilePage(EventListActivity.this, userData, position);
 
                 }
             });

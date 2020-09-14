@@ -1,67 +1,59 @@
 package com.procialize.eventapp.ui.newsFeedPost.view;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.viewpager.widget.ViewPager;
-
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Database.EventAppDB;
-import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedPost.adapter.ViewPagerMultimediaAdapter;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
-import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.viewModel.PostNewsFeedViewModel;
-import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
-import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
-import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.yanzhenjie.album.AlbumFile;
 
 import java.io.File;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
 public class PostNewActivity extends AppCompatActivity implements View.OnClickListener {
 
     LinearLayout ll_upload_media, ll_media_dots, linear;
     EditText et_post;
-    TextView btn_post, tv_count;
+    TextView btn_post, tv_count,tv_name;
     PostNewsFeedViewModel postNewsFeedViewModel;
     ArrayList<SelectedImages> resultList = new ArrayList<>();
     private ArrayList<AlbumFile> mAlbumFiles = new ArrayList<>();//Array For selected images and videos
@@ -73,8 +65,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     private int dotscount;
     ConnectionDetector cd;
     EventAppDB eventAppDB;
-
-    String event_id = "1";
+    ImageView iv_back,iv_profile;
+    String event_id, api_token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,15 +74,42 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_post_new);
 
         eventAppDB = EventAppDB.getDatabase(this);
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this, EVENT_ID);
+
         Log.d("tot_count", String.valueOf(eventAppDB.uploadMultimediaDao().getRowCount()));
         postNewsFeedViewModel = ViewModelProviders.of(this).get(PostNewsFeedViewModel.class);
         cd = ConnectionDetector.getInstance(this);
         ll_upload_media = findViewById(R.id.ll_upload_media);
+        iv_back = findViewById(R.id.iv_back);
+        iv_profile = findViewById(R.id.iv_profile);
         ll_media_dots = findViewById(R.id.ll_media_dots);
         linear = findViewById(R.id.linear);
         btn_post = findViewById(R.id.btn_post);
         tv_count = findViewById(R.id.tv_count);
+        tv_name = findViewById(R.id.tv_name);
         et_post = findViewById(R.id.et_post);
+        iv_back.setOnClickListener(this);
+
+        String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
+        String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
+        String lName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
+        String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
+        String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
+        tv_name.setText(fName + " "+lName);
+        Glide.with(PostNewActivity.this)
+                .load(profilePic)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(iv_profile);
 
         et_post.addTextChangedListener(new TextWatcher() {
             @Override
@@ -257,6 +276,9 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_back:
+                onBackPressed();
+                break;
             case R.id.ll_upload_media:
                 postNewsFeedViewModel.selectAlbum(this);
                 break;
@@ -270,7 +292,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                             @Override
                             public void onChanged(Boolean aBoolean) {
                                 if (aBoolean) {
-                                    postNewsFeedViewModel.sendPost(event_id, postText, resultList);
+                                    postNewsFeedViewModel.sendPost(api_token, event_id, postText, resultList);
                                     postNewsFeedViewModel.getStatus().observe(PostNewActivity.this, new Observer<LoginOrganizer>() {
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {

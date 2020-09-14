@@ -67,14 +67,14 @@ public class NewsFeedViewModel extends ViewModel {
     MutableLiveData<Boolean> isValid = new MutableLiveData<>();
     String noOfLikes = "0";
     String likeStatus="";
-     public void init(String pagesize, String pagenumber) {
+     public void init(String token,String eventId,String pagesize, String pagenumber) {
        /* if (mutableLiveData != null) {
             return;
         }*/
 
 
         newsRepository = NewsfeedRepository.getInstance();
-        mutableLiveData = newsRepository.getNewsFeed("1", pagesize, pagenumber);
+        mutableLiveData = newsRepository.getNewsFeed(token,eventId, pagesize, pagenumber);
 
     }
 
@@ -112,11 +112,11 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //---------------View Like Action mechanism--------------------------------
-    public void openLikeimg(Activity activity, String event_id, String newsfeedid, View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
+    public void openLikeimg(Activity activity, String token, String event_id, String newsfeedid, View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
          activityVar = activity;
         newsRepository = NewsfeedRepository.getInstance();
         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-            newsfeedLike = newsRepository.PostLike(event_id, newsfeedid);
+            newsfeedLike = newsRepository.PostLike(token,event_id, newsfeedid);
 
          newsRepository.getLikeActivity().observe((LifecycleOwner) activityVar, new Observer<LikePost>() {
               @Override
@@ -172,7 +172,7 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     ///------------------Open More dot features------------------
-    public void openMoreDetails(Activity activity, Newsfeed_detail feed, int position) {
+    public void openMoreDetails(Activity activity, Newsfeed_detail feed, int position, String token, String eventId) {
         activityVar = activity;
         dialog = new BottomSheetDialog(activity);
         dialog.setContentView(R.layout.botomfeeddialouge);
@@ -244,7 +244,7 @@ public class NewsFeedViewModel extends ViewModel {
             @Override
             public void onClick(View v) {
                 if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-                    newsfeedHide = newsRepository.DeletePost("1", feed.getNews_feed_id());
+                    newsfeedHide = newsRepository.DeletePost(token,eventId, feed.getNews_feed_id());
 
                     newsRepository.getPostActivity().observe((LifecycleOwner) activity, new Observer<LoginOrganizer>() {
                         @Override
@@ -272,7 +272,7 @@ public class NewsFeedViewModel extends ViewModel {
                 newsRepository = NewsfeedRepository.getInstance();
 
                 if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-                    newsfeedHide = newsRepository.PostHide("1", feed.getNews_feed_id());
+                    newsfeedHide = newsRepository.PostHide(token,eventId, feed.getNews_feed_id());
 
                     newsRepository.getPostActivity().observe((LifecycleOwner) activity, new Observer<LoginOrganizer>() {
                         @Override
@@ -294,7 +294,7 @@ public class NewsFeedViewModel extends ViewModel {
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge("reportPost", feed.getNews_feed_id(),feed.getAttendee_id());
+                showratedialouge(token,"reportPost", feed.getNews_feed_id(),feed.getAttendee_id(),eventId);
             }
         });
 
@@ -302,7 +302,7 @@ public class NewsFeedViewModel extends ViewModel {
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge("reportUser",feed.getNews_feed_id(), feed.getAttendee_id());
+                showratedialouge(token,"reportUser",feed.getNews_feed_id(), feed.getAttendee_id(),eventId);
             }
         });
 
@@ -373,10 +373,10 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //-------------call to upload newsfeed---------------------
-    public void sendPost(String event_id, String status, List<UploadMultimedia> resultList) {
+    public void sendPost(String token,String event_id, String status, List<UploadMultimedia> resultList) {
        // mIsUploading.setValue(true);
         NewsfeedRepository postNewsFeedRepository = NewsfeedRepository.getInstance();
-        multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(event_id, status, resultList);//,mediaFile,mediaFileThumb);
+        multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(token,event_id, status, resultList);//,mediaFile,mediaFileThumb);
     }
     public MutableLiveData<LoginOrganizer> getPostStatus() {
        // mIsUploading.setValue(false);
@@ -399,7 +399,7 @@ public class NewsFeedViewModel extends ViewModel {
         return mIsUpdating;
     }
 
-    private void showratedialouge(final String from, final String id, final String attnId) {
+    private void showratedialouge(final String api_token,final String from, final String id, final String attnId,String eventId) {
 
         myDialog = new Dialog(activityVar);
         myDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -456,7 +456,7 @@ public class NewsFeedViewModel extends ViewModel {
                     if (from.equalsIgnoreCase("reportPost")) {
 
                         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-                            newsfeedHide = newsRepository.ReportPost("1", id, msg);
+                            newsfeedHide = newsRepository.ReportPost(api_token,eventId, id, msg);
 
                             newsRepository.getPostActivity().observe((LifecycleOwner) activityVar, new Observer<LoginOrganizer>() {
                                 @Override
@@ -477,7 +477,7 @@ public class NewsFeedViewModel extends ViewModel {
                         /*newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
                         myDialog.cancel();*/
                         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-                            newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
+                            newsfeedHide = newsRepository.ReportUser(api_token,eventId, attnId,id, msg);
                             newsRepository.getPostActivity().observe((LifecycleOwner) activityVar, new Observer<LoginOrganizer>() {
                                 @Override
                                 public void onChanged(LoginOrganizer loginOrganizer) {

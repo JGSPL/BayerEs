@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;

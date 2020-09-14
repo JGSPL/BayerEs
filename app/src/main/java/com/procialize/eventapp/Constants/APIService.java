@@ -1,8 +1,10 @@
 package com.procialize.eventapp.Constants;
 
 
+import com.google.gson.JsonObject;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.validateOTP;
+import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.eventList.model.Event;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -10,8 +12,11 @@ import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.profile.model.Profile;
+import com.procialize.eventapp.ui.splash.view.SplashAcivity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -19,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -50,104 +56,109 @@ public interface APIService{
                                                       @Field("pageSize") String pageSize,
                                                       @Field("pageNumber") String pageNumber);
 
-    @Headers("authorization: " + HeaderToken)
+   // @Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/NewsFeedDetailFetch")
     @FormUrlEncoded
-    Call<FetchNewsfeedMultiple> NewsFeedDetailFetch(@Field("event_id") String event_id,
+    Call<FetchNewsfeedMultiple> NewsFeedDetailFetch(@Header("authorization") String authorization,
+                                                    @Field("event_id") String event_id,
                                                     @Field("news_feed_id") String news_feed_id);
 
     @Multipart
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/PostNewsFeed")
-    Call<LoginOrganizer> postNewsFeed(@Part("event_id") RequestBody description,
+    Call<LoginOrganizer> postNewsFeed(@Header("authorization") String authorization,
+                                      @Part("event_id") RequestBody event_id,
                                       @Part("post_content") RequestBody post_content,
                                       @Part List<MultipartBody.Part> files,
                                       @Part List<MultipartBody.Part> thumbFiles);
 
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/PostComment")
     @FormUrlEncoded
-    Call<LoginOrganizer> PostComment(
+    Call<LoginOrganizer> PostComment(@Header("authorization") String authorization,
             @Field("event_id") String Event_id,
             @Field("news_feed_id") String news_feed_id,
             @Field("comment_data") String comment_data,
             @Field("type") String Type);
 
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/DeleteComment")
     @FormUrlEncoded
-    Call<LoginOrganizer> DeleteComment(
+    Call<LoginOrganizer> DeleteComment(@Header("authorization") String authorization,
             @Field("event_id") String event_id,
             @Field("comment_id") String comment_id);
 
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/CommentHide")
     @FormUrlEncoded
-    Call<LoginOrganizer> CommentHide(
+    Call<LoginOrganizer> CommentHide(@Header("authorization") String authorization,
             @Field("event_id") String event_id,
             @Field("comment_id") String comment_id);
 
-    @Headers("authorization: " + HeaderToken)
+   // @Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/CommentFetch")
     @FormUrlEncoded
-    Call<Comment> getComment(@Field("event_id") String event_id,
+    Call<Comment> getComment(@Header("authorization") String authorization,@Field("event_id") String event_id,
                              @Field("news_feed_id") String news_feed_id/*,
                                     @Field("pageSize") String pageSize,
                                     @Field("pageNumber") String pageNumber*/);
 
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/PostHide")
     @FormUrlEncoded
-    Call<LoginOrganizer> PostHide(@Field("event_id") String event_id,
+    Call<LoginOrganizer> PostHide(@Header("authorization") String authorization,@Field("event_id") String event_id,
                                   @Field("news_feed_id") String news_feed_id);
 
-    @Headers("authorization: " + HeaderToken)
+   // @Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/ReportPost")
     @FormUrlEncoded
-    Call<LoginOrganizer> ReportPost(@Field("event_id") String event_id,
+    Call<LoginOrganizer> ReportPost(@Header("authorization") String authorization,
+                                    @Field("event_id") String event_id,
                                     @Field("news_feed_id") String news_feed_id,
                                     @Field("content") String content);
 
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/ReportUser")
     @FormUrlEncoded
-    Call<LoginOrganizer> ReportUser(@Field("event_id") String event_id,
+    Call<LoginOrganizer> ReportUser(@Header("authorization") String authorization,
+                                    @Field("event_id") String event_id,
                                     @Field("reported_user_id") String reported_user_id,
                                     @Field("news_feed_id") String news_feed_id,
                                     @Field("content") String content);
 
 
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/ReportComment")
     @FormUrlEncoded
-    Call<LoginOrganizer> ReportComment(@Field("event_id") String event_id,
+    Call<LoginOrganizer> ReportComment(@Header("authorization") String authorization,@Field("event_id") String event_id,
                                        @Field("comment_id") String comment_id,
                                        @Field("content") String content);
 
-    @Headers("authorization: " + HeaderToken)
+   // @Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/PostLike")
     @FormUrlEncoded
-    Call<LikePost> PostLike(@Field("event_id") String event_id,
+    Call<LikePost> PostLike(@Header("authorization") String authorization, @Field("event_id") String event_id,
                             @Field("news_feed_id") String news_feed_id);
 
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/PostLike")
     @FormUrlEncoded
-    Call<LikePost> PostLikeFromComment(@Field("event_id") String event_id,
+    Call<LikePost> PostLikeFromComment(@Header("authorization") String authorization, @Field("event_id") String event_id,
                                        @Field("news_feed_id") String news_feed_id);
 
 
-    @Headers("authorization: " + HeaderToken)
+    // @Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/DeletePost")
     @FormUrlEncoded
-    Call<LoginOrganizer> DeletePost(@Field("event_id") String event_id,
+    Call<LoginOrganizer> DeletePost(@Header("authorization") String authorization, @Field("event_id") String event_id,
                                     @Field("news_feed_id") String news_feed_id);
 
 
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/LikeFetch")
     @FormUrlEncoded
-    Call<Like> getLikes(@Field("event_id") String event_id,
+    Call<Like> getLikes(@Header("authorization") String authorization,
+                        @Field("event_id") String event_id,
                         @Field("news_feed_id") String news_feed_id,
                         @Field("pageSize") String pageSize,
                         @Field("pageNumber") String pageNumber);
@@ -166,26 +177,26 @@ public interface APIService{
                              @Field("organizer_id") String organizer_id,
                              @Field("search_text") String search_text);
 
-    @Headers("authorization: " + HeaderToken)
+    // @Headers("authorization: " + HeaderToken)
     @POST("event_api_call/updateDeviceInfo")
     @FormUrlEncoded
-    Call<UpdateDeviceInfo> updateDeviceInfo(@Field("event_id") String event_id,
+    Call<UpdateDeviceInfo> updateDeviceInfo(@Header("authorization") String authorization, @Field("event_id") String event_id,
                                             @Field("device_token") String device_token,
                                             @Field("platform") String platform,
                                             @Field("device") String device,
                                             @Field("os_version") String os_version,
                                             @Field("app_version") String app_version);
 
-   // @Headers("authorization: " + HeaderToken)
+    // @Headers("authorization: " + HeaderToken)
     @POST("event_api_call/getProfileInfo")
     @FormUrlEncoded
-    Call<Profile> getProfile(@Header("authorization") String auth, @Field("event_id") String event_id);
+    Call<Profile> getProfile(@Header("authorization") String authorization, @Field("event_id") String event_id);
 
 
     @Multipart
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("event_api_call/updateProfile")
-    Call<Profile> updateProfile(
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
                                 @Part("event_id") RequestBody event_id,
                                 @Part("first_name") RequestBody first_name,
                                 @Part("last_name") RequestBody last_name,
@@ -197,9 +208,9 @@ public interface APIService{
                                 @Part MultipartBody.Part filename);
 
     @Multipart
-    @Headers("authorization: " + HeaderToken)
+    //@Headers("authorization: " + HeaderToken)
     @POST("event_api_call/updateProfile")
-    Call<Profile> updateProfile(
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
                                 @Part("event_id") RequestBody event_id,
                                 @Part("first_name") RequestBody first_name,
                                 @Part("last_name") RequestBody last_name,
@@ -208,4 +219,14 @@ public interface APIService{
                                 @Part("email") RequestBody email,
                                 @Part("mobile") RequestBody mobile,
                                 @Part("company_name") RequestBody company_name);
+
+    //Attendee Api
+    // @Headers("authorization: " + HeaderToken)
+    @POST("Attendee_api/AttendeeList")
+    @FormUrlEncoded
+    Call<FetchAttendee> AttendeeList(@Header("authorization") String auth,
+                                     @Field("event_id") String organizer_id,
+                                     @Field("search_text") String search_text,
+                                     @Field("pageNumber") String pageNumber,
+                                     @Field("pageSize") String pageSize);
 }

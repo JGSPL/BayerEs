@@ -43,13 +43,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.home.viewmodel.HomeViewModel;
@@ -57,6 +64,7 @@ import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
+import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
@@ -72,8 +80,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAdapterListner, View.OnClickListener {
     ArrayList<Newsfeed_detail> newsfeedArrayList = new ArrayList<>();
@@ -84,15 +95,24 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     View root;
     SwipeRefreshLayout feedrefresh;
     LinearLayout ll_whats_on_mind;
-    String eventid = "1";
-   ConnectionDetector connectionDetector;
+    String eventid;
+    ConnectionDetector connectionDetector;
     UploadMultimediaBackgroundReceiver mReceiver;
     IntentFilter mFilter;
     public static ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
-    String reaction_type;
+    String api_token;
+ImageView iv_profile;
+    int totalPages = 0;
+    int newsFeedPageNumber = 1;
+    int newsFeedPageSize = 10;
 
-
+    private int currentPage = PAGE_START;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+    ConnectionDetector cd ;
+    LinearLayoutManager linearLayoutManager;
+    private static int TOTAL_PAGES = 5;
     public static NewsFeedFragment newInstance() {
 
         return new NewsFeedFragment();
@@ -103,17 +123,42 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
         newsFeedDatabaseViewModel = ViewModelProviders.of(this).get(NewsFeedDatabaseViewModel.class);
 
+        api_token = SharedPreference.getPref(getActivity(),AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(getActivity(),EVENT_ID);
+
         Log.d("On news feed fragment", "Yes");
 
         root = inflater.inflate(R.layout.fragment_home, container, false);
         cl_main = root.findViewById(R.id.cl_main);
         recycler_feed = root.findViewById(R.id.recycler_feed);
+        iv_profile = root.findViewById(R.id.iv_profile);
         feedrefresh = root.findViewById(R.id.feedrefresh);
         ll_whats_on_mind = root.findViewById(R.id.ll_whats_on_mind);
         ll_whats_on_mind.setOnClickListener(this);
         tv_uploding_multimedia = root.findViewById(R.id.tv_uploding_multimedia);
         connectionDetector = ConnectionDetector.getInstance(getActivity());
+        if (newsfeedAdapter == null) {
+            newsfeedAdapter = new NewsFeedAdapter(getContext(), newsfeedArrayList, NewsFeedFragment.this);
+            recycler_feed.setLayoutManager(new LinearLayoutManager(getContext()));
+            recycler_feed.setAdapter(newsfeedAdapter);
+            recycler_feed.setItemAnimator(new DefaultItemAnimator());
+            recycler_feed.setNestedScrollingEnabled(true);
+            newsfeedAdapter.notifyDataSetChanged();
+        String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
+        Glide.with(getActivity())
+                .load(profilePic)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
 
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(iv_profile);
+        }
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -173,7 +218,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
-            newsfeedViewModel.init("", "");
+
+
+            newsfeedViewModel.init(api_token,eventid,String.valueOf(newsFeedPageSize),String.valueOf(newsFeedPageNumber));
 
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
@@ -186,6 +233,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         newsfeedArrayList.addAll(feedList);
                         insertIntoDb(feedList);
                         String mediaPath = fetchNewsfeedMultiple.getMedia_path();
+                        totalPages = Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
 
                         HashMap<String, String> map = new HashMap<>();
                         map.put(NEWS_FEED_MEDIA_PATH, mediaPath);
@@ -210,7 +258,66 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             }
         }, 100);
 
+        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recycler_feed.setLayoutManager(linearLayoutManager);
+
+        recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+
+                loadNextPage();
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return TOTAL_PAGES;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
     }
+
+    private void loadNextPage() {
+        Log.d("loadNextPage", "loadNextPage: " + currentPage);
+
+       // newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
+        newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
+
+        Log.d("loadNextPage", "loadNextPage: " + currentPage);
+        newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
+        newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
+            @Override
+            public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
+                if (newsfeedArrayList.size() > 0) {
+                    newsfeedArrayList.clear();
+                }
+                //newsfeedArrayList.addAll(feedList);
+                newsfeedAdapter.removeLoadingFooter();
+                isLoading = false;
+
+                List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
+                newsfeedAdapter.addAll(feedList);
+                //s(response, currentPage + "");
+                if (currentPage != totalPages) {
+                    newsfeedAdapter.addLoadingFooter();
+                    newsfeedAdapter.notifyDataSetChanged();
+                }
+                else
+                    isLastPage = true;
+            }
+        });
+    }
+
 
     public void insertIntoDb(List<Newsfeed_detail> feedList) {
         newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
@@ -327,87 +434,15 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position) {
-        newsfeedViewModel.openMoreDetails(getActivity(), feed, position);
-
+        newsfeedViewModel.openMoreDetails(getActivity(), feed, position,api_token,eventid);
     }
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
-
-        newsfeedViewModel.openLikeimg(getActivity(), eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
-
-       /* int count = Integer.parseInt(feed.getTotal_likes());
-
-        Drawable drawables = likeimage.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable) drawables).getBitmap();
-
-        Bitmap bitmap2 = ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_like)).getBitmap();
+        newsfeedViewModel.openLikeimg(getActivity(),api_token, eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
+   }
 
 
-//        if(!drawables[2].equals(R.drawable.ic_like)){
-        if (bitmap != bitmap2) {
-            reaction_type = "";
-            feed.setLike_flag("");
-            likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
-//            likeimage.setBackgroundResource(R.drawable.ic_like);
-            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
-                newsfeedViewModel.openLikeimg(eventid, feed.getNews_feed_id());
-            } else {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
-            try {
-
-                if (count > 0) {
-                    count = count - 1;
-                    feed.setTotal_likes(String.valueOf(count));
-
-                    if (count == 1) {
-                        liketext.setText(count + " Like");
-                    } else {
-                        liketext.setText(count + " Likes");
-                    }
-
-                    feed.setTotal_likes(String.valueOf(count));
-
-                } else {
-                    liketext.setText("0" + " Likes");
-                    feed.setTotal_likes("0");
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            feed.setLike_flag("1");
-            likeimage.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
-           *//*int color = Color.parseColor(colorActive);
-            likeimage.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*//*
-            reaction_type = "0";
-            if (ConnectionDetector.getInstance(getContext()).isConnectingToInternet()) {
-                newsfeedViewModel.openLikeimg(eventid, feed.getNews_feed_id());
-            } else {
-                Toast.makeText(getActivity(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            }
-
-            try {
-
-                count = count + 1;
-                if (count == 1) {
-                    liketext.setText(count + " Like");
-                } else {
-                    liketext.setText(count + " Likes");
-                }
-
-                feed.setTotal_likes(String.valueOf(count));
-
-                feed.setTotal_likes(String.valueOf(count));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }*/
-    }
 
     @Override
     public void onClick(View v) {
@@ -459,7 +494,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                         uploadMultimedia.remove(0);
                                     }
 
-                                    newsfeedViewModel.sendPost(eventid, postText, uploadMultimedia);
+                                    newsfeedViewModel.sendPost(api_token,eventid, postText, uploadMultimedia);
                                     newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {
