@@ -1,7 +1,6 @@
 package com.procialize.eventapp.Constants;
 
 
-import com.google.gson.JsonObject;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.validateOTP;
 import com.procialize.eventapp.ui.eventList.model.Event;
@@ -11,11 +10,8 @@ import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.profile.model.Profile;
-import com.procialize.eventapp.ui.splash.view.SplashAcivity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -23,7 +19,6 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
-import retrofit2.http.HeaderMap;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -157,7 +152,14 @@ public interface APIService{
                         @Field("pageSize") String pageSize,
                         @Field("pageNumber") String pageNumber);
 
-   // @Headers("authorization: " + HeaderToken)
+    // @Headers("authorization: " + HeaderToken)
+    @POST("event_api_call/refreshToken")
+    @FormUrlEncoded
+    Call<validateOTP> getRefreashToken(@Field("organizer_id") String organizer_id,
+                                    @Field("username") String username,
+                                    @Field("otp") String otp,
+                                    @Field("access_token") String access_token);
+
     @POST("event_api_call/eventList")
     @FormUrlEncoded
     Call<Event> getEventList(@Header("authorization") String auth,

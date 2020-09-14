@@ -19,7 +19,6 @@ import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -35,6 +34,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 
 public class Utility {
@@ -240,5 +242,30 @@ public class Utility {
     private static String getJson(String strEncoded) throws UnsupportedEncodingException {
         byte[] decodedBytes = Base64.decode(strEncoded, Base64.URL_SAFE);
         return new String(decodedBytes, "UTF-8");
+    }
+
+    public static int getTimeDifferenceInMillis(String dateTime) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.SECOND, 5);
+        Date date = now.getTime();
+        long currentTime = date.getTime();
+        long endTime = 0;
+
+        try {
+            //Parsing the user Inputed time ("yyyy-MM-dd HH:mm:ss")
+            endTime = dateFormat.parse(dateTime).getTime();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        if (endTime > currentTime)
+            return 1;
+        else
+            return 0;
     }
 }

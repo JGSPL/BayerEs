@@ -36,14 +36,6 @@ public class LoginActivity extends AppCompatActivity {
             if (message.equalsIgnoreCase("user found")) {
                 activityLoginBinding.linearLoginView.setVisibility(View.GONE);
                 activityLoginBinding.linearOTPView.setVisibility(View.VISIBLE);
-
-               /* activityLoginBinding.txtOtp.setVisibility(View.VISIBLE);
-                activityLoginBinding.liinearOtp.setVisibility(View.VISIBLE);
-                activityLoginBinding.editOtp.setVisibility(View.VISIBLE);
-                activityLoginBinding.txtLogin.setVisibility(View.INVISIBLE);
-                activityLoginBinding.txtMobileno.setVisibility(View.INVISIBLE);
-                activityLoginBinding.btnSubmit.setVisibility(View.INVISIBLE);
-                activityLoginBinding.inEmail.setVisibility(View.INVISIBLE);*/
             } else if (message.equalsIgnoreCase("back")) {
                 activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
                 activityLoginBinding.linearOTPView.setVisibility(View.GONE);

@@ -23,4 +23,11 @@ public final class SharedPreferencesConstant {
     public static final String ATTENDEE_STATUS = "attendee_status";
     public static final String AUTHERISATION_KEY = "autherisationKey";
     public static final String IS_LOGIN = "IsLoggedIn";
+    public static final String IS_GOD = "isGod";
+    public static final String TIME = "time";
+    public static final String EXPIRY_TIME = "expity_time";
+    public static final String USER_TYPE = "user_type";
+    public static final String VERIFY_OTP = "verify_otp";
+    public static final String MIDDLE_NAME = "middle_name";
+    public static final String OTP = "otp";
 }

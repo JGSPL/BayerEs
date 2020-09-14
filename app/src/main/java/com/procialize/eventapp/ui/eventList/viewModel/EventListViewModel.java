@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.model.Event;
 import com.procialize.eventapp.ui.eventList.model.EventList;
@@ -22,6 +24,8 @@ import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import java.io.Serializable;
 import java.util.List;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EXPIRY_TIME;
+
 public class EventListViewModel extends ViewModel {
 
     private EventRepository eventRepository = EventRepository.getInstance();
@@ -29,6 +33,7 @@ public class EventListViewModel extends ViewModel {
     MutableLiveData<UpdateDeviceInfo> updateData = new MutableLiveData<>();
 
     public void getEvent(String organizer_id, String search_text) {
+
         eventRepository = EventRepository.getInstance();
         eventData = eventRepository.getEventList(organizer_id, search_text);
     }

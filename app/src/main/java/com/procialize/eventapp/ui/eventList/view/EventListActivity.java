@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -16,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.adapter.EventAdapter;
@@ -27,12 +30,11 @@ import com.procialize.eventapp.ui.eventList.model.LoginUserInfo;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.eventList.viewModel.EventListViewModel;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
@@ -83,6 +85,17 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         eventListViewModel = ViewModelProviders.of(this).get(EventListViewModel.class);
 
         if (cd.isConnectingToInternet()) {
+            String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
+            Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
+            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
+
+            if (isvalidtoken == 1) {
+                RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                refreashToken.callGetRefreashToken(EventListActivity.this);
+            } else {
+                Log.d("TAG", "Token is already refreashed");
+            }
+
             eventListViewModel.getEvent("0", "");
             eventListViewModel.getEventList().observe(this, new Observer<Event>() {
                 @Override
