@@ -2,7 +2,6 @@ package com.procialize.eventapp.ui.eventList.view;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
@@ -51,8 +52,6 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBI
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 
 public class EventListActivity extends AppCompatActivity implements EventAdapter.EventAdapterListner {
 
@@ -96,9 +95,10 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         if (cd.isConnectingToInternet()) {
             String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
             Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
-            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
+//            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
+           boolean isvalidtoken= Utility.isTimeGreater(String.valueOf(timestamp_expiry));
 
-            if (isvalidtoken == 1) {
+            if (isvalidtoken == false) {
                 RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
                 refreashToken.callGetRefreashToken(EventListActivity.this);
             } else {
@@ -211,8 +211,6 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }
-
-
     }
 
 }
