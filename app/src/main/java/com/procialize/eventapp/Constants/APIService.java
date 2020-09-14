@@ -214,5 +214,7 @@ public interface APIService {
     @FormUrlEncoded
     Call<FetchAttendee> AttendeeList(@Header("authorization") String auth,
                                      @Field("event_id") String organizer_id,
-                                     @Field("search_text") String search_text);
+                                     @Field("search_text") String search_text,
+                                     @Field("pageNumber") String pageNumber,
+                                     @Field("pageSize") String pageSize);
 }

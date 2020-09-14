@@ -96,7 +96,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     SwipeRefreshLayout feedrefresh;
     LinearLayout ll_whats_on_mind;
     String eventid;
-   ConnectionDetector connectionDetector;
+    ConnectionDetector connectionDetector;
     UploadMultimediaBackgroundReceiver mReceiver;
     IntentFilter mFilter;
     public static ConstraintLayout cl_main;
@@ -105,7 +105,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 2;
+    int newsFeedPageSize = 10;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -137,6 +137,13 @@ ImageView iv_profile;
         ll_whats_on_mind.setOnClickListener(this);
         tv_uploding_multimedia = root.findViewById(R.id.tv_uploding_multimedia);
         connectionDetector = ConnectionDetector.getInstance(getActivity());
+        if (newsfeedAdapter == null) {
+            newsfeedAdapter = new NewsFeedAdapter(getContext(), newsfeedArrayList, NewsFeedFragment.this);
+            recycler_feed.setLayoutManager(new LinearLayoutManager(getContext()));
+            recycler_feed.setAdapter(newsfeedAdapter);
+            recycler_feed.setItemAnimator(new DefaultItemAnimator());
+            recycler_feed.setNestedScrollingEnabled(true);
+            newsfeedAdapter.notifyDataSetChanged();
         String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
         Glide.with(getActivity())
                 .load(profilePic)
@@ -151,6 +158,7 @@ ImageView iv_profile;
                         return false;
                     }
                 }).into(iv_profile);
+        }
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -210,7 +218,9 @@ ImageView iv_profile;
 
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
-            newsfeedViewModel.init(api_token,eventid,"", "");
+
+
+            newsfeedViewModel.init(api_token,eventid,String.valueOf(newsFeedPageSize),String.valueOf(newsFeedPageNumber));
 
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
@@ -280,7 +290,32 @@ ImageView iv_profile;
     private void loadNextPage() {
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
 
+       // newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
+        newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
+
+        Log.d("loadNextPage", "loadNextPage: " + currentPage);
         newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
+        newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
+            @Override
+            public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
+                if (newsfeedArrayList.size() > 0) {
+                    newsfeedArrayList.clear();
+                }
+                //newsfeedArrayList.addAll(feedList);
+                newsfeedAdapter.removeLoadingFooter();
+                isLoading = false;
+
+                List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
+                newsfeedAdapter.addAll(feedList);
+                //s(response, currentPage + "");
+                if (currentPage != totalPages) {
+                    newsfeedAdapter.addLoadingFooter();
+                    newsfeedAdapter.notifyDataSetChanged();
+                }
+                else
+                    isLastPage = true;
+            }
+        });
     }
 
 
@@ -406,6 +441,8 @@ ImageView iv_profile;
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
         newsfeedViewModel.openLikeimg(getActivity(),api_token, eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
    }
+
+
 
     @Override
     public void onClick(View v) {

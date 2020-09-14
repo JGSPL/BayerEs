@@ -15,9 +15,9 @@ public class AttendeeViewModel extends ViewModel {
     private AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
     MutableLiveData<FetchAttendee> fetchAttendeeData = new MutableLiveData<>();
 
-    public void getAttendee(String token, String organizer_id, String search_text) {
+    public void getAttendee(String token, String organizer_id, String search_text, String pageNumber, String pageSize) {
         attendeeRepository = AttendeeRepository.getInstance();
-        fetchAttendeeData = attendeeRepository.getAttendeeList(token,organizer_id, search_text);
+        fetchAttendeeData = attendeeRepository.getAttendeeList(token,organizer_id, search_text,pageNumber, pageSize);
     }
 
 
