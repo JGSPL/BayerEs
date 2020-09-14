@@ -93,7 +93,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
             setDynamicColor(holder);
 
-            if (feedData.getFirst_name().equalsIgnoreCase("null")) {
+            if (feedData.getFirst_name().equalsIgnoreCase("null") || (feedData.getFirst_name().equalsIgnoreCase(""))) {
                 holder.root.setVisibility(View.GONE);
             } else {
                 holder.root.setVisibility(View.VISIBLE);

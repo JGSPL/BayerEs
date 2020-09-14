@@ -84,14 +84,13 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 10;
+    int newsFeedPageSize = 100;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
     private boolean isLastPage = false;
     ConnectionDetector cd;
     LinearLayoutManager linearLayoutManager;
-    private static int TOTAL_PAGES = 5;
 
     public static NewsFeedFragment newInstance() {
         return new NewsFeedFragment();
@@ -239,7 +238,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
 
                         try {
-                            if (currentPage <= TOTAL_PAGES) newsfeedAdapter.addLoadingFooter();
+                            if (currentPage <= totalPages) newsfeedAdapter.addLoadingFooter();
                             else isLastPage = true;
 
                             newsfeedAdapter.notifyDataSetChanged();
@@ -274,7 +273,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
             @Override
             public int getTotalPageCount() {
-                return TOTAL_PAGES;
+                return totalPages;
             }
 
             @Override
@@ -444,7 +443,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position) {
-        newsfeedViewModel.openMoreDetails(getActivity(), feed, position, api_token, eventid);
+        newsfeedViewModel.openMoreDetails(getActivity(), feed, position, api_token, eventid, newsfeedAdapter);
     }
 
     @Override
