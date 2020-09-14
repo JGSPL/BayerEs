@@ -194,9 +194,6 @@ public class LoginViewModel extends BaseObservable {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(SharedPreferencesConstant.OTP, otp);
-                    SharedPreference.putPref(context, map);
                     setToastMessage(response.body().getHeader().get(0).getMsg());
                     LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
                     RefreashToken refreashToken = new RefreashToken(context);
@@ -205,6 +202,7 @@ public class LoginViewModel extends BaseObservable {
 
                     //LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
                     HashMap<String,String> map = new HashMap<>();
+                    map.put(SharedPreferencesConstant.OTP, otp);
                     map.put(AUTHERISATION_KEY,response.body().getTokenpreenrypt());
                     SharedPreference.putPref(context,map);
                 } else {

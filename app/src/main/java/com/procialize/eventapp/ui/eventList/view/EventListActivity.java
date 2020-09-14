@@ -51,6 +51,8 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBI
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 
 public class EventListActivity extends AppCompatActivity implements EventAdapter.EventAdapterListner {
 
@@ -60,10 +62,11 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     RecyclerView rv_event_list;
     EventAdapter eventAdapter;
     EditText et_search;
-    String event_id, device_token = "111111", platform, device, osVersion, appVersion, deviceId;
+    String event_id , device_token = "111111", platform, device, osVersion, appVersion, deviceId;
     SessionManager session;
-    String api_token = "";
+    String api_token="";
     boolean result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +107,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
 
 
             eventListViewModel.getEvent(api_token,"0", "");
-            eventListViewModel.getEvent(api_token, "0", "");
+
             eventListViewModel.getEventList().observe(this, new Observer<Event>() {
                 @Override
                 public void onChanged(Event event) {
