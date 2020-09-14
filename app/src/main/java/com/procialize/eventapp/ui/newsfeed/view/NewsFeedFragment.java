@@ -4,11 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,23 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import androidx.annotation.LongDef;
-
-import android.widget.ImageView;
-
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -48,19 +34,14 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.eventList.view.EventListActivity;
-import com.procialize.eventapp.ui.home.viewmodel.HomeViewModel;
-import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
@@ -74,15 +55,12 @@ import com.procialize.eventapp.ui.newsfeed.roomDB.TableNewsFeedMedia;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
@@ -102,19 +80,19 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     public static ConstraintLayout cl_main;
     private TextView tv_uploding_multimedia;
     String api_token;
-ImageView iv_profile;
+    ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 10;
+    int newsFeedPageSize = 5;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    ConnectionDetector cd ;
+    ConnectionDetector cd;
     LinearLayoutManager linearLayoutManager;
     private static int TOTAL_PAGES = 5;
-    public static NewsFeedFragment newInstance() {
 
+    public static NewsFeedFragment newInstance() {
         return new NewsFeedFragment();
     }
 
@@ -123,8 +101,8 @@ ImageView iv_profile;
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
         newsFeedDatabaseViewModel = ViewModelProviders.of(this).get(NewsFeedDatabaseViewModel.class);
 
-        api_token = SharedPreference.getPref(getActivity(),AUTHERISATION_KEY);
-        eventid = SharedPreference.getPref(getActivity(),EVENT_ID);
+        api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
         Log.d("On news feed fragment", "Yes");
 
@@ -144,20 +122,20 @@ ImageView iv_profile;
             recycler_feed.setItemAnimator(new DefaultItemAnimator());
             recycler_feed.setNestedScrollingEnabled(true);
             newsfeedAdapter.notifyDataSetChanged();
-        String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
-        Glide.with(getActivity())
-                .load(profilePic)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+            String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
+            Glide.with(getActivity())
+                    .load(profilePic)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(iv_profile);
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(iv_profile);
         }
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -219,8 +197,7 @@ ImageView iv_profile;
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
 
-
-            newsfeedViewModel.init(api_token,eventid,String.valueOf(newsFeedPageSize),String.valueOf(newsFeedPageNumber));
+            newsfeedViewModel.init(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(newsFeedPageNumber));
 
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
@@ -231,6 +208,8 @@ ImageView iv_profile;
                             newsfeedArrayList.clear();
                         }
                         newsfeedArrayList.addAll(feedList);
+
+                        newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
                         insertIntoDb(feedList);
                         String mediaPath = fetchNewsfeedMultiple.getMedia_path();
                         totalPages = Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
@@ -290,11 +269,11 @@ ImageView iv_profile;
     private void loadNextPage() {
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
 
-       // newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
+        // newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
 
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
-        newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
+        newsfeedViewModel.init(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
         newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
             @Override
             public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
@@ -306,13 +285,14 @@ ImageView iv_profile;
                 isLoading = false;
 
                 List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
-                newsfeedAdapter.addAll(feedList);
+                if (feedList.size() > 0) {
+                    newsfeedAdapter.addAll(feedList);
+                }
                 //s(response, currentPage + "");
                 if (currentPage != totalPages) {
                     newsfeedAdapter.addLoadingFooter();
                     newsfeedAdapter.notifyDataSetChanged();
-                }
-                else
+                } else
                     isLastPage = true;
             }
         });
@@ -320,7 +300,6 @@ ImageView iv_profile;
 
 
     public void insertIntoDb(List<Newsfeed_detail> feedList) {
-        newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
         newsFeedDatabaseViewModel.insertIntoDb(getActivity(), feedList);
     }
 
@@ -358,7 +337,7 @@ ImageView iv_profile;
                         newsFeedDatabaseViewModel.getNewsFeedMediaDataList(getActivity(), tableNewsFeeds.get(i).getNews_feed_id()).observe(getActivity(), new Observer<List<TableNewsFeedMedia>>() {
                             @Override
                             public void onChanged(List<TableNewsFeedMedia> tableNewsFeedMedia) {
-                                Log.d("tableNewsFeedMedia_","tableNewsFeedMedia");
+                                Log.d("tableNewsFeedMedia_", "tableNewsFeedMedia");
                                 if (tableNewsFeedMedia != null) {
                                     Log.d("Media_Count", tableNewsFeedMedia.size() + "");
                                     List<News_feed_media> newsFeedMediaList = new ArrayList<>();
@@ -434,14 +413,13 @@ ImageView iv_profile;
 
     @Override
     public void moreTvFollowOnClick(View v, Newsfeed_detail feed, int position) {
-        newsfeedViewModel.openMoreDetails(getActivity(), feed, position,api_token,eventid);
+        newsfeedViewModel.openMoreDetails(getActivity(), feed, position, api_token, eventid);
     }
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
-        newsfeedViewModel.openLikeimg(getActivity(),api_token, eventid,feed.getNews_feed_id(),  v,  feed,  position,  likeimage,  liketext);
-   }
-
+        newsfeedViewModel.openLikeimg(getActivity(), api_token, eventid, feed.getNews_feed_id(), v, feed, position, likeimage, liketext);
+    }
 
 
     @Override
@@ -461,14 +439,14 @@ ImageView iv_profile;
             try {
                 newsfeedViewModel.stopBackgroundService(getActivity());
                 uploadData();
-           /* newsfeedViewModel.getMediaToUpload(getActivity());
-            newsfeedViewModel.getMedia().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
+                /* newsfeedViewModel.getMediaToUpload(getActivity());
+                newsfeedViewModel.getMedia().observe(getActivity(), new Observer<List<UploadMultimedia>>() {
                 @Override
                 public void onChanged(List<UploadMultimedia> uploadMultimedia) {
-                    Log.d("count_of_is_compressed1", uploadMultimedia.size() + "");
-                    uploadData();
+                Log.d("count_of_is_compressed1", uploadMultimedia.size() + "");
+                uploadData();
                 }
-            });*/
+                });*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -494,7 +472,7 @@ ImageView iv_profile;
                                         uploadMultimedia.remove(0);
                                     }
 
-                                    newsfeedViewModel.sendPost(api_token,eventid, postText, uploadMultimedia);
+                                    newsfeedViewModel.sendPost(api_token, eventid, postText, uploadMultimedia);
                                     newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {

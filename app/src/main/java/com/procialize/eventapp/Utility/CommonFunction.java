@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -16,23 +17,70 @@ import androidx.core.content.FileProvider;
 
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.ui.profile.view.ProfileActivity;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static com.procialize.eventapp.Constants.Constant.FOLDER_DIRECTORY;
 import static com.procialize.eventapp.Constants.Constant.IMAGE_DIRECTORY;
 import static com.procialize.eventapp.Constants.Constant.VIDEO_DIRECTORY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 
 public class CommonFunction {
 
+    public static void saveBackgroundImage(Context context, String url) {
+        boolean result = Utility.checkWritePermission(context);
+        if(result) {
+            String mediaPath = SharedPreference.getPref(context, EVENT_LIST_MEDIA_PATH);
+            Picasso.with(context).load(mediaPath + url).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    String root = Environment.getExternalStorageDirectory().toString();
+                    File myDir = new File(root + "/" + FOLDER_DIRECTORY);
+                    if (!myDir.exists()) {
+                        myDir.mkdirs();
+                    }
 
+                    String name = "background.jpg";
+                    myDir = new File(myDir, name);
+                    FileOutputStream out = null;
+                    try {
+                        out = new FileOutputStream(myDir);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
+                        out.flush();
+                        out.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+                    Log.d("Failed", "failed");
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+
+                }
+            });
+        }
+
+    }
 
     public static String saveImage(Context context, Bitmap myBitmap, String imageName) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -96,7 +144,7 @@ public class CommonFunction {
 
         if (activity.getCurrentFocus() != null) {
 
-            InputMethodManager inputMethodManager = (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }
     }
@@ -110,7 +158,7 @@ public class CommonFunction {
         }
     }
 
-    public static boolean isMyServiceRunning(Context context,Class<?> serviceClass) {
+    public static boolean isMyServiceRunning(Context context, Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -130,7 +178,7 @@ public class CommonFunction {
         }
         SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy hh:mm aa");
         //SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
-        String targetdatevalue= targetFormat.format(sourceDate);
+        String targetdatevalue = targetFormat.format(sourceDate);
         return targetdatevalue;
     }
 
@@ -144,7 +192,7 @@ public class CommonFunction {
         }
         SimpleDateFormat targetFormat = new SimpleDateFormat("dd-mm-yyyy");
         //SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
-        String targetdatevalue= targetFormat.format(sourceDate);
+        String targetdatevalue = targetFormat.format(sourceDate);
         return targetdatevalue;
     }
 

@@ -1,16 +1,13 @@
 package com.procialize.eventapp.ui.newsfeed.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -19,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -34,8 +30,6 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
-import com.procialize.eventapp.costumTools.ClickableViewPager;
-import com.procialize.eventapp.costumTools.ScaledImageView;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
@@ -45,6 +39,11 @@ import java.util.List;
 
 import cn.jzvd.JzvdStd;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsViewHolder> {
@@ -58,18 +57,25 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     private PaginationAdapterCallback mCallback;
     private boolean retryPageLoad = false;
     private boolean isLoadingAdded = false;
+    String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
+
     public NewsFeedAdapter() {
 
     }
+
     public NewsFeedAdapter(Context context, ArrayList<Newsfeed_detail> feed_detail, FeedAdapterListner listener) {
         this.context = context;
         this.feed_detail = feed_detail;
         this.listener = listener;
 
-      //  this.mCallback = (PaginationAdapterCallback) context;
-
+        //  this.mCallback = (PaginationAdapterCallback) context;
 
         cd = new ConnectionDetector();
+        eventColor1 = SharedPreference.getPref(context, EVENT_COLOR_1);
+        eventColor2 = SharedPreference.getPref(context, EVENT_COLOR_2);
+        eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+        eventColor4 = SharedPreference.getPref(context, EVENT_COLOR_4);
+        eventColor5 = SharedPreference.getPref(context, EVENT_COLOR_5);
     }
 
     @NonNull
@@ -84,13 +90,16 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         Newsfeed_detail feedData = feed_detail.get(position);
         try {
 
-            if(feedData.getFirst_name().equalsIgnoreCase("null")){
+            setDynamicColor(holder);
+
+            if (feedData.getFirst_name().equalsIgnoreCase("null")) {
                 holder.root.setVisibility(View.GONE);
-            }else{
+            } else {
                 holder.root.setVisibility(View.VISIBLE);
             }
-            mediaPath = SharedPreference.getPref(context,NEWS_FEED_MEDIA_PATH);
-            
+            mediaPath = SharedPreference.getPref(context, NEWS_FEED_MEDIA_PATH);
+
+
             holder.nameTv.setText(feedData.getFirst_name() + " " + feedData.getLast_name());
             if (feedData.getCity_id() != null && !(feedData.getCity_id().equalsIgnoreCase(""))) {
                 holder.designationTv.setText(feedData.getDesignation() + " - " + feedData.getCity_id());
@@ -127,14 +136,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 holder.dateTv.setText(convertedDate);
             }
 
-            holder.root.setOnClickListener(new View.OnClickListener() {
+            /*holder.root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (feedData.getNews_feed_media().size() > 0) {
                         listener.onContactSelected(feed_detail.get(position), position);
                     }
                 }
-            });
+            });*/
 
             if (feedData.getTotal_comments().equalsIgnoreCase("1")) {
                 holder.tv_comment.setText(feedData.getTotal_comments() + " Comment");
@@ -295,11 +304,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         TextView nameTv;
         TextView designationTv, tv_concat, companyTv, dateTv, tv_status, testdata;
         TextView tv_like, tv_comment;
-        ImageView moreIV, profileIV, iv_comments, iv_like;
+        ImageView moreIV, profileIV, iv_comments, iv_like,iv_share;
         ProgressBar progressView;
         ViewPager vp_slider;
         LinearLayout ll_dots, ll_bottom;
         LinearLayout root;
+        View v_divider;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -323,12 +333,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
             profileIV = itemView.findViewById(R.id.profileIV);
             iv_like = itemView.findViewById(R.id.iv_like);
+            iv_share = itemView.findViewById(R.id.iv_share);
 
             progressView = itemView.findViewById(R.id.progressView);
             root = itemView.findViewById(R.id.root);
             moreIV = itemView.findViewById(R.id.moreIV);
 
             ll_bottom = itemView.findViewById(R.id.ll_bottom);
+            v_divider = itemView.findViewById(R.id.v_divider);
         }
     }
 
@@ -427,5 +439,30 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
     public List<Newsfeed_detail> getNewsFeedList() {
         return feed_detail;
+    }
+
+
+    public void setDynamicColor(@NonNull final NewsViewHolder holder) {
+        holder.nameTv.setTextColor(Color.parseColor(eventColor1));
+        holder.tv_status.setTextColor(Color.parseColor(eventColor3));
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+        holder.dateTv.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        holder.designationTv.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        holder.tv_concat.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        holder.companyTv.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        holder.tv_like.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        holder.tv_comment.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        holder.root.setBackgroundColor(Color.parseColor(eventColor2));
+        holder.v_divider.setBackgroundColor(Color.parseColor(eventColor3));
+
+        int color = Color.parseColor( eventColor3);
+        holder.moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        holder.iv_like.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        holder.iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        holder.iv_share.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        holder.moreIV.setAlpha(150);
+        holder.iv_like.setAlpha(150);
+        holder.iv_comments.setAlpha(150);
+        holder.iv_share.setAlpha(150);
     }
 }

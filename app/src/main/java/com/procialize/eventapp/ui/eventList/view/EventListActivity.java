@@ -2,7 +2,6 @@ package com.procialize.eventapp.ui.eventList.view;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
@@ -57,14 +57,16 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     RecyclerView rv_event_list;
     EventAdapter eventAdapter;
     EditText et_search;
-    String event_id , device_token = "111111", platform, device, osVersion, appVersion, deviceId;
+    String event_id, device_token = "111111", platform, device, osVersion, appVersion, deviceId;
     SessionManager session;
-    String api_token="";
-
+    String api_token = "";
+    boolean result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_list);
+
+        result = Utility.checkWritePermission(EventListActivity.this);
 
         platform = "android";
         device = Build.MODEL;
@@ -76,8 +78,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
 
         session = new SessionManager(getApplicationContext());
 
-        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
-        event_id = SharedPreference.getPref(this,EVENT_ID);
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this, EVENT_ID);
 
         ll_main = findViewById(R.id.ll_main);
         et_search = findViewById(R.id.et_search);
@@ -86,7 +88,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         eventListViewModel = ViewModelProviders.of(this).get(EventListViewModel.class);
 
         if (cd.isConnectingToInternet()) {
-            eventListViewModel.getEvent(api_token,"0", "");
+            eventListViewModel.getEvent(api_token, "0", "");
             eventListViewModel.getEventList().observe(this, new Observer<Event>() {
                 @Override
                 public void onChanged(Event event) {
@@ -138,15 +140,17 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     @Override
     public void onMoreSelected(EventList event, int position) {
         if (cd.isConnectingToInternet()) {
-            String eventId = event.getEvent_id();
 
-            session.saveCurrentEvent(event);
-            eventListViewModel.updateUserData(api_token,eventId, device_token, platform, device, osVersion, appVersion, session);
+            if(result) {
+                String eventId = event.getEvent_id();
+                CommonFunction.saveBackgroundImage(EventListActivity.this, event.getBackground_image());
+                session.saveCurrentEvent(event);
+                eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
 
-            eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
-                @Override
-                public void onChanged(UpdateDeviceInfo event) {
-                    List<LoginUserInfo> userData = event.getLoginUserInfoList();
+                eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
+                    @Override
+                    public void onChanged(UpdateDeviceInfo event) {
+                        List<LoginUserInfo> userData = event.getLoginUserInfoList();
                   /*  String fname = userData.get(0).getFirst_name();
                     String lName = userData.get(0).getLast_name();
                     String designation = userData.get(0).getDesignation();
@@ -157,29 +161,34 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     String is_god = userData.get(0).getIs_god();
                     String emailId = userData.get(0).getEmail();*/
 
-                            HashMap<String, String> map = new HashMap<>();
-                            map.put(KEY_FNAME,userData.get(0).getFirst_name());
-                            map.put(KEY_LNAME, userData.get(0).getLast_name());
-                            map.put(KEY_EMAIL, userData.get(0).getEmail());
-                            map.put(KEY_PASSWORD, "");
-                            map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
-                            map.put(KEY_COMPANY, userData.get(0).getCompany_name());
-                            map.put(KEY_MOBILE, userData.get(0).getMobile());
-                            map.put(KEY_TOKEN, "");
-                            map.put(KEY_CITY, userData.get(0).getCity());
-                            map.put(KEY_GCM_ID, "");
-                            map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
-                            map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
-                            map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
-                            map.put(IS_LOGIN, "true");
-                            map.put(EVENT_ID, eventId);
-                            SharedPreference.putPref(EventListActivity.this, map);
-                            //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(KEY_FNAME, userData.get(0).getFirst_name());
+                        map.put(KEY_LNAME, userData.get(0).getLast_name());
+                        map.put(KEY_EMAIL, userData.get(0).getEmail());
+                        map.put(KEY_PASSWORD, "");
+                        map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
+                        map.put(KEY_COMPANY, userData.get(0).getCompany_name());
+                        map.put(KEY_MOBILE, userData.get(0).getMobile());
+                        map.put(KEY_TOKEN, "");
+                        map.put(KEY_CITY, userData.get(0).getCity());
+                        map.put(KEY_GCM_ID, "");
+                        map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
+                        map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
+                        map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
+                        map.put(IS_LOGIN, "true");
+                        map.put(EVENT_ID, eventId);
+                        SharedPreference.putPref(EventListActivity.this, map);
+                        //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
 
-                            eventListViewModel.openProfilePage(EventListActivity.this, userData, position);
 
-                }
-            });
+                        if (eventListViewModel != null && eventListViewModel.getupdateUserdatq().hasObservers()) {
+                            eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
+                        }
+
+                        eventListViewModel.openProfilePage(EventListActivity.this, userData, position);
+                    }
+                });
+            }
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }

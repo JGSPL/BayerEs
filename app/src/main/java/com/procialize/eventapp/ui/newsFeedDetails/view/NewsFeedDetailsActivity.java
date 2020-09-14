@@ -1,11 +1,5 @@
 package com.procialize.eventapp.ui.newsFeedDetails.view;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.ViewPager;
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -13,7 +7,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -35,6 +28,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
+
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
@@ -49,7 +48,6 @@ import com.squareup.picasso.Target;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -61,7 +59,6 @@ import java.util.List;
 
 import cn.jzvd.JzvdStd;
 
-import static com.procialize.eventapp.Constants.Constant.MY_PREFS_NAME;
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
@@ -90,7 +87,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
         Intent intent = getIntent();
         try {
-           // newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
+            // newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
             news_feed_media = (ArrayList<News_feed_media>) getIntent().getSerializableExtra("media_list");
             mediaPosition = getIntent().getIntExtra("position", 0);
 
@@ -98,7 +95,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             e.printStackTrace();
         }
 
-        newsFeedPath = SharedPreference.getPref(this,NEWS_FEED_MEDIA_PATH);
+        newsFeedPath = SharedPreference.getPref(this, NEWS_FEED_MEDIA_PATH);
 
         btn_save = findViewById(R.id.btn_save);
         btn_share = findViewById(R.id.btn_share);
@@ -112,14 +109,12 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
         setupPagerAdapter();
     }
 
-    public void setupPagerAdapter()
-    {
-
+    public void setupPagerAdapter() {
+        if (news_feed_media != null) {
             final ArrayList<String> imagesSelectednew = new ArrayList<>();
             final ArrayList<String> imagesSelectednew1 = new ArrayList<>();
-        final ImageView[] ivArrayDotsPager;
-
-        for (int i = 0; i < news_feed_media.size(); i++) {
+            final ImageView[] ivArrayDotsPager;
+            for (int i = 0; i < news_feed_media.size(); i++) {
                 imagesSelectednew.add(news_feed_media.get(i).getMedia_file());
                 imagesSelectednew1.add(news_feed_media.get(i).getThumb_image());
             }
@@ -129,42 +124,42 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             swipepagerAdapter.notifyDataSetChanged();
             vp_media.setCurrentItem(mediaPosition);
 
-        if (imagesSelectednew.size() > 1) {
-            ivArrayDotsPager = new ImageView[imagesSelectednew.size()];
-            //setupPagerIndidcatorDots(0, ll_dots, imagesSelectednew.size());
-            vp_media.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    JzvdStd.releaseAllVideos();
-                    MediaPlayer mediaPlayer = new MediaPlayer();
-                    mediaPlayer.pause();
-                }
+            if (imagesSelectednew.size() > 1) {
+                ivArrayDotsPager = new ImageView[imagesSelectednew.size()];
+                //setupPagerIndidcatorDots(0, ll_dots, imagesSelectednew.size());
+                vp_media.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                        JzvdStd.releaseAllVideos();
+                        MediaPlayer mediaPlayer = new MediaPlayer();
+                        mediaPlayer.pause();
+                    }
 
-                @Override
-                public void onPageSelected(int position1) {
-                    shareOrSaveImagePosition = position1;
-                    JzvdStd.releaseAllVideos();
-                    setupPagerIndidcatorDots(position1, ll_dots, imagesSelectednew.size());
+                    @Override
+                    public void onPageSelected(int position1) {
+                        shareOrSaveImagePosition = position1;
+                        JzvdStd.releaseAllVideos();
+                        setupPagerIndidcatorDots(position1, ll_dots, imagesSelectednew.size());
                    /* NewsfeedAdapter.ViewHolder viewHolder = new NewsfeedAdapter.ViewHolder();
                     if (viewHolder.VideoView != null) {
                         viewHolder.VideoView.pause();
                     }*/
 
 
-                    //-----------------------------------------------------------------------------------------------
-                    MediaPlayer mediaPlayer = new MediaPlayer();
-                    mediaPlayer.pause();
-                }
+                        //-----------------------------------------------------------------------------------------------
+                        MediaPlayer mediaPlayer = new MediaPlayer();
+                        mediaPlayer.pause();
+                    }
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                    JzvdStd.releaseAllVideos();
-                    MediaPlayer mediaPlayer = new MediaPlayer();
-                    mediaPlayer.pause();
-                }
-            });
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                        JzvdStd.releaseAllVideos();
+                        MediaPlayer mediaPlayer = new MediaPlayer();
+                        mediaPlayer.pause();
+                    }
+                });
+            }
         }
-
 
     }
 
@@ -188,19 +183,17 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                                 "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
                             final String[] permissions = new String[]{"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
                             ActivityCompat.requestPermissions(NewsFeedDetailsActivity.this, permissions, 0);
-                        }
-                        else if (NewsFeedDetailsActivity.this.checkSelfPermission(
+                        } else if (NewsFeedDetailsActivity.this.checkSelfPermission(
                                 "android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
                             final String[] permissions = new String[]{"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
                             ActivityCompat.requestPermissions(NewsFeedDetailsActivity.this, permissions, 0);
-                        }
-                        else {
+                        } else {
 
                             url = newsFeedPath + news_feed_media.get(shareOrSaveImagePosition).getMedia_file();
                             if (url.contains("mp4")) {
                                 new DownloadFile().execute(url);
                             } else {
-                                url = newsFeedPath/*Constant.newsfeedwall*/ +news_feed_media.get(shareOrSaveImagePosition).getMedia_file();
+                                url = newsFeedPath/*Constant.newsfeedwall*/ + news_feed_media.get(shareOrSaveImagePosition).getMedia_file();
                                 //String root = Environment.getExternalStorageDirectory().toString();
                               /*  try {
 
@@ -474,6 +467,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             }
         }
     }
+
     static public void shareImage(String url, final Context context) {
         final Dialog dialog = new Dialog(context);
         Picasso.with(context).load(url).into(new Target() {
@@ -521,7 +515,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             if (dots.length > 0) {
                 if (dots.length != currentPage) {
                     dots[currentPage].setTextColor(Color.parseColor("#A2A2A2"));
-                   // dots[currentPage].setTextColor(Color.parseColor(colorActive));
+                    // dots[currentPage].setTextColor(Color.parseColor(colorActive));
                 }
             }
         } catch (Exception e) {

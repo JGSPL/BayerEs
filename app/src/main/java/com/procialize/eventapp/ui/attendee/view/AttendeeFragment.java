@@ -147,10 +147,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 loadFirstPage();
             }
         });
-        SessionManager sessionManager = new SessionManager(getContext());
-
-        // api_token
-        api_token = sessionManager.getAuthHeaderKey();
 
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
