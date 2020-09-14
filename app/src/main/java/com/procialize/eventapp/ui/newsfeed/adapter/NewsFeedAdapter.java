@@ -63,10 +63,11 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
     }
 
-    public NewsFeedAdapter(Context context, ArrayList<Newsfeed_detail> feed_detail, FeedAdapterListner listener) {
+    public NewsFeedAdapter(Context context,/* ArrayList<Newsfeed_detail> feed_detail,*/ FeedAdapterListner listener) {
         this.context = context;
-        this.feed_detail = feed_detail;
+       // this.feed_detail = feed_detail;
         this.listener = listener;
+        this.feed_detail = new ArrayList<>();
 
         //  this.mCallback = (PaginationAdapterCallback) context;
 
