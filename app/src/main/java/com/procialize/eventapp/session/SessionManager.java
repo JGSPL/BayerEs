@@ -309,4 +309,6 @@ public class SessionManager {
         map.put(EVENT_COLOR_5, userEvent.getColor_five());
         SharedPreference.putPref(_context,map);
     }
+
+
 }

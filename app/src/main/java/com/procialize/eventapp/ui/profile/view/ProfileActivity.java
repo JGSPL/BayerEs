@@ -33,6 +33,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
@@ -541,5 +542,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+        finish();
+    }
 }

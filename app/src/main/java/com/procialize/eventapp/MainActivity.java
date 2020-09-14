@@ -2,9 +2,14 @@ package com.procialize.eventapp;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -32,6 +38,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
@@ -45,6 +52,7 @@ import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.quiz.view.QuizFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
+import java.io.File;
 import java.sql.Timestamp;
 
 import static com.procialize.eventapp.Utility.Constant.colorSecondary;
@@ -64,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event;
+    LinearLayout ll_main;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,14 +84,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mContentFrame = findViewById(R.id.fragment_frame);
         rv_side_menu = findViewById(R.id.rv_side_menu);
         mToolbar = findViewById(R.id.toolbar);
+        ll_main = findViewById(R.id.ll_main);
 
-/*        if (CheckingPermissionIsEnabledOrNot()) {
-//            Toast.makeText(MainActivity.this, "All Permissions Granted Successfully", Toast.LENGTH_LONG).show();
+        try {
+
+            File mypath = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "/" + Constant.FOLDER_DIRECTORY + "/" + "background.jpg");
+            Resources res = getResources();
+            Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(mypath));
+            BitmapDrawable bd = new BitmapDrawable(res, bitmap);
+            ll_main.setBackgroundDrawable(bd);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else {
-            //Calling method to enable permission.
-            RequestMultiplePermission();
-        }*/
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
@@ -113,8 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }).into(iv_profile);
 
-        setUpToolbar();
-        setUpNavDrawer();
+       setUpToolbar();
+         setUpNavDrawer();
         tr_switch_event = findViewById(R.id.tr_switch_event);
         tr_switch_event.setOnClickListener(this);
 
@@ -214,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void setUpToolbar() {
+   private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
@@ -243,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void setUpNavDrawer() {
+     private void setUpNavDrawer() {
         if (mToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             mToolbar.setNavigationIcon(R.drawable.ic_drawer);
@@ -278,7 +291,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             navView.setItemIconTintList(iconsColorStates);
             navView.setItemTextColor(textColorStates);
         }
-
     }
 
     @Override
@@ -310,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_switch_event:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, EventListActivity.class));
-                SharedPreference.clearAllPref(this);
+                //SharedPreference.clearAllPref(this);
                 break;
         }
     }
