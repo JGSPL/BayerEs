@@ -194,6 +194,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 }
             });
 
+            holder.iv_share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onShareClick(feed_detail.get(position), position);
+
+                }
+            });
+
             holder.iv_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -204,6 +212,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                     }
                 }
             });
+
 
             if (!feedData.getPost_status().isEmpty() && feedData.getPost_status() != null) {
                 holder.tv_status.setText(feedData.getPost_status());
@@ -290,6 +299,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         void onCommentClick(Newsfeed_detail feed, int position);
 
         void onLikeClick(Newsfeed_detail feed, int position);
+
+        void onShareClick(Newsfeed_detail feed, int position);
 
         void onSliderClick(Newsfeed_detail feed, int position);
 

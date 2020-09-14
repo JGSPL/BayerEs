@@ -64,6 +64,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
+
 public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAdapterListner, View.OnClickListener {
     ArrayList<Newsfeed_detail> newsfeedArrayList = new ArrayList<>();
     NewsFeedAdapter newsfeedAdapter;
@@ -277,16 +278,16 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
             @Override
             public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
-                if (newsfeedArrayList.size() > 0) {
+                /*if (newsfeedArrayList.size() > 0) {
                     newsfeedArrayList.clear();
-                }
+                }*/
                 //newsfeedArrayList.addAll(feedList);
                 newsfeedAdapter.removeLoadingFooter();
                 isLoading = false;
 
                 List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
                 if (feedList.size() > 0) {
-                    newsfeedAdapter.addAll(feedList);
+                    newsfeedArrayList.addAll(feedList);
                 }
                 //s(response, currentPage + "");
                 if (currentPage != totalPages) {
@@ -402,6 +403,12 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     @Override
     public void onLikeClick(Newsfeed_detail feed, int position) {
         newsfeedViewModel.openLikePage(getActivity(), feed, position);
+    }
+
+    @Override
+    public void onShareClick(Newsfeed_detail feed, int position) {
+        newsfeedViewModel.openShareTask(getActivity(), feed, position);
+
     }
 
     @Override
