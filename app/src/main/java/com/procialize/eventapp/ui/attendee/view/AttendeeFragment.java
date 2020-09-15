@@ -1,10 +1,8 @@
 package com.procialize.eventapp.ui.attendee.view;
 
 import android.app.Activity;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,8 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -40,26 +36,13 @@ import com.procialize.eventapp.ui.attendee.adapter.AttendeeAdapter;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
-import com.procialize.eventapp.ui.eventList.adapter.EventAdapter;
-import com.procialize.eventapp.ui.eventList.model.EventList;
-import com.procialize.eventapp.ui.eventList.view.EventListActivity;
-import com.procialize.eventapp.ui.eventList.viewModel.EventListViewModel;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
-import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 
@@ -88,7 +71,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     Attendee attendeeTmp;
     Boolean isVisible = false;
     public static Activity activity;
-    int totalPages = 100;
+    int totalPages = 20000;
     int attendeePageNumber = 1;
     int attendeePageSize = 10;
     AttendeeViewModel attendeeViewModel;
@@ -366,6 +349,15 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     @Override
     public void onContactSelected(Attendee attendee) {
-        
+        Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
+        intent.putExtra("fname", attendee.getFirst_name());
+        intent.putExtra("lname", attendee.getLast_name());
+        intent.putExtra("company", attendee.getCompany_name());
+        intent.putExtra("city", attendee.getCity());
+        intent.putExtra("designation", attendee.getDesignation());
+        intent.putExtra("prof_pic", attendee.getProfile_picture());
+        intent.putExtra("attendee_type", attendee.getAttendee_type());
+        startActivity(intent);
+        getActivity().finish();
     }
 }

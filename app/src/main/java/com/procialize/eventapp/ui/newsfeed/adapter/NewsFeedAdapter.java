@@ -64,10 +64,11 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
     }
 
-    public NewsFeedAdapter(Context context, ArrayList<Newsfeed_detail> feed_detail, FeedAdapterListner listener) {
+    public NewsFeedAdapter(Context context,/* ArrayList<Newsfeed_detail> feed_detail,*/ FeedAdapterListner listener) {
         this.context = context;
-        this.feed_detail = feed_detail;
+       // this.feed_detail = feed_detail;
         this.listener = listener;
+        this.feed_detail = new ArrayList<>();
 
         //  this.mCallback = (PaginationAdapterCallback) context;
 
@@ -93,7 +94,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
             setDynamicColor(holder);
 
-            if (feedData.getFirst_name().equalsIgnoreCase("null")) {
+            if (feedData.getFirst_name().equalsIgnoreCase("null") || (feedData.getFirst_name().equalsIgnoreCase(""))) {
                 holder.root.setVisibility(View.GONE);
             } else {
                 holder.root.setVisibility(View.VISIBLE);
@@ -195,6 +196,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 }
             });
 
+            holder.iv_share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onShareClick(feed_detail.get(position), position);
+
+                }
+            });
+
             holder.iv_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -205,6 +214,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                     }
                 }
             });
+
 
             if (!feedData.getPost_status().isEmpty() && feedData.getPost_status() != null) {
                 holder.tv_status.setText(feedData.getPost_status());
@@ -293,6 +303,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         void onCommentClick(Newsfeed_detail feed, int position, int swipeablePosition);
 
         void onLikeClick(Newsfeed_detail feed, int position);
+
+        void onShareClick(Newsfeed_detail feed, int position);
 
         void onSliderClick(Newsfeed_detail feed, int position);
 

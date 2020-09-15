@@ -287,6 +287,7 @@ public class Utility {
     public static int getTimeDifferenceInMillis(String dateTime) {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String currentTimeString = sdf.format(new Date());
 
         Calendar now = Calendar.getInstance();
         now.add(Calendar.SECOND, 5);
@@ -308,6 +309,59 @@ public class Utility {
         else
             return 0;
     }
+
+    public static boolean isTimeGreater(String datetime) {
+        Date currentdateTime, pickedTime;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTimeString = sdf.format(new Date());
+
+        try {
+            currentdateTime = sdf.parse(currentTimeString);
+            pickedTime = sdf.parse(datetime);
+
+
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.SECOND, 5);
+            Date date = now.getTime();
+            long currentTime = date.getTime();
+            long endTime = 0;
+
+            try {
+                //Parsing the user Inputed time ("yyyy-MM-dd HH:mm:ss")
+                endTime = sdf.parse(datetime).getTime();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            Log.e("CDATE", "Current Date: " + currentdateTime);
+            Log.e("PDATE", "Picked Date: " + pickedTime);
+
+
+        /*compare > 0, if date1 is greater than date2
+        compare = 0, if date1 is equal to date2
+        compare < 0, if date1 is smaller than date2*/
+
+            if (pickedTime.compareTo(currentdateTime) > 0) {
+                Log.e("TAG", "Picked Date is Greater than Current Date");
+                if (endTime > currentTime)
+                    return false;
+                else
+                    return true;
+            } else if (pickedTime.compareTo(currentdateTime) == 0) {
+                Log.e("TAG", "Picked Date is equal to Current Date");
+                return false;
+            } else {
+                Log.e("TAG", "Picked Date is Less than Current Date");
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
 
 
     public static void setupPagerIndidcatorDots(Context context,int currentPage, LinearLayout ll_dots, int size) {

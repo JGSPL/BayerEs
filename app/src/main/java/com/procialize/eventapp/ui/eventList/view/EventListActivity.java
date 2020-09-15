@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
@@ -51,8 +53,6 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBI
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 
 public class EventListActivity extends AppCompatActivity implements EventAdapter.EventAdapterListner {
 
@@ -94,17 +94,18 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         eventListViewModel = ViewModelProviders.of(this).get(EventListViewModel.class);
 
         if (cd.isConnectingToInternet()) {
-            /*String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
+            String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
             Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
-            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
+//            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
+           boolean isvalidtoken= Utility.isTimeGreater(String.valueOf(timestamp_expiry));
 
-            if (isvalidtoken == 1) {
-                RefreashToken refreashToken = new RefreashToken(EventListActivity.this);*/
-                new RefreashToken(EventListActivity.this).callGetRefreashToken(EventListActivity.this);
-            /*} else {
+            if (isvalidtoken == false) {
+                RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                refreashToken.callGetRefreashToken(EventListActivity.this);
+            } else {
                 Log.d("TAG", "Token is already refreashed");
             }
-*/
+
 
             eventListViewModel.getEvent(api_token,"0", "");
 
@@ -159,10 +160,12 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     @Override
     public void onMoreSelected(EventList event, int position) {
         if (cd.isConnectingToInternet()) {
-            String eventId = event.getEvent_id();
-            CommonFunction.saveBackgroundImage(EventListActivity.this, event.getBackground_image());
-            session.saveCurrentEvent(event);
-            eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
+
+           // if(result) {
+                String eventId = event.getEvent_id();
+                CommonFunction.saveBackgroundImage(EventListActivity.this, event.getBackground_image());
+                session.saveCurrentEvent(event);
+                eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
 
             eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
                 @Override
@@ -178,39 +181,37 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     String is_god = userData.get(0).getIs_god();
                     String emailId = userData.get(0).getEmail();*/
 
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(KEY_FNAME, userData.get(0).getFirst_name());
-                    map.put(KEY_LNAME, userData.get(0).getLast_name());
-                    map.put(KEY_EMAIL, userData.get(0).getEmail());
-                    map.put(KEY_PASSWORD, "");
-                    map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
-                    map.put(KEY_COMPANY, userData.get(0).getCompany_name());
-                    map.put(KEY_MOBILE, userData.get(0).getMobile());
-                    map.put(KEY_TOKEN, "");
-                    map.put(KEY_CITY, userData.get(0).getCity());
-                    map.put(KEY_GCM_ID, "");
-                    map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
-                    map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
-                    map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
-                    map.put(IS_LOGIN, "true");
-                    map.put(EVENT_ID, eventId);
-                    SharedPreference.putPref(EventListActivity.this, map);
-                    //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(KEY_FNAME, userData.get(0).getFirst_name());
+                        map.put(KEY_LNAME, userData.get(0).getLast_name());
+                        map.put(KEY_EMAIL, userData.get(0).getEmail());
+                        map.put(KEY_PASSWORD, "");
+                        map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
+                        map.put(KEY_COMPANY, userData.get(0).getCompany_name());
+                        map.put(KEY_MOBILE, userData.get(0).getMobile());
+                        map.put(KEY_TOKEN, "");
+                        map.put(KEY_CITY, userData.get(0).getCity());
+                        map.put(KEY_GCM_ID, "");
+                        map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
+                        map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
+                        map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
+                        map.put(IS_LOGIN, "true");
+                        map.put(EVENT_ID, eventId);
+                        SharedPreference.putPref(EventListActivity.this, map);
+                        //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
 
 
-                    if (eventListViewModel != null && eventListViewModel.getupdateUserdatq().hasObservers()) {
-                        eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
+                        if (eventListViewModel != null && eventListViewModel.getupdateUserdatq().hasObservers()) {
+                            eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
+                        }
+
+                        eventListViewModel.openProfilePage(EventListActivity.this, userData, position);
                     }
-
-                    eventListViewModel.openProfilePage(EventListActivity.this, userData, position);
-                }
-            });
-
+                });
+           // }
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }
-
-
     }
 
 }
