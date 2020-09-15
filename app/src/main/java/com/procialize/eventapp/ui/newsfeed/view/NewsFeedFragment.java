@@ -44,6 +44,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
@@ -106,9 +107,12 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         return new NewsFeedFragment();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        //Call Refresh token
+        new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
+
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
         newsFeedDatabaseViewModel = ViewModelProviders.of(this).get(NewsFeedDatabaseViewModel.class);
 

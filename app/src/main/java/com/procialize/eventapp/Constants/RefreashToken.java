@@ -4,16 +4,21 @@ import android.content.Context;
 import android.util.Log;
 
 import com.auth0.android.jwt.JWT;
+import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.GetterSetter.validateOTP;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
+import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EXPIRY_TIME;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_EMAIL;
@@ -53,6 +58,12 @@ public class RefreashToken {
     }
 
     public void decodeRefreashToken(String data) {
+
+        HashMap<String, String> map_token = new HashMap<>();
+        map_token.put(AUTHERISATION_KEY, data);
+        SharedPreference.putPref(context, map_token);
+
+
         JWT jwt = new JWT(data);
 
         Log.d("Response", jwt.toString());
@@ -101,10 +112,20 @@ public class RefreashToken {
     }
 
     public void callGetRefreashToken(Context context) {
-        String username = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_EMAIL);
-        String otp = SharedPreference.getPref(context, SharedPreferencesConstant.OTP);
-        String accesstoken = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_TOKEN);
-        mApiService = ApiUtils.getAPIService();
-        GetRefreashToken(username, otp, accesstoken);
+        if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
+            String expirytime = SharedPreference.getPref(context, SharedPreferencesConstant.EXPIRY_TIME);
+            Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
+            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
+
+            if (isvalidtoken == 1) {
+                String username = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_EMAIL);
+                String otp = SharedPreference.getPref(context, SharedPreferencesConstant.OTP);
+                String accesstoken = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_TOKEN);
+                mApiService = ApiUtils.getAPIService();
+                GetRefreashToken(username, otp, accesstoken);
+            } else {
+                Log.d("TAG", "Token is already refreashed");
+            }
+        }
     }
 }

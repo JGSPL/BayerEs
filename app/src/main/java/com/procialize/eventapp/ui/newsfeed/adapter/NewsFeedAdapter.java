@@ -30,6 +30,7 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
@@ -237,7 +238,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                     holder.vp_slider.setCurrentItem(0);
 
                     if (imagesSelectednew.size() > 1) {
-                        setupPagerIndidcatorDots(0, holder.ll_dots, imagesSelectednew.size());
+                        //CommonFunction.
+                        Utility.setupPagerIndidcatorDots(context,0, holder.ll_dots, imagesSelectednew.size());
                         holder.vp_slider.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                             @Override
                             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -248,7 +250,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                             public void onPageSelected(int position1) {
                                 JzvdStd.goOnPlayOnPause();
                                 swipableAdapterPosition = position1;
-                                setupPagerIndidcatorDots(position1, holder.ll_dots, imagesSelectednew.size());
+                                Utility.setupPagerIndidcatorDots(context,position1, holder.ll_dots, imagesSelectednew.size());
+                                //setupPagerIndidcatorDots(position1, holder.ll_dots, imagesSelectednew.size());
                             }
 
                             @Override
@@ -344,29 +347,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         }
     }
 
-    private void setupPagerIndidcatorDots(int currentPage, LinearLayout ll_dots, int size) {
-
-        TextView[] dots = new TextView[size];
-        ll_dots.removeAllViews();
-        for (int i = 0; i < dots.length; i++) {
-            dots[i] = new TextView(context);
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(30);
-            dots[i].setTextColor(Color.parseColor("#343434"));
-            ll_dots.addView(dots[i]);
-        }
-
-        try {
-            if (dots.length > 0) {
-                if (dots.length != currentPage) {
-                    dots[currentPage].setTextColor(Color.parseColor("#A2A2A2"));
-                    // dots[currentPage].setTextColor(Color.parseColor(colorActive));
-                }
-            }
-        } catch (Exception e) {
-
-        }
-    }
 
     public void add(Newsfeed_detail r) {
         feed_detail.add(r);
@@ -446,12 +426,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         holder.nameTv.setTextColor(Color.parseColor(eventColor1));
         holder.tv_status.setTextColor(Color.parseColor(eventColor3));
         String eventColor3Opacity40 = eventColor3.replace("#", "");
-        holder.dateTv.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
-        holder.designationTv.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
-        holder.tv_concat.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
-        holder.companyTv.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
-        holder.tv_like.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
-        holder.tv_comment.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        holder.dateTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.designationTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.tv_concat.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.companyTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.tv_like.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.tv_comment.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         holder.root.setBackgroundColor(Color.parseColor(eventColor2));
         holder.v_divider.setBackgroundColor(Color.parseColor(eventColor3));
 
@@ -460,9 +440,9 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         holder.iv_like.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.iv_share.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        holder.moreIV.setAlpha(150);
-        holder.iv_like.setAlpha(150);
-        holder.iv_comments.setAlpha(150);
-        holder.iv_share.setAlpha(150);
+        holder.moreIV.setAlpha(180);
+        holder.iv_like.setAlpha(180);
+        holder.iv_comments.setAlpha(180);
+        holder.iv_share.setAlpha(180);
     }
 }

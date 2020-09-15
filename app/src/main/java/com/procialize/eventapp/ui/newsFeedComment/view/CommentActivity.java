@@ -53,12 +53,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.GifEmojiAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -128,10 +130,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     String noOfLikes = "0", likeStatus = "", api_token;
     private String strPath, eventColor1,eventColor2,eventColor3,eventColor4,eventColor5;
     public Dialog dialogShare;
+    View v_divider;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+
+        //Call Refresh token
+        new RefreashToken(this).callGetRefreashToken(this);
 
         eventColor1 = SharedPreference.getPref(this, EVENT_COLOR_1);
         eventColor2 = SharedPreference.getPref(this, EVENT_COLOR_2);
@@ -181,6 +187,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_date_time = findViewById(R.id.tv_date_time);
         tv_no_of_comments = findViewById(R.id.tv_no_of_comments);
         tv_no_of_likes = findViewById(R.id.tv_no_of_likes);
+        v_divider = findViewById(R.id.v_divider);
 
         CommonFunction.showBackgroundImage(this,ll_main);
 
@@ -1005,6 +1012,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_no_of_likes.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
         tv_no_of_comments.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
         ll_root.setBackgroundColor(Color.parseColor(eventColor2));
+        v_divider.setBackgroundColor(Color.parseColor(eventColor3));
 
         int color = Color.parseColor( eventColor3);
         //moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);

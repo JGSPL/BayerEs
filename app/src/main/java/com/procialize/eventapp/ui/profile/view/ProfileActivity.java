@@ -33,12 +33,12 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
@@ -84,17 +84,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     TextView tv_profile_pic;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
-    String event_id , profile_pic = "";
+    String event_id, profile_pic = "";
     ProgressBar progressView;
     private String userChoosenTask = "";
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
     String api_token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        //Call Refresh token
+        new RefreashToken(this).callGetRefreashToken(this);
 
         options = new UCrop.Options();
 
@@ -137,12 +141,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         iv_change_profile.setOnClickListener(this);
         iv_back.setOnClickListener(this);
 
-        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
-        event_id = SharedPreference.getPref(this,EVENT_ID);
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this, EVENT_ID);
 
-        CommonFunction.showBackgroundImage(this,ll_main);
+        CommonFunction.showBackgroundImage(this, ll_main);
         if (connectionDetector.isConnectingToInternet()) {
-            profileActivityViewModel.getProfile(api_token,event_id);
+            profileActivityViewModel.getProfile(api_token, event_id);
             profileActivityViewModel.getProfileDetails().observe(this, new Observer<Profile>() {
                 @Override
                 public void onChanged(Profile profile) {
@@ -197,7 +201,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 String mobile = et_mobile.getText().toString().trim();
                 String profile_pic = tv_profile_pic.getText().toString();
 
-                profileActivityViewModel.updateProfile(api_token,event_id,
+                profileActivityViewModel.updateProfile(api_token, event_id,
                         first_name,
                         last_name,
                         designation,
@@ -217,7 +221,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                     @Override
                                     public void run() {
                                         HashMap<String, String> map = new HashMap<>();
-                                        map.put(KEY_FNAME,profile.getProfileDetails().get(0).getFirst_name());
+                                        map.put(KEY_FNAME, profile.getProfileDetails().get(0).getFirst_name());
                                         map.put(KEY_LNAME, profile.getProfileDetails().get(0).getLast_name());
                                         map.put(KEY_EMAIL, profile.getProfileDetails().get(0).getEmail());
                                         map.put(KEY_PASSWORD, "");
