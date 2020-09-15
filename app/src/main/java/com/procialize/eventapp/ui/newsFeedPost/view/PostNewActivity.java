@@ -366,6 +366,10 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void setPagerAdapter(List<SelectedImages> resultList) {
+        for (int j=0;j<resultList.size();j++)
+        {
+            Log.d("path",resultList.get(j).getmPath());
+        }
         viewPagerAdapter = new ViewPagerMultimediaAdapter(PostNewActivity.this, resultList);
         viewPagerAdapter.notifyDataSetChanged();
         vp_media.setAdapter(viewPagerAdapter);

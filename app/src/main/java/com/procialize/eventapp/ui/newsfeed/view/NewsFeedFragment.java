@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -70,7 +69,6 @@ import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
@@ -90,7 +88,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     UploadMultimediaBackgroundReceiver mReceiver;
     IntentFilter mFilter;
     public static ConstraintLayout cl_main;
-    private TextView tv_uploding_multimedia,tv_whats_on_mind;
+    private TextView tv_uploding_multimedia, tv_whats_on_mind;
     String api_token;
     ImageView iv_profile;
     int totalPages = 0;
@@ -135,36 +133,38 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recycler_feed.setLayoutManager(mLayoutManager);
-        newsfeedAdapter = new NewsFeedAdapter(getActivity()/*, FragmentNewsFeed.this*/,NewsFeedFragment.this);
+        newsfeedAdapter = new NewsFeedAdapter(getActivity()/*, FragmentNewsFeed.this*/, NewsFeedFragment.this);
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recycler_feed.setLayoutManager(linearLayoutManager);
         recycler_feed.setItemAnimator(new DefaultItemAnimator());
         recycler_feed.setAdapter(newsfeedAdapter);
+        newsfeedAdapter.notifyDataSetChanged();
         connectionDetector = ConnectionDetector.getInstance(getActivity());
 
 
-            String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
-            Glide.with(getActivity())
-                    .load(profilePic)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
+        String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
+        Glide.with(getActivity())
+                .load(profilePic)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            return false;
-                        }
-                    }).into(iv_profile);
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(iv_profile);
 
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 feedrefresh.setRefreshing(false);
                 if (connectionDetector.isConnectingToInternet()) {
-                    newsfeedAdapter.getNewsFeedList().clear();
-                    newsfeedAdapter.notifyDataSetChanged();
+                    currentPage = PAGE_START;
+                   /* newsfeedAdapter.getNewsFeedList().clear();
+                    newsfeedAdapter.notifyDataSetChanged();*/
                     init();
                 }
             }
@@ -203,7 +203,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         });
 
 
-        tv_whats_on_mind.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_4)));
+        tv_whats_on_mind.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_4)));
         tv_whats_on_mind.setAlpha(0.4f);
 
         if (!CommonFunction.isMyServiceRunning(getActivity(), BackgroundServiceToCompressMedia.class)) {
@@ -254,38 +254,46 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
 
-            newsfeedViewModel.init(getActivity(),api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
-
-            newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
+            newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+            newsfeedViewModel.getNewsRepository().observeForever(new Observer<FetchNewsfeedMultiple>() {
                 @Override
                 public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
-                    if (fetchNewsfeedMultiple != null) {
-                        List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
-                        newsfeedAdapter.addAll(feedList);
+                    try {
+                        if (fetchNewsfeedMultiple != null) {
+                            newsfeedAdapter.getNewsFeedList().clear();
+                            newsfeedAdapter.notifyDataSetChanged();
+                            List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
+                            newsfeedAdapter.addAll(feedList);
 
-                        newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
-                        insertIntoDb(feedList);
-                        String mediaPath = fetchNewsfeedMultiple.getMedia_path();
-                        totalPages = Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
+                            newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
+                            insertIntoDb(feedList);
+                            String mediaPath = fetchNewsfeedMultiple.getMedia_path();
+                            totalPages = Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
 
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put(NEWS_FEED_MEDIA_PATH, mediaPath);
-                        SharedPreference.putPref(getActivity(), map);
+                            try {
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put(NEWS_FEED_MEDIA_PATH, mediaPath);
+                                SharedPreference.putPref(getActivity(), map);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                if (currentPage <= totalPages) newsfeedAdapter.addLoadingFooter();
+                                else isLastPage = true;
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
 
-                        try {
-                            if (currentPage <= totalPages) newsfeedAdapter.addLoadingFooter();
-                            else isLastPage = true;
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
-
                         if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                             newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
                 }
             });
 
@@ -306,9 +314,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     private void loadNextPage() {
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
-
-
-        Log.d("loadNextPage", "loadNextPage: " + currentPage);
         if (newsfeedViewModel != null /*&& newsfeedViewModel.getNewsRepository().hasObservers()*/) {
             newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
         }
@@ -326,7 +331,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                     List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
                     if (feedList.size() > 0) {
                         newsfeedAdapter.addAll(feedList);
-
+                        insertIntoDb(feedList);
                     }
 
                    /* if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
@@ -477,8 +482,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     @Override
-    public void onCommentClick(Newsfeed_detail feed, int position,int swipeablePosition) {
-        newsfeedViewModel.openCommentPage(getActivity(), feed, position,swipeablePosition);
+    public void onCommentClick(Newsfeed_detail feed, int position, int swipeablePosition) {
+        newsfeedViewModel.openCommentPage(getActivity(), feed, position, swipeablePosition);
     }
 
     @Override
@@ -562,11 +567,18 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {
                                             if (result != null) {
-
                                                 newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
+
+                                               /*new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {*/
                                                 String status = result.getHeader().get(0).getType();
                                                 String message = result.getHeader().get(0).getMsg();
                                                 Utility.createLongSnackBar(cl_main, message);
+                                                init();
+                                                   /* }
+                                                }, 1000);*/
+
                                             } else {
                                                 Utility.createLongSnackBar(cl_main, "failure");
                                             }

@@ -330,7 +330,7 @@ public class Utility {
             long endTime = 0;
 
             try {
-                //Parsing the user Inputed time ("yyyy-MM-dd HH:mm:ss")
+//Parsing the user Inputed time ("yyyy-MM-dd HH:mm:ss")
                 endTime = sdf.parse(datetime).getTime();
 
             } catch (Exception e) {
@@ -341,9 +341,9 @@ public class Utility {
             Log.e("PDATE", "Picked Date: " + pickedTime);
 
 
-        /*compare > 0, if date1 is greater than date2
-        compare = 0, if date1 is equal to date2
-        compare < 0, if date1 is smaller than date2*/
+/*compare > 0, if date1 is greater than date2
+compare = 0, if date1 is equal to date2
+compare < 0, if date1 is smaller than date2*/
 
             if (pickedTime.compareTo(currentdateTime) > 0) {
                 Log.e("TAG", "Picked Date is Greater than Current Date");

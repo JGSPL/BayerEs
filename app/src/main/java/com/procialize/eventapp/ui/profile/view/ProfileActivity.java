@@ -98,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_profile);
 
         //Call Refresh token
-       // new RefreashToken(this).callGetRefreashToken(this);
+        new RefreashToken(this).callGetRefreashToken(this);
 
         options = new UCrop.Options();
 
