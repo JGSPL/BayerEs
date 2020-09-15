@@ -89,7 +89,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 100;
+    int newsFeedPageSize = 5;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -134,13 +134,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         recycler_feed.setAdapter(newsfeedAdapter);
         connectionDetector = ConnectionDetector.getInstance(getActivity());
 
-        if (newsfeedAdapter == null) {
-            newsfeedAdapter = new NewsFeedAdapter(getContext(), /*newsfeedArrayList,*/ NewsFeedFragment.this);
-            /*recycler_feed.setLayoutManager(new LinearLayoutManager(getContext()));
-            recycler_feed.setAdapter(newsfeedAdapter);
-            recycler_feed.setItemAnimator(new DefaultItemAnimator());
-            recycler_feed.setNestedScrollingEnabled(true);
-            newsfeedAdapter.notifyDataSetChanged();*/
+
             String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
             Glide.with(getActivity())
                     .load(profilePic)
@@ -155,7 +149,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             return false;
                         }
                     }).into(iv_profile);
-        }
+
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -234,10 +228,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
                     if (fetchNewsfeedMultiple != null) {
                         List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
-                        /*if (newsfeedArrayList.size() > 0) {
-                            newsfeedArrayList.clear();
-                        }
-                        newsfeedArrayList.addAll(feedList);*/
                         newsfeedAdapter.addAll(feedList);
 
                         newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
@@ -254,13 +244,18 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             if (currentPage <= totalPages) newsfeedAdapter.addLoadingFooter();
                             else isLastPage = true;
 
-                            newsfeedAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
+                        if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                            newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                        }
                     }
+
                 }
             });
+
         } else {
             getDataFromDb();
         }
@@ -268,12 +263,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 setupRecyclerView();
             }
         }, 100);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recycler_feed.setLayoutManager(linearLayoutManager);
 
         recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
@@ -304,33 +298,37 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     private void loadNextPage() {
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
 
-        // newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
-        newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
 
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
+        if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+            newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+        }
         newsfeedViewModel.init(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+
         newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
             @Override
             public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
-                /*if (newsfeedArrayList.size() > 0) {
-                    newsfeedArrayList.clear();
-                }*/
-                //newsfeedArrayList.addAll(feedList);
+
                 newsfeedAdapter.removeLoadingFooter();
                 isLoading = false;
 
                 List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
                 if (feedList.size() > 0) {
-                   // newsfeedArrayList.addAll(feedList);
                     newsfeedAdapter.addAll(feedList);
 
                 }
 
+                if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                    newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                }
+
                 if (currentPage != totalPages) {
                     newsfeedAdapter.addLoadingFooter();
-                    newsfeedAdapter.notifyDataSetChanged();
+                   // newsfeedAdapter.notifyDataSetChanged();
                 } else
                     isLastPage = true;
+
+
             }
         });
     }
@@ -424,6 +422,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         } else {
             newsfeedAdapter.notifyDataSetChanged();
         }
+
     }
 
     @Override
