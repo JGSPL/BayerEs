@@ -181,10 +181,10 @@ public class CommentRepository {
      * @param content
      * @return
      */
-    public MutableLiveData<LoginOrganizer> reportUser(String token,String event_id,String reported_user_id,String news_feed_id,String content) {
+    public MutableLiveData<LoginOrganizer> reportUser(String token,String event_id,String reported_user_id,String commentId,String content) {
         commentApi = ApiUtils.getAPIService();
 
-        commentApi.ReportUser(token,event_id, reported_user_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
+        commentApi.ReportCommentUser(token,event_id, reported_user_id, commentId, content).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {

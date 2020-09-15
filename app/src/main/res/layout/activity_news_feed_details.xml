@@ -5,18 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/ll_main"
     tools:context=".ui.newsFeedDetails.view.NewsFeedDetailsActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        app:elevation="0dp"
+        android:background="@android:color/transparent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
             app:navigationIcon="@drawable/backarrow"
+            app:elevation="0dp"
             android:layout_height="?attr/actionBarSize">
 
             <ImageView

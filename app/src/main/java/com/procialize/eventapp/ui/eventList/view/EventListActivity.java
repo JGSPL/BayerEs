@@ -94,17 +94,17 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         eventListViewModel = ViewModelProviders.of(this).get(EventListViewModel.class);
 
         if (cd.isConnectingToInternet()) {
-            String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
+            /*String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
             Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
 //            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
            boolean isvalidtoken= Utility.isTimeGreater(String.valueOf(timestamp_expiry));
 
-            if (isvalidtoken == false) {
+            if (isvalidtoken == false) {*/
                 RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
                 refreashToken.callGetRefreashToken(EventListActivity.this);
-            } else {
+           /* } else {
                 Log.d("TAG", "Token is already refreashed");
-            }
+            }*/
 
 
             eventListViewModel.getEvent(api_token,"0", "");

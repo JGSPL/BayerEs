@@ -115,9 +115,9 @@ public class RefreashToken {
         if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
             String expirytime = SharedPreference.getPref(context, SharedPreferencesConstant.EXPIRY_TIME);
             Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
-            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
-
-            if (isvalidtoken == 1) {
+//            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
+            boolean isvalidtoken= Utility.isTimeGreater(String.valueOf(timestamp_expiry));
+            if (isvalidtoken == false) {
                 String username = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_EMAIL);
                 String otp = SharedPreference.getPref(context, SharedPreferencesConstant.OTP);
                 String accesstoken = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_TOKEN);

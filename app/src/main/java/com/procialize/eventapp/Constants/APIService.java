@@ -125,6 +125,14 @@ public interface APIService{
                                     @Field("reported_user_id") String reported_user_id,
                                     @Field("news_feed_id") String news_feed_id,
                                     @Field("content") String content);
+    //@Headers("authorization: " + HeaderToken)
+    @POST("NewsFeed_api/ReportCommentUser")
+    @FormUrlEncoded
+    Call<LoginOrganizer> ReportCommentUser(@Header("authorization") String authorization,
+                                    @Field("event_id") String event_id,
+                                    @Field("reported_user_id") String reported_user_id,
+                                    @Field("comment_id") String comment_id,
+                                    @Field("content") String content);
 
 
     //@Headers("authorization: " + HeaderToken)

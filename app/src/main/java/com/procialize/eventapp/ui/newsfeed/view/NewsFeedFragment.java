@@ -444,14 +444,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     @Override
     public void onShareClick(Newsfeed_detail feed, int position) {
         newsfeedViewModel.openShareTask(getActivity(), feed, position);
-
     }
 
     @Override
     public void onSliderClick(Newsfeed_detail feed, int position) {
-
         newsfeedViewModel.openFeedDetails(getActivity(), feed, position);
-
     }
 
     @Override

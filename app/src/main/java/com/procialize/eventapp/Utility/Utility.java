@@ -319,7 +319,6 @@ public class Utility {
             currentdateTime = sdf.parse(currentTimeString);
             pickedTime = sdf.parse(datetime);
 
-
             Calendar now = Calendar.getInstance();
             now.add(Calendar.SECOND, 5);
             Date date = now.getTime();

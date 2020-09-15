@@ -358,6 +358,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         intent.putExtra("prof_pic", attendee.getProfile_picture());
         intent.putExtra("attendee_type", attendee.getAttendee_type());
         startActivity(intent);
-        getActivity().finish();
+       // getActivity().finish();
     }
 }
