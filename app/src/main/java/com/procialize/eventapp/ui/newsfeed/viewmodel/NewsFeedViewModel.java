@@ -76,6 +76,8 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 import static java.security.AccessController.getContext;
 
@@ -83,6 +85,7 @@ import static java.security.AccessController.getContext;
 public class NewsFeedViewModel extends ViewModel {
     Dialog dialog, myDialog, dialogShare;
     private String ATTENDEE_STATUS = "0";
+    private String ATTENDEE_ID="";
     private Activity activityVar;
     ConnectionDetector connectionDetector;
     private MutableLiveData<FetchNewsfeedMultiple> mutableLiveData = new MutableLiveData<>();
@@ -104,9 +107,10 @@ public class NewsFeedViewModel extends ViewModel {
     String strPath="", mediaPath="";
     NewsFeedAdapter adapter;
     
-     public void init(String token,String eventId,String pagesize, String pagenumber) {
-       /* if (mutableLiveData != null) {
-            return;
+     public void init(Activity activity,String token,String eventId,String pagesize, String pagenumber) {
+         activityVar = activity;
+      /* if (mutableLiveData != null) {
+            mutableLiveData.setValue(null);
         }*/
 
 
@@ -118,6 +122,9 @@ public class NewsFeedViewModel extends ViewModel {
     public LiveData<FetchNewsfeedMultiple> getNewsRepository() {
         return mutableLiveData;
     }
+
+
+
 
     //---------------View News feed details--------------------------------
     public void openNewsFeedDetails(Activity activity, Newsfeed_detail feed, int position) {
@@ -150,7 +157,7 @@ public class NewsFeedViewModel extends ViewModel {
 
     //---------------View Share details--------------------------------
     public void openShareTask(Activity activity, Newsfeed_detail feed, int position) {
-        activityVar = activity;        
+        activityVar = activity;
         final List<News_feed_media> newsFeedMedia = feed.getNews_feed_media();
         mediaPath = SharedPreference.getPref(activity, NEWS_FEED_MEDIA_PATH);
 
@@ -294,6 +301,9 @@ public class NewsFeedViewModel extends ViewModel {
 
     ///------------------Open More dot features------------------
     public void openMoreDetails(Activity activity, Newsfeed_detail feed, int position, String token, String eventId, NewsFeedAdapter newsadapter) {
+
+        ATTENDEE_STATUS = SharedPreference.getPref(activity,IS_GOD);
+        ATTENDEE_ID = SharedPreference.getPref(activity,KEY_ATTENDEE_ID);
         activityVar = activity;
         adapter = newsadapter;
         dialog = new BottomSheetDialog(activity);
@@ -306,61 +316,39 @@ public class NewsFeedViewModel extends ViewModel {
         TextView reportuserTv = dialog.findViewById(R.id.reportuserTv);
         TextView blockuserTv = dialog.findViewById(R.id.blockuserTv);
         TextView cancelTv = dialog.findViewById(R.id.cancelTv);
-        TextView editIV = dialog.findViewById(R.id.editIV);
+        //TextView editIV = dialog.findViewById(R.id.editIV);
 
 
-        if (/*user.get(SessionManager.ATTENDEE_STATUS)*/ATTENDEE_STATUS.equalsIgnoreCase("1")) {
-            if (/*user.get(SessionManager.KEY_ID).equalsIgnoreCase(feed.getAttendeeId())*/ATTENDEE_STATUS.equalsIgnoreCase("1")) {
-                deleteTv.setVisibility(View.VISIBLE);
-                //editIV.setVisibility(View.VISIBLE);
-                hideTv.setVisibility(View.GONE);
-                reportTv.setVisibility(View.GONE);
-                reportuserTv.setVisibility(View.GONE);
-                blockuserTv.setVisibility(View.GONE);
-
-                if (feed.getType().equalsIgnoreCase("Video")) {
-                    editIV.setVisibility(View.GONE);
-
-                } else {
-                    editIV.setVisibility(View.GONE);
-
-                }
-            } else {
-                deleteTv.setVisibility(View.VISIBLE);
-                //editIV.setVisibility(View.VISIBLE);
-                hideTv.setVisibility(View.GONE);
-                reportTv.setVisibility(View.GONE);
-                reportuserTv.setVisibility(View.GONE);
-                blockuserTv.setVisibility(View.GONE);
-                editIV.setVisibility(View.GONE);
-            }
-
+        if (ATTENDEE_STATUS.equalsIgnoreCase("1")) {
+            reportTv.setVisibility(View.VISIBLE);
+            hideTv.setVisibility(View.VISIBLE);
+            deleteTv.setVisibility(View.VISIBLE);
+            reportuserTv.setVisibility(View.VISIBLE);
+            blockuserTv.setVisibility(View.VISIBLE);
+            cancelTv.setVisibility(View.VISIBLE);
+            //editIV.setVisibility(View.VISIBLE);
         } else {
-            if (/*user.get(SessionManager.KEY_ID).equalsIgnoreCase(feed.getAttendeeId())*/ATTENDEE_STATUS.equalsIgnoreCase("1")) {
-                deleteTv.setVisibility(View.VISIBLE);
-                //editIV.setVisibility(View.VISIBLE);
-                hideTv.setVisibility(View.GONE);
-                reportTv.setVisibility(View.GONE);
-                reportuserTv.setVisibility(View.GONE);
-                blockuserTv.setVisibility(View.GONE);
+           if(ATTENDEE_ID.equalsIgnoreCase(feed.getAttendee_id()))
+           {
+               reportTv.setVisibility(View.GONE);
+               hideTv.setVisibility(View.GONE);
+               reportuserTv.setVisibility(View.GONE);
+               blockuserTv.setVisibility(View.GONE);
 
-                if (feed.getType().equalsIgnoreCase("Video")) {
-                    editIV.setVisibility(View.GONE);
+               deleteTv.setVisibility(View.VISIBLE);
+               cancelTv.setVisibility(View.VISIBLE);
+               //editIV.setVisibility(View.VISIBLE);
+           }
+           else
+           {
+               reportTv.setVisibility(View.VISIBLE);
+               hideTv.setVisibility(View.VISIBLE);
+               reportuserTv.setVisibility(View.VISIBLE);
+               blockuserTv.setVisibility(View.VISIBLE);
 
-                } else {
-                    editIV.setVisibility(View.GONE);
-
-                }
-
-            } else {
-                deleteTv.setVisibility(View.VISIBLE);
-                editIV.setVisibility(View.GONE);
-                hideTv.setVisibility(View.VISIBLE);
-                reportTv.setVisibility(View.VISIBLE);
-                reportuserTv.setVisibility(View.VISIBLE);
-                blockuserTv.setVisibility(View.VISIBLE);
-            }
-
+               deleteTv.setVisibility(View.GONE);
+               cancelTv.setVisibility(View.VISIBLE);
+           }
         }
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override

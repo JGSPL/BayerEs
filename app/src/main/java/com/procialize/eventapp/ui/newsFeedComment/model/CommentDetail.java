@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class CommentDetail {
 
+    @SerializedName("commented_user_id")
+    @Expose
+    private String user_id;
     @SerializedName("comment_id")
     @Expose
     private String comment_id;
@@ -47,5 +50,13 @@ public class CommentDetail {
 
     public String getProfile_picture() {
         return profile_picture;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }

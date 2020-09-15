@@ -4,6 +4,9 @@ public final class SharedPreferencesConstant {
 
     public static String SHARED_PREF = "EventApp";
 
+
+    public static final String AUTHERISATION_KEY = "autherisationKey";
+
     public static final String NEWS_FEED_MEDIA_PATH = "newsFeedMediaPath";
     public static final String EVENT_LIST_MEDIA_PATH = "eventListMediaPath";
 
@@ -21,7 +24,6 @@ public final class SharedPreferencesConstant {
     public static final String KEY_PROFILE_PIC = "profile_pic";
     public static final String KEY_ATTENDEE_ID = "id";
     public static final String ATTENDEE_STATUS = "attendee_status";
-    public static final String AUTHERISATION_KEY = "autherisationKey";
     public static final String IS_LOGIN = "IsLoggedIn";
     public static final String IS_GOD = "isGod";
     public static final String TIME = "time";

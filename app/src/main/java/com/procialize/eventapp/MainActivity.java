@@ -2,14 +2,9 @@ package com.procialize.eventapp;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,13 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.auth0.android.jwt.JWT;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -37,31 +31,27 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
-import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.quiz.view.QuizFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
-import java.io.File;
-import java.sql.Timestamp;
-
-import static com.procialize.eventapp.Utility.Constant.colorSecondary;
 import static com.procialize.eventapp.Utility.Constant.colorunselect;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -76,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event;
     LinearLayout ll_main;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mToolbar = findViewById(R.id.toolbar);
         ll_main = findViewById(R.id.ll_main);
 
-        CommonFunction.showBackgroundImage(this,ll_main);
+        CommonFunction.showBackgroundImage(this, ll_main);
 
 /*        try {
 
@@ -131,8 +122,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }).into(iv_profile);
 
-       setUpToolbar();
-         setUpNavDrawer();
+        setUpToolbar();
+        setUpNavDrawer();
         tr_switch_event = findViewById(R.id.tr_switch_event);
         tr_switch_event.setOnClickListener(this);
 
@@ -231,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-   private void setUpToolbar() {
+    private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
@@ -260,11 +251,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-     private void setUpNavDrawer() {
+    private void setUpNavDrawer() {
         if (mToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-            mToolbar.getNavigationIcon().setTint(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4)));
+            mToolbar.getNavigationIcon().setTint(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -279,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     },
                     new int[]{
                             Color.parseColor(colorunselect),
-                            Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4))
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
                     });
 
             ColorStateList textColorStates = new ColorStateList(
@@ -289,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     },
                     new int[]{
                             Color.parseColor(colorunselect),
-                            Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4))
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
                     });
 
             navView.setItemIconTintList(iconsColorStates);
@@ -300,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
+            ActivityCompat.finishAffinity(MainActivity.this);
             return;
         }
 
@@ -326,7 +317,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_switch_event:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, EventListActivity.class));
+                SessionManager.clearCurrentEvent(MainActivity.this);
+                SessionManager.logoutUser(MainActivity.this);
                 //SharedPreference.clearAllPref(this);
+                break;
+            case R.id.tv_home:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                break;
+            case R.id.tv_profile:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                break;
+            case R.id.tr_logout:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                SessionManager.clearCurrentEvent(MainActivity.this);
+                SessionManager.logoutUser(MainActivity.this);
+                SharedPreference.clearPref(this, AUTHERISATION_KEY);
+                SharedPreference.clearPref(this, IS_LOGIN);
+
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
                 break;
         }
     }

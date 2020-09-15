@@ -8,7 +8,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -31,9 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,7 +57,6 @@ import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.GifEmojiAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -69,8 +65,6 @@ import com.procialize.eventapp.ui.newsFeedComment.model.GifResponse;
 import com.procialize.eventapp.ui.newsFeedComment.model.GifResult;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.viewModel.CommentViewModel;
-import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
-import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
@@ -100,8 +94,9 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
-import static java.security.AccessController.getContext;
 
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
@@ -111,7 +106,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     EditText et_comment, et_search_gif;
     FrameLayout fl_gif_container, fl_post_comment;
     LinearLayout ll_comment_container,
-            ll_media_dots, ll_main,ll_root;
+            ll_media_dots, ll_main, ll_root;
     CommentViewModel commentViewModel;
     String anon_id;
     RecyclerView rv_gif, rv_comments;
@@ -128,9 +123,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     Dialog contentDialog;
     List<CommentDetail> commentList = new ArrayList<>();
     String noOfLikes = "0", likeStatus = "", api_token;
-    private String strPath, eventColor1,eventColor2,eventColor3,eventColor4,eventColor5;
+    private String strPath, eventColor1, eventColor2, eventColor3, eventColor4, eventColor5,ATTENDEE_STATUS,ATTENDEE_ID;
     public Dialog dialogShare;
     View v_divider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,6 +140,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         eventColor3 = SharedPreference.getPref(this, EVENT_COLOR_3);
         eventColor4 = SharedPreference.getPref(this, EVENT_COLOR_4);
         eventColor5 = SharedPreference.getPref(this, EVENT_COLOR_5);
+        ATTENDEE_STATUS = SharedPreference.getPref(this,IS_GOD);
+        ATTENDEE_ID = SharedPreference.getPref(this,KEY_ATTENDEE_ID);
 
         commentViewModel = ViewModelProviders.of(this).get(CommentViewModel.class);
         connectionDetector = ConnectionDetector.getInstance(this);
@@ -154,9 +152,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
             newsfeedId = intent.getStringExtra("newsfeedId");
             mediaPosition = intent.getStringExtra("position");
+            swipableAdapterPosition = Integer.parseInt(mediaPosition);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
         iv_back = findViewById(R.id.iv_back);
         iv_gif = findViewById(R.id.iv_gif);
@@ -188,8 +188,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_no_of_comments = findViewById(R.id.tv_no_of_comments);
         tv_no_of_likes = findViewById(R.id.tv_no_of_likes);
         v_divider = findViewById(R.id.v_divider);
-
-        CommonFunction.showBackgroundImage(this,ll_main);
+        tv_no_of_likes.setOnClickListener(this);
+        CommonFunction.showBackgroundImage(this, ll_main);
 
         iv_share.setOnClickListener(this);
 
@@ -399,6 +399,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.iv_back:
                 onBackPressed();
                 break;
+            case R.id.tv_no_of_likes:
+                commentViewModel.openLikePage(this,newsfeed_detail,Integer.parseInt(mediaPosition));
+                break;
             case R.id.iv_gif:
                 ll_comment_container.setVisibility(View.GONE);
                 if (fl_gif_container.getVisibility() == View.GONE) {
@@ -512,7 +515,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         }
                         if (newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_type().equalsIgnoreCase("Video")) {
                             boolean isPresentFile = false;
-                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY+Constant.VIDEO_DIRECTORY);
+                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + Constant.VIDEO_DIRECTORY);
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
                                 for (int i = 0; i < children.length; i++) {
@@ -538,14 +541,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog,
                                                                 int which) {
-                                                String newsFeedPath =  SharedPreference.getPref(CommentActivity.this,NEWS_FEED_MEDIA_PATH);
+                                                String newsFeedPath = SharedPreference.getPref(CommentActivity.this, NEWS_FEED_MEDIA_PATH);
                                                 new DownloadFile().execute(/*ApiConstant.newsfeedwall*/newsFeedPath + newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file());
                                             }
                                         });
                                 builder.show();
 
                             } else if (isPresentFile) {
-                                String folder = Environment.getExternalStorageDirectory().toString() + "/" +  Constant.FOLDER_DIRECTORY+Constant.VIDEO_DIRECTORY + "/";
+                                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + Constant.VIDEO_DIRECTORY + "/";
                                 //Create androiddeft folder if it does not exist
                                 File directory = new File(folder);
                                 if (!directory.exists()) {
@@ -572,11 +575,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         } else {
                             dialogShare = new Dialog(this);
                             dialogShare.show();
-                            String newsFeedPath =  SharedPreference.getPref(CommentActivity.this,NEWS_FEED_MEDIA_PATH);
+                            String newsFeedPath = SharedPreference.getPref(CommentActivity.this, NEWS_FEED_MEDIA_PATH);
                             shareImage(newsfeed_detail.getPost_date() + "\n" + newsfeed_detail.getPost_status(), newsFeedPath + newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file(), this);
                         }
                     } else {
-                        shareTextUrl(newsfeed_detail.getPost_date()+ "\n" +newsfeed_detail.getPost_status(), StringEscapeUtils.unescapeJava(newsfeed_detail.getPost_status()));
+                        shareTextUrl(newsfeed_detail.getPost_date() + "\n" + newsfeed_detail.getPost_status(), StringEscapeUtils.unescapeJava(newsfeed_detail.getPost_status()));
                     }
                 }
                 break;
@@ -666,30 +669,34 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         TextView deleteTv = dialog.findViewById(R.id.deleteTv);
         TextView reportuserTv = dialog.findViewById(R.id.reportuserTv);
         TextView cancelTv = dialog.findViewById(R.id.cancelTv);
-        /*if (user.get(SessionManager.ATTENDEE_STATUS).equalsIgnoreCase("1")) {
-            if (user_id.equalsIgnoreCase(comment.getAttendeeId())) {
-                deleteTv.setVisibility(View.VISIBLE);
-                reportuserTv.setVisibility(View.GONE);
-                hideTv.setVisibility(View.GONE);
-                reportTv.setVisibility(View.GONE);
-            } else {
-                deleteTv.setVisibility(View.VISIBLE);
-                reportuserTv.setVisibility(View.GONE);
-                hideTv.setVisibility(View.GONE);
-                reportTv.setVisibility(View.GONE);
-            }
-        } else if (user_id.equalsIgnoreCase(comment.getAttendeeId())) {
-            deleteTv.setVisibility(View.VISIBLE);
-            reportuserTv.setVisibility(View.GONE);
-            hideTv.setVisibility(View.GONE);
-            reportTv.setVisibility(View.GONE);
-        } else {
-            deleteTv.setVisibility(View.GONE);
-            reportuserTv.setVisibility(View.VISIBLE);
-            hideTv.setVisibility(View.VISIBLE);
+        if (ATTENDEE_STATUS.equalsIgnoreCase("1")) {
             reportTv.setVisibility(View.VISIBLE);
+            hideTv.setVisibility(View.VISIBLE);
+            deleteTv.setVisibility(View.VISIBLE);
+            reportuserTv.setVisibility(View.VISIBLE);
+            cancelTv.setVisibility(View.VISIBLE);
+            //editIV.setVisibility(View.VISIBLE);
+        } else {
+            if(ATTENDEE_ID.equalsIgnoreCase(commentDetail.getUser_id()))
+            {
+                reportTv.setVisibility(View.GONE);
+                hideTv.setVisibility(View.GONE);
+                reportuserTv.setVisibility(View.GONE);
+
+                deleteTv.setVisibility(View.VISIBLE);
+                cancelTv.setVisibility(View.VISIBLE);
+                //editIV.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                reportTv.setVisibility(View.VISIBLE);
+                hideTv.setVisibility(View.VISIBLE);
+                reportuserTv.setVisibility(View.VISIBLE);
+
+                deleteTv.setVisibility(View.GONE);
+                cancelTv.setVisibility(View.VISIBLE);
+            }
         }
-*/
 
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -735,14 +742,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContentdialouge("reportComment", commentDetail.getComment_id());
+                showContentdialouge("reportComment", commentDetail.getComment_id(),commentDetail.getUser_id());
             }
         });
 
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContentdialouge("reportUser", commentDetail.getComment_id());
+                showContentdialouge("reportUser", commentDetail.getComment_id(),commentDetail.getUser_id());
             }
         });
 
@@ -756,7 +763,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         dialog.show();
     }
 
-    private void showContentdialouge(final String from, final String commentId) {
+    private void showContentdialouge(final String from, final String commentId,final String userId) {
 
         contentDialog = new Dialog(this);
         contentDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -811,7 +818,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     String content = StringEscapeUtils.escapeJava(etmsg.getText().toString());
                     dialog.cancel();
                     if (from.equalsIgnoreCase("reportUser")) {
-                        commentViewModel.reportUser(api_token, event_id, newsfeed_detail.getAttendee_id(), newsfeed_detail.getNews_feed_id(), content);
+                        commentViewModel.reportUser(api_token, event_id,userId, commentId, content);
                         commentViewModel.reportUserData().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                             @Override
                             public void onChanged(LoginOrganizer loginOrganizer) {
@@ -927,8 +934,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 //fileName = timestamp + "_" + fileName;
                 //External directory path to save file
                 //folder = Environment.getExternalStorageDirectory() + File.separator + "androiddeft/";
-                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + "/";
-
+                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + Constant.VIDEO_DIRECTORY + "/Downloads/";
 
                 //Create androiddeft folder if it does not exist
                 File directory = new File(folder);
@@ -985,21 +991,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             // dismiss the dialog after the file was downloaded
             this.progressDialog.dismiss();
 
-                ContentValues content = new ContentValues(4);
-                content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
-                        System.currentTimeMillis() / 1000);
-                content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                content.put(MediaStore.Video.Media.DATA, strPath);
+            ContentValues content = new ContentValues(4);
+            content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
+                    System.currentTimeMillis() / 1000);
+            content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+            content.put(MediaStore.Video.Media.DATA, strPath);
 
-                ContentResolver resolver = getContentResolver();
-                Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
+            ContentResolver resolver = getContentResolver();
+            Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
 
-                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-                sharingIntent.setType("video/*");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
-                sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
-                sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            sharingIntent.setType("video/*");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
         }
     }
 
@@ -1014,7 +1020,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         ll_root.setBackgroundColor(Color.parseColor(eventColor2));
         v_divider.setBackgroundColor(Color.parseColor(eventColor3));
 
-        int color = Color.parseColor( eventColor3);
+        int color = Color.parseColor(eventColor3);
         //moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);

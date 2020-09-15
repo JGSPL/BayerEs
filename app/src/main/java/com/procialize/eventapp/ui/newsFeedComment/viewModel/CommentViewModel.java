@@ -191,12 +191,12 @@ public class CommentViewModel extends ViewModel {
      * To Report User
      * @param event_id
      * @param reported_user_id
-     * @param news_feed_id
+     * @param commentId
      * @param content
      */
-    public void reportUser(String token,String event_id,String reported_user_id,String news_feed_id,String content) {
+    public void reportUser(String token,String event_id,String reported_user_id,String commentId,String content) {
         commentRepository = CommentRepository.getInstance();
-        commentHide = commentRepository.reportUser(token, event_id, reported_user_id, news_feed_id, content);
+        commentHide = commentRepository.reportUser(token, event_id, reported_user_id, commentId, content);
 
     }
 

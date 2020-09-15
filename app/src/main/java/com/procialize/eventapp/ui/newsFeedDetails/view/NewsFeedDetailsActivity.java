@@ -25,19 +25,25 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedDetails.adapter.NewsFeedDetailsPagerAdapter;
 import com.procialize.eventapp.ui.newsFeedDetails.viewModel.NewsFeedDetailsViewModel;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
@@ -47,7 +53,9 @@ import com.squareup.picasso.Target;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -56,10 +64,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
 public class NewsFeedDetailsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -74,8 +87,9 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
     private String strPath, url, imgname;
     boolean isShare;
     String newsFeedPath;
-    LinearLayout ll_dots;
+    LinearLayout ll_dots,ll_main;
     int shareOrSaveImagePosition = 0;
+    ImageView headerlogoIv;
 
 
     @Override
@@ -90,22 +104,48 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             // newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
             news_feed_media = (ArrayList<News_feed_media>) getIntent().getSerializableExtra("media_list");
             mediaPosition = getIntent().getIntExtra("position", 0);
-
+            shareOrSaveImagePosition = mediaPosition;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        final Random myRandom = new Random();
+        imgname = String.valueOf(myRandom.nextInt(500));
         newsFeedPath = SharedPreference.getPref(this, NEWS_FEED_MEDIA_PATH);
 
         btn_save = findViewById(R.id.btn_save);
         btn_share = findViewById(R.id.btn_share);
         vp_media = findViewById(R.id.vp_media);
         ll_dots = findViewById(R.id.ll_media_dots);
+        ll_main = findViewById(R.id.ll_main);
+        headerlogoIv = findViewById(R.id.headerlogoIv);
 
+        btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4)));
+        btn_share.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4)));
+        btn_save.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
+        btn_share.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
 
         btn_save.setOnClickListener(this);
         btn_share.setOnClickListener(this);
 
+        String eventLogo = SharedPreference.getPref(NewsFeedDetailsActivity.this, EVENT_LOGO);
+        String eventListMediaPath = SharedPreference.getPref(NewsFeedDetailsActivity.this, EVENT_LIST_MEDIA_PATH);
+        Glide.with(NewsFeedDetailsActivity.this)
+                .load(eventListMediaPath + eventLogo)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, com.bumptech.glide.request.target.Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, com.bumptech.glide.request.target.Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(headerlogoIv);
+
+
+        CommonFunction.showBackgroundImage(this, ll_main);
         setupPagerAdapter();
     }
 
@@ -126,7 +166,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
             if (imagesSelectednew.size() > 1) {
                 ivArrayDotsPager = new ImageView[imagesSelectednew.size()];
-                //setupPagerIndidcatorDots(0, ll_dots, imagesSelectednew.size());
+               Utility.setupPagerIndidcatorDots(this,0, ll_dots, imagesSelectednew.size());
                 vp_media.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -139,7 +179,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                     public void onPageSelected(int position1) {
                         shareOrSaveImagePosition = position1;
                         JzvdStd.releaseAllVideos();
-                        setupPagerIndidcatorDots(position1, ll_dots, imagesSelectednew.size());
+                        Utility.setupPagerIndidcatorDots(NewsFeedDetailsActivity.this,position1, ll_dots, imagesSelectednew.size());
                    /* NewsfeedAdapter.ViewHolder viewHolder = new NewsfeedAdapter.ViewHolder();
                     if (viewHolder.VideoView != null) {
                         viewHolder.VideoView.pause();
@@ -193,59 +233,47 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                             if (url.contains("mp4")) {
                                 new DownloadFile().execute(url);
                             } else {
-                                url = newsFeedPath/*Constant.newsfeedwall*/ + news_feed_media.get(shareOrSaveImagePosition).getMedia_file();
-                                //String root = Environment.getExternalStorageDirectory().toString();
-                              /*  try {
+                                url = newsFeedPath+ news_feed_media.get(shareOrSaveImagePosition).getMedia_file();
+                                Picasso.with(NewsFeedDetailsActivity.this).load(url).into(new com.squareup.picasso.Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                        String root = Environment.getExternalStorageDirectory().toString();
+                                        File myDir = new File(root + "/" + Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY);
 
-                                    PicassoTrustAll.getInstance(NewsFeedDetailsActivity.this)
-                                            .load(url)
-                                            .into(new Target() {
-                                                      @Override
-                                                      public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                                          try {
-                                                              String root = Environment.getExternalStorageDirectory().toString();
-                                                              File myDir = new File(root + "/" + Constant.folderName);
+                                        if (!myDir.exists()) {
+                                            myDir.mkdirs();
+                                        }
+                                        Date date = new Date();
+                                        long time = date.getTime();
+                                        Utility.createShortSnackBar(ll_main,"Please check Folder "+Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY);
+                                        String name = imgname + time + ".jpg";
+                                        myDir = new File(myDir, name);
+                                        FileOutputStream out = null;
+                                        try {
+                                            out = new FileOutputStream(myDir);
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                                            out.flush();
+                                            out.close();
+                                        } catch (FileNotFoundException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
 
-                                                              if (!myDir.exists()) {
-                                                                  myDir.mkdirs();
-                                                              }
-                                                              Date date = new Date();
-                                                              //getTime() returns current time in milliseconds
-                                                              long time = date.getTime();
-                                                              Toast.makeText(NewsFeedDetailsActivity.this,
-                                                                      "Download completed- check folder " + Constant.folderName,
-                                                                      Toast.LENGTH_SHORT).show();
-                                                              String name = imgname + time + ".jpg";
-                                                              myDir = new File(myDir, name);
-                                                              FileOutputStream out = new FileOutputStream(myDir);
-                                                              bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                                    @Override
+                                    public void onBitmapFailed(Drawable errorDrawable) {
+                                    }
 
-                                                              out.flush();
-                                                              out.close();
-                                                          } catch (Exception e) {
-                                                          }
-                                                      }
-
-                                                      @Override
-                                                      public void onBitmapFailed(Drawable errorDrawable) {
-                                                      }
-
-                                                      @Override
-                                                      public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                                      }
-                                                  }
-                                            );
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }*/
-
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                    }
+                                });
                             }
                         }
                     }
                 } else {
-                    Toast.makeText(getBaseContext(), "No Internet Connection",
-                            Toast.LENGTH_SHORT).show();
+                    Utility.createShortSnackBar(ll_main,"No Internet Connection");
                 }
                 break;
             case R.id.btn_share:
@@ -273,7 +301,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
                         if (type.equals("Video")) {
                             boolean isPresentFile = false;
-                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY);
+                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY+ "/Downloads/");
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
                                 for (int i = 0; i < children.length; i++) {
@@ -385,7 +413,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 //fileName = timestamp + "_" + fileName;
                 //External directory path to save file
                 //folder = Environment.getExternalStorageDirectory() + File.separator + "androiddeft/";
-                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + "/";
+                String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + Constant.VIDEO_DIRECTORY + "/Downloads/";
 
 
                 //Create androiddeft folder if it does not exist
@@ -420,7 +448,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 // closing streams
                 output.close();
                 input.close();
-                return "Download completed- check folder " + Constant.FOLDER_DIRECTORY;
+                return "Download completed- Please check Folder "+Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY;
 
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
@@ -455,15 +483,15 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("video/*");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via MRGE app");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
                 sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                startActivity(Intent.createChooser(sharingIntent, "Shared via MRGE app"));
+                startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
             } else {
 
-                // Display File path after downloading
-                Toast.makeText(getApplicationContext(),
-                        message, Toast.LENGTH_LONG).show();
+
+                Utility.createShortSnackBar(ll_main,message);
+
             }
         }
     }
@@ -476,9 +504,9 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 dialog.dismiss();
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("image/*");
-                i.putExtra(Intent.EXTRA_SUBJECT, "Shared via MRGE app");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
                 i.putExtra(Intent.EXTRA_STREAM, getLocalBitmapUri(bitmap, context));
-                context.startActivity(Intent.createChooser(i, "Shared via MRGE app"));
+                context.startActivity(Intent.createChooser(i, "Shared via Event app"));
             }
 
             @Override
@@ -498,31 +526,5 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
         // }
 
     }
-
-    private void setupPagerIndidcatorDots(int currentPage, LinearLayout ll_dots, int size) {
-
-        TextView[] dots = new TextView[size];
-        ll_dots.removeAllViews();
-        for (int i = 0; i < dots.length; i++) {
-            dots[i] = new TextView(this);
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(30);
-            dots[i].setTextColor(Color.parseColor("#343434"));
-            ll_dots.addView(dots[i]);
-        }
-
-        try {
-            if (dots.length > 0) {
-                if (dots.length != currentPage) {
-                    dots[currentPage].setTextColor(Color.parseColor("#A2A2A2"));
-                    // dots[currentPage].setTextColor(Color.parseColor(colorActive));
-                }
-            }
-        } catch (Exception e) {
-
-        }
-
-    }
-
 
 }
