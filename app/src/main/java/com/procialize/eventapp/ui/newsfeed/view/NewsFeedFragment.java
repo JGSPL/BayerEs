@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -47,6 +48,8 @@ import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
+import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
@@ -103,7 +106,10 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ConnectionDetector cd;
     LinearLayoutManager linearLayoutManager;
     private APIService newsfeedApi;
-
+    String noOfLikes = "0";
+    String likeStatus="";
+    String strPath="", mediaPath="";
+    NewsFeedAdapter adapter;
 
     public static NewsFeedFragment newInstance() {
         return new NewsFeedFragment();
@@ -512,7 +518,58 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
-        newsfeedViewModel.openLikeimg(getActivity(), api_token, eventid, feed.getNews_feed_id(), v, feed, position, likeimage, liketext);
+        //newsfeedViewModel.openLikeimg(getActivity(), api_token, eventid, feed.getNews_feed_id(), v, feed, position, likeimage, liketext);
+        noOfLikes = "0";
+       // newsfeedViewModel.PostLike(api_token, eventid, feed.getNews_feed_id());
+        newsfeedApi = ApiUtils.getAPIService();
+
+            newsfeedApi.PostLike(api_token, eventid, feed.getNews_feed_id()).enqueue(new Callback<LikePost>() {
+                @Override
+                public void onResponse(Call<LikePost> call,
+                                       Response<LikePost> response) {
+                    if (response.isSuccessful()) {
+                            likeStatus = response.body().getLike_status();
+                            noOfLikes = liketext.getText().toString().split(" ")[0];
+                            if (likeStatus.equalsIgnoreCase("1")) {
+                                //showLikeCount(Integer.parseInt(noOfLikes) + 1);
+                                int LikeCount = Integer.parseInt(noOfLikes) + 1;
+                                if (LikeCount == 1) {
+                                    liketext.setText(LikeCount + " Like");
+                                } else {
+                                    liketext.setText(LikeCount + " Likes");
+                                }
+                                likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_active_like));
+                                noOfLikes = "0";
+                                likeStatus = "";
+                            } else {
+                                if (Integer.parseInt(noOfLikes) > 0) {
+                                    // showLikeCount(Integer.parseInt(noOfLikes) - 1);
+                                    int LikeCount = Integer.parseInt(noOfLikes) - 1;
+                                    if (LikeCount == 1) {
+                                        liketext.setText(LikeCount + " Like");
+                                    } else {
+                                        liketext.setText(LikeCount + " Likes");
+                                    }
+                                    likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_like));
+                                    noOfLikes = "0";
+                                }
+                                noOfLikes = "0";
+                                likeStatus = "";
+                            }
+                            Utility.createShortSnackBar(cl_main, response.body().getHeader().get(0).getMsg());
+
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LikePost> call, Throwable t) {
+                   // liketPostUpdate.setValue(null);
+                    Utility.createShortSnackBar(cl_main, "Failure..");
+
+                }
+            });
+
     }
 
 
