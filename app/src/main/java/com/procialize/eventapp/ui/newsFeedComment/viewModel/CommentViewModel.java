@@ -2,6 +2,7 @@ package com.procialize.eventapp.ui.newsFeedComment.viewModel;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.procialize.eventapp.ui.newsFeedComment.model.GifResult;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.networking.CommentRepository;
 import com.procialize.eventapp.ui.newsFeedComment.networking.GifRepository;
+import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.networking.PostNewsFeedRepository;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
@@ -31,6 +33,7 @@ import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -246,4 +249,13 @@ public class CommentViewModel extends ViewModel {
     public LiveData<FetchNewsfeedMultiple> newsFeedDeatils() {
         return newsFeedDetails;
     }
+
+    //---------------View Like details--------------------------------
+    public void openLikePage(Activity activity, Newsfeed_detail feed, int position) {
+        activity.startActivity(new Intent(activity, LikeActivity.class)
+                .putExtra("Newsfeed_detail", (Serializable) feed)
+                .putExtra("position", "" + position));
+    }
+
+
 }

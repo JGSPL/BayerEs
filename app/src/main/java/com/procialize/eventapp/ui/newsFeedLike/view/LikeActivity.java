@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
@@ -66,6 +67,8 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        CommonFunction.showBackgroundImage(this,ll_main);
 
         geLikes();
     }

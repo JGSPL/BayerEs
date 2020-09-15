@@ -27,6 +27,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
@@ -72,6 +73,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_new);
+//Call Refresh token
+        new RefreashToken(this).callGetRefreashToken(this);
 
         eventAppDB = EventAppDB.getDatabase(this);
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
@@ -284,6 +287,9 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btn_post:
                 if (cd.isConnectingToInternet()) {
+                    //Call Refresh token
+                    new RefreashToken(this).callGetRefreashToken(this);
+
                     String postText = et_post.getText().toString().trim();
                     btn_post.setEnabled(false);
                     if (resultList.size() == 0) {

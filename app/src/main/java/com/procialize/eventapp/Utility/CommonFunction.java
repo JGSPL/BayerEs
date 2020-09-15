@@ -5,18 +5,24 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.core.content.FileProvider;
 
 import com.procialize.eventapp.BuildConfig;
+import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -80,6 +86,19 @@ public class CommonFunction {
             });
         }
 
+    }
+
+    public static void showBackgroundImage(Context context, View view){
+        try {
+
+            File mypath = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "/" + Constant.FOLDER_DIRECTORY + "/" + "background.jpg");
+            Resources res =context.getResources();
+            Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(mypath));
+            BitmapDrawable bd = new BitmapDrawable(res, bitmap);
+            view.setBackgroundDrawable(bd);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static String saveImage(Context context, Bitmap myBitmap, String imageName) {

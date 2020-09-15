@@ -149,6 +149,20 @@ public class SwipeMultimediaAdapter extends PagerAdapter {
             }
         });
 
+        videoview.thumbImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
+                    if(news_feed_media.size()>0) {
+                        Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
+                        edit.putExtra("position", position);
+                        edit.putExtra("media_list", ( Serializable ) news_feed_media);
+                        context.startActivity(edit);
+                    }
+                }
+            }
+        });
+
         return myImageLayout;
     }
 

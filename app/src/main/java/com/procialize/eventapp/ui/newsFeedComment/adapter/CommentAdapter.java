@@ -3,6 +3,7 @@ package com.procialize.eventapp.ui.newsFeedComment.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -29,6 +30,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
 import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
@@ -40,6 +42,12 @@ import java.util.List;
 
 import cn.jzvd.JzvdStd;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
+
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsViewHolder> {
 
@@ -47,11 +55,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
     List<CommentDetail> commentDetails;
     String name1 = "";
     CommentAdapterListner listener;
+    String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
 
     public CommentAdapter(Context context, List<CommentDetail> commentDetails, CommentAdapterListner listener) {
         this.context = context;
         this.commentDetails = commentDetails;
         this.listener = listener;
+
+        eventColor1 = SharedPreference.getPref(context, EVENT_COLOR_1);
+        eventColor2 = SharedPreference.getPref(context, EVENT_COLOR_2);
+        eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+        eventColor4 = SharedPreference.getPref(context, EVENT_COLOR_4);
+        eventColor5 = SharedPreference.getPref(context, EVENT_COLOR_5);
     }
 
     @NonNull
@@ -88,7 +103,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         //holder.tv_name.setText(comments.getFirst_name()+" "+comments.getLast_name()+" "+comments.getComment());
         //String name1 = "<font color='"+colorActive+"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
         if (comments.getComment().contains("gif")) {
-            name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
+            //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
+            name1 = "<font color='"+eventColor1+"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
             holder.fl_gif.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(comments.getComment())
@@ -106,7 +122,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                         }
                     }).into(holder.iv_gif);
         } else {
-            name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + comments.getComment();
+            //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + comments.getComment();
+            name1 = "<font color='"+eventColor1 +"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + " " +
+                    "<font color='"+eventColor3 +"'>" + comments.getComment() + "</font>" ;
             holder.fl_gif.setVisibility(View.GONE);
         }
         holder.tv_name.setMovementMethod(LinkMovementMethod.getInstance());
@@ -119,7 +137,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         }
         holder.tv_date_time.setText(CommonFunction.convertDate(comments.getDateTime()));
 
-
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+        holder.tv_date_time.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
+        int color = Color.parseColor( eventColor3);
+        holder.iv_options.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        holder.iv_options.setAlpha(150);
+        holder.ll_root.setBackgroundColor(Color.parseColor(eventColor2));
+        holder.v_divider.setBackgroundColor(Color.parseColor(eventColor3));
     }
 
     @Override
@@ -137,6 +161,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         FrameLayout fl_gif;
         ImageView iv_gif, iv_options,iv_profile;
         ProgressBar pb_gif,progressView;
+        LinearLayout ll_root;
+        View v_divider;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -148,6 +174,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
             iv_profile = itemView.findViewById(R.id.iv_profile);
             pb_gif = itemView.findViewById(R.id.pb_gif);
             progressView = itemView.findViewById(R.id.progressView);
+            ll_root = itemView.findViewById(R.id.ll_root);
+            v_divider = itemView.findViewById(R.id.v_divider);
 
             iv_options.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -155,7 +183,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                     listener.onMoreSelected(commentDetails.get(getAdapterPosition()), getAdapterPosition());
                 }
             });
-
         }
     }
 }

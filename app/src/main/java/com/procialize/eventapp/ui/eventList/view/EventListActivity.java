@@ -2,6 +2,7 @@ package com.procialize.eventapp.ui.eventList.view;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -166,10 +167,10 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                 session.saveCurrentEvent(event);
                 eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
 
-                eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
-                    @Override
-                    public void onChanged(UpdateDeviceInfo event) {
-                        List<LoginUserInfo> userData = event.getLoginUserInfoList();
+            eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
+                @Override
+                public void onChanged(UpdateDeviceInfo event) {
+                    List<LoginUserInfo> userData = event.getLoginUserInfoList();
                   /*  String fname = userData.get(0).getFirst_name();
                     String lName = userData.get(0).getLast_name();
                     String designation = userData.get(0).getDesignation();

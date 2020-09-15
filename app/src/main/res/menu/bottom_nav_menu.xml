@@ -7,27 +7,27 @@
         android:enabled="true"
         android:icon="@drawable/ic_newsfeed"
         android:title="@string/title_home"
-        app:showAsAction="withText" />
+        app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/navigation_agenda"
         android:enabled="true"
         android:icon="@drawable/ic_agenda"
         android:title="@string/title_agend"
-        app:showAsAction="withText" />
+        app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/navigation_attendee"
         android:enabled="true"
         android:icon="@drawable/ic_attendee"
         android:title="@string/title_attendee"
-        app:showAsAction="withText" />
+        app:showAsAction="collapseActionView" />
     <item
         android:id="@+id/navigation_speaker"
         android:enabled="true"
         android:icon="@drawable/ic_speaker"
         android:title="@string/title_speaker"
-        app:showAsAction="withText" />
+        app:showAsAction="collapseActionView" />
 
 
 </menu>

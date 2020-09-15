@@ -10,15 +10,19 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -38,6 +42,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 
 public class Utility {
 
@@ -355,4 +362,30 @@ public class Utility {
         return true;
     }
 
+
+
+    public static void setupPagerIndidcatorDots(Context context,int currentPage, LinearLayout ll_dots, int size) {
+
+        TextView[] dots = new TextView[size];
+        ll_dots.removeAllViews();
+        for (int i = 0; i < dots.length; i++) {
+            dots[i] = new TextView(context);
+            dots[i].setText(Html.fromHtml("&#8226;"));
+            dots[i].setTextSize(30);
+           // dots[i].setTextColor(Color.parseColor("#343434"));
+            dots[i].setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
+            ll_dots.addView(dots[i]);
+        }
+
+        try {
+            if (dots.length > 0) {
+                if (dots.length != currentPage) {
+                    //dots[currentPage].setTextColor(Color.parseColor("#A2A2A2"));
+                    dots[currentPage].setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
+                }
+            }
+        } catch (Exception e) {
+
+        }
+    }
 }

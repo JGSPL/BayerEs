@@ -28,6 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
@@ -90,6 +91,9 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_attendee, container, false);
+
+        new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
+
         attendeerecycler = root.findViewById(R.id.recycler_attendee);
 
         api_token = SharedPreference.getPref(getActivity(),AUTHERISATION_KEY);

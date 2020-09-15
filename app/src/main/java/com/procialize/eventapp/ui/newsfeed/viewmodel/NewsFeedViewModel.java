@@ -50,6 +50,7 @@ import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
+import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
@@ -101,6 +102,7 @@ public class NewsFeedViewModel extends ViewModel {
     String noOfLikes = "0";
     String likeStatus="";
     String strPath="", mediaPath="";
+    NewsFeedAdapter adapter;
     
      public void init(String token,String eventId,String pagesize, String pagenumber) {
        /* if (mutableLiveData != null) {
@@ -132,11 +134,11 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //---------------View Comment details--------------------------------
-    public void openCommentPage(Activity activity, Newsfeed_detail feed, int position) {
+    public void openCommentPage(Activity activity, Newsfeed_detail feed, int position,int swipeablePosition) {
         activity.startActivity(new Intent(activity, CommentActivity.class)
                 .putExtra("Newsfeed_detail", (Serializable) feed)
                 .putExtra("newsfeedId",feed.getNews_feed_id())
-                .putExtra("position", "" + position));
+                .putExtra("position", "" + swipeablePosition));
     }
 
     //---------------View Like details--------------------------------
@@ -291,8 +293,9 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     ///------------------Open More dot features------------------
-    public void openMoreDetails(Activity activity, Newsfeed_detail feed, int position, String token, String eventId) {
+    public void openMoreDetails(Activity activity, Newsfeed_detail feed, int position, String token, String eventId, NewsFeedAdapter newsadapter) {
         activityVar = activity;
+        adapter = newsadapter;
         dialog = new BottomSheetDialog(activity);
         dialog.setContentView(R.layout.botomfeeddialouge);
 
@@ -369,6 +372,10 @@ public class NewsFeedViewModel extends ViewModel {
                         @Override
                         public void onChanged(LoginOrganizer loginOrganizer) {
                             if (loginOrganizer != null) {
+                                adapter.getNewsFeedList().remove(position);
+                                // remove the item from recycler view
+                                // feedAdapter.removeItem(viewHolder.getAdapterPosition());
+                                adapter.notifyItemRemoved(position);
                                 List<Header> heaserList = loginOrganizer.getHeader();
                                 Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
@@ -397,6 +404,10 @@ public class NewsFeedViewModel extends ViewModel {
                         @Override
                         public void onChanged(LoginOrganizer loginOrganizer) {
                             if (loginOrganizer != null) {
+                                adapter.getNewsFeedList().remove(position);
+                                // remove the item from recycler view
+                                // feedAdapter.removeItem(viewHolder.getAdapterPosition());
+                                adapter.notifyItemRemoved(position);
                                 List<Header> heaserList = loginOrganizer.getHeader();
                                 Utility.createShortSnackBar(NewsFeedFragment.cl_main,heaserList.get(0).getMsg());
                                 dialog.cancel();
