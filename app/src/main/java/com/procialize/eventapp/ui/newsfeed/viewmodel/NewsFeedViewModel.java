@@ -109,9 +109,9 @@ public class NewsFeedViewModel extends ViewModel {
     
      public void init(Activity activity,String token,String eventId,String pagesize, String pagenumber) {
          activityVar = activity;
-       if (mutableLiveData != null) {
+      /* if (mutableLiveData != null) {
             mutableLiveData.setValue(null);
-        }
+        }*/
 
 
         newsRepository = NewsfeedRepository.getInstance();

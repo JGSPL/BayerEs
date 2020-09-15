@@ -2,7 +2,6 @@ package com.procialize.eventapp.ui.eventList.view;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,7 +31,6 @@ import com.procialize.eventapp.ui.eventList.model.LoginUserInfo;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.eventList.viewModel.EventListViewModel;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
@@ -94,17 +92,18 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         eventListViewModel = ViewModelProviders.of(this).get(EventListViewModel.class);
 
         if (cd.isConnectingToInternet()) {
-            /*String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
-            Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
+            String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
+            String timestamp_expiry = Utility.getDate(Long.parseLong(expirytime));
+//            Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
 //            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
-           boolean isvalidtoken= Utility.isTimeGreater(String.valueOf(timestamp_expiry));
+            boolean isvalidtoken = Utility.isTimeGreater(String.valueOf(timestamp_expiry));
 
-            if (isvalidtoken == false) {*/
-               /* RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
-                refreashToken.callGetRefreashToken(EventListActivity.this);*/
-           /* } else {
+            if (isvalidtoken == false) {
+                RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                refreashToken.callGetRefreashToken(EventListActivity.this);
+            } else {
                 Log.d("TAG", "Token is already refreashed");
-            }*/
+            }
 
 
             eventListViewModel.getEvent(api_token,"0", "");
@@ -213,4 +212,5 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }
     }
+
 }
