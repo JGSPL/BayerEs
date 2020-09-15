@@ -153,6 +153,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 holder.tv_comment.setText(feedData.getTotal_comments() + " Comments");
             }
 
+            if(feedData.getLike_flag().equalsIgnoreCase("1"))
+            {
+                holder.iv_like.setImageDrawable(context.getDrawable(R.drawable.ic_active_like));
+
+            }else{
+                holder.iv_like.setImageDrawable(context.getDrawable(R.drawable.ic_like));
+
+            }
             if (feedData.getTotal_likes().equalsIgnoreCase("1")) {
                 holder.tv_like.setText(feedData.getTotal_likes() + " Like");
             } else {
