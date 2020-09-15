@@ -37,6 +37,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
@@ -61,6 +63,10 @@ import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
@@ -89,13 +95,15 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 100;
+    int newsFeedPageSize = 5;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
     private boolean isLastPage = false;
     ConnectionDetector cd;
     LinearLayoutManager linearLayoutManager;
+    private APIService newsfeedApi;
+
 
     public static NewsFeedFragment newInstance() {
         return new NewsFeedFragment();
@@ -134,13 +142,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         recycler_feed.setAdapter(newsfeedAdapter);
         connectionDetector = ConnectionDetector.getInstance(getActivity());
 
-        if (newsfeedAdapter == null) {
-            newsfeedAdapter = new NewsFeedAdapter(getContext(), /*newsfeedArrayList,*/ NewsFeedFragment.this);
-            /*recycler_feed.setLayoutManager(new LinearLayoutManager(getContext()));
-            recycler_feed.setAdapter(newsfeedAdapter);
-            recycler_feed.setItemAnimator(new DefaultItemAnimator());
-            recycler_feed.setNestedScrollingEnabled(true);
-            newsfeedAdapter.notifyDataSetChanged();*/
+
             String profilePic = SharedPreference.getPref(getActivity(), SharedPreferencesConstant.KEY_PROFILE_PIC);
             Glide.with(getActivity())
                     .load(profilePic)
@@ -155,7 +157,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             return false;
                         }
                     }).into(iv_profile);
-        }
+
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -175,6 +177,31 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             feedrefresh.setRefreshing(false);
 
         }
+        recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+
+                loadNextPage();
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return totalPages;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
+
 
         tv_whats_on_mind.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_4)));
         tv_whats_on_mind.setAlpha(0.4f);
@@ -227,17 +254,13 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
 
-            newsfeedViewModel.init(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+            newsfeedViewModel.init(getActivity(),api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
 
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
                 public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
                     if (fetchNewsfeedMultiple != null) {
                         List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
-                        /*if (newsfeedArrayList.size() > 0) {
-                            newsfeedArrayList.clear();
-                        }
-                        newsfeedArrayList.addAll(feedList);*/
                         newsfeedAdapter.addAll(feedList);
 
                         newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
@@ -254,13 +277,18 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             if (currentPage <= totalPages) newsfeedAdapter.addLoadingFooter();
                             else isLastPage = true;
 
-                            newsfeedAdapter.notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
+                        if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                            newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                        }
                     }
+
                 }
             });
+
         } else {
             getDataFromDb();
         }
@@ -268,71 +296,87 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 setupRecyclerView();
             }
         }, 100);
 
-        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recycler_feed.setLayoutManager(linearLayoutManager);
 
-        recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-            @Override
-            protected void loadMoreItems() {
-                isLoading = true;
-                currentPage += 1;
-
-                loadNextPage();
-            }
-
-            @Override
-            public int getTotalPageCount() {
-                return totalPages;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
-
-            @Override
-            public boolean isLoading() {
-                return isLoading;
-            }
-        });
     }
 
     private void loadNextPage() {
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
 
-        // newsfeedViewModel.init(api_token,eventid, String.valueOf(newsFeedPageSize),String.valueOf(currentPage));
-        newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
 
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
-        newsfeedViewModel.init(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+        if (newsfeedViewModel != null /*&& newsfeedViewModel.getNewsRepository().hasObservers()*/) {
+            newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+        }
+        newsfeedApi = ApiUtils.getAPIService();
+
+        // newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+        newsfeedApi.NewsFeedFetchMultiple(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage)).enqueue(new Callback<FetchNewsfeedMultiple>() {
+            @Override
+            public void onResponse(Call<FetchNewsfeedMultiple> call,
+                                   Response<FetchNewsfeedMultiple> response) {
+                if (response.isSuccessful()) {
+                    newsfeedAdapter.removeLoadingFooter();
+                    isLoading = false;
+
+                    List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
+                    if (feedList.size() > 0) {
+                        newsfeedAdapter.addAll(feedList);
+
+                    }
+
+                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                        newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                    }
+
+                    if (currentPage != totalPages) {
+                        newsfeedAdapter.addLoadingFooter();
+                        // newsfeedAdapter.notifyDataSetChanged();
+                    } else
+                        isLastPage = true;
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
+
+            }
+        });
+
+/*
         newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
             @Override
             public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
-                /*if (newsfeedArrayList.size() > 0) {
-                    newsfeedArrayList.clear();
-                }*/
-                //newsfeedArrayList.addAll(feedList);
+
                 newsfeedAdapter.removeLoadingFooter();
                 isLoading = false;
 
                 List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
                 if (feedList.size() > 0) {
-                   // newsfeedArrayList.addAll(feedList);
                     newsfeedAdapter.addAll(feedList);
 
                 }
 
+                if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                    newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                }
+
                 if (currentPage != totalPages) {
                     newsfeedAdapter.addLoadingFooter();
-                    newsfeedAdapter.notifyDataSetChanged();
+                   // newsfeedAdapter.notifyDataSetChanged();
                 } else
                     isLastPage = true;
+
+
             }
         });
+*/
     }
 
 
@@ -424,6 +468,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         } else {
             newsfeedAdapter.notifyDataSetChanged();
         }
+
     }
 
     @Override

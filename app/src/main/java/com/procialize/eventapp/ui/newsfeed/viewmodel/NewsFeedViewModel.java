@@ -107,10 +107,11 @@ public class NewsFeedViewModel extends ViewModel {
     String strPath="", mediaPath="";
     NewsFeedAdapter adapter;
     
-     public void init(String token,String eventId,String pagesize, String pagenumber) {
-       /* if (mutableLiveData != null) {
-            return;
-        }*/
+     public void init(Activity activity,String token,String eventId,String pagesize, String pagenumber) {
+         activityVar = activity;
+       if (mutableLiveData != null) {
+            mutableLiveData.setValue(null);
+        }
 
 
         newsRepository = NewsfeedRepository.getInstance();
@@ -121,6 +122,9 @@ public class NewsFeedViewModel extends ViewModel {
     public LiveData<FetchNewsfeedMultiple> getNewsRepository() {
         return mutableLiveData;
     }
+
+
+
 
     //---------------View News feed details--------------------------------
     public void openNewsFeedDetails(Activity activity, Newsfeed_detail feed, int position) {

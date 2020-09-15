@@ -48,11 +48,123 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginLeft="10dp"
-                android:text="Attendee Detail"
+                android:text="@string/attendeedetail"
                 android:textColor="@color/black" />
 
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/grey_light" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/white" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_profile_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:adjustViewBounds="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="145dp"
+                        android:layout_height="145dp"
+                        android:layout_centerInParent="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/image_border" />
+
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/myCardView"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/image_border"
+                        app:cardCornerRadius="70dp"
+                        app:cardElevation="@dimen/album_dp_0">
+
+
+                        <ImageView
+                            android:id="@+id/iv_profile"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_centerInParent="true"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="TODO"
+                            android:scaleType="centerCrop"></ImageView>
+
+                        <RelativeLayout
+                            android:id="@+id/rl_update_pic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:alpha="20"
+                            android:background="#73000000"
+                            android:gravity="bottom">
+
+                            <ImageView
+                                android:id="@+id/iv_change_profile"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_gravity="bottom"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_camera"
+                                android:tint="@color/white" />
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <ProgressBar
+                        android:id="@+id/progressView"
+                        android:layout_width="18dp"
+                        android:layout_height="17dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:visibility="visible" />
+
+                </RelativeLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
