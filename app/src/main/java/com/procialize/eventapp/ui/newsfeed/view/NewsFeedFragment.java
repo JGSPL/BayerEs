@@ -37,6 +37,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
@@ -61,6 +63,10 @@ import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
@@ -96,6 +102,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     private boolean isLastPage = false;
     ConnectionDetector cd;
     LinearLayoutManager linearLayoutManager;
+    private APIService newsfeedApi;
+
 
     public static NewsFeedFragment newInstance() {
         return new NewsFeedFragment();
@@ -169,6 +177,31 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             feedrefresh.setRefreshing(false);
 
         }
+        recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+
+                loadNextPage();
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return totalPages;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
+
 
         tv_whats_on_mind.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_4)));
         tv_whats_on_mind.setAlpha(0.4f);
@@ -221,7 +254,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
 
-            newsfeedViewModel.init(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+            newsfeedViewModel.init(getActivity(),api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
 
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
@@ -269,30 +302,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         }, 100);
 
 
-        recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-            @Override
-            protected void loadMoreItems() {
-                isLoading = true;
-                currentPage += 1;
-
-                loadNextPage();
-            }
-
-            @Override
-            public int getTotalPageCount() {
-                return totalPages;
-            }
-
-            @Override
-            public boolean isLastPage() {
-                return isLastPage;
-            }
-
-            @Override
-            public boolean isLoading() {
-                return isLoading;
-            }
-        });
     }
 
     private void loadNextPage() {
@@ -300,11 +309,47 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
 
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
-        if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+        if (newsfeedViewModel != null /*&& newsfeedViewModel.getNewsRepository().hasObservers()*/) {
             newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
         }
-        newsfeedViewModel.init(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+        newsfeedApi = ApiUtils.getAPIService();
 
+        // newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+        newsfeedApi.NewsFeedFetchMultiple(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage)).enqueue(new Callback<FetchNewsfeedMultiple>() {
+            @Override
+            public void onResponse(Call<FetchNewsfeedMultiple> call,
+                                   Response<FetchNewsfeedMultiple> response) {
+                if (response.isSuccessful()) {
+                    newsfeedAdapter.removeLoadingFooter();
+                    isLoading = false;
+
+                    List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
+                    if (feedList.size() > 0) {
+                        newsfeedAdapter.addAll(feedList);
+
+                    }
+
+                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                        newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                    }
+
+                    if (currentPage != totalPages) {
+                        newsfeedAdapter.addLoadingFooter();
+                        // newsfeedAdapter.notifyDataSetChanged();
+                    } else
+                        isLastPage = true;
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
+
+            }
+        });
+
+/*
         newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
             @Override
             public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
@@ -331,6 +376,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
             }
         });
+*/
     }
 
 
