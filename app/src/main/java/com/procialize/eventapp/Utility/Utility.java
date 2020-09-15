@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.format.DateFormat;
 import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
@@ -42,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Locale;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
@@ -319,6 +321,8 @@ public class Utility {
             currentdateTime = sdf.parse(currentTimeString);
             pickedTime = sdf.parse(datetime);
 
+
+
             Calendar now = Calendar.getInstance();
             now.add(Calendar.SECOND, 5);
             Date date = now.getTime();
@@ -343,7 +347,7 @@ public class Utility {
 
             if (pickedTime.compareTo(currentdateTime) > 0) {
                 Log.e("TAG", "Picked Date is Greater than Current Date");
-                if (endTime > currentTime)
+                if (endTime < currentTime)
                     return false;
                 else
                     return true;
@@ -380,11 +384,18 @@ public class Utility {
             if (dots.length > 0) {
                 if (dots.length != currentPage) {
                     //dots[currentPage].setTextColor(Color.parseColor("#A2A2A2"));
-                    dots[currentPage].setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
+                    dots[currentPage].setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
                 }
             }
         } catch (Exception e) {
 
         }
+    }
+
+    public static String getDate(long time) {
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        cal.setTimeInMillis(time * 1000);
+        String date = DateFormat.format("yyyy-MM-dd HH:mm:ss", cal).toString();
+        return date;
     }
 }
