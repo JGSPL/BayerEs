@@ -31,6 +31,8 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_NAME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EXPIRY_TIME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_CITY;
@@ -45,6 +47,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASS
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.SHARED_PREF;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.*;
 
 
 public class SessionManager {
@@ -310,5 +313,37 @@ public class SessionManager {
         SharedPreference.putPref(_context,map);
     }
 
+    public static void clearCurrentEvent(Context context) {
+        SharedPreference.clearPref(context,EVENT_ID);
+        SharedPreference.clearPref(context,EVENT_NAME);
+        SharedPreference.clearPref(context,EVENT_LOGO);
+        SharedPreference.clearPref(context,EVENT_BACKGROUD);
+        SharedPreference.clearPref(context,EVENT_COLOR_1);
+        SharedPreference.clearPref(context,EVENT_COLOR_2);
+        SharedPreference.clearPref(context,EVENT_COLOR_3);
+        SharedPreference.clearPref(context,EVENT_COLOR_4);
+        SharedPreference.clearPref(context,EVENT_COLOR_5);
+    }
 
+ public static void logoutUser(Context context) {
+        SharedPreference.clearPref(context,KEY_FNAME);
+        SharedPreference.clearPref(context,KEY_LNAME);
+        SharedPreference.clearPref(context,KEY_EMAIL);
+        SharedPreference.clearPref(context,KEY_PASSWORD);
+        SharedPreference.clearPref(context,KEY_DESIGNATION);
+        SharedPreference.clearPref(context,KEY_COMPANY);
+        SharedPreference.clearPref(context,KEY_MOBILE);
+        SharedPreference.clearPref(context,KEY_TOKEN);
+        SharedPreference.clearPref(context,EVENT_ID);
+        SharedPreference.clearPref(context,KEY_CITY);
+        SharedPreference.clearPref(context,KEY_GCM_ID);
+        SharedPreference.clearPref(context,KEY_PROFILE_PIC);
+        SharedPreference.clearPref(context,KEY_ATTENDEE_ID);
+        SharedPreference.clearPref(context,ATTENDEE_STATUS);
+        SharedPreference.clearPref(context,IS_LOGIN);
+        SharedPreference.clearPref(context,IS_GOD);
+        SharedPreference.clearPref(context,USER_TYPE);
+        SharedPreference.clearPref(context,VERIFY_OTP);
+        SharedPreference.clearPref(context,MIDDLE_NAME);
+    }
 }

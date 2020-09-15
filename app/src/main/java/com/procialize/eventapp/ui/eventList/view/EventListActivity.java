@@ -100,8 +100,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
            boolean isvalidtoken= Utility.isTimeGreater(String.valueOf(timestamp_expiry));
 
             if (isvalidtoken == false) {*/
-                RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
-                refreashToken.callGetRefreashToken(EventListActivity.this);
+               /* RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                refreashToken.callGetRefreashToken(EventListActivity.this);*/
            /* } else {
                 Log.d("TAG", "Token is already refreashed");
             }*/
@@ -213,5 +213,4 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }
     }
-
 }
