@@ -329,9 +329,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
                     }
 
-                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                   /* if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                         newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-                    }
+                    }*/
 
                     if (currentPage != totalPages) {
                         newsfeedAdapter.addLoadingFooter();
