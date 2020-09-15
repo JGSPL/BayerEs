@@ -163,6 +163,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             public void onRefresh() {
                 feedrefresh.setRefreshing(false);
                 if (connectionDetector.isConnectingToInternet()) {
+                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                        newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                    }
                     newsfeedAdapter.getNewsFeedList().clear();
                     newsfeedAdapter.notifyDataSetChanged();
                     init();
@@ -173,6 +176,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
             newsfeedAdapter.getNewsFeedList().clear();
             newsfeedAdapter.notifyDataSetChanged();
+            if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+            }
             init();
             feedrefresh.setRefreshing(false);
 
@@ -254,7 +260,10 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
 
-            newsfeedViewModel.init(getActivity(),api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+           // newsfeedViewModel.init(getActivity(),api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+            //newsfeedApi = ApiUtils.getAPIService();
+
+             newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(newsFeedPageNumber));
 
             newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
                 @Override
@@ -288,6 +297,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
                 }
             });
+
 
         } else {
             getDataFromDb();
@@ -329,10 +339,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
                     }
 
-                   /* if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                   if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                         newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-                    }*/
-
+                    }
                     if (currentPage != totalPages) {
                         newsfeedAdapter.addLoadingFooter();
                         // newsfeedAdapter.notifyDataSetChanged();
