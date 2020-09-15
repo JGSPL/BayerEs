@@ -37,6 +37,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
@@ -74,6 +76,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
@@ -106,8 +112,15 @@ public class NewsFeedViewModel extends ViewModel {
     String likeStatus="";
     String strPath="", mediaPath="";
     NewsFeedAdapter adapter;
-    
-     public void init(Activity activity,String token,String eventId,String pagesize, String pagenumber) {
+    MutableLiveData<LikePost> liketPostUpdate = new MutableLiveData<>();
+
+
+    private APIService newsfeedApi;
+
+
+
+
+    public void init(Activity activity,String token,String eventId,String pagesize, String pagenumber) {
          activityVar = activity;
       /* if (mutableLiveData != null) {
             mutableLiveData.setValue(null);
@@ -267,9 +280,10 @@ public class NewsFeedViewModel extends ViewModel {
                                 likeimage.setImageDrawable(activityVar.getDrawable(R.drawable.ic_active_like));
                                 noOfLikes = "0";
                                 likeStatus = "";
+                                LikeCount = 0;
                             } else {
                                 if (Integer.parseInt(noOfLikes) > 0) {
-                                    int LikeCount = Integer.parseInt(noOfLikes) + 1;
+                                    int LikeCount = Integer.parseInt(noOfLikes) - 1;
                                     if (LikeCount == 1) {
                                         liketext.setText(LikeCount + " Like");
                                     } else {
@@ -277,18 +291,21 @@ public class NewsFeedViewModel extends ViewModel {
                                     }
                                     likeimage.setImageDrawable(activityVar.getDrawable(R.drawable.ic_like));
                                     noOfLikes = "0";
+
                                 }
                                 noOfLikes = "0";
                                 likeStatus = "";
+
                             }
                             Snackbar.make(NewsFeedFragment.cl_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
                         }
-                        /*if (commentViewModel != null && commentViewModel.likePostData().hasObservers()) {
-                            commentViewModel.likePostData().removeObservers(CommentActivity.this);
-                        }*/
                     }
 
                     Snackbar.make(NewsFeedFragment.cl_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
+                  if (newsRepository.getLikeActivity().hasActiveObservers()) {
+
+                      newsRepository.getLikeActivity().removeObservers((LifecycleOwner) activityVar);
+                  }
 
                   }
 
@@ -776,5 +793,6 @@ public class NewsFeedViewModel extends ViewModel {
 
         activityVar.startActivity(Intent.createChooser(share, "Share link!"));
     }
+
 
 }
