@@ -17,6 +17,7 @@
         android:background="@drawable/splash"
         tools:context=".ui.splash.view.SplashAcivity">
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

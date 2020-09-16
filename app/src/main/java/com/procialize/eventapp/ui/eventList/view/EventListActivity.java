@@ -212,5 +212,4 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }
     }
-
 }

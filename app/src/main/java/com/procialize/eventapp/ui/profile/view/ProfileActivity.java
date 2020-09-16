@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -56,6 +58,9 @@ import static com.procialize.eventapp.Constants.Constant.REQUEST_CAMERA;
 import static com.procialize.eventapp.Constants.Constant.SELECT_FILE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
@@ -81,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     LinearLayout ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobile, ll_main;
     EditText et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
-    TextView tv_profile_pic;
+    TextView tv_profile_pic,tv_header;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
     String event_id, profile_pic = "";
@@ -135,11 +140,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         et_email = findViewById(R.id.et_email);
         et_mobile = findViewById(R.id.et_mobile);
         tv_profile_pic = findViewById(R.id.tv_profile_pic);
+        tv_header = findViewById(R.id.tv_header);
 
         btn_save = findViewById(R.id.btn_save);
         btn_save.setOnClickListener(this);
         iv_change_profile.setOnClickListener(this);
         iv_back.setOnClickListener(this);
+
+        btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        btn_save.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+
+        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
 
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
