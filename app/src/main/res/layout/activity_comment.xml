@@ -359,9 +359,10 @@
             <ImageView
                 android:id="@+id/iv_gif"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:padding="2dp"
-                android:src="@mipmap/ic_emoji" />
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:adjustViewBounds="true"
+                android:background="@mipmap/ic_emoji" />
 
             <EditText
                 android:id="@+id/et_comment"

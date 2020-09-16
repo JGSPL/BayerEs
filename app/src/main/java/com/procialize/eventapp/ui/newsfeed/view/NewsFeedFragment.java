@@ -71,6 +71,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
@@ -212,8 +213,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             }
         });
 
-
-        tv_whats_on_mind.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_4)));
+        String colorFour = SharedPreference.getPref(getActivity(), EVENT_COLOR_4);
+        tv_whats_on_mind.setTextColor(Color.parseColor(colorFour));
         tv_whats_on_mind.setAlpha(0.4f);
 
         if (!CommonFunction.isMyServiceRunning(getActivity(), BackgroundServiceToCompressMedia.class)) {

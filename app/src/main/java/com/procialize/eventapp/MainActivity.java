@@ -48,6 +48,7 @@ import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 import static com.procialize.eventapp.Utility.Constant.colorunselect;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event;
+    TableRow tr_switch_event,tr_home,tr_profile;
     LinearLayout ll_main;
 
     @Override
@@ -125,7 +126,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setUpToolbar();
         setUpNavDrawer();
         tr_switch_event = findViewById(R.id.tr_switch_event);
+        tr_home = findViewById(R.id.tr_home);
+        tr_profile = findViewById(R.id.tr_profile);
         tr_switch_event.setOnClickListener(this);
+        tr_home.setOnClickListener(this);
+        tr_profile.setOnClickListener(this);
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -269,7 +274,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             new int[]{android.R.attr.state_checked}
                     },
                     new int[]{
-                            Color.parseColor(colorunselect),
+                            //Color.parseColor(colorunselect),
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)),
                             Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
                     });
 
@@ -279,12 +285,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             new int[]{android.R.attr.state_checked}
                     },
                     new int[]{
-                            Color.parseColor(colorunselect),
+                            //Color.parseColor(colorunselect),
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)),
                             Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
                     });
 
             navView.setItemIconTintList(iconsColorStates);
             navView.setItemTextColor(textColorStates);
+            navView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         }
     }
 
@@ -321,11 +329,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SessionManager.logoutUser(MainActivity.this);
                 //SharedPreference.clearAllPref(this);
                 break;
-            case R.id.tv_home:
+            case R.id.tr_home:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
                 break;
-            case R.id.tv_profile:
+            case R.id.tr_profile:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;

@@ -452,7 +452,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         holder.root.setBackgroundColor(Color.parseColor(eventColor2));
         holder.v_divider.setBackgroundColor(Color.parseColor(eventColor3));
 
-        int color = Color.parseColor( eventColor3);
+        int color = Color.parseColor(eventColor1);
         holder.moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.iv_like.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);

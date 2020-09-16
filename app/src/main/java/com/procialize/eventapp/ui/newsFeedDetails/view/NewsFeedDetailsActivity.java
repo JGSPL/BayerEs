@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -70,6 +71,7 @@ import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
@@ -89,7 +91,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
     String newsFeedPath;
     LinearLayout ll_dots,ll_main;
     int shareOrSaveImagePosition = 0;
-    ImageView headerlogoIv;
+    ImageView headerlogoIv,iv_back;
 
 
     @Override
@@ -119,6 +121,11 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
         ll_dots = findViewById(R.id.ll_media_dots);
         ll_main = findViewById(R.id.ll_main);
         headerlogoIv = findViewById(R.id.headerlogoIv);
+        iv_back = findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(this);
+
+        int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2));
+        iv_back.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
         btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4)));
         btn_share.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4)));
@@ -206,6 +213,9 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_back:
+                onBackPressed();
+                break;
             case R.id.btn_save:
                 /*String strUrlPathForSave = "";
                 String strMediaTypeForSave = "";
@@ -524,7 +534,5 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             }
         });
         // }
-
     }
-
 }

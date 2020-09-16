@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -80,7 +81,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     private boolean isLoading = false;
     private boolean isLastPage = false;
     LinearLayoutManager linearLayoutManager;
-    TextView searchBtn;
+    ImageView iv_search;
     String strAttendeeName = "";
     String attendee_message = "";
     public static AttendeeFragment newInstance() {
@@ -122,10 +123,10 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         mAPIService = ApiUtils.getAPIService();
 
-        searchBtn = root.findViewById(R.id.searchBtn);
-        searchBtn.setTextColor(getResources().getColor(R.color.colorwhite));
+        iv_search = root.findViewById(R.id.iv_search);
+        //searchBtn.setTextColor(getResources().getColor(R.color.colorwhite));
         //searchBtn.setBackgroundColor(Color.parseColor(colorActive));
-        searchBtn.setOnClickListener(new View.OnClickListener() {
+        iv_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 strAttendeeName = searchEt.getText().toString().trim();
@@ -357,6 +358,8 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         intent.putExtra("designation", attendee.getDesignation());
         intent.putExtra("prof_pic", attendee.getProfile_picture());
         intent.putExtra("attendee_type", attendee.getAttendee_type());
+        intent.putExtra("mobile", attendee.getMobile());
+        intent.putExtra("email", attendee.getEmail());
         startActivity(intent);
        // getActivity().finish();
     }

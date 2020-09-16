@@ -123,7 +123,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     Dialog contentDialog;
     List<CommentDetail> commentList = new ArrayList<>();
     String noOfLikes = "0", likeStatus = "", api_token;
-    private String strPath, eventColor1, eventColor2, eventColor3, eventColor4, eventColor5,ATTENDEE_STATUS,ATTENDEE_ID;
+    private String strPath, eventColor1, eventColor2, eventColor3, eventColor4, eventColor5, ATTENDEE_STATUS, ATTENDEE_ID;
     public Dialog dialogShare;
     View v_divider;
 
@@ -140,8 +140,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         eventColor3 = SharedPreference.getPref(this, EVENT_COLOR_3);
         eventColor4 = SharedPreference.getPref(this, EVENT_COLOR_4);
         eventColor5 = SharedPreference.getPref(this, EVENT_COLOR_5);
-        ATTENDEE_STATUS = SharedPreference.getPref(this,IS_GOD);
-        ATTENDEE_ID = SharedPreference.getPref(this,KEY_ATTENDEE_ID);
+        ATTENDEE_STATUS = SharedPreference.getPref(this, IS_GOD);
+        ATTENDEE_ID = SharedPreference.getPref(this, KEY_ATTENDEE_ID);
 
         commentViewModel = ViewModelProviders.of(this).get(CommentViewModel.class);
         connectionDetector = ConnectionDetector.getInstance(this);
@@ -192,6 +192,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         CommonFunction.showBackgroundImage(this, ll_main);
 
         iv_share.setOnClickListener(this);
+        iv_back_gif.setOnClickListener(this);
 
         if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
             if (newsfeed_detail == null || newsfeed_detail.getAttendee_id() == null) {
@@ -400,7 +401,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 onBackPressed();
                 break;
             case R.id.tv_no_of_likes:
-                commentViewModel.openLikePage(this,newsfeed_detail,Integer.parseInt(mediaPosition));
+                commentViewModel.openLikePage(this, newsfeed_detail, Integer.parseInt(mediaPosition));
                 break;
             case R.id.iv_gif:
                 ll_comment_container.setVisibility(View.GONE);
@@ -583,6 +584,18 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
                 break;
+            case R.id.iv_back_gif:
+                if (fl_gif_container.getVisibility() == View.VISIBLE) {
+                    ll_comment_container.setVisibility(View.VISIBLE);
+                    fl_gif_container.setVisibility(View.GONE);
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
         }
     }
 
@@ -677,8 +690,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             cancelTv.setVisibility(View.VISIBLE);
             //editIV.setVisibility(View.VISIBLE);
         } else {
-            if(ATTENDEE_ID.equalsIgnoreCase(commentDetail.getUser_id()))
-            {
+            if (ATTENDEE_ID.equalsIgnoreCase(commentDetail.getUser_id())) {
                 reportTv.setVisibility(View.GONE);
                 hideTv.setVisibility(View.GONE);
                 reportuserTv.setVisibility(View.GONE);
@@ -686,9 +698,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 deleteTv.setVisibility(View.VISIBLE);
                 cancelTv.setVisibility(View.VISIBLE);
                 //editIV.setVisibility(View.VISIBLE);
-            }
-            else
-            {
+            } else {
                 reportTv.setVisibility(View.VISIBLE);
                 hideTv.setVisibility(View.VISIBLE);
                 reportuserTv.setVisibility(View.VISIBLE);
@@ -742,14 +752,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContentdialouge("reportComment", commentDetail.getComment_id(),commentDetail.getUser_id());
+                showContentdialouge("reportComment", commentDetail.getComment_id(), commentDetail.getUser_id());
             }
         });
 
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContentdialouge("reportUser", commentDetail.getComment_id(),commentDetail.getUser_id());
+                showContentdialouge("reportUser", commentDetail.getComment_id(), commentDetail.getUser_id());
             }
         });
 
@@ -763,7 +773,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         dialog.show();
     }
 
-    private void showContentdialouge(final String from, final String commentId,final String userId) {
+    private void showContentdialouge(final String from, final String commentId, final String userId) {
 
         contentDialog = new Dialog(this);
         contentDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -818,7 +828,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     String content = StringEscapeUtils.escapeJava(etmsg.getText().toString());
                     dialog.cancel();
                     if (from.equalsIgnoreCase("reportUser")) {
-                        commentViewModel.reportUser(api_token, event_id,userId, commentId, content);
+                        commentViewModel.reportUser(api_token, event_id, userId, commentId, content);
                         commentViewModel.reportUserData().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                             @Override
                             public void onChanged(LoginOrganizer loginOrganizer) {

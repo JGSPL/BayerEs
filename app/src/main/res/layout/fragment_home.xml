@@ -59,8 +59,7 @@
                 android:layout_marginLeft="@dimen/margin"
                 android:gravity="center_vertical"
                 android:hint="@string/news_edit_title"
-                android:textColorHint="@color/black"
-                android:textSize="@dimen/textsizesmaller" />
+                android:textSize="15dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -116,7 +115,8 @@
             android:id="@+id/recycler_feed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="true"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
