@@ -661,7 +661,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    public void openMoreOptions(Activity activity, Newsfeed_detail newsfeed_detail, CommentDetail commentDetail, int position, LinearLayout ll_main) {
+    public void openMoreOptions(Activity activity, final Newsfeed_detail newsfeed_detail, final CommentDetail commentDetail, final int position, final LinearLayout ll_main) {
         dialog = new BottomSheetDialog(activity);
         dialog.setContentView(R.layout.botomcommentdialouge);
         TextView reportTv = dialog.findViewById(R.id.reportTv);

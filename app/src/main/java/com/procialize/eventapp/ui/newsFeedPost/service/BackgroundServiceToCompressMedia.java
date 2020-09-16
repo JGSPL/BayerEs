@@ -54,7 +54,6 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.VIBRATE;
 import static android.Manifest.permission.WRITE_CONTACTS;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.os.Build.VERSION_CODES.Q;
 
 public class BackgroundServiceToCompressMedia extends IntentService {
     String TAG = "BackgroundServiceToCompressMedia";

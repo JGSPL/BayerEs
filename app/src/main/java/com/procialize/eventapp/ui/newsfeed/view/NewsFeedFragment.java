@@ -409,7 +409,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         newsfeedArrayList.clear();
                     }
                     for (int i = 0; i < tableNewsFeeds.size(); i++) {
-                        Newsfeed_detail newsfeed_detail = new Newsfeed_detail();
+                        final Newsfeed_detail newsfeed_detail = new Newsfeed_detail();
                         newsfeed_detail.setNews_feed_id(tableNewsFeeds.get(i).getNews_feed_id());
                         newsfeed_detail.setType(tableNewsFeeds.get(i).getType());
                         newsfeed_detail.setPost_status(tableNewsFeeds.get(i).getPost_status());
@@ -517,7 +517,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     @Override
-    public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
+    public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, final ImageView likeimage, final TextView liketext) {
         //newsfeedViewModel.openLikeimg(getActivity(), api_token, eventid, feed.getNews_feed_id(), v, feed, position, likeimage, liketext);
         noOfLikes = "0";
        // newsfeedViewModel.PostLike(api_token, eventid, feed.getNews_feed_id());
