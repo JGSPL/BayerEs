@@ -103,6 +103,10 @@
                 android:resource="@xml/file_paths"
                 tools:replace="android:resource" />
         </provider>
+        <activity
+            android:name=".ui.attendeeChat.ChatActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

@@ -63,6 +63,7 @@ import java.util.Map;
 import static com.procialize.eventapp.Utility.Constant.colorunselect;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
@@ -110,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
         String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
         String email = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_EMAIL);
+        String event_id = SharedPreference.getPref(this, EVENT_ID);;
+        String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
 
 
         LinearLayout outer = findViewById(R.id.my);
@@ -120,9 +123,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView tv_designation = outer.findViewById(R.id.tv_designation);
         tv_name.setText(fName + " " + lName);
         tv_designation.setText(designation + " - " + city);
+        String fireEmail;
+        if(email.equalsIgnoreCase("")) {
+             fireEmail = fName + "_" + attendee_id + "_" + event_id + "@procialize.in";
+        }else{
+            String[] domains = email.split("@");
+            fireEmail = fName + "_" + attendee_id + "_" + event_id+"@" + domains[1];
+
+        }
 
         //Chat related process
-        register_user(fName,email,"12345678");
+        register_user(fName,fireEmail,"12345678");
 
 
         Glide.with(MainActivity.this)
@@ -385,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onComplete(@NonNull Task<Void> task1) {
                             if(task1.isSuccessful()){
 
-                                Toast.makeText(getApplicationContext(), "New User is created", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(), "New User is created", Toast.LENGTH_SHORT).show();
                                /* Intent intent=new Intent(MainActivity.this,MainActivity.class);
 
                                 //----REMOVING THE LOGIN ACTIVITY FROM THE QUEUE----
@@ -398,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             else{
                                 login_user(email,password);
-                                Toast.makeText(MainActivity.this, "YOUR NAME IS NOT REGISTERED... MAKE NEW ACCOUNT-- ", Toast.LENGTH_SHORT).show();
+                              //  Toast.makeText(MainActivity.this, "YOUR NAME IS NOT REGISTERED... MAKE NEW ACCOUNT-- ", Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -411,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else{
                     login_user(email,password);
 
-                    Toast.makeText(getApplicationContext(), "ERROR REGISTERING USER....", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "ERROR REGISTERING USER....", Toast.LENGTH_SHORT).show();
                 }
             }
         });

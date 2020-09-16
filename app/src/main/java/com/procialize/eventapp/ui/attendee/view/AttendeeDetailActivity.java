@@ -21,6 +21,7 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 
 public class AttendeeDetailActivity extends AppCompatActivity implements View.OnClickListener {
     String fname, lname, company, city, designation, prof_pic, attendee_type;
@@ -89,7 +90,16 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_send_message:
-                String message = et_message.getText().toString().trim();
+                Intent intent = new Intent(this, ChatActivity.class);
+                /*intent.putExtra("fname", attendee.getFirst_name());
+                intent.putExtra("lname", attendee.getLast_name());
+                intent.putExtra("company", attendee.getCompany_name());
+                intent.putExtra("city", attendee.getCity());
+                intent.putExtra("designation", attendee.getDesignation());
+                intent.putExtra("prof_pic", attendee.getProfile_picture());
+                intent.putExtra("attendee_type", attendee.getAttendee_type());*/
+                startActivity(intent);
+                /*String message = et_message.getText().toString().trim();
                 if(message.isEmpty())
                 {
                     Utility.createShortSnackBar(ll_main,"Please enter message..");
@@ -104,9 +114,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                     {
                         Utility.createShortSnackBar(ll_main,"No internet connection..!");
                     }
-                }
+                }*/
                 break;
             case R.id.ll_save_contact:
+
                 break;
         }
     }

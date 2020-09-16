@@ -36,6 +36,7 @@ import com.procialize.eventapp.ui.attendee.adapter.AttendeeAdapter;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
+import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 
@@ -349,7 +350,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     @Override
     public void onContactSelected(Attendee attendee) {
-        Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
         intent.putExtra("fname", attendee.getFirst_name());
         intent.putExtra("lname", attendee.getLast_name());
         intent.putExtra("company", attendee.getCompany_name());
