@@ -351,7 +351,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     @Override
     public void onContactSelected(Attendee attendee) {
-        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
         intent.putExtra("fname", attendee.getFirst_name());
         intent.putExtra("lname", attendee.getLast_name());
         intent.putExtra("company", attendee.getCompany_name());
