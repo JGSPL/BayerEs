@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "975378797158",
+    "firebase_url": "https://eventapp2020.firebaseio.com",
+    "project_id": "eventapp2020",
+    "storage_bucket": "eventapp2020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975378797158:android:ccfd39f8bcefa531ed93a7",
+        "android_client_info": {
+          "package_name": "com.procialize.eventapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975378797158-ri4i9o301leefud7bd7819jslbjs5jah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmc8lu_Yp2dWhpm3TLtGVTcZXJJHjHg5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975378797158-ri4i9o301leefud7bd7819jslbjs5jah.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
