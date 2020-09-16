@@ -2,8 +2,7 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.procialize.eventapp"
         minSdkVersion 21
@@ -21,10 +20,7 @@ android {
     dataBinding {
         enabled = true
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+
     lintOptions {
         disable 'MissingTranslation'
     }
@@ -34,6 +30,11 @@ android {
         pickFirst 'lib/armeabi-v7a/libc++_shared.so'
         pickFirst 'lib/arm64-v8a/libc++_shared.so'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
@@ -102,8 +103,27 @@ dependencies {
     //Cropping
     //implementation 'com.github.yalantis:ucrop:2.2.2-native'
     implementation 'com.github.yalantis:ucrop:2.2.2-native'
+//-----FIREBASE DATABASE---
+   // implementation 'com.google.firebase:firebase-database:11.8.0'
 
+    //-----FIREBASE STORAGE----
+    implementation 'com.google.firebase:firebase-storage:11.8.0'
+
+    //-----DATA IS FETCHED FROM DATABASE AND ADDED TO RECYCLER VIEW----
+    implementation 'com.firebaseui:firebase-ui-database:1.0.1'
+
+    //----COMPRESSING THE IMAGE----
+    implementation 'id.zelory:compressor:2.1.0'
+    //------FIREBASE CLOUD MESSAGING FOR SENDING NOTIFICATION-----
+    implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    //----FIREBASE AUTHENTICATION---
+   // implementation 'com.google.firebase:firebase-auth:11.8.0'
+
+   // implementation 'com.google.firebase:firebase-analytics:17.4.1'
+    implementation 'com.google.firebase:firebase-database:19.3.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.1'
 
 }
+apply plugin: 'com.google.gms.google-services'
 
 

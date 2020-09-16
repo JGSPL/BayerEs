@@ -223,7 +223,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         profile_pic);
                 profileActivityViewModel.UpdateProfileDetails().observe(this, new Observer<Profile>() {
                     @Override
-                    public void onChanged(Profile profile) {
+                    public void onChanged(final Profile profile) {
                         if (profile != null) {
                             if (profile.getHeader().get(0).getType().equalsIgnoreCase("success")) {
 

@@ -127,7 +127,7 @@ public class NewsfeedRepository {
         return isUpdated;
     }
 
-    public MutableLiveData<LoginOrganizer> PostHide(String token, String event_id, String news_feed_id) {
+    public MutableLiveData<LoginOrganizer> PostHide(final String token, final String event_id, String news_feed_id) {
         newsfeedApi = ApiUtils.getAPIService();
 
         newsfeedApi.PostHide(token, event_id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
@@ -158,7 +158,7 @@ public class NewsfeedRepository {
     }
 
 
-    public MutableLiveData<LoginOrganizer> ReportPost(String token, String event_id, String news_feed_id, String content) {
+    public MutableLiveData<LoginOrganizer> ReportPost(final String token, final String event_id, String news_feed_id, String content) {
         newsfeedApi = ApiUtils.getAPIService();
 
         newsfeedApi.ReportPost(token, event_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
@@ -182,7 +182,7 @@ public class NewsfeedRepository {
     }
 
 
-    public MutableLiveData<LoginOrganizer> ReportUser(String token, String event_id, String attn_id, String news_feed_id, String content) {
+    public MutableLiveData<LoginOrganizer> ReportUser(final String token, final String event_id, String attn_id, String news_feed_id, String content) {
         newsfeedApi = ApiUtils.getAPIService();
 
         newsfeedApi.ReportUser(token, event_id, attn_id, news_feed_id, content).enqueue(new Callback<LoginOrganizer>() {
@@ -205,7 +205,7 @@ public class NewsfeedRepository {
         return reportPostUpdate;
     }
 
-    public MutableLiveData<LoginOrganizer> DeletePost(String token, String event_id, String news_feed_id) {
+    public MutableLiveData<LoginOrganizer> DeletePost(final String token, final String event_id, String news_feed_id) {
         newsfeedApi = ApiUtils.getAPIService();
 
         newsfeedApi.DeletePost(token, event_id, news_feed_id).enqueue(new Callback<LoginOrganizer>() {
@@ -229,7 +229,7 @@ public class NewsfeedRepository {
     }
 
 
-    public MutableLiveData<LikePost> PostLike(String token, String event_id, String news_feed_id) {
+    public MutableLiveData<LikePost> PostLike(final String token, final String event_id, String news_feed_id) {
         newsfeedApi = ApiUtils.getAPIService();
 
         newsfeedApi.PostLike(token, event_id, news_feed_id).enqueue(new Callback<LikePost>() {

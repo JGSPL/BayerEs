@@ -89,7 +89,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
     @Override
     public void onBindViewHolder(@NonNull final NewsViewHolder holder, final int position) {
-        Newsfeed_detail feedData = feed_detail.get(position);
+        final Newsfeed_detail feedData = feed_detail.get(position);
         try {
 
             setDynamicColor(holder);

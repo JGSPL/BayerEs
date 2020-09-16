@@ -242,7 +242,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         }
 
 
-        attendeefeedrefresh.setOnRefreshListener(this::doRefresh);
+        //attendeefeedrefresh.setOnRefreshListener(/*this::doRefresh*/);
         return root;
     }
     private void doRefresh() {
