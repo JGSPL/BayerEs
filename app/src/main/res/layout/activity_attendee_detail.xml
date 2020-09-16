@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@mipmap/bg_1"
     android:orientation="vertical"
     tools:context=".ui.newsFeedComment.view.CommentActivity">
@@ -57,13 +57,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
+
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <FrameLayout
@@ -134,24 +135,6 @@
                             android:contentDescription="TODO"
                             android:scaleType="centerCrop"></ImageView>
 
-                        <RelativeLayout
-                            android:id="@+id/rl_update_pic"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:alpha="20"
-                            android:background="#73000000"
-                            android:gravity="bottom">
-
-                            <ImageView
-                                android:id="@+id/iv_change_profile"
-                                android:layout_width="match_parent"
-                                android:layout_height="35dp"
-                                android:layout_gravity="bottom"
-                                android:padding="5dp"
-                                android:src="@drawable/ic_camera"
-                                android:tint="@color/white" />
-                        </RelativeLayout>
                     </androidx.cardview.widget.CardView>
 
                     <ProgressBar
@@ -165,10 +148,178 @@
                 </RelativeLayout>
             </FrameLayout>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:layout_weight="1"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_attendee_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Aparna Badhan"
+                    android:textSize="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/linecolor" />
+
+                <TextView
+                    android:id="@+id/tv_attendee_designation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Developer"
+                    android:textSize="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/linecolor" />
+
+
+                <TextView
+                    android:id="@+id/tv_attendee_company_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Aparna Badhan"
+                    android:textSize="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/linecolor" />
+
+                <TextView
+                    android:id="@+id/tv_attendee_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Mumbai"
+                    android:textSize="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/linecolor" />
+
+                <EditText
+                    android:id="@+id/et_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_background"
+                    android:gravity="top"
+                    android:hint="Type your message..."
+                    android:maxLines="5"
+                    android:padding="10dp"
+                    android:textSize="13dp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/ll_send_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/activetab"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="15dp"
+                        >
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/ic_email"
+                            android:tint="@color/white" />
+
+                        <com.procialize.eventapp.fonts.RobotoButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:background="@color/transperent"
+                            android:minHeight="0dp"
+                            android:text="Send Message"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/textsizesmall" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_save_contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/activetab"
+                        android:gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal"
+                        android:padding="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentBottom="true"
+                            android:layout_gravity="center"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_name"
+                            android:tint="@color/activetab"
+                            android:background="@color/white"/>
+
+                        <com.procialize.eventapp.fonts.RobotoButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            android:minHeight="0dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="Save Contact"
+                            android:textAllCaps="true"
+                            android:textColor="@color/activetab"
+                            android:textSize="@dimen/textsizesmall" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
