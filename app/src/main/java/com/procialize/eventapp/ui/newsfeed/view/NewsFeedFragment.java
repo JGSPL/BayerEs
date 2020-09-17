@@ -71,6 +71,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
@@ -212,8 +213,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             }
         });
 
-
-        tv_whats_on_mind.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_4)));
+        String colorFour = SharedPreference.getPref(getActivity(), EVENT_COLOR_4);
+        tv_whats_on_mind.setTextColor(Color.parseColor(colorFour));
         tv_whats_on_mind.setAlpha(0.4f);
 
         if (!CommonFunction.isMyServiceRunning(getActivity(), BackgroundServiceToCompressMedia.class)) {
@@ -409,7 +410,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         newsfeedArrayList.clear();
                     }
                     for (int i = 0; i < tableNewsFeeds.size(); i++) {
-                        Newsfeed_detail newsfeed_detail = new Newsfeed_detail();
+                        final Newsfeed_detail newsfeed_detail = new Newsfeed_detail();
                         newsfeed_detail.setNews_feed_id(tableNewsFeeds.get(i).getNews_feed_id());
                         newsfeed_detail.setType(tableNewsFeeds.get(i).getType());
                         newsfeed_detail.setPost_status(tableNewsFeeds.get(i).getPost_status());
@@ -517,7 +518,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     @Override
-    public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, ImageView likeimage, TextView liketext) {
+    public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, final ImageView likeimage, final TextView liketext) {
         //newsfeedViewModel.openLikeimg(getActivity(), api_token, eventid, feed.getNews_feed_id(), v, feed, position, likeimage, liketext);
         noOfLikes = "0";
        // newsfeedViewModel.PostLike(api_token, eventid, feed.getNews_feed_id());

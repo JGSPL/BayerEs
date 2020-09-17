@@ -59,7 +59,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.NewsViewHold
     @Override
     public void onBindViewHolder(@NonNull final EventAdapter.NewsViewHolder holder, final int position) {
         //Newsfeed_detail feedData = feed_detail.get(position);
-        EventList events = eventListsFilter.get(position);
+        final EventList events = eventListsFilter.get(position);
 
         if (events.getEvent_image().trim() != null) {
             Glide.with(context)

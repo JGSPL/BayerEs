@@ -290,7 +290,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     //Call Refresh token
                     new RefreashToken(this).callGetRefreashToken(this);
 
-                    String postText = et_post.getText().toString().trim();
+                    final String postText = et_post.getText().toString().trim();
                     btn_post.setEnabled(false);
                     if (resultList.size() == 0) {
                         postNewsFeedViewModel.validation(postText);

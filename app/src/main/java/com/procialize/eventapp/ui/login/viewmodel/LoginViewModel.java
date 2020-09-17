@@ -174,7 +174,7 @@ public class LoginViewModel extends BaseObservable {
         });
     }
 
-    private void otpValidate(String username, String otp) {
+    private void otpValidate(String username, final String otp) {
         mApiService.validateOTP("0", username, otp).enqueue(new Callback<validateOTP>() {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {

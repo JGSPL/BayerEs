@@ -90,12 +90,6 @@
                         android:background="@color/white" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_profile_pic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -221,6 +215,31 @@
                     android:layout_marginTop="15dp"
                     android:background="@color/linecolor" />
 
+                <TextView
+                    android:id="@+id/tv_mobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Mobile"
+                    android:textSize="16dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/linecolor" />
+
+                <TextView
+                    android:id="@+id/tv_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Email"
+                    android:textSize="16dp" />
+
                 <EditText
                     android:id="@+id/et_message"
                     android:layout_width="match_parent"
@@ -305,16 +324,17 @@
                             android:tint="@color/activetab"
                             android:background="@color/white"/>
 
-                        <com.procialize.eventapp.fonts.RobotoButton
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:background="@color/white"
                             android:minHeight="0dp"
                             android:layout_marginLeft="10dp"
                             android:text="Save Contact"
                             android:textAllCaps="true"
                             android:textColor="@color/activetab"
-                            android:textSize="@dimen/textsizesmall" />
+                            android:textSize="@dimen/textsizesmall"
+                            android:elevation="0dp"
+                            android:gravity="center_vertical"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

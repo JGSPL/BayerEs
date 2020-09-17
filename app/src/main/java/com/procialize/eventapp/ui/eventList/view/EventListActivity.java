@@ -157,11 +157,11 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
 
 
     @Override
-    public void onMoreSelected(EventList event, int position) {
+    public void onMoreSelected(EventList event, final int position) {
         if (cd.isConnectingToInternet()) {
 
            // if(result) {
-                String eventId = event.getEvent_id();
+                final String eventId = event.getEvent_id();
                 CommonFunction.saveBackgroundImage(EventListActivity.this, event.getBackground_image());
                 session.saveCurrentEvent(event);
                 eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
@@ -212,5 +212,4 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }
     }
-
 }

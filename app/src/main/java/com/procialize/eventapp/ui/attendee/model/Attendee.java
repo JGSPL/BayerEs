@@ -4,6 +4,14 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Attendee {
+    @SerializedName("mobile")
+    @Expose
+    private String mobile;
+
+    @SerializedName("email")
+    @Expose
+    private String email;
+
 
     @SerializedName("attendee_id")
     @Expose
@@ -106,5 +114,13 @@ public class Attendee {
 
     public void setTotal_sms(String total_sms) {
         this.total_sms = total_sms;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

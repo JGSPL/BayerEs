@@ -13,25 +13,28 @@ public final class SharedPreferencesConstant {
     public static final String KEY_FNAME = "name";
     public static final String KEY_LNAME = "lname";
     public static final String KEY_EMAIL = "email";
+    public static final String KEY_MOBILE = "mobile";
+    public static final String MIDDLE_NAME = "middle_name";
+
+    public static final String IS_LOGIN = "IsLoggedIn";
+    public static final String TIME = "time";
+    public static final String EXPIRY_TIME = "expity_time";
+    public static final String USER_TYPE = "user_type";
+    public static final String VERIFY_OTP = "verify_otp";
+    public static final String OTP = "otp";
+
+    public static final String KEY_TOKEN = "api_access_token";
+
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_DESIGNATION = "designation";
     public static final String KEY_COMPANY = "company";
-    public static final String KEY_MOBILE = "mobile";
-    public static final String KEY_TOKEN = "api_access_token";
     public static final String EVENT_ID = "event_id";
     public static final String KEY_CITY = "city";
     public static final String KEY_GCM_ID = "gcm_id";
     public static final String KEY_PROFILE_PIC = "profile_pic";
     public static final String KEY_ATTENDEE_ID = "id";
     public static final String ATTENDEE_STATUS = "attendee_status";
-    public static final String IS_LOGIN = "IsLoggedIn";
     public static final String IS_GOD = "isGod";
-    public static final String TIME = "time";
-    public static final String EXPIRY_TIME = "expity_time";
-    public static final String USER_TYPE = "user_type";
-    public static final String VERIFY_OTP = "verify_otp";
-    public static final String MIDDLE_NAME = "middle_name";
-    public static final String OTP = "otp";
 
     public static final String EVENT_NAME = "eventnamestr";
     public static final String EVENT_LOGO = "logoImg";
