@@ -1,3 +1,4 @@
+include ':imagelibrary'
 include ':library'
 include ':jiaozivideoplayer'
 include ':app'
