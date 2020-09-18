@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event,tr_home,tr_profile;
+    TableRow tr_switch_event,tr_home,tr_profile, tr_logout;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
     FirebaseAuth mauth;
@@ -121,13 +121,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
-        fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
+        String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
         String lName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
         String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
         String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
         String email = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_EMAIL);
-        String event_id = SharedPreference.getPref(this, EVENT_ID);;
+        String event_id = SharedPreference.getPref(this, EVENT_ID);
         String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
+        String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
+
 
 
         LinearLayout outer = findViewById(R.id.my);
@@ -170,9 +172,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_switch_event = findViewById(R.id.tr_switch_event);
         tr_home = findViewById(R.id.tr_home);
         tr_profile = findViewById(R.id.tr_profile);
+        tr_logout = findViewById(R.id.tr_logout);
         tr_switch_event.setOnClickListener(this);
         tr_home.setOnClickListener(this);
         tr_profile.setOnClickListener(this);
+        tr_logout.setOnClickListener(this);
+
+        if (tot_event.equalsIgnoreCase("1")) {
+            tr_switch_event.setVisibility(View.GONE);
+        } else {
+            tr_switch_event.setVisibility(View.VISIBLE);
+        }
+
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -268,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
 
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
