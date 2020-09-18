@@ -585,6 +585,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
+                JzvdStd.releaseAllVideos();
                 onBackPressed();
                 break;
             case R.id.tv_no_of_likes:
@@ -1354,4 +1355,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         return commentTextView.getText().toString();
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        JzvdStd.releaseAllVideos();
+    }
 }
