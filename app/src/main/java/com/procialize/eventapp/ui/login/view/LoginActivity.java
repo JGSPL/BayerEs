@@ -3,12 +3,11 @@ package com.procialize.eventapp.ui.login.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.BindingAdapter;
@@ -19,13 +18,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.procialize.eventapp.BuildConfig;
-import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
-import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
 import com.procialize.eventapp.session.SessionManager;
@@ -80,32 +77,33 @@ public class LoginActivity extends AppCompatActivity {
     public static void runMe(View view, String message) {
         if (message != null) {
             if (message.equalsIgnoreCase("user found")) {
+                Utility.hideKeyboard(view);
                 activityLoginBinding.linearLoginView.setVisibility(View.GONE);
                 activityLoginBinding.linearOTPView.setVisibility(View.VISIBLE);
             } else if (message.equalsIgnoreCase("back")) {
+                Utility.hideKeyboard(view);
                 activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
                 activityLoginBinding.linearOTPView.setVisibility(View.GONE);
             } else if (message.equalsIgnoreCase("Successfully Login")) {
-
+                Utility.hideKeyboard(view);
                 final String tot_event = SharedPreference.getPref(view.getContext(), SharedPreferencesConstant.TOTAL_EVENT);
                 if (tot_event.equalsIgnoreCase("1")) {
                     boolean result = Utility.checkWritePermission(view.getContext());
                     getEventDetails(view);
                 } else {
+                    view.setClickable(false);
                     view.getContext().startActivity(new Intent(view.getContext(), EventListActivity.class));
+                    ((Activity) view.getContext()).finish();
                 }
                 //finish();
             } else if (message.equalsIgnoreCase("DesignAndDevelopedby")) {
+                Utility.hideKeyboard(view);
                 String url = "https://www.theeventapp.in/terms-of-use";
                 view.getContext().startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
                 //finish();
             } else {
 //                Constant.displayToast(view.getContext(), message);
-                try {
-                    InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                } catch(Exception ignored) {
-                }
+                Utility.hideKeyboard(view);
                 Utility.createShortSnackBar(view, message);
 
             }

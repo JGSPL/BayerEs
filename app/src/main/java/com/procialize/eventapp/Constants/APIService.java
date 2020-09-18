@@ -3,6 +3,7 @@ package com.procialize.eventapp.Constants;
 
 import com.google.gson.JsonObject;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.GetterSetter.resendOTP;
 import com.procialize.eventapp.GetterSetter.validateOTP;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.eventList.model.Event;
@@ -39,6 +40,11 @@ public interface APIService{
     @FormUrlEncoded
     Call<LoginOrganizer> LoginWithOrganizer(@Field("organizer_id") String organizer_id,
                                             @Field("username") String username);
+
+    @POST("event_api_call/resendOTP")
+    @FormUrlEncoded
+    Call<resendOTP> ResendOTP(@Field("organizer_id") String organizer_id,
+                              @Field("username") String username);
 
 
     @POST("event_api_call/validateOTP")

@@ -3,15 +3,22 @@ package com.procialize.eventapp.ui.profile.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,10 +48,8 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
-import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 import com.yalantis.ucrop.UCrop;
 
@@ -79,6 +84,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROF
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_CAMERA;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 import static com.procialize.eventapp.Utility.Utility.getImageUri;
 import static com.procialize.eventapp.Utility.Utility.getRealPathFromURI;
 import static com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel.mCurrentPhotoPath;
@@ -229,17 +235,20 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 mobile = et_mobile.getText().toString().trim();
                 profile_pic = tv_profile_pic.getText().toString();
 
-                updateProfile(
-                        first_name,
-                        last_name,
-                        designation,
-                        company_name,
-                        city,
-                        email,
-                        mobile,
-                        profile_pic
-                );
-
+                if (connectionDetector.isConnectingToInternet()) {
+                    updateProfile(
+                            first_name,
+                            last_name,
+                            designation,
+                            company_name,
+                            city,
+                            email,
+                            mobile,
+                            profile_pic
+                    );
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet connection");
+                }
                 break;
             case R.id.iv_change_profile:
 
@@ -290,7 +299,39 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_FILE) {
-                onSelectFromGalleryResult(data);
+//                onSelectFromGalleryResult(data);
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                Cursor cursor = getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+
+                String compressedImagePath = compressImage(picturePath);
+//                appDelegate.setPostImagePath(compressedImagePath);
+
+                file = new File(compressedImagePath);
+
+                UCrop.of(selectedImage, Uri.parse(file.getAbsolutePath()))
+                        .withAspectRatio(2, 2).withOptions(options)
+                        .withMaxResultSize(200, 200)
+                        .start(this);
+
+                tv_profile_pic.setText(file.getAbsolutePath());
+                // PicassoTrustAll.getInstance(this).load(compressedImagePath).into(post_thumbnail);
+//                Glide.with(this).load(compressedImagePath).into(profileIV);
+
+
+                // PicassoTrustAll.getInstance(PostActivity.this).load(compressedImagePath)
+                // .into(post_thumbnail);
+
+                Toast.makeText(ProfileActivity.this, "Image selected",
+                        Toast.LENGTH_SHORT).show();
+
+                cursor.close();
             } else if (requestCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
             } else if (requestCode == UCrop.REQUEST_CROP) {
@@ -531,6 +572,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 return;
             }
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //profileActivityViewModel.cameraIntent(ProfileActivity.this);
+                    try {
+                        Intent intent = getIntent();
+                        CommonFunction.saveBackgroundImage(ProfileActivity.this, intent.getStringExtra("eventBg"));
+                    } catch (Exception e) {
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
         }
     }
 
@@ -599,11 +655,187 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         }
                     });
-                }else
-                {
-                    Utility.createShortSnackBar(ll_main,s);
+                } else {
+                    Utility.createShortSnackBar(ll_main, s);
                 }
             }
         });
+    }
+
+    private String getRealPathFromURIgallery(String contentURI) {
+        Uri contentUri = Uri.parse(contentURI);
+        Cursor cursor = getContentResolver().query(contentUri, null, null,
+                null, null);
+        if (cursor == null) {
+            return contentUri.getPath();
+        } else {
+            cursor.moveToFirst();
+            int index = cursor
+                    .getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            return cursor.getString(index);
+        }
+    }
+
+    public String compressImage(String imageUri) {
+
+        String filePath = getRealPathFromURIgallery(imageUri);
+        Bitmap scaledBitmap = null;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        // by setting this field as true, the actual bitmap pixels are not
+        // loaded in the memory. Just the bounds are loaded. If
+        // you try the use the bitmap here, you will get null.
+        options.inJustDecodeBounds = true;
+        Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
+
+        int actualHeight = options.outHeight;
+        int actualWidth = options.outWidth;
+
+        // max Height and width values of the compressed image is taken as
+        // 816x612
+
+        float maxHeight = 916.0f;
+        float maxWidth = 712.0f;
+        float imgRatio = actualWidth / actualHeight;
+        float maxRatio = maxWidth / maxHeight;
+
+        // width and height values are set maintaining the aspect ratio of the
+        // image
+
+        if (actualHeight > maxHeight || actualWidth > maxWidth) {
+            if (imgRatio < maxRatio) {
+                imgRatio = maxHeight / actualHeight;
+                actualWidth = (int) (imgRatio * actualWidth);
+                actualHeight = (int) maxHeight;
+            } else if (imgRatio > maxRatio) {
+                imgRatio = maxWidth / actualWidth;
+                actualHeight = (int) (imgRatio * actualHeight);
+                actualWidth = (int) maxWidth;
+            } else {
+                actualHeight = (int) maxHeight;
+                actualWidth = (int) maxWidth;
+            }
+        }
+
+        // setting inSampleSize value allows to load a scaled down version of
+        // the original image
+
+        options.inSampleSize = calculateInSampleSize(options, actualWidth,
+                actualHeight);
+
+        // inJustDecodeBounds set to false to load the actual bitmap
+        options.inJustDecodeBounds = false;
+
+        // this options allow android to claim the bitmap memory if it runs low
+        // on memory
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+        options.inTempStorage = new byte[16 * 1024];
+
+        try {
+            // load the bitmap from its path
+            bmp = BitmapFactory.decodeFile(filePath, options);
+        } catch (OutOfMemoryError exception) {
+            exception.printStackTrace();
+
+        }
+        try {
+            scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight,
+                    Bitmap.Config.ARGB_8888);
+        } catch (OutOfMemoryError exception) {
+            exception.printStackTrace();
+        }
+
+        float ratioX = actualWidth / (float) options.outWidth;
+        float ratioY = actualHeight / (float) options.outHeight;
+        float middleX = actualWidth / 2.0f;
+        float middleY = actualHeight / 2.0f;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2,
+                middleY - bmp.getHeight() / 2, new Paint(
+                        Paint.FILTER_BITMAP_FLAG));
+
+        // check the rotation of the image and display it properly
+        ExifInterface exif;
+        try {
+            exif = new ExifInterface(filePath);
+
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, 0);
+            Log.d("EXIF", "Exif: " + orientation);
+            Matrix matrix = new Matrix();
+            if (orientation == 6) {
+                matrix.postRotate(90);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 3) {
+                matrix.postRotate(180);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 8) {
+                matrix.postRotate(270);
+                Log.d("EXIF", "Exif: " + orientation);
+            }
+            scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
+                    scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,
+                    true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileOutputStream out = null;
+        String filename = getFilename();
+
+        try {
+            out = new FileOutputStream(filename);
+
+            // write the compressed bitmap at the destination specified by
+            // filename.
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return filename;
+
+    }
+
+    public String getFilename() {
+        File file = new File(Environment.getExternalStorageDirectory()
+                .getPath(), "MyFolder/Images");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String uriSting = (file.getAbsolutePath() + "/"
+                + System.currentTimeMillis() + ".jpg");
+        return uriSting;
+
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options,
+                                     int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height
+                    / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+
+        final float totalPixels = width * height;
+        final float totalReqPixelsCap = reqWidth * reqHeight * 2;
+        while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+            inSampleSize++;
+        }
+
+        return inSampleSize;
     }
 }

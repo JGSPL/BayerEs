@@ -1,5 +1,6 @@
 package com.procialize.eventapp.ui.splash.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,12 +32,12 @@ public class SplashAcivity extends AppCompatActivity implements Splash {
     @Override
     public void openLoginActivity(Context context) {
         context.startActivity(new Intent(context, LoginActivity.class));
-
+        ((Activity)context).finish();
     }
 
     @Override
     public void openMainActivity(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
-
+        ((Activity)context).finish();
     }
 }

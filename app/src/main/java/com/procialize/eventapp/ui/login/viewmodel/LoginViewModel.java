@@ -11,12 +11,12 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.GetterSetter.resendOTP;
 import com.procialize.eventapp.GetterSetter.validateOTP;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
 import com.procialize.eventapp.ui.login.model.Login;
-import com.procialize.eventapp.ui.login.view.LoginActivity;
 
 import java.util.HashMap;
 
@@ -33,6 +33,7 @@ public class LoginViewModel extends BaseObservable {
     private String successMessage = "Login was successful";
     private String errorMessage = "Email or Mobile No. not valid";
     private String errorMessage1 = "Please enter mobile no. or email id";
+    private String errorMessage2 = "Please enter valid OTP";
     private String termsandconditions = "Please Agreed to the terms and conditions";
     private String interneterror = "No Internet Connection.";
     APIService mApiService = ApiUtils.getAPIService();
@@ -144,15 +145,44 @@ public class LoginViewModel extends BaseObservable {
     }
 
     public void onOTPSubmitClicked() {
+        if (isotpValid()) {
+            if (cd.isConnectingToInternet()) {
+                otpValidate(getloginEmail(), getOtp());
+            } else {
+                setToastMessage(interneterror);
+            }
+        } else {
+            setToastMessage(errorMessage2);
+        }
 
-        otpValidate(getloginEmail(), getOtp());
     }
 
     public void onResendOTPClicked() {
+        if (isInputDataValid()) {
+            if (cd.isConnectingToInternet()) {
+                resendOtp(getloginEmail());
+            } else {
+                setToastMessage(interneterror);
+            }
+        } else {
+            setToastMessage(errorMessage1);
+        }
+
     }
 
     public boolean isInputDataValid() {
         if (getloginEmail() == null || getloginEmail().isEmpty())
+            return false;
+        /*else if (getloginPassword() == null || getloginPassword().isEmpty())
+            return false;
+        else if (TextUtils.isEmpty(getloginEmail()) || !Patterns.EMAIL_ADDRESS.matcher(getloginEmail()).matches() || getloginPassword().length() < 5)
+            return false;*/
+        else
+            return true;
+    }
+
+    public boolean isotpValid() {
+        if (getOtp() == null || getOtp().isEmpty())
             return false;
         /*else if (getloginPassword() == null || getloginPassword().isEmpty())
             return false;
@@ -187,6 +217,7 @@ public class LoginViewModel extends BaseObservable {
     }
 
     private void otpValidate(String username, final String otp) {
+
         mApiService.validateOTP("0", username, otp).enqueue(new Callback<validateOTP>() {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
@@ -205,19 +236,52 @@ public class LoginViewModel extends BaseObservable {
                 } else {
                     if (response.body() != null) {
                         if (response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
-                            setToastMessage("Invalid credentials!");
+                            setToastMessage("Invalid OTP");
                         } else {
                             setToastMessage(response.body().getHeader().get(0).getMsg());
                         }
 
                     } else {
-                        setToastMessage("Invalid credentials!");
+                        setToastMessage("Invalid OTP");
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<validateOTP> call, Throwable t) {
+                setToastMessage(errorMessage);
+            }
+        });
+    }
+
+    private void resendOtp(String username) {
+        mApiService.ResendOTP("0", username).enqueue(new Callback<resendOTP>() {
+            @Override
+            public void onResponse(Call<resendOTP> call, Response<resendOTP> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        setToastMessage(" OTP sent on register email id/mobile no");
+                    } else {
+                        if (response.body() != null) {
+                            if (response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
+                                setToastMessage("Invalid credentials!");
+                            } else {
+                                setToastMessage(response.body().getHeader().get(0).getMsg());
+                            }
+                        } else if (response.code() == 400) {
+                            setToastMessage("User Block for 30 min due to too many attempts");
+                        } else {
+                            setToastMessage("Please try after some time");
+                        }
+                    }
+                }catch (Exception e){
+                    setToastMessage("Please try after some time");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<resendOTP> call, Throwable t) {
                 setToastMessage(errorMessage);
             }
         });
