@@ -17,6 +17,9 @@ public class Constant {
     public static final String VIDEO_DIRECTORY = "/Video";
     public static final String BROADCAST_UPLOAD_MULTIMEDIA_ACTION = "com.procialize.eventsapp.UPLOAD_MULTIMEDIA";
 
+    public static class Config {
+        public static final boolean DEVELOPER_MODE = false;
+    }
 
     public static void displayToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();

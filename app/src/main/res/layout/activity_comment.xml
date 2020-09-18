@@ -182,8 +182,23 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin"
                     android:text=""
+                    android:autoLink="web"
+                    android:textColorLink="@android:color/holo_blue_dark"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
+
+
+                <TextView
+                    android:id="@+id/testdataPost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:paddingBottom="5dp"
+                    android:text=""
+                    android:textColor="@color/inactivetab"
+                    android:textSize="@dimen/textsizesmall"
+                    android:visibility="gone" />
+
 
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/vp_media"
@@ -248,22 +263,22 @@
                     android:layout_margin="10dp">
                     <ImageView
                         android:id="@+id/iv_likes"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_weight="1"
                         android:src="@drawable/ic_like"/>
                     <ImageView
                         android:id="@+id/iv_comments"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_weight="1"
                         android:src="@drawable/ic_comment"/>
 
 
                     <ImageView
                         android:id="@+id/iv_share"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_weight="1"
                         android:src="@drawable/ic_share"/>
                 </LinearLayout>
@@ -280,7 +295,12 @@
         </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-
+    <TextView
+        android:id="@+id/textData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:visibility="gone" />
     <FrameLayout
         android:id="@+id/fl_gif_container"
         android:layout_width="match_parent"
@@ -338,6 +358,9 @@
 
     </FrameLayout>
 
+
+    <include layout="@layout/users_list" />
+
     <LinearLayout
         android:id="@+id/ll_comment_container"
         android:layout_width="match_parent"
@@ -378,12 +401,13 @@
                 android:maxLines="20"
                 android:textSize="15dp" />
 
-            <TextView
+
+<!--            <TextView
                 android:id="@+id/textData"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="10sp"
-                android:visibility="gone" />
+                android:visibility="visible" />-->
 
         </LinearLayout>
 

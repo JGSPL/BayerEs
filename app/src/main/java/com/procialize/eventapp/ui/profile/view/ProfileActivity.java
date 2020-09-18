@@ -41,8 +41,10 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
+import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 import com.yalantis.ucrop.UCrop;
 
@@ -86,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     LinearLayout ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobile, ll_main;
     EditText et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
-    TextView tv_profile_pic,tv_header;
+    TextView tv_profile_pic, tv_header;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
     String event_id, profile_pic = "";
@@ -95,13 +97,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
-    String api_token;
+    String api_token, first_name, last_name, designation, company_name, city, email, mobile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        try {
+            Intent intent = getIntent();
+            CommonFunction.saveBackgroundImage(ProfileActivity.this,intent.getStringExtra("eventBg"));
+        }catch (Exception e)
+        {}
         //Call Refresh token
         new RefreashToken(this).callGetRefreashToken(this);
 
@@ -158,19 +165,28 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         CommonFunction.showBackgroundImage(this, ll_main);
         if (connectionDetector.isConnectingToInternet()) {
+
             profileActivityViewModel.getProfile(api_token, event_id);
             profileActivityViewModel.getProfileDetails().observe(this, new Observer<Profile>() {
                 @Override
                 public void onChanged(Profile profile) {
                     List<ProfileDetails> profileDetails = profile.getProfileDetails();
                     if (profileDetails.size() > 0) {
-                        et_first_name.setText(profileDetails.get(0).getFirst_name());
-                        et_last_name.setText(profileDetails.get(0).getLast_name());
-                        et_designation.setText(profileDetails.get(0).getDesignation());
-                        et_company_name.setText(profileDetails.get(0).getCompany_name());
-                        et_city.setText(profileDetails.get(0).getCity());
-                        et_email.setText(profileDetails.get(0).getEmail());
-                        et_mobile.setText(profileDetails.get(0).getMobile());
+                        first_name = profileDetails.get(0).getFirst_name();
+                        last_name = profileDetails.get(0).getLast_name();
+                        designation = profileDetails.get(0).getDesignation();
+                        company_name = profileDetails.get(0).getCompany_name();
+                        city = profileDetails.get(0).getCity();
+                        email = profileDetails.get(0).getEmail();
+                        mobile = profileDetails.get(0).getMobile();
+
+                        et_first_name.setText(first_name);
+                        et_last_name.setText(last_name);
+                        et_designation.setText(designation);
+                        et_company_name.setText(company_name);
+                        et_city.setText(city);
+                        et_email.setText(email);
+                        et_mobile.setText(mobile);
 
                         if (profileDetails.get(0).getProfile_picture().trim() != null) {
                             Glide.with(ProfileActivity.this)
@@ -204,67 +220,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save:
-                String first_name = et_first_name.getText().toString().trim();
-                String last_name = et_last_name.getText().toString().trim();
-                String designation = et_designation.getText().toString().trim();
-                String company_name = et_company_name.getText().toString().trim();
-                String city = et_city.getText().toString().trim();
-                String email = et_email.getText().toString().trim();
-                String mobile = et_mobile.getText().toString().trim();
-                String profile_pic = tv_profile_pic.getText().toString();
+                first_name = et_first_name.getText().toString().trim();
+                last_name = et_last_name.getText().toString().trim();
+                designation = et_designation.getText().toString().trim();
+                company_name = et_company_name.getText().toString().trim();
+                city = et_city.getText().toString().trim();
+                email = et_email.getText().toString().trim();
+                mobile = et_mobile.getText().toString().trim();
+                profile_pic = tv_profile_pic.getText().toString();
 
-                profileActivityViewModel.updateProfile(api_token, event_id,
+                updateProfile(
                         first_name,
                         last_name,
                         designation,
+                        company_name,
                         city,
                         email,
-                        mobile, company_name,
-                        profile_pic);
-                profileActivityViewModel.UpdateProfileDetails().observe(this, new Observer<Profile>() {
-                    @Override
-                    public void onChanged(final Profile profile) {
-                        if (profile != null) {
-                            if (profile.getHeader().get(0).getType().equalsIgnoreCase("success")) {
-
-                                Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
-                                final Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        HashMap<String, String> map = new HashMap<>();
-                                        map.put(KEY_FNAME, profile.getProfileDetails().get(0).getFirst_name());
-                                        map.put(KEY_LNAME, profile.getProfileDetails().get(0).getLast_name());
-                                        map.put(KEY_EMAIL, profile.getProfileDetails().get(0).getEmail());
-                                        map.put(KEY_PASSWORD, "");
-                                        map.put(KEY_DESIGNATION, profile.getProfileDetails().get(0).getDesignation());
-                                        map.put(KEY_COMPANY, profile.getProfileDetails().get(0).getCompany_name());
-                                        map.put(KEY_MOBILE, profile.getProfileDetails().get(0).getMobile());
-                                        map.put(KEY_TOKEN, "");
-                                        map.put(KEY_CITY, profile.getProfileDetails().get(0).getCity());
-                                        map.put(KEY_GCM_ID, "");
-                                        map.put(KEY_PROFILE_PIC, profile.getProfileDetails().get(0).getProfile_picture());
-                                        map.put(KEY_ATTENDEE_ID, profile.getProfileDetails().get(0).getAttendee_id());
-                                        map.put(ATTENDEE_STATUS, profile.getProfileDetails().get(0).getIs_god());
-                                        map.put(IS_LOGIN, "true");
-                                        SharedPreference.putPref(ProfileActivity.this, map);
-
-                                        profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                                    }
-                                }, 100);
-
-                            } else {
-                                Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
-                            }
-                        } else {
-                            Utility.createShortSnackBar(ll_main, "failure..!");
-                        }
-
-                        if (profileActivityViewModel != null && profileActivityViewModel.UpdateProfileDetails().hasObservers()) {
-                            profileActivityViewModel.UpdateProfileDetails().removeObservers(ProfileActivity.this);
-                        }
-                    }
-                });
+                        mobile,
+                        profile_pic
+                );
 
                 break;
             case R.id.iv_change_profile:
@@ -563,7 +537,73 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        /*updateProfile(first_name,
+                last_name,
+                designation,
+                company_name,
+                city,
+                email,
+                mobile,
+                "");*/
         startActivity(new Intent(ProfileActivity.this, MainActivity.class));
         finish();
+    }
+
+    public void updateProfile(final String first_name, final String last_name, final String designation,
+                              final String company_name, final String city, final String email, final String mobile, final String profile_pic) {
+        profileActivityViewModel.validation(first_name, last_name, designation, company_name, city);
+        profileActivityViewModel.getIsValid().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(s.isEmpty()) {
+                    profileActivityViewModel.updateProfile(api_token, event_id, first_name, last_name, designation, city,
+                            email, mobile, company_name, profile_pic);
+                    profileActivityViewModel.UpdateProfileDetails().observe(ProfileActivity.this, new Observer<Profile>() {
+                        @Override
+                        public void onChanged(final Profile profile) {
+                            if (profile != null) {
+                                if (profile.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+
+                                    Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
+                                    final Handler handler = new Handler();
+
+                                    HashMap<String, String> map = new HashMap<>();
+                                    map.put(KEY_FNAME, profile.getProfileDetails().get(0).getFirst_name());
+                                    map.put(KEY_LNAME, profile.getProfileDetails().get(0).getLast_name());
+                                    map.put(KEY_EMAIL, profile.getProfileDetails().get(0).getEmail());
+                                    map.put(KEY_PASSWORD, "");
+                                    map.put(KEY_DESIGNATION, profile.getProfileDetails().get(0).getDesignation());
+                                    map.put(KEY_COMPANY, profile.getProfileDetails().get(0).getCompany_name());
+                                    map.put(KEY_MOBILE, profile.getProfileDetails().get(0).getMobile());
+                                    map.put(KEY_TOKEN, "");
+                                    map.put(KEY_CITY, profile.getProfileDetails().get(0).getCity());
+                                    map.put(KEY_GCM_ID, "");
+                                    map.put(KEY_PROFILE_PIC, profile.getProfileDetails().get(0).getProfile_picture());
+                                    map.put(KEY_ATTENDEE_ID, profile.getProfileDetails().get(0).getAttendee_id());
+                                    map.put(ATTENDEE_STATUS, profile.getProfileDetails().get(0).getIs_god());
+                                    map.put(IS_LOGIN, "true");
+                                    SharedPreference.putPref(ProfileActivity.this, map);
+
+                                    profileActivityViewModel.openMainActivity(ProfileActivity.this);
+                                    profileActivityViewModel.updateProfileFlag(ProfileActivity.this, event_id);
+
+                                } else {
+                                    Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
+                                }
+                            } else {
+                                Utility.createShortSnackBar(ll_main, "failure..!");
+                            }
+
+                            if (profileActivityViewModel != null && profileActivityViewModel.UpdateProfileDetails().hasObservers()) {
+                                profileActivityViewModel.UpdateProfileDetails().removeObservers(ProfileActivity.this);
+                            }
+                        }
+                    });
+                }else
+                {
+                    Utility.createShortSnackBar(ll_main,s);
+                }
+            }
+        });
     }
 }

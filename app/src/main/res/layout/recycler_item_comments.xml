@@ -17,6 +17,8 @@
         android:paddingTop="@dimen/margin"
         android:paddingRight="@dimen/margin">
 
+
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,5 +130,14 @@
 
     </LinearLayout>
 
-
+    <TextView
+        android:id="@+id/testdata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingBottom="5dp"
+        android:text=""
+        android:textColor="@color/inactivetab"
+        android:textSize="@dimen/textsizesmall"
+        android:visibility="gone" />
 </LinearLayout>

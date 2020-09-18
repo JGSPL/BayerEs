@@ -24,4 +24,6 @@ public class AttendeeViewModel extends ViewModel {
     public LiveData<FetchAttendee> getEventList() {
         return fetchAttendeeData;
     }
+
+
 }

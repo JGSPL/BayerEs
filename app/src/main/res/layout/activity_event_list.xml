@@ -37,13 +37,13 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/iv_back"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:id="@+id/iv_logout"
+                    android:layout_width="32dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center"
+                    android:paddingLeft="@dimen/margin"
                     android:src="@drawable/ic_logout"
-                    android:visibility="visible"
-                    android:paddingLeft="@dimen/margin" />
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/tv_header"

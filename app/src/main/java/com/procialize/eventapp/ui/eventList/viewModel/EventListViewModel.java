@@ -7,24 +7,17 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.procialize.eventapp.Utility.SharedPreference;
-import com.procialize.eventapp.Utility.SharedPreferencesConstant;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.model.Event;
-import com.procialize.eventapp.ui.eventList.model.EventList;
 import com.procialize.eventapp.ui.eventList.model.LoginUserInfo;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.eventList.networking.EventRepository;
-import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
-import com.procialize.eventapp.ui.newsFeedComment.networking.CommentRepository;
-import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
-import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
+import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 
 import java.io.Serializable;
 import java.util.List;
-
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EXPIRY_TIME;
 
 public class EventListViewModel extends ViewModel {
 
@@ -32,9 +25,12 @@ public class EventListViewModel extends ViewModel {
     MutableLiveData<Event> eventData = new MutableLiveData<>();
     MutableLiveData<UpdateDeviceInfo> updateData = new MutableLiveData<>();
 
-    public void getEvent(String token,String organizer_id, String search_text) {
+    private LiveData<List<ProfileEventId>> profileDataUpdated;
+
+
+    public void getEvent(String token, String organizer_id, String search_text) {
         eventRepository = EventRepository.getInstance();
-        eventData = eventRepository.getEventList(token,organizer_id, search_text);
+        eventData = eventRepository.getEventList(token, organizer_id, search_text);
     }
 
 
@@ -44,10 +40,10 @@ public class EventListViewModel extends ViewModel {
 
     //-------------Update User data ---------------------
 
-    public void updateUserData(String token,String eventid, String device_token, String platform, String device,
+    public void updateUserData(String token, String eventid, String device_token, String platform, String device,
                                String osVersion, String appVersion, SessionManager sessionManager) {
         eventRepository = EventRepository.getInstance();
-        updateData = eventRepository.UpdateUserInfo(token,eventid, device_token, platform, device, osVersion, appVersion, sessionManager);
+        updateData = eventRepository.UpdateUserInfo(token, eventid, device_token, platform, device, osVersion, appVersion, sessionManager);
     }
 
 
@@ -62,9 +58,17 @@ public class EventListViewModel extends ViewModel {
                 .putExtra("event_details", (Serializable) event)
                 .putExtra("position", "" + position));
     }*/
-    public void openProfilePage(Activity activity, List<LoginUserInfo> event, int position) {
+    public void openProfilePage(Activity activity, List<LoginUserInfo> event, int position,String eventBg) {
         activity.startActivity(new Intent(activity, ProfileActivity.class)
                 .putExtra("event_details", (Serializable) event)
-                .putExtra("position", "" + position));
+                .putExtra("position", "" + position)
+                .putExtra("eventBg", "" + eventBg)
+        );
     }
+
+    public void openMainPage(Activity activity) {
+        activity.startActivity(new Intent(activity, MainActivity.class));
+    }
+
+
 }

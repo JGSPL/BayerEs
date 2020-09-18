@@ -3,20 +3,26 @@ package com.procialize.eventapp.ui.newsFeedPost.viewModel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.percolate.mentions.Mentionable;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.MediaLoader;
+import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.newsFeedComment.networking.GifRepository;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.networking.PostNewsFeedRepository;
@@ -28,6 +34,8 @@ import com.yanzhenjie.album.Album;
 import com.yanzhenjie.album.AlbumConfig;
 import com.yanzhenjie.album.AlbumFile;
 import com.yanzhenjie.album.api.widget.Widget;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +56,7 @@ public class PostNewsFeedViewModel extends ViewModel {
     MutableLiveData<Boolean> isInsertedIntoDB = new MutableLiveData<>();
     MutableLiveData<Boolean> isValid = new MutableLiveData<>();
     PostNewsFeedRepository postNewsFeedRepository;
-
+    private MutableLiveData<List<TableAttendee>> attendeeList = new MutableLiveData<>();
     public void init() {
         if (mutableLiveData == null) {
             return;
@@ -169,5 +177,41 @@ public class PostNewsFeedViewModel extends ViewModel {
     public MutableLiveData<Boolean> getIsValid() {
         return isValid;
     }
+
+    public void showMentionsList(Activity activity,boolean display) {
+        com.percolate.caffeine.ViewUtils.showView(activity, R.id.mentions_list_layout);
+        if (display) {
+            com.percolate.caffeine.ViewUtils.showView(activity, R.id.mentions_list);
+            com.percolate.caffeine.ViewUtils.hideView(activity, R.id.mentions_empty_view);
+        } else {
+            com.percolate.caffeine.ViewUtils.hideView(activity, R.id.mentions_list);
+            com.percolate.caffeine.ViewUtils.showView(activity, R.id.mentions_empty_view);
+        }
+    }
+
+    public void searchUsers(String query,List<TableAttendee> attendeeList_db) {
+        final List<TableAttendee> searchResults = new ArrayList<>();
+        if (StringUtils.isNotBlank(query)) {
+            query = query.toLowerCase(Locale.US);
+            if (attendeeList_db != null && !attendeeList_db.isEmpty()) {
+                searchResults.clear();
+                attendeeList.setValue(null);
+                for (TableAttendee user : attendeeList_db) {
+                    final String firstName = user.getFirst_name().toLowerCase();
+                    final String lastName = user.getLast_name().toLowerCase();
+                    if (firstName.startsWith(query) || lastName.startsWith(query)) {
+                        searchResults.add(user);
+                    }
+                }
+            }
+        }
+        attendeeList.setValue(searchResults);
+    }
+
+    public LiveData<List<TableAttendee>> getAttendeeList()
+    {
+        return attendeeList;
+    }
+
 
 }
