@@ -25,10 +25,19 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
+import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -43,6 +52,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     ProgressBar progressView;
     public static final int RequestPermissionCode = 100;
     AttendeeDetailsViewModel attendeeDetailsViewModel;
+    private DatabaseReference mConvDatabase;
+    private DatabaseReference mUsersDatabase;
+    private DatabaseReference mMessageDatabase;
+    private FirebaseAuth mAuth;
+    String  mCurrent_user_id,attendeeid, firebase_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +107,21 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                         }
                     }).into(iv_profile);
         }
+
+        //--GETTING CURRENT USER ID---
+        mAuth= FirebaseAuth.getInstance();
+        mCurrent_user_id = mAuth.getCurrentUser().getUid();
+
+        //---REFERENCE TO CHATS CHILD IN FIREBASE DATABASE-----
+        mConvDatabase = FirebaseDatabase.getInstance().getReference().child("chats").child(mCurrent_user_id);
+
+        //---OFFLINE FEATURE---
+        mConvDatabase.keepSynced(true);
+
+        mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersDatabase.keepSynced(true);
+
+        mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("messages").child(mCurrent_user_id);
     }
 
     public void getIntentData() {
@@ -105,28 +135,83 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         attendee_type = intent.getStringExtra("attendee_type");
         mobile = intent.getStringExtra("mobile");
         email = intent.getStringExtra("email");
-
-
+        attendeeid = intent.getStringExtra("attendeeid");
+        firebase_id = intent.getStringExtra("firebase_id");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_send_message:
-                String message = et_message.getText().toString().trim();
+                final String SprofilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
+                final String SUserNmae = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
+                final String SlName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
+
+                final String message = et_message.getText().toString().trim();
                 if(message.isEmpty())
                 {
                     Utility.createShortSnackBar(ll_main,"Please enter message..");
+
                 }
                 else
                 {
-                    if(ConnectionDetector.getInstance(this).isConnectingToInternet())
-                    {
+                    if(firebase_id.equalsIgnoreCase("0")){
+                        et_message.setText("");
+                        Utility.createShortSnackBar(ll_main, "User not valid for chat...!");
 
-                    }
-                    else
-                    {
-                        Utility.createShortSnackBar(ll_main,"No internet connection..!");
+                    }else {
+                        if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
+                            mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                               /* final String userName = dataSnapshot.child("name").getValue().toString();
+                                String userThumb = dataSnapshot.child("thumb_image").getValue().toString();
+
+                                if(dataSnapshot.hasChild("online")){
+
+                                    String userOnline = dataSnapshot.child("online").getValue().toString();
+                                    //  convViewHolder.setUserOnline(userOnline);
+
+                                }*/
+                                    //  convViewHolder.setName(userName);
+                                    // convViewHolder.setUserImage(userThumb,this);
+
+                                    //--OPENING CHAT ACTIVITY FOR CLICKED USER----
+
+                                    Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
+                                    chatIntent.putExtra("user_id", firebase_id);
+                                    chatIntent.putExtra("user_name", fname + " " + lname);
+                                    chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
+                                    chatIntent.putExtra("sProfilePic", SprofilePic);
+                                    chatIntent.putExtra("rProfilepic", prof_pic);
+                                    chatIntent.putExtra("attendeeid", attendeeid);
+                                    chatIntent.putExtra("firebase_id", firebase_id);
+                                    chatIntent.putExtra("Message", message);
+                                    chatIntent.putExtra("page", "AttendeeDetail");
+
+                                    chatIntent.putExtra("lname", lname);
+                                    chatIntent.putExtra("company", company);
+                                    chatIntent.putExtra("city", city);
+                                    chatIntent.putExtra("designation", designation);
+                                    chatIntent.putExtra("attendee_type", attendee_type);
+                                    chatIntent.putExtra("mobile", mobile);
+                                    chatIntent.putExtra("email", email);
+
+                                    startActivity(chatIntent);
+                                    finish();
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        } else {
+                            Utility.createShortSnackBar(ll_main, "No internet connection..!");
+                        }
                     }
                 }
                 break;

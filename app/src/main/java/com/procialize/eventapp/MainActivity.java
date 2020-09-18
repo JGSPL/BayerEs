@@ -24,6 +24,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -42,6 +43,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -59,6 +63,10 @@ import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.Constant.colorunselect;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
@@ -85,7 +93,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DatabaseReference mDatabaseReference;
     FirebaseAuth mauth;
     private DatabaseReference mDatabase;
-
+    APIService updateApi;
+    MutableLiveData<LoginOrganizer> chatUpdate = new MutableLiveData<>();
+    String api_token,eventid;
+    String fName;
+    String fireEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,13 +113,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mauth=FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
         mDatabase=FirebaseDatabase.getInstance().getReference().child("users");
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(this, EVENT_ID);
 
 
         CommonFunction.showBackgroundImage(this, ll_main);
 
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
-        String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
+        fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
         String lName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
         String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
         String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
@@ -124,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView tv_designation = outer.findViewById(R.id.tv_designation);
         tv_name.setText(fName + " " + lName);
         tv_designation.setText(designation + " - " + city);
-        String fireEmail;
+
         if(email.equalsIgnoreCase("")) {
              fireEmail = fName + "_" + attendee_id + "_" + event_id + "@procialize.in";
         }else{
@@ -436,6 +450,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
+
     //Login User
     private void login_user(String email, String password) {
 
@@ -465,10 +481,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         //---OPENING MAIN ACTIVITY---
                                         Log.e("Login : ","Logged in Successfully" );
-                                        Toast.makeText(getApplicationContext(), "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                                        /*Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-                                        startActivity(intent);
-                                        finish();*/
+                                        Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                        String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                        getChatUpdate(api_token,eventid,currentuser,fireEmail,fName);
+
                                     }
                                     else{
                                         Toast.makeText(MainActivity.this, databaseError.toString()  , Toast.LENGTH_SHORT).show();
@@ -488,6 +504,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 });
-    }
+        }
+
+        //Update Api
+        public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username) {
+            updateApi = ApiUtils.getAPIService();
+
+            updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail).enqueue(new Callback<LoginOrganizer>() {
+                @Override
+                public void onResponse(Call<LoginOrganizer> call,
+                                       Response<LoginOrganizer> response) {
+                    if (response.isSuccessful()) {
+                        chatUpdate.setValue(response.body());
+                        Utility.createShortSnackBar(ll_main,"Chat info updated");
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                    chatUpdate.setValue(null);
+
+                }
+            });
+            return chatUpdate;
+        }
+
+
 
 }

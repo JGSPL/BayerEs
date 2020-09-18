@@ -20,5 +20,6 @@
     <color name="colorgrey">#e6e6e6</color>
 
     <color name="colorwhite">#ffffff</color>
-
+    <color name="colorBackground">#7E57C2</color>
+    <color name="colorButton">#d67601</color>
 </resources>
