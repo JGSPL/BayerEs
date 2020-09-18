@@ -195,7 +195,7 @@ public class LoginViewModel extends BaseObservable {
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
                     setToastMessage(response.body().getHeader().get(0).getMsg());
-                    LoginActivity.sessionManager.storeAuthHeaderkey(response.body().getTokenpreenrypt());
+
                     RefreashToken refreashToken = new RefreashToken(context);
                     String data = refreashToken.decryptedData(response.body().getToken().toString().trim());
                     refreashToken.decodeRefreashToken(data);

@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.procialize.eventapp.Database.EventAppDB;
+import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
@@ -24,7 +25,7 @@ public class NewsFeedDatabaseViewModel extends ViewModel {
     EventAppDB eventAppDB;
     private LiveData<List<TableNewsFeed>> newsFeedData = new MutableLiveData<>();
     private LiveData<List<TableNewsFeedMedia>> newsFeedMediaData;// = new MutableLiveData<>();
-
+    private LiveData<List<TableAttendee>> attendeeDetail;
     public void insertIntoDb(Context context, List<Newsfeed_detail> newsfeedDetails) {
         eventAppDB = EventAppDB.getDatabase(context);
 
@@ -101,4 +102,13 @@ public class NewsFeedDatabaseViewModel extends ViewModel {
         return ;
     }
 
+    public void getAttendeeDetailsFromId(Context context,String attendeeid)
+    {
+        eventAppDB = EventAppDB.getDatabase(context);
+        attendeeDetail = eventAppDB.attendeeDao().getAttendeeDetailsFromId(attendeeid);
+    }
+
+    public LiveData<List<TableAttendee>> getAttendeeDetails() {
+        return attendeeDetail;
+    }
 }

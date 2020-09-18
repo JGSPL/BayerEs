@@ -24,7 +24,9 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.eventList.model.EventList;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.NewsViewHold
     List<EventList> eventListsFilter;
     String mediaPath;
     EventAdapter.EventAdapterListner listener;
+    public static boolean isClickable = true;
 
     public EventAdapter(Context context, List<EventList> eventLists, EventAdapter.EventAdapterListner listener) {
         this.context = context;
@@ -84,18 +87,22 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.NewsViewHold
 
         holder.tv_event_name.setText(events.getName());
 
-
         holder.tv_date_time.setTextColor(context.getResources().getColor(R.color.black));
         holder.tv_venue.setTextColor(context.getResources().getColor(R.color.black));
+
+        if(isClickable)
+        {holder.ll_main_event_list.setEnabled(true);}
+        else
+        {holder.ll_main_event_list.setEnabled(false);}
 
         holder.ll_main_event_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 listener.onMoreSelected(events,position);
+
+                isClickable = false;
             }
         });
-
     }
 
     @Override
@@ -137,7 +144,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.NewsViewHold
                 eventListsFilter = (ArrayList<EventList>) filterResults.values;
 
                 if (eventListsFilter.size() == 0) {
-                    Toast.makeText(context, "No Event Found", Toast.LENGTH_SHORT).show();
+                    Utility.createShortSnackBar(EventListActivity.ll_main,"No Event Found");
+                    //Toast.makeText(context, "No Event Found", Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
                 }
                 // refresh the list with filtered data

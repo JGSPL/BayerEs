@@ -78,7 +78,8 @@ public class NewsfeedRepository {
         List<MultipartBody.Part> thumbParts = new ArrayList<>();
         for (int i = 0; i < resultList.size(); i++) {
             File file;
-            if (resultList.get(i).getMimeType().contains("gif")) {
+            MultipartBody.Part filePart;
+            if (resultList.get(i).getMedia_file().contains("gif")) {
                 file = new File(resultList.get(i).getMedia_file());
             } else {
                 if (!resultList.get(i).getCompressedPath().isEmpty()) {
@@ -87,7 +88,19 @@ public class NewsfeedRepository {
                     file = new File(resultList.get(i).getMedia_file());
                 }
             }
-            MultipartBody.Part filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse(resultList.get(i).getMimeType()), file));
+
+            if(MediaType.parse(resultList.get(i).getMimeType())==null)
+            {
+                if(resultList.get(i).getMedia_type().equalsIgnoreCase("image")) {
+                    filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse("image/png"), file));
+                }
+                else
+                {
+                    filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse("video/mp4"), file));
+                }
+            }else {
+                filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse(resultList.get(i).getMimeType()), file));
+            }
             parts.add(filePart);
         }
 

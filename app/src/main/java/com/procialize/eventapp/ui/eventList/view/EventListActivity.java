@@ -1,12 +1,14 @@
 package com.procialize.eventapp.ui.eventList.view;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.RefreashToken;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
-import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.adapter.EventAdapter;
@@ -30,6 +32,8 @@ import com.procialize.eventapp.ui.eventList.model.EventList;
 import com.procialize.eventapp.ui.eventList.model.LoginUserInfo;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.eventList.viewModel.EventListViewModel;
+import com.procialize.eventapp.ui.login.view.LoginActivity;
+import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,19 +55,21 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBI
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
+import static com.procialize.eventapp.ui.eventList.adapter.EventAdapter.isClickable;
 
-public class EventListActivity extends AppCompatActivity implements EventAdapter.EventAdapterListner {
+public class EventListActivity extends AppCompatActivity implements EventAdapter.EventAdapterListner , View.OnClickListener {
 
     EventListViewModel eventListViewModel;
     ConnectionDetector cd;
-    LinearLayout ll_main;
+    public static LinearLayout ll_main;
     RecyclerView rv_event_list;
     EventAdapter eventAdapter;
     EditText et_search;
-    String event_id , device_token = "111111", platform, device, osVersion, appVersion, deviceId;
+    String event_id, device_token = "111111", platform, device, osVersion, appVersion, deviceId;
     SessionManager session;
-    String api_token="";
+    String api_token = "";
     boolean result;
+    ImageView iv_logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,28 +91,16 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
+        iv_logout = findViewById(R.id.iv_logout);
         ll_main = findViewById(R.id.ll_main);
         et_search = findViewById(R.id.et_search);
         rv_event_list = findViewById(R.id.rv_event_list);
         cd = ConnectionDetector.getInstance(this);
         eventListViewModel = ViewModelProviders.of(this).get(EventListViewModel.class);
-
+        iv_logout.setOnClickListener(this);
         if (cd.isConnectingToInternet()) {
-          /*  String expirytime = SharedPreference.getPref(EventListActivity.this, SharedPreferencesConstant.EXPIRY_TIME);
-            String timestamp_expiry = Utility.getDate(Long.parseLong(expirytime));
-//            Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expirytime));
-//            int isvalidtoken = Utility.getTimeDifferenceInMillis(String.valueOf(timestamp_expiry));
-            boolean isvalidtoken = Utility.isTimeGreater(String.valueOf(timestamp_expiry));
-
-            if (isvalidtoken == false) {
-                RefreashToken refreashToken = new RefreashToken(EventListActivity.this);*/
             new RefreashToken(EventListActivity.this).callGetRefreashToken(EventListActivity.this);
-            /*} else {
-                Log.d("TAG", "Token is already refreashed");
-            }*/
-
-
-            eventListViewModel.getEvent(api_token,"0", "");
+            eventListViewModel.getEvent(api_token, "0", "");
 
             eventListViewModel.getEventList().observe(this, new Observer<Event>() {
                 @Override
@@ -159,17 +153,16 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     @Override
     public void onMoreSelected(EventList event, final int position) {
         if (cd.isConnectingToInternet()) {
-
-           // if(result) {
-                final String eventId = event.getEvent_id();
-                CommonFunction.saveBackgroundImage(EventListActivity.this, event.getBackground_image());
-                session.saveCurrentEvent(event);
-                eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
-
-            eventListViewModel.getupdateUserdatq().observe(this, new Observer<UpdateDeviceInfo>() {
+            // if(result) {
+            final String eventId = event.getEvent_id();
+            final String eventBg = event.getBackground_image();
+            CommonFunction.saveBackgroundImage(EventListActivity.this, event.getBackground_image());
+            session.saveCurrentEvent(event);
+            eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
+            eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
                 @Override
                 public void onChanged(UpdateDeviceInfo event) {
-                    List<LoginUserInfo> userData = event.getLoginUserInfoList();
+                    final List<LoginUserInfo> userData = event.getLoginUserInfoList();
                   /*  String fname = userData.get(0).getFirst_name();
                     String lName = userData.get(0).getLast_name();
                     String designation = userData.get(0).getDesignation();
@@ -180,36 +173,59 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     String is_god = userData.get(0).getIs_god();
                     String emailId = userData.get(0).getEmail();*/
 
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put(KEY_FNAME, userData.get(0).getFirst_name());
-                        map.put(KEY_LNAME, userData.get(0).getLast_name());
-                        map.put(KEY_EMAIL, userData.get(0).getEmail());
-                        map.put(KEY_PASSWORD, "");
-                        map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
-                        map.put(KEY_COMPANY, userData.get(0).getCompany_name());
-                        map.put(KEY_MOBILE, userData.get(0).getMobile());
-                        map.put(KEY_TOKEN, "");
-                        map.put(KEY_CITY, userData.get(0).getCity());
-                        map.put(KEY_GCM_ID, "");
-                        map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
-                        map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
-                        map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
-                        map.put(IS_LOGIN, "true");
-                        map.put(EVENT_ID, eventId);
-                        SharedPreference.putPref(EventListActivity.this, map);
-                        //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(KEY_FNAME, userData.get(0).getFirst_name());
+                    map.put(KEY_LNAME, userData.get(0).getLast_name());
+                    map.put(KEY_EMAIL, userData.get(0).getEmail());
+                    map.put(KEY_PASSWORD, "");
+                    map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
+                    map.put(KEY_COMPANY, userData.get(0).getCompany_name());
+                    map.put(KEY_MOBILE, userData.get(0).getMobile());
+                    map.put(KEY_TOKEN, "");
+                    map.put(KEY_CITY, userData.get(0).getCity());
+                    map.put(KEY_GCM_ID, "");
+                    map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
+                    map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
+                    map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
+                    map.put(IS_LOGIN, "true");
+                    map.put(EVENT_ID, eventId);
+                    SharedPreference.putPref(EventListActivity.this, map);
+                    //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
 
 
-                        if (eventListViewModel != null && eventListViewModel.getupdateUserdatq().hasObservers()) {
-                            eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
-                        }
-
-                        eventListViewModel.openProfilePage(EventListActivity.this, userData, position);
+                    if (eventListViewModel != null && eventListViewModel.getupdateUserdatq().hasObservers()) {
+                        eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
                     }
-                });
-           // }
+                    EventAppDB eventAppDB = EventAppDB.getDatabase(EventListActivity.this);
+                    List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId);
+                    if (profileDataUpdated.size() > 0) {
+                        isClickable = true;
+                        eventListViewModel.openMainPage(EventListActivity.this);
+                    } else {
+                        isClickable = true;
+                        eventListViewModel.openProfilePage(EventListActivity.this, userData, position, eventBg);
+                    }
+                }
+            });
+            // }
         } else {
+            isClickable = true;
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.iv_logout:
+                isClickable = true;
+                SessionManager.clearCurrentEvent(EventListActivity.this);
+                SessionManager.logoutUser(EventListActivity.this);
+                SharedPreference.clearAllPref(EventListActivity.this);
+                startActivity(new Intent(EventListActivity.this, LoginActivity.class));
+                finish();
+            break;
         }
     }
 }

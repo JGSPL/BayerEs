@@ -105,8 +105,6 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         attendee_type = intent.getStringExtra("attendee_type");
         mobile = intent.getStringExtra("mobile");
         email = intent.getStringExtra("email");
-
-
     }
 
     @Override

@@ -328,6 +328,8 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:hint="Email"
+                        android:editable="false"
+                        android:clickable="false"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -354,6 +356,8 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:hint="Mobile"
+                        android:editable="false"
+                        android:clickable="false"
                         android:textSize="13dp" />
                 </LinearLayout>
 

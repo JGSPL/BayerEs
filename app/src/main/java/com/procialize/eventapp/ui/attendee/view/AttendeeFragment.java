@@ -36,6 +36,7 @@ import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.adapter.AttendeeAdapter;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
+import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
@@ -77,6 +78,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     int attendeePageNumber = 1;
     int attendeePageSize = 10;
     AttendeeViewModel attendeeViewModel;
+    AttendeeDatabaseViewModel attendeeDatabaseViewModel;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -109,6 +111,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         cd = ConnectionDetector.getInstance(getActivity());
         sessionManager = new SessionManager(getContext());
         attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
+        attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
 
 
         // use a linear layout manager
@@ -279,13 +282,20 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         Log.d("First Page", "loadFirstPage: ");
 
         // To ensure list is visible when retry button in error view is clicked
+
+
         currentPage = PAGE_START;
         attendeeViewModel.getAttendee(api_token,eventid, "", String.valueOf(attendeePageNumber),String.valueOf(attendeePageSize));
         attendeeViewModel.getEventList().observe(this, new Observer<FetchAttendee>() {
             @Override
             public void onChanged(FetchAttendee event) {
                 List<Attendee> eventLists = event.getAttandeeList();
-            progressBar.setVisibility(View.GONE);
+
+                //Delete All attendee from local db and insert attendee
+                attendeeDatabaseViewModel.deleteAllAttendee(getActivity());
+                attendeeDatabaseViewModel.insertIntoDb(getActivity(),eventLists);
+
+                progressBar.setVisibility(View.GONE);
 
                 setupEventAdapter(eventLists);
             }
@@ -313,6 +323,9 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
                 List<Attendee> results = event.getAttandeeList();
                 attendeeAdapter.addAll(results);
+                //insert attendee in local db
+                attendeeDatabaseViewModel.insertIntoDb(getActivity(),results);
+
                 if (currentPage != totalPages)
                     attendeeAdapter.addLoadingFooter();
                 else

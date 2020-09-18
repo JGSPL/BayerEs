@@ -60,7 +60,6 @@ import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.procialize.eventapp.Utility.Constant.colorunselect;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event,tr_home,tr_profile;
+    TableRow tr_switch_event, tr_home, tr_profile;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
     FirebaseAuth mauth;
@@ -98,12 +97,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rv_side_menu = findViewById(R.id.rv_side_menu);
         mToolbar = findViewById(R.id.toolbar);
         ll_main = findViewById(R.id.ll_main);
-        mauth=FirebaseAuth.getInstance();
+        mauth = FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-        mDatabase=FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
 
 
-        CommonFunction.showBackgroundImage(this, ll_main);
 
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
@@ -112,9 +110,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
         String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
         String email = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_EMAIL);
-        String event_id = SharedPreference.getPref(this, EVENT_ID);;
+        String event_id = SharedPreference.getPref(this, EVENT_ID);
+        ;
         String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
+        String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
 
+
+        CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
+        CommonFunction.showBackgroundImage(this, ll_main);
 
         LinearLayout outer = findViewById(R.id.my);
         ImageView iv_profile = outer.findViewById(R.id.iv_profile);
@@ -125,16 +128,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_name.setText(fName + " " + lName);
         tv_designation.setText(designation + " - " + city);
         String fireEmail;
-        if(email.equalsIgnoreCase("")) {
-             fireEmail = fName + "_" + attendee_id + "_" + event_id + "@procialize.in";
-        }else{
+        if (email.equalsIgnoreCase("")) {
+            fireEmail = fName + "_" + attendee_id + "_" + event_id + "@procialize.in";
+        } else {
             String[] domains = email.split("@");
-            fireEmail = fName + "_" + attendee_id + "_" + event_id+"@" + domains[1];
+            fireEmail = fName + "_" + attendee_id + "_" + event_id + "@" + domains[1];
 
         }
 
         //Chat related process
-        register_user(fName,fireEmail,"12345678");
+        register_user(fName, fireEmail, "12345678");
 
 
         Glide.with(MainActivity.this)
@@ -153,12 +156,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setUpToolbar();
         setUpNavDrawer();
+
+
         tr_switch_event = findViewById(R.id.tr_switch_event);
         tr_home = findViewById(R.id.tr_home);
         tr_profile = findViewById(R.id.tr_profile);
         tr_switch_event.setOnClickListener(this);
         tr_home.setOnClickListener(this);
         tr_profile.setOnClickListener(this);
+
+        if (tot_event.equalsIgnoreCase("1")) {
+            tr_switch_event.setVisibility(View.GONE);
+        } else {
+            tr_switch_event.setVisibility(View.VISIBLE);
+        }
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -381,30 +392,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //-----REGISTERING THE NEW USER------
     private void register_user(final String displayname, final String email, final String password) {
 
-        mauth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
+        mauth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 //------IF USER IS SUCCESSFULLY REGISTERED-----
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
 
                     FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
-                    final String uid=current_user.getUid();
+                    final String uid = current_user.getUid();
                     String token_id = FirebaseInstanceId.getInstance().getToken();
-                    Map userMap=new HashMap();
-                    userMap.put("device_token",token_id);
-                    userMap.put("name",displayname);
-                    userMap.put("status","Hello Events");
-                    userMap.put("image","default");
-                    userMap.put("thumb_image","default");
-                    userMap.put("online","true");
+                    Map userMap = new HashMap();
+                    userMap.put("device_token", token_id);
+                    userMap.put("name", displayname);
+                    userMap.put("status", "Hello Events");
+                    userMap.put("image", "default");
+                    userMap.put("thumb_image", "default");
+                    userMap.put("online", "true");
 
                     mDatabase.child(uid).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task1) {
-                            if(task1.isSuccessful()){
+                            if (task1.isSuccessful()) {
 
-                               // Toast.makeText(getApplicationContext(), "New User is created", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(getApplicationContext(), "New User is created", Toast.LENGTH_SHORT).show();
                                /* Intent intent=new Intent(MainActivity.this,MainActivity.class);
 
                                 //----REMOVING THE LOGIN ACTIVITY FROM THE QUEUE----
@@ -413,11 +424,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 finish();*/
 
 
-
-                            }
-                            else{
-                                login_user(email,password);
-                              //  Toast.makeText(MainActivity.this, "YOUR NAME IS NOT REGISTERED... MAKE NEW ACCOUNT-- ", Toast.LENGTH_SHORT).show();
+                            } else {
+                                login_user(email, password);
+                                //  Toast.makeText(MainActivity.this, "YOUR NAME IS NOT REGISTERED... MAKE NEW ACCOUNT-- ", Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -427,8 +436,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
                 //---ERROR IN ACCOUNT CREATING OF NEW USER---
-                else{
-                    login_user(email,password);
+                else {
+                    login_user(email, password);
 
                     //Toast.makeText(getApplicationContext(), "ERROR REGISTERING USER....", Toast.LENGTH_SHORT).show();
                 }
@@ -440,48 +449,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void login_user(String email, String password) {
 
         //---SIGN IN FOR THE AUTHENTICATE EMAIL-----
-        mauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this,
+        mauth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
                             //---ADDING DEVICE TOKEN ID AND SET ONLINE TO BE TRUE---
                             //---DEVICE TOKEN IS USED FOR SENDING NOTIFICATION----
-                            String user_id=mauth.getCurrentUser().getUid();
-                            String token_id= FirebaseInstanceId.getInstance().getToken();
+                            String user_id = mauth.getCurrentUser().getUid();
+                            String token_id = FirebaseInstanceId.getInstance().getToken();
                             Map addValue = new HashMap();
-                            addValue.put("device_token",token_id);
-                            addValue.put("online","true");
+                            addValue.put("device_token", token_id);
+                            addValue.put("online", "true");
 
                             //---IF UPDATE IS SUCCESSFULL , THEN OPEN MAIN ACTIVITY---
-                            mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener(){
+                            mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener() {
 
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
-                                    if(databaseError==null){
+                                    if (databaseError == null) {
 
                                         //---OPENING MAIN ACTIVITY---
-                                        Log.e("Login : ","Logged in Successfully" );
+                                        Log.e("Login : ", "Logged in Successfully");
                                         Toast.makeText(getApplicationContext(), "Logged in Successfully", Toast.LENGTH_SHORT).show();
                                         /*Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                                         startActivity(intent);
                                         finish();*/
-                                    }
-                                    else{
-                                        Toast.makeText(MainActivity.this, databaseError.toString()  , Toast.LENGTH_SHORT).show();
-                                        Log.e("Error is : ",databaseError.toString());
+                                    } else {
+                                        Toast.makeText(MainActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
+                                        Log.e("Error is : ", databaseError.toString());
 
                                     }
                                 }
                             });
 
 
-
-                        }
-                        else{
+                        } else {
                             //---IF AUTHENTICATION IS WRONG----
                             Toast.makeText(MainActivity.this, "Wrong Credentials" +
                                     "", Toast.LENGTH_SHORT).show();

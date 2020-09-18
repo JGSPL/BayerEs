@@ -44,8 +44,11 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LI
 public class CommonFunction {
 
     public static void saveBackgroundImage(Context context, String url) {
+
         boolean result = Utility.checkWritePermission(context);
         if(result) {
+
+
             String mediaPath = SharedPreference.getPref(context, EVENT_LIST_MEDIA_PATH);
             Picasso.with(context).load(mediaPath + url).into(new Target() {
                 @Override
@@ -57,6 +60,14 @@ public class CommonFunction {
                     }
 
                     String name = "background.jpg";
+                    File fdelete = new File(Uri.parse(myDir+"/"+name).getPath());
+                    if (fdelete.exists()) {
+                        if (fdelete.delete()) {
+                            System.out.println("file Deleted :" + Uri.parse(myDir+"/"+name).getPath());
+                        } else {
+                            System.out.println("file not Deleted :" + Uri.parse(myDir+"/"+name).getPath());
+                        }
+                    }
                     myDir = new File(myDir, name);
                     FileOutputStream out = null;
                     try {

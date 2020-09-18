@@ -101,8 +101,8 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="145dp"
-                        android:layout_height="145dp"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
                         android:layout_centerInParent="true"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
@@ -111,19 +111,19 @@
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/myCardView"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/image_border"
-                        app:cardCornerRadius="70dp"
+                        app:cardCornerRadius="50dp"
                         app:cardElevation="@dimen/album_dp_0">
 
 
                         <ImageView
                             android:id="@+id/iv_profile"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_centerInParent="true"
                             android:adjustViewBounds="true"
                             android:contentDescription="TODO"
@@ -155,15 +155,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:text="Aparna Badhan"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
                 <TextView
@@ -171,15 +171,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:text="Developer"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
 
@@ -188,15 +188,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:text="Aparna Badhan"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
                 <TextView
@@ -204,15 +204,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:text="Mumbai"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
                 <TextView
@@ -220,14 +220,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:text="Mobile"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
                 <TextView
@@ -235,17 +235,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:text="Email"
-                    android:textSize="16dp" />
+                    android:textSize="15dp" />
 
                 <EditText
                     android:id="@+id/et_message"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_gravity="bottom"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/edit_background"
                     android:gravity="top"
                     android:hint="Type your message..."
@@ -265,14 +265,13 @@
                     <LinearLayout
                         android:id="@+id/ll_send_message"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentBottom="true"
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:background="@color/activetab"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        android:padding="15dp"
                         >
 
                         <ImageView
@@ -288,7 +287,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:background="@color/transperent"
-                            android:minHeight="0dp"
                             android:text="Send Message"
                             android:textAllCaps="true"
                             android:textColor="@color/white"
@@ -298,7 +296,7 @@
                     <LinearLayout
                         android:id="@+id/ll_save_contact"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="40dp"
                         android:layout_alignParentBottom="true"
                         android:layout_gravity="center"
                         android:layout_weight="1"

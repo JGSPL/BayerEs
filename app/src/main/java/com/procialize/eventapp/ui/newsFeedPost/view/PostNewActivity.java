@@ -1,14 +1,19 @@
 package com.procialize.eventapp.ui.newsFeedPost.view;
 
+import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,8 +21,11 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +33,10 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.percolate.mentions.Mentionable;
+import com.percolate.mentions.Mentions;
+import com.percolate.mentions.QueryListener;
+import com.percolate.mentions.SuggestionsListener;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Constants.RefreashToken;
@@ -32,29 +44,44 @@ import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.costumTools.RecyclerItemClickListener;
+import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
+import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
+import com.procialize.eventapp.ui.newsFeedLike.model.AttendeeList;
 import com.procialize.eventapp.ui.newsFeedPost.adapter.ViewPagerMultimediaAdapter;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
+import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.viewModel.PostNewsFeedViewModel;
+import com.procialize.eventapp.ui.newsfeed.model.Mention;
+import com.procialize.eventapp.ui.tagging.adapter.UsersAdapter;
+import com.procialize.eventapp.ui.tagging.model.TaggingComment;
 import com.yanzhenjie.album.AlbumFile;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
-public class PostNewActivity extends AppCompatActivity implements View.OnClickListener {
+public class PostNewActivity extends AppCompatActivity implements View.OnClickListener , QueryListener, SuggestionsListener {
 
-    LinearLayout ll_upload_media, ll_media_dots, linear;
+    LinearLayout ll_upload_media, ll_media_dots, linear,ll_info;
     EditText et_post;
-    TextView btn_post, tv_count,tv_name;
+    TextView btn_post, tv_count,tv_name,txtUploadImg,tv_header,tv_total_count,textData;
     PostNewsFeedViewModel postNewsFeedViewModel;
     ArrayList<SelectedImages> resultList = new ArrayList<>();
     private ArrayList<AlbumFile> mAlbumFiles = new ArrayList<>();//Array For selected images and videos
@@ -66,9 +93,12 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     private int dotscount;
     ConnectionDetector cd;
     EventAppDB eventAppDB;
-    ImageView iv_back,iv_profile;
-    String event_id, api_token;
-
+    ImageView iv_back,iv_profile,imguploadimg;
+    String event_id, api_token, postText ="" ;
+    UsersAdapter usersAdapter;
+    private Mentions mentions;
+    AttendeeDatabaseViewModel attendeeDatabaseViewModel;
+    List<TableAttendee> attendeeList = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,17 +112,27 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
         Log.d("tot_count", String.valueOf(eventAppDB.uploadMultimediaDao().getRowCount()));
         postNewsFeedViewModel = ViewModelProviders.of(this).get(PostNewsFeedViewModel.class);
+        attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+
         cd = ConnectionDetector.getInstance(this);
         ll_upload_media = findViewById(R.id.ll_upload_media);
         iv_back = findViewById(R.id.iv_back);
         iv_profile = findViewById(R.id.iv_profile);
         ll_media_dots = findViewById(R.id.ll_media_dots);
+        ll_info = findViewById(R.id.ll_info);
         linear = findViewById(R.id.linear);
         btn_post = findViewById(R.id.btn_post);
         tv_count = findViewById(R.id.tv_count);
         tv_name = findViewById(R.id.tv_name);
+        tv_header = findViewById(R.id.tv_header);
+        txtUploadImg = findViewById(R.id.txtUploadImg);
+        tv_total_count = findViewById(R.id.tv_total_count);
+        textData = findViewById(R.id.textData);
         et_post = findViewById(R.id.et_post);
+        imguploadimg = findViewById(R.id.imguploadimg);
         iv_back.setOnClickListener(this);
+
+        setDynamicColor();
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
@@ -274,6 +314,23 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
+
+
+        //Tagging Functionality
+        attendeeList = new ArrayList<TableAttendee>();
+        attendeeDatabaseViewModel.getAttendeeDetails(this);
+        attendeeDatabaseViewModel.getAttendeeList().observeForever(new Observer<List<TableAttendee>>() {
+            @Override
+            public void onChanged(List<TableAttendee> tableAttendees) {
+                attendeeList = tableAttendees;
+            }
+        });
+        mentions = new Mentions.Builder(this, et_post)
+                .suggestionsListener(this)
+                .queryListener(this)
+                .build();
+
+        setupMentionsList();
     }
 
     @Override
@@ -290,7 +347,14 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     //Call Refresh token
                     new RefreashToken(this).callGetRefreashToken(this);
 
-                    final String postText = et_post.getText().toString().trim();
+                    postText = et_post.getText().toString().trim();
+                    final TaggingComment comment = new TaggingComment();
+                    comment.setComment(postText);
+                    comment.setMentions(mentions.getInsertedMentions());
+                    textData.setText(postText);
+
+                    postText = highlightMentions(textData, comment.getMentions());
+
                     btn_post.setEnabled(false);
                     if (resultList.size() == 0) {
                         postNewsFeedViewModel.validation(postText);
@@ -325,25 +389,6 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                         });
                     } else {
                         try {
-                            /*eventAppDB = EventAppDB.getDatabase(this);
-                            Log.d("Tot_Count",String.valueOf(eventAppDB.uploadMultimediaDao().getRowCount()));
-                            Date date = new Date();
-                            long time = date.getTime();
-                            Timestamp ts = new Timestamp(time);
-
-                            for (int i = 0; i < resultList.size(); i++) {
-                                UploadMultimedia uploadMultimedia = new UploadMultimedia();
-                                uploadMultimedia.setMultimedia_id(String.valueOf(eventAppDB.uploadMultimediaDao().getRowCount()+1));
-                                uploadMultimedia.setMedia_file(resultList.get(i).getmOriginalFilePath());
-                                uploadMultimedia.setMedia_file_thumb(resultList.get(i).getmThumbPath());
-                                uploadMultimedia.setNews_feed_id("");
-                                uploadMultimedia.setIs_uploaded("0");
-                                uploadMultimedia.setMedia_type(resultList.get(i).getmMediaType());
-                                uploadMultimedia.setCompressedPath("");
-                                uploadMultimedia.setFolderUniqueId(ts.toString());
-
-                                eventAppDB.uploadMultimediaDao().insertMultimediaToUpload(uploadMultimedia);
-                            }*/
                             postNewsFeedViewModel.insertMultimediaIntoDB(this, postText, resultList);
                             postNewsFeedViewModel.getDBStatus().observe(this, new Observer<Boolean>() {
                                 @Override
@@ -420,5 +465,128 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void setDynamicColor()
+    {
+        CommonFunction.showBackgroundImage(this, linear);
+        ll_info.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_2)));
+        tv_name.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1)));
+        ll_upload_media.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1)));
+
+        txtUploadImg.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1)));
+        tv_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_3)));
+        tv_total_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_3)));
+        btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1)));
+        btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_4)));
+
+        int color1 = Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1));
+        imguploadimg.setColorFilter(color1, PorterDuff.Mode.SRC_ATOP);
+
+        int color4 = Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_4));
+        iv_back.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_4)));
+    }
+
+    //Tagging Functionality
+
+
+    private void setupMentionsList() {
+        final RecyclerView mentionsList = findViewById(R.id.mentions_list);
+        mentionsList.setLayoutManager(new LinearLayoutManager(this));
+        usersAdapter = new UsersAdapter(this);
+        mentionsList.setAdapter(usersAdapter);
+        InputMethodManager inputManager = ( InputMethodManager ) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
+        // set on item click listener
+        mentionsList.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(final View view, final int position) {
+                final TableAttendee user = usersAdapter.getItem(position);
+
+                /*
+                 * We are creating a mentions object which implements the
+                 * <code>Mentionable</code> interface this allows the library to set the offset
+                 * and length of the mention.
+                 */
+                if (user != null) {
+                    final Mention mention = new Mention();
+                    mention.setMentionName(user.getFirst_name() + " " + user.getLast_name());
+                    mention.setMentionid(user.getAttendee_id());
+                    mentions.insertMention(mention);
+                }
+            }
+        }));
+    }
+
+    @Override
+    public void onQueryReceived(String s) {
+        postNewsFeedViewModel.searchUsers(s,attendeeList);
+        postNewsFeedViewModel.getAttendeeList().observe(this,new Observer<List<TableAttendee>>() {
+            @Override
+            public void onChanged(List<TableAttendee> tableAttendees) {
+                if(tableAttendees!=null && !tableAttendees.isEmpty())
+                {
+                    ArrayList<String> arr = new ArrayList<String>(tableAttendees.size());
+                    for (int j = 0; j < tableAttendees.size(); j++) {
+                        arr.add(tableAttendees.get(j).getAttendee_id());
+                    }
+
+                    for (int i = 0; i < mentions.getInsertedMentions().size(); i++) {
+                        String mentionName = mentions.getInsertedMentions().get(i).getMentionid();
+                        if (arr.contains(mentionName)) {
+                            int index = arr.indexOf(mentionName);
+                            tableAttendees.remove(index);
+                            arr.clear();
+                            for (int j = 0; j < tableAttendees.size(); j++) {
+                                arr.add(tableAttendees.get(j).getAttendee_id());
+                            }
+                        }
+                    }
+                    usersAdapter.clear();
+                    usersAdapter.addAll(tableAttendees);
+                    postNewsFeedViewModel.showMentionsList(PostNewActivity.this,true);
+                }
+                else
+                {
+                    postNewsFeedViewModel.showMentionsList(PostNewActivity.this,false);
+                }
+                if (postNewsFeedViewModel != null && postNewsFeedViewModel.getAttendeeList().hasObservers()) {
+                    postNewsFeedViewModel.getAttendeeList().removeObservers(PostNewActivity.this);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void displaySuggestions(boolean b) {
+        if (b) {
+            com.percolate.caffeine.ViewUtils.showView(this, R.id.mentions_list_layout);
+        } else {
+            com.percolate.caffeine.ViewUtils.hideView(this, R.id.mentions_list_layout);
+        }
+    }
+
+    //Tagging function By Aparna
+    private String highlightMentions(TextView commentTextView, final List<Mentionable> mentions) {
+        final SpannableStringBuilder spannable = new SpannableStringBuilder(commentTextView.getText());
+        for (int i = 0; i < mentions.size(); i++) {
+            EventAppDB eventAppDB = EventAppDB.getDatabase(PostNewActivity.this);
+            String mentionNameFromDb = eventAppDB.attendeeDao().getMentionNameFromAttendeeId(String.valueOf(mentions.get(i).getMentionid()));
+            if (mentionNameFromDb.isEmpty()) {
+                mentionNameFromDb = "<" + mentions.get(i).getMentionid() + "^" + mentions.get(i).getMentionName() + ">";
+            }
+            int offset = mentions.get(i).getMentionOffset();
+            int length = mentions.get(i).getMentionLength();
+            if (i != 0) {
+                for (int j = 0; j < i; j++) {
+                    offset = offset + mentions.get(j).getMentionid().length() + 3;
+                }
+            }
+            spannable.setSpan(mentionNameFromDb, offset, offset + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.replace(offset, offset + length, (CharSequence) mentionNameFromDb);
+            //String mentionedData = data.replace(mentionName, mentionNameFromDb);
+            commentTextView.setText(spannable, TextView.BufferType.SPANNABLE);
+        }
+        return commentTextView.getText().toString();
+    }
 
 }
