@@ -45,7 +45,7 @@ import static android.Manifest.permission.WRITE_CONTACTS;
 
 public class AttendeeDetailActivity extends AppCompatActivity implements View.OnClickListener {
     String fname, lname, company, city, designation, prof_pic, attendee_type,mobile,email;
-    TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email;
+    TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
     EditText et_message;
     LinearLayout ll_send_message, ll_save_contact,ll_main;
     ImageView iv_profile,iv_back;
@@ -75,11 +75,14 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         tv_mobile = findViewById(R.id.tv_mobile);
         tv_email = findViewById(R.id.tv_email);
         et_message = findViewById(R.id.et_message);
+        tv_sendmess = findViewById(R.id.tv_sendmess);
+
         ll_send_message = findViewById(R.id.ll_send_message);
         ll_save_contact = findViewById(R.id.ll_save_contact);
         ll_main = findViewById(R.id.ll_main);
         ll_save_contact.setOnClickListener(this);
         ll_send_message.setOnClickListener(this);
+        tv_sendmess.setOnClickListener(this);
 
         tv_attendee_name.setText(fname + " " + lname);
         tv_attendee_designation.setText(designation);
@@ -141,13 +144,14 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View v) {
+        final String SprofilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
+        final String SUserNmae = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
+        final String SlName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
+
+        final String message = et_message.getText().toString().trim();
         switch (v.getId()) {
             case R.id.ll_send_message:
-                final String SprofilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
-                final String SUserNmae = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
-                final String SlName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
 
-                final String message = et_message.getText().toString().trim();
                 if(message.isEmpty())
                 {
                     Utility.createShortSnackBar(ll_main,"Please enter message..");
@@ -178,6 +182,62 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                     // convViewHolder.setUserImage(userThumb,this);
 
                                     //--OPENING CHAT ACTIVITY FOR CLICKED USER----
+
+                                    Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
+                                    chatIntent.putExtra("user_id", firebase_id);
+                                    chatIntent.putExtra("user_name", fname + " " + lname);
+                                    chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
+                                    chatIntent.putExtra("sProfilePic", SprofilePic);
+                                    chatIntent.putExtra("rProfilepic", prof_pic);
+                                    chatIntent.putExtra("attendeeid", attendeeid);
+                                    chatIntent.putExtra("firebase_id", firebase_id);
+                                    chatIntent.putExtra("Message", message);
+                                    chatIntent.putExtra("page", "AttendeeDetail");
+
+                                    chatIntent.putExtra("lname", lname);
+                                    chatIntent.putExtra("company", company);
+                                    chatIntent.putExtra("city", city);
+                                    chatIntent.putExtra("designation", designation);
+                                    chatIntent.putExtra("attendee_type", attendee_type);
+                                    chatIntent.putExtra("mobile", mobile);
+                                    chatIntent.putExtra("email", email);
+
+                                    startActivity(chatIntent);
+                                    finish();
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        } else {
+                            Utility.createShortSnackBar(ll_main, "No internet connection..!");
+                        }
+                    }
+                }
+                break;
+            case R.id.tv_sendmess:
+
+                if(message.isEmpty())
+                {
+                    Utility.createShortSnackBar(ll_main,"Please enter message..");
+
+                }
+                else
+                {
+                    if(firebase_id.equalsIgnoreCase("0")){
+                        et_message.setText("");
+                        Utility.createShortSnackBar(ll_main, "User not valid for chat...!");
+
+                    }else {
+                        if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
+                            mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
 
                                     Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
