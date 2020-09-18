@@ -13,12 +13,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.Constants.Constant;
-import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.MainActivity;
-import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
-import com.procialize.eventapp.ui.newsFeedComment.networking.CommentRepository;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.networking.ProfileRepository;
+import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,15 +31,18 @@ public class ProfileActivityViewModel extends ViewModel {
     public static String mCurrentPhotoPath = "";
     private MutableLiveData<Profile> profileData = new MutableLiveData<>();
     private MutableLiveData<Profile> updateProfile = new MutableLiveData<>();
+    MutableLiveData<String> message = new MutableLiveData<>();
+
+    EventAppDB eventAppDB;
 
     /**
      * To get Profile details
      *
      * @param event_id
      */
-    public void getProfile(String token,String event_id) {
+    public void getProfile(String token, String event_id) {
         profileRepository = ProfileRepository.getInstance();
-        profileData = profileRepository.getProfile(token,event_id);//, pageSize,pageNumber);
+        profileData = profileRepository.getProfile(token, event_id);//, pageSize,pageNumber);
     }
 
     public LiveData<Profile> getProfileDetails() {
@@ -61,7 +63,7 @@ public class ProfileActivityViewModel extends ViewModel {
      * @param profile_pic
      */
 
-    public void updateProfile(String token,String event_id, String first_name, String last_name, String
+    public void updateProfile(String token, String event_id, String first_name, String last_name, String
             designation, String city, String email, String mobile, String company_name, String profile_pic) {
         profileRepository = ProfileRepository.getInstance();
         updateProfile = profileRepository.updateProfile(token,
@@ -134,5 +136,33 @@ public class ProfileActivityViewModel extends ViewModel {
         activity.startActivity(intent);
         activity.finish();
     }
+
+    public void updateProfileFlag(Activity activity, String eventId) {
+        eventAppDB = EventAppDB.getDatabase(activity);
+        ProfileEventId profileEventId = new ProfileEventId();
+        profileEventId.setFld_event_id(eventId);
+        profileEventId.setFld_is_profile_update("1");
+        eventAppDB.profileUpdateDao().insertProfileWithEventId(profileEventId);
+    }
+
+    public void validation(String first_name, String last_name, String designation, String company_name, String city) {
+        if (first_name.isEmpty()) {
+            message.setValue("Please Enter First Name");
+        } else if (last_name.isEmpty()) {
+            message.setValue("Please Enter Last Name");
+        } else if (designation.isEmpty()) {
+            message.setValue("Please Enter Designation");
+        } else if (company_name.isEmpty()) {
+            message.setValue("Please Enter Company Name");
+        } else if (city.isEmpty()) {
+            message.setValue("Please Enter City");
+        }
+        else {message.setValue("");}
+    }
+
+    public MutableLiveData<String> getIsValid() {
+        return message;
+    }
+
 
 }

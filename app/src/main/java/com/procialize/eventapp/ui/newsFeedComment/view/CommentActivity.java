@@ -19,7 +19,12 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -47,16 +52,25 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.percolate.mentions.Mentionable;
+import com.percolate.mentions.Mentions;
+import com.percolate.mentions.QueryListener;
+import com.percolate.mentions.SuggestionsListener;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Constants.RefreashToken;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.costumTools.RecyclerItemClickListener;
+import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
+import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
+import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.GifEmojiAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -65,9 +79,14 @@ import com.procialize.eventapp.ui.newsFeedComment.model.GifResponse;
 import com.procialize.eventapp.ui.newsFeedComment.model.GifResult;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.viewModel.CommentViewModel;
+import com.procialize.eventapp.ui.newsFeedPost.viewModel.PostNewsFeedViewModel;
 import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
+import com.procialize.eventapp.ui.newsfeed.model.Mention;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
+import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
+import com.procialize.eventapp.ui.tagging.adapter.UsersAdapter;
+import com.procialize.eventapp.ui.tagging.model.TaggingComment;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -99,14 +118,14 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTE
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
 
 
-public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner, CommentAdapter.CommentAdapterListner {
+public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner,
+        CommentAdapter.CommentAdapterListner, QueryListener, SuggestionsListener {
 
     private static final String API_KEY = "TVG20YJW1MXR";
     ImageView iv_gif, iv_back_gif, iv_likes, iv_comments, iv_share, iv_profile, iv_back;
     EditText et_comment, et_search_gif;
     FrameLayout fl_gif_container, fl_post_comment;
-    LinearLayout ll_comment_container,
-            ll_media_dots, ll_main, ll_root;
+    LinearLayout ll_comment_container, ll_media_dots, ll_main, ll_root;
     CommentViewModel commentViewModel;
     String anon_id;
     RecyclerView rv_gif, rv_comments;
@@ -115,17 +134,23 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private String mediaPosition, newsfeedId;
     private Newsfeed_detail newsfeed_detail;
     public static int swipableAdapterPosition = 0;
-    private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments, tv_no_of_likes;
+    private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments, tv_no_of_likes, tv_header, testdataPost, textData;
     String event_id;
     ConnectionDetector connectionDetector;
     String commentText = "";
     BottomSheetDialog dialog;
     Dialog contentDialog;
     List<CommentDetail> commentList = new ArrayList<>();
-    String noOfLikes = "0", likeStatus = "", api_token;
+    String noOfLikes = "0", likeStatus = "", api_token, substring;
     private String strPath, eventColor1, eventColor2, eventColor3, eventColor4, eventColor5, ATTENDEE_STATUS, ATTENDEE_ID;
     public Dialog dialogShare;
     View v_divider;
+    NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
+    PostNewsFeedViewModel postNewsFeedViewModel;
+    UsersAdapter usersAdapter;
+    private Mentions mentions;
+    AttendeeDatabaseViewModel attendeeDatabaseViewModel;
+    List<TableAttendee> attendeeList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +169,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         ATTENDEE_ID = SharedPreference.getPref(this, KEY_ATTENDEE_ID);
 
         commentViewModel = ViewModelProviders.of(this).get(CommentViewModel.class);
+        newsFeedDatabaseViewModel = ViewModelProviders.of(this).get(NewsFeedDatabaseViewModel.class);
+        postNewsFeedViewModel = ViewModelProviders.of(this).get(PostNewsFeedViewModel.class);
+        attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+
         connectionDetector = ConnectionDetector.getInstance(this);
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
@@ -158,6 +187,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
 
 
+        tv_header = findViewById(R.id.tv_header);
         iv_back = findViewById(R.id.iv_back);
         iv_gif = findViewById(R.id.iv_gif);
         iv_likes = findViewById(R.id.iv_likes);
@@ -187,6 +217,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_date_time = findViewById(R.id.tv_date_time);
         tv_no_of_comments = findViewById(R.id.tv_no_of_comments);
         tv_no_of_likes = findViewById(R.id.tv_no_of_likes);
+        testdataPost = findViewById(R.id.testdataPost);
+        textData = findViewById(R.id.textData);
         v_divider = findViewById(R.id.v_divider);
         tv_no_of_likes.setOnClickListener(this);
         CommonFunction.showBackgroundImage(this, ll_main);
@@ -212,6 +244,145 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         if (!postStatus.trim().isEmpty()) {
             tv_status.setText(postStatus);
             tv_status.setVisibility(View.VISIBLE);
+        } else {
+            tv_status.setVisibility(View.GONE);
+        }
+        testdataPost.setText(postStatus);
+        final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(testdataPost.getText());
+        if (newsfeed_detail.getPost_status() != null) {
+
+            tv_status.setVisibility(View.VISIBLE);
+            int flag = 0;
+            for (int i = 0; i < stringBuilder.length(); i++) {
+                String sample = stringBuilder.toString();
+                if ((stringBuilder.charAt(i) == '<')) {
+                    try {
+                        String text = "<";
+                        String text1 = ">";
+
+                        if (flag == 0) {
+                            int start = sample.indexOf(text, i);
+                            int end = sample.indexOf(text1, i);
+
+                            Log.v("Indexes of", "Start : " + start + "," + end);
+                            try {
+                                substring = sample.substring(start, end + 1);
+                                Log.v("String names: ", substring);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                            if (substring.contains("<")) {
+                                if (sample.contains(substring)) {
+                                    substring = substring.replace("<", "");
+                                    substring = substring.replace(">", "");
+                                    int index = substring.indexOf("^");
+//                                    substring = substring.replace("^", "");
+                                    final String attendeeid = substring.substring(0, index);
+                                    substring = substring.substring(index + 1, substring.length());
+
+
+                                    stringBuilder.setSpan(stringBuilder, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+                                    stringBuilder.setSpan(new ClickableSpan() {
+                                        @Override
+                                        public void onClick(View widget) {
+                                            EventAppDB eventAppDB = EventAppDB.getDatabase(CommentActivity.this);
+                                            newsFeedDatabaseViewModel.getAttendeeDetailsFromId(CommentActivity.this, attendeeid);
+                                            newsFeedDatabaseViewModel.getAttendeeDetails().observe(CommentActivity.this, new Observer<List<TableAttendee>>() {
+                                                @Override
+                                                public void onChanged(List<TableAttendee> tableAttendees) {
+                                                    if (tableAttendees != null) {
+                                                        Intent intent = new Intent(CommentActivity.this, AttendeeDetailActivity.class);
+                                                        intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
+                                                        intent.putExtra("lname", tableAttendees.get(0).getLast_name());
+                                                        intent.putExtra("company", tableAttendees.get(0).getCompany_name());
+                                                        intent.putExtra("city", tableAttendees.get(0).getCity());
+                                                        intent.putExtra("designation", tableAttendees.get(0).getDesignation());
+                                                        intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
+                                                        intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
+                                                        intent.putExtra("mobile", tableAttendees.get(0).getMobile());
+                                                        intent.putExtra("email", tableAttendees.get(0).getEmail());
+                                                        startActivity(intent);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    stringBuilder.replace(start, end + 1, substring);
+                                    //holder.testdata.setText(stringBuilder, TextView.BufferType.SPANNABLE);
+                                    tv_status.setMovementMethod(LinkMovementMethod.getInstance());
+                                    tv_status.setText(stringBuilder);
+                                    flag = 1;
+                                }
+                            }
+                        } else {
+
+                            int start = sample.indexOf(text, i);
+                            int end = sample.indexOf(text1, i);
+
+                            Log.v("Indexes of", "Start : " + start + "," + end);
+                            try {
+                                substring = sample.substring(start, end + 1);
+                                Log.v("String names: ", substring);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (substring.contains("<")) {
+                                if (sample.contains(substring)) {
+                                    substring = substring.replace("<", "");
+                                    substring = substring.replace(">", "");
+                                    int index = substring.indexOf("^");
+//                                    substring = substring.replace("^", "");
+                                    final String attendeeid = substring.substring(0, index);
+                                    substring = substring.substring(index + 1, substring.length());
+
+
+                                    stringBuilder.setSpan(stringBuilder, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                    stringBuilder.setSpan(new ClickableSpan() {
+                                        @Override
+                                        public void onClick(View widget) {
+                                            newsFeedDatabaseViewModel.getAttendeeDetailsFromId(CommentActivity.this, attendeeid);
+                                            newsFeedDatabaseViewModel.getAttendeeDetails().observe(CommentActivity.this, new Observer<List<TableAttendee>>() {
+                                                @Override
+                                                public void onChanged(List<TableAttendee> tableAttendees) {
+                                                    if (tableAttendees != null) {
+                                                        Intent intent = new Intent(CommentActivity.this, AttendeeDetailActivity.class);
+                                                        intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
+                                                        intent.putExtra("lname", tableAttendees.get(0).getLast_name());
+                                                        intent.putExtra("company", tableAttendees.get(0).getCompany_name());
+                                                        intent.putExtra("city", tableAttendees.get(0).getCity());
+                                                        intent.putExtra("designation", tableAttendees.get(0).getDesignation());
+                                                        intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
+                                                        intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
+                                                        intent.putExtra("mobile", tableAttendees.get(0).getMobile());
+                                                        intent.putExtra("email", tableAttendees.get(0).getEmail());
+                                                        startActivity(intent);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                    stringBuilder.replace(start, end + 1, substring);
+                                    //holder.testdata.setText(stringBuilder, TextView.BufferType.SPANNABLE);
+                                    tv_status.setMovementMethod(LinkMovementMethod.getInstance());
+                                    tv_status.setText(stringBuilder);
+
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            tv_status.setText(stringBuilder);
         } else {
             tv_status.setVisibility(View.GONE);
         }
@@ -323,6 +494,22 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         iv_share.setImageDrawable(getResources().getDrawable(R.drawable.ic_share));*/
         getComments();
         setDynamicColor();
+
+        //Tagging Functionality
+        attendeeList = new ArrayList<TableAttendee>();
+        attendeeDatabaseViewModel.getAttendeeDetails(this);
+        attendeeDatabaseViewModel.getAttendeeList().observeForever(new Observer<List<TableAttendee>>() {
+            @Override
+            public void onChanged(List<TableAttendee> tableAttendees) {
+                attendeeList = tableAttendees;
+            }
+        });
+        mentions = new Mentions.Builder(this, et_comment)
+                .suggestionsListener(this)
+                .queryListener(this)
+                .build();
+
+        setupMentionsList();
     }
 
     public void getComments() {
@@ -405,108 +592,130 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 commentViewModel.openLikePage(this, newsfeed_detail, Integer.parseInt(mediaPosition));
                 break;
             case R.id.iv_gif:
-                ll_comment_container.setVisibility(View.GONE);
-                if (fl_gif_container.getVisibility() == View.GONE) {
-                    try {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                        et_comment.setTextColor(Color.parseColor("#0000"));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                if (connectionDetector.isConnectingToInternet()) {
                     ll_comment_container.setVisibility(View.GONE);
-                    fl_gif_container.setVisibility(View.VISIBLE);
-
-                    //Get Gif Id
-                    commentViewModel.GetId(API_KEY);
-                    commentViewModel.getAnonId().observe(this, new Observer<String>() {
-                        @Override
-                        public void onChanged(@Nullable String result) {
-                            anon_id = result;
+                    if (fl_gif_container.getVisibility() == View.GONE) {
+                        try {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                            et_comment.setTextColor(Color.parseColor("#0000"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    });
 
-                    //Get GIF images
-                    commentViewModel.GetGif(API_KEY, anon_id);
-                    commentViewModel.getGifList().observe(this, new Observer<GifResponse>() {
-                        @Override
-                        public void onChanged(GifResponse listMutableLiveData) {
-                            List<GifResult> listResult = listMutableLiveData.getResults();
-                            setupGifAdapter(listResult);
+                        ll_comment_container.setVisibility(View.GONE);
+                        fl_gif_container.setVisibility(View.VISIBLE);
+
+                        //Get Gif Id
+                        commentViewModel.GetId(API_KEY);
+                        commentViewModel.getAnonId().observe(this, new Observer<String>() {
+                            @Override
+                            public void onChanged(@Nullable String result) {
+                                anon_id = result;
+                            }
+                        });
+
+                        //Get GIF images
+                        commentViewModel.GetGif(API_KEY, anon_id);
+                        commentViewModel.getGifList().observe(this, new Observer<GifResponse>() {
+                            @Override
+                            public void onChanged(GifResponse listMutableLiveData) {
+                                List<GifResult> listResult = listMutableLiveData.getResults();
+                                setupGifAdapter(listResult);
+                            }
+                        });
+
+
+                    } else {
+                        ll_comment_container.setVisibility(View.VISIBLE);
+                        fl_gif_container.setVisibility(View.GONE);
+                        try {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    });
-
-
-                } else {
-                    ll_comment_container.setVisibility(View.VISIBLE);
-                    fl_gif_container.setVisibility(View.GONE);
-                    try {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
                 }
                 break;
             case R.id.fl_post_comment:
-                commentText = et_comment.getText().toString();
-                commentViewModel.validation(commentText);
-                commentViewModel.getIsValid().observe(this, new Observer<Boolean>() {
-                    @Override
-                    public void onChanged(Boolean aBoolean) {
-                        if (aBoolean) {
-                            commentViewModel.postComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
-                            commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
-                                @Override
-                                public void onChanged(LoginOrganizer loginOrganizer) {
-                                    Utility.createShortSnackBar(ll_main, "Success");
-                                    et_comment.setText("");
-                                    commentText = et_comment.getText().toString();
-                                    getComments();
-                                }
-                            });
-                        } else {
-                            Utility.createShortSnackBar(ll_main, "Please Enter Comment");
+                if (connectionDetector.isConnectingToInternet()) {
+                    commentText = et_comment.getText().toString();
+                    final TaggingComment comment = new TaggingComment();
+                    comment.setComment(commentText);
+                    comment.setMentions(mentions.getInsertedMentions());
+                    textData.setText(commentText);
+
+                    fl_post_comment.setEnabled(false);
+
+                    commentText = highlightMentions(textData, comment.getMentions());
+                    commentViewModel.validation(commentText);
+                    commentViewModel.getIsValid().observe(this, new Observer<Boolean>() {
+                        @Override
+                        public void onChanged(Boolean aBoolean) {
+                            if (aBoolean) {
+                                commentViewModel.postComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
+                                commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
+                                    @Override
+                                    public void onChanged(LoginOrganizer loginOrganizer) {
+                                        fl_post_comment.setEnabled(true);
+                                        Utility.createShortSnackBar(ll_main, "Success");
+                                        et_comment.setText("");
+                                        commentText = et_comment.getText().toString();
+                                        getComments();
+                                    }
+                                });
+                            } else {
+                                fl_post_comment.setEnabled(true);
+                                Utility.createShortSnackBar(ll_main, "Please Enter Comment");
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
+                }
                 break;
             case R.id.iv_likes:
-                noOfLikes = "0";
-                commentViewModel.likePost(api_token, event_id, newsfeed_detail.getNews_feed_id());
-                commentViewModel.likePostData().observe(CommentActivity.this, new Observer<LikePost>() {
-                    @Override
-                    public void onChanged(LikePost likePost) {
-                        if (likePost != null) {
-                            String status = likePost.getHeader().get(0).getType();
-                            if (status.equalsIgnoreCase("success")) {
-                                likeStatus = likePost.getLike_status();
-                                noOfLikes = tv_no_of_likes.getText().toString().split(" ")[0];
-                                if (likeStatus.equalsIgnoreCase("1")) {
-                                    showLikeCount(Integer.parseInt(noOfLikes) + 1);
-                                    iv_likes.setImageDrawable(getDrawable(R.drawable.ic_active_like));
-                                    noOfLikes = "0";
-                                    likeStatus = "";
-                                } else {
-                                    if (Integer.parseInt(noOfLikes) > 0) {
-                                        showLikeCount(Integer.parseInt(noOfLikes) - 1);
-                                        iv_likes.setImageDrawable(getDrawable(R.drawable.ic_like));
+                if (connectionDetector.isConnectingToInternet()) {
+                    noOfLikes = "0";
+                    commentViewModel.likePost(api_token, event_id, newsfeed_detail.getNews_feed_id());
+                    commentViewModel.likePostData().observe(CommentActivity.this, new Observer<LikePost>() {
+                        @Override
+                        public void onChanged(LikePost likePost) {
+                            if (likePost != null) {
+                                String status = likePost.getHeader().get(0).getType();
+                                if (status.equalsIgnoreCase("success")) {
+                                    likeStatus = likePost.getLike_status();
+                                    noOfLikes = tv_no_of_likes.getText().toString().split(" ")[0];
+                                    if (likeStatus.equalsIgnoreCase("1")) {
+                                        showLikeCount(Integer.parseInt(noOfLikes) + 1);
+                                        iv_likes.setImageDrawable(getDrawable(R.drawable.ic_active_like));
                                         noOfLikes = "0";
+                                        likeStatus = "";
+                                    } else {
+                                        if (Integer.parseInt(noOfLikes) > 0) {
+                                            showLikeCount(Integer.parseInt(noOfLikes) - 1);
+                                            iv_likes.setImageDrawable(getDrawable(R.drawable.ic_like));
+                                            noOfLikes = "0";
+                                        }
+                                        noOfLikes = "0";
+                                        likeStatus = "";
                                     }
-                                    noOfLikes = "0";
-                                    likeStatus = "";
+                                    Utility.createShortSnackBar(ll_main, likePost.getHeader().get(0).getMsg());
                                 }
-                                Utility.createShortSnackBar(ll_main, likePost.getHeader().get(0).getMsg());
+                                if (commentViewModel != null && commentViewModel.likePostData().hasObservers()) {
+                                    commentViewModel.likePostData().removeObservers(CommentActivity.this);
+                                }
+                            } else {
+                                Utility.createShortSnackBar(ll_main, "Failure..");
                             }
-                            if (commentViewModel != null && commentViewModel.likePostData().hasObservers()) {
-                                commentViewModel.likePostData().removeObservers(CommentActivity.this);
-                            }
-                        } else {
-                            Utility.createShortSnackBar(ll_main, "Failure..");
                         }
-                    }
-                });
+                    });
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
+                }
                 break;
             case R.id.iv_share:
                 if (connectionDetector.isConnectingToInternet()) {
@@ -583,6 +792,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     } else {
                         shareTextUrl(newsfeed_detail.getPost_date() + "\n" + newsfeed_detail.getPost_status(), StringEscapeUtils.unescapeJava(newsfeed_detail.getPost_status()));
                     }
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
                 }
                 break;
             case R.id.iv_back_gif:
@@ -1029,18 +1240,121 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_no_of_likes.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
         tv_no_of_comments.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
         ll_root.setBackgroundColor(Color.parseColor(eventColor2));
-        v_divider.setBackgroundColor(Color.parseColor(eventColor3));
+        v_divider.setBackgroundColor(Color.parseColor("#66" + eventColor3Opacity40));
 
-        int color = Color.parseColor(eventColor3);
+        int color = Color.parseColor(eventColor1);
         //moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_share.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         //moreIV.setAlpha(150);
-        iv_likes.setAlpha(150);
-        iv_comments.setAlpha(150);
-        iv_share.setAlpha(150);
+        iv_likes.setAlpha(180);
+        iv_comments.setAlpha(180);
+        iv_share.setAlpha(180);
+
+
+        int color4 = Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4));
+        iv_back.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4)));
     }
+
+    private void setupMentionsList() {
+        final RecyclerView mentionsList = findViewById(R.id.mentions_list);
+        mentionsList.setLayoutManager(new LinearLayoutManager(this));
+        usersAdapter = new UsersAdapter(this);
+        mentionsList.setAdapter(usersAdapter);
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(et_comment.getWindowToken(), 0);
+        // set on item click listener
+        mentionsList.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(final View view, final int position) {
+                final TableAttendee user = usersAdapter.getItem(position);
+
+                /*
+                 * We are creating a mentions object which implements the
+                 * <code>Mentionable</code> interface this allows the library to set the offset
+                 * and length of the mention.
+                 */
+                if (user != null) {
+                    final Mention mention = new Mention();
+                    mention.setMentionName(user.getFirst_name() + " " + user.getLast_name());
+                    mention.setMentionid(user.getAttendee_id());
+                    mentions.insertMention(mention);
+                }
+            }
+        }));
+    }
+
+    @Override
+    public void onQueryReceived(String s) {
+        postNewsFeedViewModel.searchUsers(s, attendeeList);
+        postNewsFeedViewModel.getAttendeeList().observe(this, new Observer<List<TableAttendee>>() {
+            @Override
+            public void onChanged(List<TableAttendee> tableAttendees) {
+                if (tableAttendees != null && !tableAttendees.isEmpty()) {
+                    ArrayList<String> arr = new ArrayList<String>(tableAttendees.size());
+                    for (int j = 0; j < tableAttendees.size(); j++) {
+                        arr.add(tableAttendees.get(j).getAttendee_id());
+                    }
+
+                    for (int i = 0; i < mentions.getInsertedMentions().size(); i++) {
+                        String mentionName = mentions.getInsertedMentions().get(i).getMentionid();
+                        if (arr.contains(mentionName)) {
+                            int index = arr.indexOf(mentionName);
+                            tableAttendees.remove(index);
+                            arr.clear();
+                            for (int j = 0; j < tableAttendees.size(); j++) {
+                                arr.add(tableAttendees.get(j).getAttendee_id());
+                            }
+                        }
+                    }
+                    usersAdapter.clear();
+                    usersAdapter.addAll(tableAttendees);
+                    postNewsFeedViewModel.showMentionsList(CommentActivity.this, true);
+                } else {
+                    postNewsFeedViewModel.showMentionsList(CommentActivity.this, false);
+                }
+                if (postNewsFeedViewModel != null && postNewsFeedViewModel.getAttendeeList().hasObservers()) {
+                    postNewsFeedViewModel.getAttendeeList().removeObservers(CommentActivity.this);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void displaySuggestions(boolean b) {
+        if (b) {
+            com.percolate.caffeine.ViewUtils.showView(this, R.id.mentions_list_layout);
+        } else {
+            com.percolate.caffeine.ViewUtils.hideView(this, R.id.mentions_list_layout);
+        }
+    }
+
+    //Tagging function By Aparna
+    private String highlightMentions(TextView commentTextView, final List<Mentionable> mentions) {
+        final SpannableStringBuilder spannable = new SpannableStringBuilder(commentTextView.getText());
+        for (int i = 0; i < mentions.size(); i++) {
+            EventAppDB eventAppDB = EventAppDB.getDatabase(CommentActivity.this);
+            String mentionNameFromDb = eventAppDB.attendeeDao().getMentionNameFromAttendeeId(String.valueOf(mentions.get(i).getMentionid()));
+            if (mentionNameFromDb.isEmpty()) {
+                mentionNameFromDb = "<" + mentions.get(i).getMentionid() + "^" + mentions.get(i).getMentionName() + ">";
+            }
+            int offset = mentions.get(i).getMentionOffset();
+            int length = mentions.get(i).getMentionLength();
+            if (i != 0) {
+                for (int j = 0; j < i; j++) {
+                    offset = offset + mentions.get(j).getMentionid().length() + 3;
+                }
+            }
+            spannable.setSpan(mentionNameFromDb, offset, offset + length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.replace(offset, offset + length, (CharSequence) mentionNameFromDb);
+            //String mentionedData = data.replace(mentionName, mentionNameFromDb);
+            commentTextView.setText(spannable, TextView.BufferType.SPANNABLE);
+        }
+        return commentTextView.getText().toString();
+    }
+
 
     @Override
     public void onBackPressed() {

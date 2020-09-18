@@ -1,3 +1,5 @@
+include ':tools-release'
+include ':mentions-release'
 include ':imagelibrary'
 include ':library'
 include ':jiaozivideoplayer'

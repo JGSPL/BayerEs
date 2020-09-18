@@ -189,7 +189,6 @@
                 android:layout_height="320dp"
                 android:visibility="gone"/>
 
-
             <LinearLayout
                 android:id="@+id/ll_dots"
                 android:layout_width="match_parent"

@@ -1,10 +1,17 @@
 package com.procialize.eventapp.ui.newsfeed.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +23,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
@@ -27,13 +39,20 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
+import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
+import com.procialize.eventapp.ui.newsFeedDetails.viewModel.NewsFeedDetailsViewModel;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
+import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +65,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment.cl_main;
 
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsViewHolder> {
 
@@ -59,7 +79,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     private boolean retryPageLoad = false;
     private boolean isLoadingAdded = false;
     String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
-
+    String substring;
+    NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
     public NewsFeedAdapter() {
 
     }
@@ -78,6 +99,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
         eventColor4 = SharedPreference.getPref(context, EVENT_COLOR_4);
         eventColor5 = SharedPreference.getPref(context, EVENT_COLOR_5);
+
+        newsFeedDatabaseViewModel = ViewModelProviders.of((FragmentActivity) context).get(NewsFeedDatabaseViewModel.class);
     }
 
     @NonNull
@@ -215,7 +238,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                     if (cd.isConnectingToInternet()) {
                         listener.likeTvViewOnClick(v, feed_detail.get(position), position, holder.iv_like, holder.tv_like);
                     } else {
-                        Toast.makeText(context, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                        Utility.createShortSnackBar(cl_main,"No Internet Connection");
+
                     }
                 }
             });
@@ -282,6 +306,184 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                     holder.vp_slider.setVisibility(View.GONE);
                 }
             }
+
+            holder.testdata.setText((feedData.getPost_status()));
+
+            final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
+            if (feedData.getPost_status() != null) {
+
+                holder.tv_status.setVisibility(View.VISIBLE);
+                int flag = 0;
+                for (int i = 0; i < stringBuilder.length(); i++) {
+                    String sample = stringBuilder.toString();
+                    if ((stringBuilder.charAt(i) == '<')) {
+                        try {
+                            String text = "<";
+                            String text1 = ">";
+
+                            if (flag == 0) {
+                                int start = sample.indexOf(text, i);
+                                int end = sample.indexOf(text1, i);
+
+                                Log.v("Indexes of", "Start : " + start + "," + end);
+                                try {
+                                    substring = sample.substring(start, end + 1);
+                                    Log.v("String names: ", substring);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+
+                                if (substring.contains("<")) {
+                                    if (sample.contains(substring)) {
+                                        substring = substring.replace("<", "");
+                                        substring = substring.replace(">", "");
+                                        int index = substring.indexOf("^");
+//                                    substring = substring.replace("^", "");
+                                        final String attendeeid = substring.substring(0, index);
+                                        substring = substring.substring(index + 1, substring.length());
+
+
+                                        stringBuilder.setSpan(stringBuilder, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+                                        stringBuilder.setSpan(new ClickableSpan() {
+                                            @Override
+                                            public void onClick(View widget) {
+                                                EventAppDB eventAppDB = EventAppDB.getDatabase(context);
+                                                newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context,attendeeid);
+                                                newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context,new Observer<List<TableAttendee>>() {
+                                                    @Override
+                                                    public void onChanged(List<TableAttendee> tableAttendees) {
+                                                        if(tableAttendees!=null) {
+                                                            Intent intent = new Intent(context, AttendeeDetailActivity.class);
+                                                            intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
+                                                            intent.putExtra("lname", tableAttendees.get(0).getLast_name());
+                                                            intent.putExtra("company", tableAttendees.get(0).getCompany_name());
+                                                            intent.putExtra("city", tableAttendees.get(0).getCity());
+                                                            intent.putExtra("designation", tableAttendees.get(0).getDesignation());
+                                                            intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
+                                                            intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
+                                                            intent.putExtra("mobile", tableAttendees.get(0).getMobile());
+                                                            intent.putExtra("email", tableAttendees.get(0).getEmail());
+                                                            context.startActivity(intent);
+                                                        }
+                                                    }
+                                                });
+                                                /*LiveData<List<TableAttendee>> attendeeDBList = eventAppDB.attendeeDao().getAttendeeDetailsFromId(attendeeid);
+                                                List<TableAttendee> attendeeData = attendeeDBList.getValue();
+                                                List<TableAttendee> attendeeData1 = attendeeData;
+                                                if(attendeeDBList.getValue()!=null) {
+                                                    Intent intent = new Intent(context, AttendeeDetailActivity.class);
+                                                    intent.putExtra("fname", attendeeDBList.getValue().get(0).getFirst_name());
+                                                    intent.putExtra("lname", attendeeDBList.getValue().get(0).getLast_name());
+                                                    intent.putExtra("company", attendeeDBList.getValue().get(0).getCompany_name());
+                                                    intent.putExtra("city", attendeeDBList.getValue().get(0).getCity());
+                                                    intent.putExtra("designation", attendeeDBList.getValue().get(0).getDesignation());
+                                                    intent.putExtra("prof_pic", attendeeDBList.getValue().get(0).getProfile_picture());
+                                                    intent.putExtra("attendee_type", attendeeDBList.getValue().get(0).getAttendee_type());
+                                                    intent.putExtra("mobile", attendeeDBList.getValue().get(0).getMobile());
+                                                    intent.putExtra("email", attendeeDBList.getValue().get(0).getEmail());
+                                                    context.startActivity(intent);
+                                                }*/
+                                            }
+                                        }, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        stringBuilder.replace(start, end + 1, substring);
+                                        //holder.testdata.setText(stringBuilder, TextView.BufferType.SPANNABLE);
+                                        holder.tv_status.setMovementMethod(LinkMovementMethod.getInstance());
+                                        holder.tv_status.setText(stringBuilder);
+                                        flag = 1;
+                                    }
+                                }
+                            } else {
+
+                                int start = sample.indexOf(text, i);
+                                int end = sample.indexOf(text1, i);
+
+                                Log.v("Indexes of", "Start : " + start + "," + end);
+                                try {
+                                    substring = sample.substring(start, end + 1);
+                                    Log.v("String names: ", substring);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                if (substring.contains("<")) {
+                                    if (sample.contains(substring)) {
+                                        substring = substring.replace("<", "");
+                                        substring = substring.replace(">", "");
+                                        int index = substring.indexOf("^");
+//                                    substring = substring.replace("^", "");
+                                        final String attendeeid = substring.substring(0, index);
+                                        substring = substring.substring(index + 1, substring.length());
+
+
+                                        stringBuilder.setSpan(stringBuilder, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                        stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                        stringBuilder.setSpan(new ClickableSpan() {
+                                            @Override
+                                            public void onClick(View widget) {
+                                                newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context,attendeeid);
+                                                newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context,new Observer<List<TableAttendee>>() {
+                                                    @Override
+                                                    public void onChanged(List<TableAttendee> tableAttendees) {
+                                                        if(tableAttendees!=null) {
+                                                            Intent intent = new Intent(context, AttendeeDetailActivity.class);
+                                                            intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
+                                                            intent.putExtra("lname", tableAttendees.get(0).getLast_name());
+                                                            intent.putExtra("company", tableAttendees.get(0).getCompany_name());
+                                                            intent.putExtra("city", tableAttendees.get(0).getCity());
+                                                            intent.putExtra("designation", tableAttendees.get(0).getDesignation());
+                                                            intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
+                                                            intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
+                                                            intent.putExtra("mobile", tableAttendees.get(0).getMobile());
+                                                            intent.putExtra("email", tableAttendees.get(0).getEmail());
+                                                            context.startActivity(intent);
+                                                        }
+                                                    }
+                                                });
+                                                /*EventAppDB eventAppDB = EventAppDB.getDatabase(context);
+                                                LiveData<List<TableAttendee>> attendeeDBList = eventAppDB.attendeeDao().getAttendeeDetailsFromId(attendeeid);
+                                                List<TableAttendee> attendeeData = attendeeDBList.getValue();
+                                                List<TableAttendee> attendeeData1 = attendeeData;
+                                                if(attendeeDBList.getValue()!=null) {
+                                                    Intent intent = new Intent(context, AttendeeDetailActivity.class);
+                                                    intent.putExtra("fname", attendeeDBList.getValue().get(0).getFirst_name());
+                                                    intent.putExtra("lname", attendeeDBList.getValue().get(0).getLast_name());
+                                                    intent.putExtra("company", attendeeDBList.getValue().get(0).getCompany_name());
+                                                    intent.putExtra("city", attendeeDBList.getValue().get(0).getCity());
+                                                    intent.putExtra("designation", attendeeDBList.getValue().get(0).getDesignation());
+                                                    intent.putExtra("prof_pic", attendeeDBList.getValue().get(0).getProfile_picture());
+                                                    intent.putExtra("attendee_type", attendeeDBList.getValue().get(0).getAttendee_type());
+                                                    intent.putExtra("mobile", attendeeDBList.getValue().get(0).getMobile());
+                                                    intent.putExtra("email", attendeeDBList.getValue().get(0).getEmail());
+                                                    context.startActivity(intent);
+                                                }*/
+                                            }
+                                        }, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                        stringBuilder.replace(start, end + 1, substring);
+                                        //holder.testdata.setText(stringBuilder, TextView.BufferType.SPANNABLE);
+                                        holder.tv_status.setMovementMethod(LinkMovementMethod.getInstance());
+
+                                        holder.tv_status.setText(stringBuilder);
+
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+
+                holder.tv_status.setText(stringBuilder);
+            } else {
+                holder.tv_status.setVisibility(View.GONE);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -450,7 +652,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         holder.tv_like.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         holder.tv_comment.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         holder.root.setBackgroundColor(Color.parseColor(eventColor2));
-        holder.v_divider.setBackgroundColor(Color.parseColor(eventColor3));
+        holder.v_divider.setBackgroundColor(Color.parseColor("#8C" + eventColor3Opacity40));
 
         int color = Color.parseColor(eventColor1);
         holder.moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);

@@ -40,6 +40,8 @@ public interface UploadMultimediaDao {
     @Query("UPDATE tbl_upload_multimedia SET fld_is_uploaded='1' WHERE fld_folderUniqueId = :folderUniqueId")
     void updateIsUploded(String folderUniqueId);
 
+    @Query("SELECT * from tbl_upload_multimedia WHERE fld_is_uploaded='0'")
+    List<UploadMultimedia> getNonUploadMultimedia();
 /*    @Query("DELETE FROM tbl_upload_multimedia WHERE fld_folderUniqueId = :folderUniqueId")
     void updateIsUploded(String folderUniqueId);*/
 }

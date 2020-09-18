@@ -22,6 +22,7 @@ public final class SharedPreferencesConstant {
     public static final String USER_TYPE = "user_type";
     public static final String VERIFY_OTP = "verify_otp";
     public static final String OTP = "otp";
+    public static final String TOTAL_EVENT = "total_event";
 
     public static final String KEY_TOKEN = "api_access_token";
 

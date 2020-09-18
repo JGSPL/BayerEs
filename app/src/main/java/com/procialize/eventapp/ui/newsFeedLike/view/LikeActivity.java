@@ -7,10 +7,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
@@ -32,6 +35,7 @@ import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
 public class LikeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -46,6 +50,7 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout ll_main;
     ImageView iv_back;
     String api_token = "";
+    TextView tv_header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,7 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
         ll_main = findViewById(R.id.ll_main);
         rv_like = findViewById(R.id.rv_like);
         iv_back = findViewById(R.id.iv_back);
+        tv_header = findViewById(R.id.tv_header);
         iv_back.setOnClickListener(this);
         Intent intent = getIntent();
         try {
@@ -68,8 +74,8 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
+        setDynamicColor();
         CommonFunction.showBackgroundImage(this,ll_main);
-
         geLikes();
     }
 
@@ -106,5 +112,12 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
                 onBackPressed();
                 break;
         }
+    }
+
+    public void setDynamicColor() {
+
+        int color4 = Color.parseColor(SharedPreference.getPref(LikeActivity.this,EVENT_COLOR_4));
+        iv_back.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(LikeActivity.this,EVENT_COLOR_4)));
     }
 }

@@ -43,6 +43,7 @@
 
         <activity
             android:name=".ui.attendee.view.AttendeeDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
         <activity
             android:name=".ui.profile.view.ProfileActivity"
@@ -50,6 +51,7 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
         <activity
             android:name=".ui.eventList.view.EventListActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
         <activity
             android:name=".ui.splash.view.SplashAcivity"

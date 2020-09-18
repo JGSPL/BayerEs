@@ -28,6 +28,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBI
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.TIME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.TOTAL_EVENT;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.USER_TYPE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.VERIFY_OTP;
 
@@ -80,6 +81,7 @@ public class RefreashToken {
         map.put(VERIFY_OTP, jwt.getClaim("verify_otp").asString());
         map.put(EXPIRY_TIME, jwt.getClaim("expiry_time").asString());
         map.put(TIME, jwt.getClaim("time").asString());
+        map.put(TOTAL_EVENT, jwt.getClaim("total_event").asString());
 //        Timestamp timestamp_open = new Timestamp(Long.parseLong(time));
 //        Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expiry_time));
         SharedPreference.putPref(context, map);
