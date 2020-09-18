@@ -214,6 +214,7 @@
             </LinearLayout>
         </LinearLayout>
             </LinearLayout>
+
             <TextView
                 android:id="@+id/txt_designdevelop"
                 android:layout_width="match_parent"
@@ -224,7 +225,9 @@
                 android:text="@string/designandeveloped"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:textSize="@dimen/textsizesmallest"
-                />
+                android:onClick="@{()-> viewModel.onTextDesignClicked()}"
+                android:textColor="@color/blue" />
+
 
         </RelativeLayout>
 

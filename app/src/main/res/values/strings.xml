@@ -25,7 +25,6 @@
     <string name="title_quiz">Quiz</string>
     <string name="livepollblank">No active poll</string>
     <string name="quizblank">No active quiz</string>
-    <string name="designandeveloped">Design  Developed by Procialize</string>
     <string name="typeMessage">Type here your message...</string>
     <string name="post">Post</string>
     <string name="no_matches_found">No Matches Found</string>
@@ -42,5 +41,5 @@
     <string name="sendmsg">Submit</string>
     <string name="search_event_here">Type here to search event</string>
     <string name="attendeedetail">Attendee Detail</string>
-
+    <string name="designandeveloped"><u>Design  Developed by Procialize</u></string>
 </resources>

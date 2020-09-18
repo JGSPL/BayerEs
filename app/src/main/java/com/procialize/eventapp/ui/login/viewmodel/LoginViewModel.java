@@ -6,6 +6,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 import com.procialize.eventapp.BR;
+import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
@@ -31,8 +32,11 @@ public class LoginViewModel extends BaseObservable {
     ActivityLoginBinding activityLoginBinding;
     private String successMessage = "Login was successful";
     private String errorMessage = "Email or Mobile No. not valid";
+    private String errorMessage1 = "Please enter mobile no. or email id";
     private String termsandconditions = "Please Agreed to the terms and conditions";
+    private String interneterror = "No Internet Connection.";
     APIService mApiService = ApiUtils.getAPIService();
+    ConnectionDetector cd;
 
     public String getUserEmail() {
         return userEmail;
@@ -108,6 +112,7 @@ public class LoginViewModel extends BaseObservable {
     public LoginViewModel(Context context) {
         this.context=context;
         login = new Login(getloginEmail(), getloginPassword());
+        cd = ConnectionDetector.getInstance(context);
     }
 
    /* @Bindable
@@ -118,10 +123,13 @@ public class LoginViewModel extends BaseObservable {
     public void onLoginClicked() {
 
         if (isInputDataValid()) {
-//            setToastMessage(successMessage);
-            userLogin(getloginEmail());
+            if (cd.isConnectingToInternet()) {
+                userLogin(getloginEmail());
+            } else {
+                setToastMessage(interneterror);
+            }
         } else {
-            setToastMessage(errorMessage);
+            setToastMessage(errorMessage1);
         }
     }
 
@@ -129,6 +137,10 @@ public class LoginViewModel extends BaseObservable {
        /* activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
         activityLoginBinding.linearOTPView.setVisibility(View.GONE);*/
         setToastMessage("back");
+    }
+
+    public void onTextDesignClicked() {
+        setToastMessage("DesignAndDevelopedby");
     }
 
     public void onOTPSubmitClicked() {
@@ -162,7 +174,7 @@ public class LoginViewModel extends BaseObservable {
                     if (response.body() != null) {
                         setToastMessage(response.body().getHeader().get(0).getMsg());
                     } else {
-                        setToastMessage("Invalid credentials!");
+                        setToastMessage("Please enter valid mobile/email");
                     }
                 }
             }

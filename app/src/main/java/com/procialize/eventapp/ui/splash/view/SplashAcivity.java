@@ -31,13 +31,12 @@ public class SplashAcivity extends AppCompatActivity implements Splash {
     @Override
     public void openLoginActivity(Context context) {
         context.startActivity(new Intent(context, LoginActivity.class));
-        finish();
+
     }
 
     @Override
     public void openMainActivity(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
-        finish();
 
     }
 }

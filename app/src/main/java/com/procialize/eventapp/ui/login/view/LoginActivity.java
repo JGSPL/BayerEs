@@ -1,16 +1,19 @@
 package com.procialize.eventapp.ui.login.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 
-import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
@@ -43,8 +46,19 @@ public class LoginActivity extends AppCompatActivity {
             } else if (message.equalsIgnoreCase("Successfully Login")) {
                 view.getContext().startActivity(new Intent(view.getContext(), EventListActivity.class));
                 //finish();
+            } else if (message.equalsIgnoreCase("DesignAndDevelopedby")) {
+                String url = "https://www.theeventapp.in/terms-of-use";
+                view.getContext().startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
+                //finish();
             } else {
-                Constant.displayToast(view.getContext(), message);
+//                Constant.displayToast(view.getContext(), message);
+                try {
+                    InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                } catch(Exception ignored) {
+                }
+                Utility.createShortSnackBar(view, message);
+
             }
         }
     }
