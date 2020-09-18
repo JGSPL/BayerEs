@@ -243,4 +243,14 @@ public interface APIService{
                                      @Field("search_text") String search_text,
                                      @Field("pageNumber") String pageNumber,
                                      @Field("pageSize") String pageSize);
+
+
+ @POST("Attendee_api/UpdateChatUserInfo")
+ @FormUrlEncoded
+ Call<LoginOrganizer> UpdateChatUserInfo(@Header("authorization") String auth,
+                                  @Field("event_id") String organizer_id,
+                                  @Field("firebase_id") String search_text,
+                                         @Field("firebase_name") String firebase_name,
+                                  @Field("firebase_username") String pageNumber);
+
 }

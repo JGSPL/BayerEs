@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/imagelibrary" />
             <option value="$PROJECT_DIR$/jiaozivideoplayer" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/mentions-release" />

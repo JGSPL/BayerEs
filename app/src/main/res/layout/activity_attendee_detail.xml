@@ -286,9 +286,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginRight="3dp"
                             android:background="@color/transperent"
                             android:text="Send Message"
                             android:textAllCaps="true"
+                            android:id="@+id/tv_sendmess"
                             android:textColor="@color/white"
                             android:textSize="@dimen/textsizesmall" />
                     </LinearLayout>
