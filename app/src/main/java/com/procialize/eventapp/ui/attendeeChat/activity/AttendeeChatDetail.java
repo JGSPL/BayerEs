@@ -2,6 +2,8 @@ package com.procialize.eventapp.ui.attendeeChat.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -40,13 +42,16 @@ import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.WRITE_CONTACTS;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 public class AttendeeChatDetail extends AppCompatActivity implements View.OnClickListener {
-    String fname, lname, company, city, designation, prof_pic, attendee_type,mobile,email;
-    TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
+    String fname, lname, company, city, designation, prof_pic, attendee_type, mobile, email;
+    TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,
+            tv_mobile, tv_email, tv_sendmess, tv_header, tv_contact;
     EditText et_message;
-    LinearLayout ll_send_message, ll_save_contact,ll_main;
-    ImageView iv_profile,iv_back;
+    LinearLayout ll_send_message, ll_save_contact, ll_main, ll_save_contact_inner;
+    ImageView iv_profile, iv_back, ic_email, iv_contact;
     ProgressBar progressView;
     public static final int RequestPermissionCode = 100;
     AttendeeDetailsViewModel attendeeDetailsViewModel;
@@ -54,7 +59,8 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
     private DatabaseReference mUsersDatabase;
     private DatabaseReference mMessageDatabase;
     private FirebaseAuth mAuth;
-    String  mCurrent_user_id,attendeeid, firebase_id;
+    String mCurrent_user_id, attendeeid, firebase_id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,7 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         progressView = findViewById(R.id.progressView);
         iv_profile = findViewById(R.id.iv_profile);
         iv_back = findViewById(R.id.iv_back);
+        ic_email = findViewById(R.id.ic_email);
         tv_attendee_name = findViewById(R.id.tv_attendee_name);
         tv_attendee_designation = findViewById(R.id.tv_attendee_designation);
         tv_attendee_company_name = findViewById(R.id.tv_attendee_company_name);
@@ -74,6 +81,10 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         tv_email = findViewById(R.id.tv_email);
         et_message = findViewById(R.id.et_message);
         tv_sendmess = findViewById(R.id.tv_sendmess);
+        tv_header = findViewById(R.id.tv_header);
+        ll_save_contact_inner = findViewById(R.id.ll_save_contact_inner);
+        iv_contact = findViewById(R.id.iv_contact);
+        tv_contact = findViewById(R.id.tv_contact);
 
         ll_send_message = findViewById(R.id.ll_send_message);
         ll_save_contact = findViewById(R.id.ll_save_contact);
@@ -89,8 +100,21 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         tv_mobile.setText(mobile);
         tv_email.setText(email);
 
-        iv_back.setOnClickListener(this);
         CommonFunction.showBackgroundImage(this, ll_main);
+
+
+        iv_back.setOnClickListener(this);
+
+        CommonFunction.showBackgroundImage(AttendeeChatDetail.this, ll_main);
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        ll_send_message.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        ic_email.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        tv_sendmess.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        ll_save_contact.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        ll_save_contact_inner.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        iv_contact.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
+        tv_contact.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
 
         if (prof_pic.trim() != null) {
             Glide.with(AttendeeChatDetail.this)
@@ -111,7 +135,7 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         }
 
         //--GETTING CURRENT USER ID---
-        mAuth= FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         mCurrent_user_id = mAuth.getCurrentUser().getUid();
 
         //---REFERENCE TO CHATS CHILD IN FIREBASE DATABASE-----
@@ -120,7 +144,7 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         //---OFFLINE FEATURE---
         mConvDatabase.keepSynced(true);
 
-        mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users");
         mUsersDatabase.keepSynced(true);
 
         mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("messages").child(mCurrent_user_id);
@@ -151,18 +175,15 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.ll_send_message:
 
-                if(message.isEmpty())
-                {
-                    Utility.createShortSnackBar(ll_main,"Please enter message..");
+                if (message.isEmpty()) {
+                    Utility.createShortSnackBar(ll_main, "Please enter message..");
 
-                }
-                else
-                {
-                    if(firebase_id.equalsIgnoreCase("0")){
+                } else {
+                    if (firebase_id.equalsIgnoreCase("0")) {
                         et_message.setText("");
                         Utility.createShortSnackBar(ll_main, "User not valid for chat...!");
 
-                    }else {
+                    } else {
                         if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
                             mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -220,18 +241,15 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.tv_sendmess:
 
-                if(message.isEmpty())
-                {
-                    Utility.createShortSnackBar(ll_main,"Please enter message..");
+                if (message.isEmpty()) {
+                    Utility.createShortSnackBar(ll_main, "Please enter message..");
 
-                }
-                else
-                {
-                    if(firebase_id.equalsIgnoreCase("0")){
+                } else {
+                    if (firebase_id.equalsIgnoreCase("0")) {
                         et_message.setText("");
                         Utility.createShortSnackBar(ll_main, "User not valid for chat...!");
 
-                    }else {
+                    } else {
                         if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
                             mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -279,7 +297,7 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
                     if (!CheckingPermissionIsEnabledOrNot()) {
                         RequestMultiplePermission();
                     } else {
-                        attendeeDetailsViewModel.saveContact(this,fname+" "+lname,company,mobile,designation,email);
+                        attendeeDetailsViewModel.saveContact(this, fname + " " + lname, company, mobile, designation, email);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -332,7 +350,6 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
-
 
 
 }

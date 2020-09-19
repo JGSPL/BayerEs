@@ -555,6 +555,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
         }
 
+        //Normal Login User
+        private void normal_login_user(String email, String password) {
+
+            //---SIGN IN FOR THE AUTHENTICATE EMAIL-----
+            mauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this,
+                    new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            if(task.isSuccessful()){
+
+                                //---ADDING DEVICE TOKEN ID AND SET ONLINE TO BE TRUE---
+                                //---DEVICE TOKEN IS USED FOR SENDING NOTIFICATION----
+                                String user_id=mauth.getCurrentUser().getUid();
+                                String token_id= FirebaseInstanceId.getInstance().getToken();
+                                Map addValue = new HashMap();
+                                addValue.put("device_token",token_id);
+                                addValue.put("online","true");
+
+                                //---IF UPDATE IS SUCCESSFULL , THEN OPEN MAIN ACTIVITY---
+                                mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener(){
+
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                                        if(databaseError==null){
+
+                                            //---OPENING MAIN ACTIVITY---
+                                            Log.e("Login : ","Logged in Successfully" );
+                                            // Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                            String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                            getChatUpdate(api_token,eventid,currentuser,fireEmail,fName);
+
+                                        }
+                                        else{
+                                            Toast.makeText(MainActivity.this, databaseError.toString()  , Toast.LENGTH_SHORT).show();
+                                            Log.e("Error is : ",databaseError.toString());
+
+                                        }
+                                    }
+                                });
+
+
+
+                            }
+                            else{
+                                //---IF AUTHENTICATION IS WRONG----
+                                Toast.makeText(MainActivity.this, "Wrong Credentials" +
+                                        "", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+
+
     private void getAttendeeAndInsertIntoDB()
     {
         AttendeeViewModel attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);

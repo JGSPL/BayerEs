@@ -57,7 +57,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
 
         android:scrollbars="none">
@@ -145,9 +145,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="15dp"
+                android:padding="15dp"
                 android:layout_weight="1"
-
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <TextView
@@ -248,10 +248,10 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/edit_background"
                     android:gravity="top"
-                    android:visibility="gone"
                     android:hint="Type your message..."
                     android:maxLines="5"
                     android:padding="10dp"
+                    android:visibility="gone"
                     android:textSize="13dp" />
 
 
@@ -260,7 +260,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="bottom"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
@@ -268,7 +268,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:visibility="gone"
-
                         android:layout_alignParentBottom="true"
                         android:layout_gravity="center"
                         android:layout_weight="1"
@@ -278,6 +277,7 @@
                         >
 
                         <ImageView
+                            android:id="@+id/ic_email"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_gravity="center"
@@ -307,7 +307,6 @@
                         android:layout_alignParentBottom="true"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:layout_marginTop="10dp"
                         android:background="@color/activetab"
                         android:gravity="center"
                         android:layout_marginLeft="10dp"
@@ -315,6 +314,7 @@
                         android:padding="1dp">
 
                         <LinearLayout
+                            android:id="@+id/ll_save_contact_inner"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_alignParentBottom="true"
@@ -323,6 +323,7 @@
                             android:gravity="center"
                             android:orientation="horizontal">
                             <ImageView
+                                android:id="@+id/iv_contact"
                                 android:layout_width="25dp"
                                 android:layout_height="25dp"
                                 android:layout_gravity="center"
@@ -331,6 +332,7 @@
                                 android:background="@color/white"/>
 
                             <TextView
+                                android:id="@+id/tv_contact"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:minHeight="0dp"

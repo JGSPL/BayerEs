@@ -54,6 +54,18 @@ public class Attendee {
     @Expose
     private String firebase_username;
 
+    @SerializedName("firebase_status")
+    @Expose
+    private String firebase_status;
+
+    public String getFirebase_status() {
+        return firebase_status;
+    }
+
+    public void setFirebase_status(String firebase_status) {
+        this.firebase_status = firebase_status;
+    }
+
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }

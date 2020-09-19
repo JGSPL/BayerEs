@@ -137,7 +137,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 strAttendeeName = searchEt.getText().toString().trim();
                 attendeeAdapter.getAttendeeListFiltered().clear();
                 attendeeAdapter.notifyDataSetChanged();
-                loadFirstPage();
+                loadFirstPage(strAttendeeName);
             }
         });
 
@@ -149,13 +149,16 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 attendeeAdapter.getAttendeeListFiltered().clear();
                 attendeeAdapter.notifyDataSetChanged();
             }
-            loadFirstPage();
+            loadFirstPage("");
+
         } else {
             /*db = procializeDB.getReadableDatabase();
 
             attendeesDBList = dbHelper.getAllAttendeeDetails("0", attendeePageSize + "");
             attendeeAdapter.addAll(attendeesDBList);*/
         }
+
+
 
 
 
@@ -246,12 +249,12 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             e.printStackTrace();
         }
 
-//        attendeefeedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                doRefresh();
-//            }
-//        });
+       attendeefeedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+           public void onRefresh() {
+                doRefresh();
+            }
+        });
 
         return root;
     }
@@ -266,9 +269,11 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             strAttendeeName =  searchEt.getText().toString().trim();
             attendeeAdapter.getAttendeeListFiltered().clear();
             attendeeAdapter.notifyDataSetChanged();
-            loadFirstPage();
+            loadFirstPage("");
             attendeefeedrefresh.setRefreshing(false);
         } else {
+            attendeefeedrefresh.setRefreshing(false);
+
             /*progressBar.setVisibility(View.GONE);
             attendeeAdapter.getAttendeeListFiltered().clear();
             attendeeAdapter.notifyDataSetChanged();
@@ -282,14 +287,14 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     public void retryPageLoad() {
         loadNextPage();
     }
-    private void loadFirstPage() {
+    private void loadFirstPage( String searchtext) {
         Log.d("First Page", "loadFirstPage: ");
 
         // To ensure list is visible when retry button in error view is clicked
 
 
         currentPage = PAGE_START;
-        attendeeViewModel.getAttendee(api_token,eventid, "", String.valueOf(attendeePageNumber),String.valueOf(attendeePageSize));
+        attendeeViewModel.getAttendee(api_token,eventid, searchtext, String.valueOf(attendeePageNumber),String.valueOf(attendeePageSize));
         attendeeViewModel.getEventList().observe(this, new Observer<FetchAttendee>() {
             @Override
             public void onChanged(FetchAttendee event) {
@@ -368,7 +373,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     @Override
     public void onContactSelected(Attendee attendee) {
-        if(!(attendee.getFirebase_id().equalsIgnoreCase("0"))){
+        if(!(attendee.getFirebase_status().equalsIgnoreCase("0"))){
             final String SprofilePic = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_PROFILE_PIC);
             final String SUserNmae = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_FNAME);
             final String SlName = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_LNAME);

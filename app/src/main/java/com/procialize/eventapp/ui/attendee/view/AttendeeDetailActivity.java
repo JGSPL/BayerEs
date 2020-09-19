@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -40,11 +44,17 @@ import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.WRITE_CONTACTS;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
 public class AttendeeDetailActivity extends AppCompatActivity implements View.OnClickListener {
     String fname, lname, company, city, designation, prof_pic, attendee_type, mobile, email;
@@ -61,7 +71,9 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     private DatabaseReference mMessageDatabase;
     private FirebaseAuth mAuth;
     String mCurrent_user_id, attendeeid, firebase_id;
-
+    APIService updateApi;
+    MutableLiveData<LoginOrganizer> chatUpdate = new MutableLiveData<>();
+    String api_token,eventid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +81,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_attendee_detail);
 
         getIntentData();
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(this, EVENT_ID);
+
+
         attendeeDetailsViewModel = ViewModelProviders.of(this).get(AttendeeDetailsViewModel.class);
         progressView = findViewById(R.id.progressView);
         iv_profile = findViewById(R.id.iv_profile);
@@ -171,6 +187,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         final String SprofilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         final String SUserNmae = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
         final String SlName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
+        final String FireEmaile = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASEUSER_NAME);
 
         final String message = et_message.getText().toString().trim();
         switch (v.getId()) {
@@ -256,7 +273,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-
+                                    getChatUpdate(api_token,eventid,firebase_id, fname,FireEmaile);
                                     Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
                                     chatIntent.putExtra("user_name", fname + " " + lname);
@@ -350,6 +367,29 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
                 break;
         }
+    }
+    //Update Api
+    public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username ) {
+        updateApi = ApiUtils.getAPIService();
+
+        updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail,"1").enqueue(new Callback<LoginOrganizer>() {
+            @Override
+            public void onResponse(Call<LoginOrganizer> call,
+                                   Response<LoginOrganizer> response) {
+                if (response.isSuccessful()) {
+                    chatUpdate.setValue(response.body());
+                    // Utility.createShortSnackBar(ll_main,"Chat info updated");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                chatUpdate.setValue(null);
+
+            }
+        });
+        return chatUpdate;
     }
 
 
