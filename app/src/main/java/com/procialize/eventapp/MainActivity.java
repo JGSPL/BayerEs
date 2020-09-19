@@ -24,9 +24,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -79,7 +79,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.procialize.eventapp.Utility.Constant.colorunselect;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
@@ -630,11 +629,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         attendeeViewModel.getEventList().observe(this, new Observer<FetchAttendee>() {
             @Override
             public void onChanged(FetchAttendee event) {
-                List<Attendee> attendeeList = event.getAttandeeList();
+                try {
+                    List<Attendee> attendeeList = event.getAttandeeList();
 
-                //Delete All attendee from local db and insert attendee
-                attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
-                attendeeDatabaseViewModel.insertIntoDb(MainActivity.this,attendeeList);
+                    //Delete All attendee from local db and insert attendee
+                    attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
+                    attendeeDatabaseViewModel.insertIntoDb(MainActivity.this, attendeeList);
+                } catch (Exception e) {
+
+                }
+
             }
         });
     }

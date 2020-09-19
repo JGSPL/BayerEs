@@ -339,6 +339,11 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
                     boolean writeContactpermjission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (readContactPermission && writeContactpermjission) {
 //                        Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_LONG).show();
+                        try {
+                            attendeeDetailsViewModel.saveContact(this, fname + " " + lname, company, mobile, designation, email);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
 
                         Toast.makeText(AttendeeChatDetail.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
