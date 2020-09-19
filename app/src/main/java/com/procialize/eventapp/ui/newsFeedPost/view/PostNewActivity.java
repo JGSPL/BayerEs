@@ -315,7 +315,6 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-
         //Tagging Functionality
         attendeeList = new ArrayList<TableAttendee>();
         attendeeDatabaseViewModel.getAttendeeDetails(this);

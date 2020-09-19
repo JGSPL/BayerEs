@@ -47,7 +47,6 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
     String attendee_design = "1", attendee_company = "1", attendee_location = "1", attendee_mobile = "1", attendee_save_contact = "1";
     String MY_PREFS_NAME = "ProcializeInfo";
     String MY_PREFS_LOGIN = "ProcializeLogin";
-    String colorActive;
     private Context context;
     private List<Attendee> attendeeListFiltered;
     private AttendeeAdapterListner listener;
@@ -63,8 +62,6 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
         this.attendeeLists = commentList;
         this.listener = listener;
         this.context = context;
-        SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        colorActive = "#00fffff";
     }
 
     @Override
@@ -215,9 +212,6 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
 
                 }
 
-
-
-
                 String attendee_id = attendee.getAttendee_id();
                 /*String unreadMsgCount = procializeDB.getAttendeeChatForAttendeeId(attendee_id);
                 if (!unreadMsgCount.equalsIgnoreCase("0")) {
@@ -233,7 +227,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                 }*/
             }
 
-            holder.iv_background.setBackgroundColor(Color.parseColor(colorActive));
+            //holder.iv_background.setBackgroundColor(Color.parseColor(colorActive));
         } catch (Exception e) {
             e.printStackTrace();
         }

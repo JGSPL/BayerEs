@@ -47,6 +47,7 @@ import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
@@ -169,13 +170,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                CommonFunction.showBackgroundImage(ProfileActivity.this, ll_main);
-            }
-        }, 2000);
+        CommonFunction.showBackgroundImage(ProfileActivity.this, ll_main);
 
         if (connectionDetector.isConnectingToInternet()) {
 
@@ -226,6 +221,42 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
             });
+        }
+        else
+        {
+            first_name = SharedPreference.getPref(getApplicationContext(), KEY_FNAME);
+            last_name = SharedPreference.getPref(getApplicationContext(), KEY_LNAME);
+            designation =SharedPreference.getPref(getApplicationContext(), KEY_DESIGNATION);
+            company_name = SharedPreference.getPref(getApplicationContext(), KEY_COMPANY);
+            city = SharedPreference.getPref(getApplicationContext(), KEY_CITY);
+            email = SharedPreference.getPref(getApplicationContext(), KEY_EMAIL);
+            mobile = SharedPreference.getPref(getApplicationContext(), KEY_MOBILE);
+
+            et_first_name.setText(first_name);
+            et_last_name.setText(last_name);
+            et_designation.setText(designation);
+            et_company_name.setText(company_name);
+            et_city.setText(city);
+            et_email.setText(email);
+            et_mobile.setText(mobile);
+
+            if (SharedPreference.getPref(getApplicationContext(), KEY_PROFILE_PIC) != null) {
+                Glide.with(getApplicationContext())
+                        .load(SharedPreference.getPref(getApplicationContext(), KEY_PROFILE_PIC))
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                progressView.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                progressView.setVisibility(View.GONE);
+                                return false;
+                            }
+                        }).into(iv_profile);
+            }
         }
     }
 

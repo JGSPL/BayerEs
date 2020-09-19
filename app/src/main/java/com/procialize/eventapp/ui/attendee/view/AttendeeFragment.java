@@ -37,12 +37,14 @@ import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.adapter.AttendeeAdapter;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
+import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
@@ -55,7 +57,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     RecyclerView attendeerecycler;
     SwipeRefreshLayout attendeefeedrefresh;
     EditText searchEt;
-    
+
     AttendeeAdapter attendeeAdapter;
     SessionManager sessionManager;
     String eventid, colorActive;
@@ -63,13 +65,13 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     String picPath = "";
 
     // TODO: Rename and change types of parameters
-    
+
     private APIService mAPIService;
     private ProgressBar progressBar;
     private SQLiteDatabase db;
     private ConnectionDetector cd;
     private List<Attendee> attendeeList;
-    private List<Attendee> attendeesDBList;
+    private List<Attendee> attendeesDBList = new ArrayList<>();
     LinearLayout linear;
     String api_token;
     Attendee attendeeTmp;
@@ -88,6 +90,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     ImageView iv_search;
     String strAttendeeName = "";
     String attendee_message = "";
+
     public static AttendeeFragment newInstance() {
 
         return new AttendeeFragment();
@@ -101,8 +104,8 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         attendeerecycler = root.findViewById(R.id.recycler_attendee);
 
-        api_token = SharedPreference.getPref(getActivity(),AUTHERISATION_KEY);
-        eventid = SharedPreference.getPref(getActivity(),EVENT_ID);
+        api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
         searchEt = root.findViewById(R.id.searchEt);
         attendeefeedrefresh = root.findViewById(R.id.swiperefresh_attendee);
@@ -123,7 +126,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
 
 
-       // pullrefresh.setTextColor(Color.parseColor(colorActive));
+        // pullrefresh.setTextColor(Color.parseColor(colorActive));
 
 
         mAPIService = ApiUtils.getAPIService();
@@ -144,25 +147,16 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         if (cd.isConnectingToInternet()) {
-            strAttendeeName =  searchEt.getText().toString().trim();
-            if(attendeeAdapter!=null) {
+            strAttendeeName = searchEt.getText().toString().trim();
+            if (attendeeAdapter != null) {
                 attendeeAdapter.getAttendeeListFiltered().clear();
                 attendeeAdapter.notifyDataSetChanged();
             }
             loadFirstPage("");
 
         } else {
-            /*db = procializeDB.getReadableDatabase();
-
-            attendeesDBList = dbHelper.getAllAttendeeDetails("0", attendeePageSize + "");
-            attendeeAdapter.addAll(attendeesDBList);*/
+            getAttendeeFromDb();
         }
-
-
-
-
-
-
         attendeerecycler.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
             protected void loadMoreItems() {
@@ -248,15 +242,45 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             e.printStackTrace();
         }
 
-       attendeefeedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        attendeefeedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-           public void onRefresh() {
+            public void onRefresh() {
                 doRefresh();
             }
         });
 
         return root;
     }
+
+    public void getAttendeeFromDb() {
+        attendeeDatabaseViewModel.getAttendeeDetails(getActivity());
+        attendeeDatabaseViewModel.getAttendeeList().observeForever(new Observer<List<TableAttendee>>() {
+            @Override
+            public void onChanged(List<TableAttendee> tableAttendees) {
+                for (int i = 0; i < tableAttendees.size(); i++) {
+                    final Attendee attendee = new Attendee();
+                    attendee.setFirebase_status("");
+                    attendee.setMobile(tableAttendees.get(i).getMobile());
+                    attendee.setEmail(tableAttendees.get(i).getEmail());
+                    attendee.setFirebase_id(tableAttendees.get(i).getFirebase_id());
+                    attendee.setFirebase_name(tableAttendees.get(i).getFirebase_name());
+                    attendee.setFirebase_username(tableAttendees.get(i).getFirebase_username());
+                    attendee.setAttendee_id(tableAttendees.get(i).getAttendee_id());
+                    attendee.setFirst_name(tableAttendees.get(i).getFirst_name());
+                    attendee.setLast_name(tableAttendees.get(i).getLast_name());
+                    attendee.setCity(tableAttendees.get(i).getCity());
+                    attendee.setDesignation(tableAttendees.get(i).getDesignation());
+                    attendee.setCompany_name(tableAttendees.get(i).getCompany_name());
+                    attendee.setAttendee_type(tableAttendees.get(i).getAttendee_type());
+                    attendee.setTotal_sms(tableAttendees.get(i).getTotal_sms());
+                    attendee.setProfile_picture(tableAttendees.get(i).getProfile_picture());
+                    attendeesDBList.add(attendee);
+                }
+                setupEventAdapter(attendeesDBList);
+            }
+        });
+    }
+
     private void doRefresh() {
         progressBar.setVisibility(View.VISIBLE);
       /*  if (callTopRatedMoviesApi().isExecuted())
@@ -265,7 +289,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         if (cd.isConnectingToInternet()) {
             // TODO: Check if data is stale.
             //  Execute network request if cache is expired; otherwise do not update data.
-            strAttendeeName =  searchEt.getText().toString().trim();
+            strAttendeeName = searchEt.getText().toString().trim();
             attendeeAdapter.getAttendeeListFiltered().clear();
             attendeeAdapter.notifyDataSetChanged();
             loadFirstPage("");
@@ -286,29 +310,30 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     public void retryPageLoad() {
         loadNextPage();
     }
-    private void loadFirstPage( String searchtext) {
+
+    private void loadFirstPage(String searchtext) {
         Log.d("First Page", "loadFirstPage: ");
 
         // To ensure list is visible when retry button in error view is clicked
 
 
         currentPage = PAGE_START;
-        attendeeViewModel.getAttendee(api_token,eventid, searchtext, String.valueOf(attendeePageNumber),String.valueOf(attendeePageSize));
-        attendeeViewModel.getEventList().observe(this, new Observer<FetchAttendee>() {
+        attendeeViewModel.getAttendee(api_token, eventid, searchtext, String.valueOf(attendeePageNumber), String.valueOf(attendeePageSize));
+        attendeeViewModel.getAttendeeList().observe(this, new Observer<FetchAttendee>() {
             @Override
             public void onChanged(FetchAttendee event) {
                 List<Attendee> eventLists = event.getAttandeeList();
 
                 //Delete All attendee from local db and insert attendee
                 attendeeDatabaseViewModel.deleteAllAttendee(getActivity());
-                attendeeDatabaseViewModel.insertIntoDb(getActivity(),eventLists);
+                attendeeDatabaseViewModel.insertIntoDb(getActivity(), eventLists);
 
                 progressBar.setVisibility(View.GONE);
 
                 setupEventAdapter(eventLists);
             }
         });
-          }
+    }
 
     public void setupEventAdapter(List<Attendee> commentList) {
         attendeeAdapter = new AttendeeAdapter(getContext(), commentList, AttendeeFragment.this);
@@ -320,8 +345,8 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     private void loadNextPage() {
         Log.d("loadNextPage", "loadNextPage: " + currentPage);
-        attendeeViewModel.getAttendee(api_token,eventid, "", String.valueOf(attendeePageNumber),String.valueOf(attendeePageSize));
-        attendeeViewModel.getEventList().observe(this, new Observer<FetchAttendee>() {
+        attendeeViewModel.getAttendee(api_token, eventid, "", String.valueOf(attendeePageNumber), String.valueOf(attendeePageSize));
+        attendeeViewModel.getAttendeeList().observe(this, new Observer<FetchAttendee>() {
             @Override
             public void onChanged(FetchAttendee event) {
                 List<Attendee> eventLists = event.getAttandeeList();
@@ -332,13 +357,13 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 List<Attendee> results = event.getAttandeeList();
                 attendeeAdapter.addAll(results);
                 //insert attendee in local db
-                attendeeDatabaseViewModel.insertIntoDb(getActivity(),results);
+                attendeeDatabaseViewModel.insertIntoDb(getActivity(), results);
 
                 if (currentPage != totalPages)
                     attendeeAdapter.addLoadingFooter();
                 else
                     isLastPage = true;
-              //  setupEventAdapter(eventLists);
+                //  setupEventAdapter(eventLists);
             }
         });
 /*
@@ -372,17 +397,17 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     @Override
     public void onContactSelected(Attendee attendee) {
-        if(!(attendee.getFirebase_id().equalsIgnoreCase("0"))){
+        if (!(attendee.getFirebase_id().equalsIgnoreCase("0"))) {
             final String SprofilePic = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_PROFILE_PIC);
             final String SUserNmae = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_FNAME);
             final String SlName = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_LNAME);
 
-            Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
-            chatIntent.putExtra("user_id",attendee.getFirebase_id());
-            chatIntent.putExtra("user_name",attendee.getFirst_name() + " " + attendee.getLast_name());
-            chatIntent.putExtra("loginUser_name",SUserNmae + " " + SlName);
-            chatIntent.putExtra("sProfilePic",SprofilePic);
-            chatIntent.putExtra("rProfilepic",attendee.getProfile_picture());
+            Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
+            chatIntent.putExtra("user_id", attendee.getFirebase_id());
+            chatIntent.putExtra("user_name", attendee.getFirst_name() + " " + attendee.getLast_name());
+            chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
+            chatIntent.putExtra("sProfilePic", SprofilePic);
+            chatIntent.putExtra("rProfilepic", attendee.getProfile_picture());
             chatIntent.putExtra("attendeeid", attendee.getAttendee_id());
             chatIntent.putExtra("firebase_id", attendee.getFirebase_id());
             chatIntent.putExtra("Message", "");
@@ -397,7 +422,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             chatIntent.putExtra("email", attendee.getEmail());
 
             startActivity(chatIntent);
-        }else {
+        } else {
             Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
             intent.putExtra("attendeeid", attendee.getAttendee_id());
             intent.putExtra("firebase_id", attendee.getFirebase_id());
@@ -413,6 +438,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             intent.putExtra("email", attendee.getEmail());
             startActivity(intent);
         }
-       // getActivity().finish();
+        // getActivity().finish();
     }
 }
