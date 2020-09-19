@@ -44,6 +44,48 @@ public class Attendee {
     @Expose
     private String total_sms;
 
+    @SerializedName("firebase_id")
+    @Expose
+    private String firebase_id;
+    @SerializedName("firebase_name")
+    @Expose
+    private String firebase_name;
+    @SerializedName("firebase_username")
+    @Expose
+    private String firebase_username;
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirebase_id() {
+        return firebase_id;
+    }
+
+    public void setFirebase_id(String firebase_id) {
+        this.firebase_id = firebase_id;
+    }
+
+    public String getFirebase_name() {
+        return firebase_name;
+    }
+
+    public void setFirebase_name(String firebase_name) {
+        this.firebase_name = firebase_name;
+    }
+
+    public String getFirebase_username() {
+        return firebase_username;
+    }
+
+    public void setFirebase_username(String firebase_username) {
+        this.firebase_username = firebase_username;
+    }
+
     public String getAttendee_id() {
         return attendee_id;
     }

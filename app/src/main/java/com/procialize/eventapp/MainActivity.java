@@ -26,6 +26,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -44,6 +45,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -70,6 +74,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.procialize.eventapp.Utility.Constant.colorunselect;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
@@ -107,8 +116,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DatabaseReference mDatabaseReference;
     FirebaseAuth mauth;
     private DatabaseReference mDatabase;
+    APIService updateApi;
+    MutableLiveData<LoginOrganizer> chatUpdate = new MutableLiveData<>();
     String api_token,eventid;
-
+    String fName;
+    String fireEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,11 +133,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rv_side_menu = findViewById(R.id.rv_side_menu);
         mToolbar = findViewById(R.id.toolbar);
         ll_main = findViewById(R.id.ll_main);
-        mauth = FirebaseAuth.getInstance();
+        mauth=FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabase=FirebaseDatabase.getInstance().getReference().child("users");
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
+
+
+
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
@@ -150,17 +165,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView tv_designation = outer.findViewById(R.id.tv_designation);
         tv_name.setText(fName + " " + lName);
         tv_designation.setText(designation + " - " + city);
-        String fireEmail;
-        if (email.equalsIgnoreCase("")) {
-            fireEmail = fName + "_" + attendee_id + "_" + event_id + "@procialize.in";
-        } else {
+
+        if(email.equalsIgnoreCase("")) {
+             fireEmail = fName + "_" + attendee_id + "_" + event_id + "@procialize.in";
+        }else{
             String[] domains = email.split("@");
-            fireEmail = fName + "_" + attendee_id + "_" + event_id + "@" + domains[1];
+            fireEmail = fName + "_" + attendee_id + "_" + event_id+"@" + domains[1];
 
         }
 
         //Chat related process
-        register_user(fName, fireEmail, "12345678");
+        register_user(fName,fireEmail,"12345678");
 
 
         Glide.with(MainActivity.this)
@@ -179,8 +194,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setUpToolbar();
         setUpNavDrawer();
-
-
         tr_switch_event = findViewById(R.id.tr_switch_event);
         tr_home = findViewById(R.id.tr_home);
         tr_profile = findViewById(R.id.tr_profile);
@@ -195,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             tr_switch_event.setVisibility(View.VISIBLE);
         }
+
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -292,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getAttendeeAndInsertIntoDB();
     }
+
 
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -419,30 +434,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //-----REGISTERING THE NEW USER------
     private void register_user(final String displayname, final String email, final String password) {
 
-        mauth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        mauth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 //------IF USER IS SUCCESSFULLY REGISTERED-----
-                if (task.isSuccessful()) {
+                if(task.isSuccessful()){
 
                     FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
-                    final String uid = current_user.getUid();
+                    final String uid=current_user.getUid();
                     String token_id = FirebaseInstanceId.getInstance().getToken();
-                    Map userMap = new HashMap();
-                    userMap.put("device_token", token_id);
-                    userMap.put("name", displayname);
-                    userMap.put("status", "Hello Events");
-                    userMap.put("image", "default");
-                    userMap.put("thumb_image", "default");
-                    userMap.put("online", "true");
+                    Map userMap=new HashMap();
+                    userMap.put("device_token",token_id);
+                    userMap.put("name",displayname);
+                    userMap.put("status","Hello Events");
+                    userMap.put("image","default");
+                    userMap.put("thumb_image","default");
+                    userMap.put("online","true");
 
                     mDatabase.child(uid).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task1) {
-                            if (task1.isSuccessful()) {
+                            if(task1.isSuccessful()){
 
-                                // Toast.makeText(getApplicationContext(), "New User is created", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(), "New User is created", Toast.LENGTH_SHORT).show();
                                /* Intent intent=new Intent(MainActivity.this,MainActivity.class);
 
                                 //----REMOVING THE LOGIN ACTIVITY FROM THE QUEUE----
@@ -451,9 +466,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 finish();*/
 
 
-                            } else {
-                                login_user(email, password);
-                                //  Toast.makeText(MainActivity.this, "YOUR NAME IS NOT REGISTERED... MAKE NEW ACCOUNT-- ", Toast.LENGTH_SHORT).show();
+
+                            }
+                            else{
+                                login_user(email,password);
+                              //  Toast.makeText(MainActivity.this, "YOUR NAME IS NOT REGISTERED... MAKE NEW ACCOUNT-- ", Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -463,8 +480,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
                 //---ERROR IN ACCOUNT CREATING OF NEW USER---
-                else {
-                    login_user(email, password);
+                else{
+                    login_user(email,password);
 
                     //Toast.makeText(getApplicationContext(), "ERROR REGISTERING USER....", Toast.LENGTH_SHORT).show();
                 }
@@ -472,56 +489,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
+
     //Login User
     private void login_user(String email, String password) {
 
         //---SIGN IN FOR THE AUTHENTICATE EMAIL-----
-        mauth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,
+        mauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this,
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()) {
+                        if(task.isSuccessful()){
 
                             //---ADDING DEVICE TOKEN ID AND SET ONLINE TO BE TRUE---
                             //---DEVICE TOKEN IS USED FOR SENDING NOTIFICATION----
-                            String user_id = mauth.getCurrentUser().getUid();
-                            String token_id = FirebaseInstanceId.getInstance().getToken();
+                            String user_id=mauth.getCurrentUser().getUid();
+                            String token_id= FirebaseInstanceId.getInstance().getToken();
                             Map addValue = new HashMap();
-                            addValue.put("device_token", token_id);
-                            addValue.put("online", "true");
+                            addValue.put("device_token",token_id);
+                            addValue.put("online","true");
 
                             //---IF UPDATE IS SUCCESSFULL , THEN OPEN MAIN ACTIVITY---
-                            mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener() {
+                            mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener(){
 
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
-                                    if (databaseError == null) {
+                                    if(databaseError==null){
 
                                         //---OPENING MAIN ACTIVITY---
-                                        Log.e("Login : ", "Logged in Successfully");
-                                        Toast.makeText(getApplicationContext(), "Logged in Successfully", Toast.LENGTH_SHORT).show();
-                                        /*Intent intent=new Intent(LoginActivity.this,MainActivity.class);
-                                        startActivity(intent);
-                                        finish();*/
-                                    } else {
-                                        Toast.makeText(MainActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
-                                        Log.e("Error is : ", databaseError.toString());
+                                        Log.e("Login : ","Logged in Successfully" );
+                                        Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                        String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                        getChatUpdate(api_token,eventid,currentuser,fireEmail,fName);
+
+                                    }
+                                    else{
+                                        Toast.makeText(MainActivity.this, databaseError.toString()  , Toast.LENGTH_SHORT).show();
+                                        Log.e("Error is : ",databaseError.toString());
 
                                     }
                                 }
                             });
 
 
-                        } else {
+
+                        }
+                        else{
                             //---IF AUTHENTICATION IS WRONG----
                             Toast.makeText(MainActivity.this, "Wrong Credentials" +
                                     "", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-    }
+        }
 
     private void getAttendeeAndInsertIntoDB()
     {
@@ -575,5 +597,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
         }
     }
+
+        //Update Api
+        public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username) {
+            updateApi = ApiUtils.getAPIService();
+
+            updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail).enqueue(new Callback<LoginOrganizer>() {
+                @Override
+                public void onResponse(Call<LoginOrganizer> call,
+                                       Response<LoginOrganizer> response) {
+                    if (response.isSuccessful()) {
+                        chatUpdate.setValue(response.body());
+                        Utility.createShortSnackBar(ll_main,"Chat info updated");
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                    chatUpdate.setValue(null);
+
+                }
+            });
+            return chatUpdate;
+        }
+
+
 
 }

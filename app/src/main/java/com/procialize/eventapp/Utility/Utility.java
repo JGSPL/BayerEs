@@ -22,6 +22,7 @@ import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -397,5 +398,13 @@ compare < 0, if date1 is smaller than date2*/
         cal.setTimeInMillis(time * 1000);
         String date = DateFormat.format("yyyy-MM-dd HH:mm:ss", cal).toString();
         return date;
+    }
+
+    public static void hideKeyboard(View view){
+        try {
+            InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch(Exception ignored) {
+        }
     }
 }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/chat_bg">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal"
+        android:paddingTop="0dp"
+        android:weightSum="1"
+        android:background="#FFFFFF"
+        android:id="@+id/linearLayout">
+
+        <ImageButton
+            android:id="@+id/chatAddButton"
+            android:layout_width="39dp"
+            android:layout_height="39dp"
+            android:layout_marginBottom="2dp"
+            android:layout_gravity="bottom"
+            android:tint="@color/black"
+            android:background="@drawable/addbutton" />
+
+        <EditText
+            android:id="@+id/chatMessageView"
+            android:layout_width="137dp"
+            android:layout_height="wrap_content"
+            android:hint="Message"
+            android:layout_gravity="center"
+            android:paddingLeft="5dp"
+            android:background="@color/colorwhite"
+            android:paddingRight="10dp"
+            android:maxHeight="300dp"
+            android:layout_weight="0.99" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:padding="2dp"
+            android:id="@+id/lineaeSend"
+            android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/chatSendButton"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:padding="5dp"
+            android:backgroundTint="@color/colorwhite"
+            android:layout_gravity="center"
+            android:background="@mipmap/ic_send"
+            />
+        </LinearLayout>
+
+    </LinearLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/message_swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout">
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"
+        android:id="@+id/recycleViewMessageList"
+        android:layout_alignParentTop="true" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center" />
+
+</RelativeLayout>

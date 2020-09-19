@@ -11,6 +11,18 @@ public class FetchNewsfeedMultiple {
     @Expose
     List<Header> header;
 
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    @SerializedName("detail")
+    @Expose
+    private String detail;
+
     @SerializedName("detailpreencrypt")
     @Expose
     List<Newsfeed_detail> newsfeed_detail;

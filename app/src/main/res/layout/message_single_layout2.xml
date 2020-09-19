@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_margin="5dp"
+    android:id="@+id/linMain"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+    <RelativeLayout
+        android:id="@+id/messageSingleLayout2"
+        android:layout_width="250dp"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:padding="0dp">
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:id="@+id/innerRl1"
+        android:background="#ffffff"
+        android:layout_marginLeft="5dp"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:padding="0dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/message_profile_layout"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        android:src="@drawable/profilepic_placeholder"
+        android:layout_marginRight="5dp"/>
+
+        <com.procialize.eventapp.fonts.RobotoTextview
+            android:id="@+id/name_text_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="5dp"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/message_profile_layout"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:textSize="14sp" />
+
+
+    <com.procialize.eventapp.fonts.RobotoTextview
+        android:id="@+id/message_text_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="15dp"
+        android:autoLink="web"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:text="TextView"
+        android:layout_below="@+id/name_text_layout"
+        android:layout_alignStart="@+id/name_text_layout" />
+
+    <ImageView
+        android:id="@+id/message_image_layout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignStart="@+id/message_text_layout"
+        android:layout_below="@+id/message_text_layout"
+        android:layout_toEndOf="@+id/message_profile_layout"
+        android:scaleType="centerCrop"/>
+
+<!--
+                <com.procialize.eventapp.Utility.MyJZVideoPlayerStandard
+                    android:id="@+id/videoplayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_alignStart="@+id/message_text_layout"
+                    android:layout_below="@+id/message_text_layout"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:screenOrientation="portrait"
+                    android:visibility="visible" />
+        -->
+        <cn.jzvd.JzvdStd
+            android:id="@+id/videoplayer"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:screenOrientation="portrait"
+            android:scaleType="centerCrop"
+            android:layout_alignStart="@+id/message_text_layout"
+            android:layout_below="@+id/message_text_layout"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:visibility="visible"/>
+
+
+
+
+        <ProgressBar
+            android:id="@+id/progressBarLeft"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center" />
+    </RelativeLayout>
+        <com.procialize.eventapp.fonts.RobotoTextview
+        android:id="@+id/time_text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+            android:layout_marginTop="5dp"
+        android:text="time"
+        android:layout_below="@+id/innerRl1"
+        android:layout_alignParentLeft="true" />
+
+</RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/messageSingleLayout3"
+        android:layout_width="250dp"
+        android:visibility="visible"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="right"
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:id="@+id/innerRl2"
+        android:background="@color/activetab"
+        android:layout_marginLeft="10dp"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:padding="0dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/message_profile_layout2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:src="@drawable/profilepic_placeholder"
+            android:layout_marginRight="5dp"/>
+
+        <com.procialize.eventapp.fonts.RobotoTextview
+            android:id="@+id/name_text_layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:inputType="textPersonName"
+            android:textSize="14sp"
+            android:hint="Name"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/message_profile_layout2" />
+
+
+        <com.procialize.eventapp.fonts.RobotoTextview
+            android:id="@+id/message_text_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="15dp"
+            android:padding="10dp"
+            android:autoLink="web"
+            android:text="TextView"
+            android:layout_below="@+id/name_text_layout2"
+            android:layout_alignStart="@+id/name_text_layout2" />
+
+        <ImageView
+            android:id="@+id/message_image_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/message_text_layout2"
+            android:layout_below="@+id/message_text_layout2"
+            android:layout_toEndOf="@+id/message_profile_layout2"
+            android:scaleType="centerCrop"/>
+
+<!--
+        <com.procialize.eventapp.Utility.MyJZVideoPlayerStandard
+            android:id="@+id/videoplayer2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignStart="@+id/message_text_layout2"
+            android:layout_below="@+id/message_text_layout2"
+            android:layout_marginRight="0dp"
+            android:screenOrientation="portrait"
+            android:visibility="visible" />
+-->
+        <cn.jzvd.JzvdStd
+            android:id="@+id/videoplayer2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:screenOrientation="portrait"
+            android:scaleType="centerCrop"
+            android:layout_alignStart="@+id/message_text_layout2"
+            android:layout_below="@+id/message_text_layout2"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:visibility="visible"/>
+
+        <ProgressBar
+            android:id="@+id/progressBarRight"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center" />
+    </RelativeLayout>
+
+        <com.procialize.eventapp.fonts.RobotoTextview
+            android:id="@+id/time_text_layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12dp"
+            android:text="time"
+            android:layout_below="@+id/innerRl2"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>
