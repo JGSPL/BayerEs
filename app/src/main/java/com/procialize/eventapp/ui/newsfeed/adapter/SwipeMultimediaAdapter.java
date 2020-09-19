@@ -30,13 +30,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.procialize.eventapp.App;
-import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.AnimateFirstDisplayListener;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -126,22 +127,23 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
                         String message = null;
                         switch (failReason.getType()) {
                             case IO_ERROR:
-                                message = "Input/Output error";
+                                message = "file not downloded ";
                                 break;
                             case DECODING_ERROR:
-                                message = "Image can't be decoded";
+                                message = "file not downloded ";
                                 break;
                             case NETWORK_DENIED:
-                                message = "Downloads are denied";
+                                message = "file not downloded ";
                                 break;
                             case OUT_OF_MEMORY:
-                                message = "Out Of Memory error";
+                                message = "file not downloded ";
                                 break;
                             case UNKNOWN:
-                                message = "Unknown error";
+                                message = "file not downloded ";
                                 break;
                         }
-                        Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+                        Utility.createShortSnackBar(view, message);
 
                         progressBar.setVisibility(View.GONE);
                     }

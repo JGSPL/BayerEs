@@ -242,7 +242,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         });
 
         String colorFour = SharedPreference.getPref(getActivity(), EVENT_COLOR_4);
-        tv_whats_on_mind.setTextColor(Color.parseColor(colorFour));
+        tv_whats_on_mind.setHintTextColor(Color.parseColor(colorFour));
         tv_whats_on_mind.setAlpha(0.4f);
 
         newsfeedViewModel.startBackgroundService(getActivity());
