@@ -79,7 +79,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="95dp"
                         android:layout_weight="1"
                         android:background="@color/grey_light" />
 
@@ -198,7 +198,8 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:hint="Name"
-                        android:textSize="13dp"/>
+                        android:singleLine="true"
+                        android:textSize="13dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -224,6 +225,7 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:hint="Last Name"
+                        android:singleLine="true"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -250,6 +252,7 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:hint="Designation"
+                        android:singleLine="true"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -276,6 +279,7 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:hint="Company Name"
+                        android:singleLine="true"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -302,7 +306,9 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:hint="City"
-                        android:textSize="13dp" />
+                        android:singleLine="true"
+                        android:textSize="13dp"
+                        android:imeOptions="actionDone"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -330,6 +336,7 @@
                         android:hint="Email"
                         android:editable="false"
                         android:clickable="false"
+                        android:singleLine="true"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -358,6 +365,7 @@
                         android:hint="Mobile"
                         android:editable="false"
                         android:clickable="false"
+                        android:singleLine="true"
                         android:textSize="13dp" />
                 </LinearLayout>
 

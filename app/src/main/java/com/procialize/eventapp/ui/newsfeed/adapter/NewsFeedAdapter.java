@@ -312,7 +312,9 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
             if (feedData.getPost_status() != null) {
 
-                holder.tv_status.setVisibility(View.VISIBLE);
+                if(feedData.getPost_status().isEmpty()){holder.tv_status.setVisibility(View.GONE);}else {
+                    holder.tv_status.setVisibility(View.VISIBLE);
+                }
                 int flag = 0;
                 for (int i = 0; i < stringBuilder.length(); i++) {
                     String sample = stringBuilder.toString();

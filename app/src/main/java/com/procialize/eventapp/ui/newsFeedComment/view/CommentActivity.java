@@ -251,7 +251,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(testdataPost.getText());
         if (newsfeed_detail.getPost_status() != null) {
 
-            tv_status.setVisibility(View.VISIBLE);
+            if(newsfeed_detail.getPost_status().isEmpty()){tv_status.setVisibility(View.GONE);}else {
+                tv_status.setVisibility(View.VISIBLE);
+            }
             int flag = 0;
             for (int i = 0; i < stringBuilder.length(); i++) {
                 String sample = stringBuilder.toString();
@@ -656,6 +658,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void onChanged(Boolean aBoolean) {
                             if (aBoolean) {
+                                Utility.hideKeyboard(ll_main);
                                 commentViewModel.postComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
                                 commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                                     @Override

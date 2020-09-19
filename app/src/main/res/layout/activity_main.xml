@@ -54,7 +54,7 @@
             android:layout_gravity="bottom"
             android:background="@color/white"
             app:elevation="8dp"
-            app:labelVisibilityMode="labeled"
+            app:labelVisibilityMode="unlabeled"
             app:menu="@menu/bottom_nav_menu" />
 
     </LinearLayout>

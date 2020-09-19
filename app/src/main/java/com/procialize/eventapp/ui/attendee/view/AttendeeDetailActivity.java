@@ -43,6 +43,7 @@ import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
+import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,9 +58,8 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
 public class AttendeeDetailActivity extends AppCompatActivity implements View.OnClickListener {
-    String fname, lname, company, city, designation, prof_pic, attendee_type, mobile, email;
-    TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,
-            tv_mobile, tv_email, tv_sendmess, tv_header, tv_contact;
+    String fname, lname, company, city, designation, prof_pic, attendee_type,mobile,email;
+    TextView tv_header,tv_contact,tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
     EditText et_message;
     LinearLayout ll_send_message, ll_save_contact, ll_main, ll_save_contact_inner;
     ImageView iv_profile, iv_back, ic_email, iv_contact;
@@ -80,6 +80,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendee_detail);
 
+        try {
+            Intent intent = getIntent();
+            CommonFunction.saveBackgroundImage(AttendeeDetailActivity.this,intent.getStringExtra("eventBg"));
+        }catch (Exception e) {
+
+        }
         getIntentData();
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
@@ -356,7 +362,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                     boolean readContactPermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean writeContactpermjission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (readContactPermission && writeContactpermjission) {
-//                        Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_LONG).show();
+                        try {
+                            attendeeDetailsViewModel.saveContact(this, fname + " " + lname, company, mobile, designation, email);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     } else {
 
                         Toast.makeText(AttendeeDetailActivity.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
@@ -391,6 +402,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         });
         return chatUpdate;
     }
+
 
 
 }
