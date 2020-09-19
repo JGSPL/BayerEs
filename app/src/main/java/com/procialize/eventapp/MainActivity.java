@@ -122,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String api_token,eventid;
     String fName;
     String fireEmail;
+
+    String storeFireid, storeFirename, stoeUsername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,6 +154,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String event_id = SharedPreference.getPref(this, EVENT_ID);
         String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
         String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
+        storeFireid = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_ID);
+        storeFirename = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_NAME);
+        stoeUsername = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASEUSER_NAME);
 
 
         getProfileDetails();
@@ -176,7 +181,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //Chat related process
-        register_user(fName,fireEmail,"12345678");
+        if(storeFireid.equalsIgnoreCase("0")){
+            register_user(fName,fireEmail,"12345678");
+
+        }else{
+            login_user(fireEmail,"12345678");
+        }
 
 
         Glide.with(MainActivity.this)
@@ -532,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         //---OPENING MAIN ACTIVITY---
                                         Log.e("Login : ","Logged in Successfully" );
-                                        Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                       // Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         getChatUpdate(api_token,eventid,currentuser,fireEmail,fName);
 
@@ -620,7 +630,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                        Response<LoginOrganizer> response) {
                     if (response.isSuccessful()) {
                         chatUpdate.setValue(response.body());
-                        Utility.createShortSnackBar(ll_main,"Chat info updated");
+                       // Utility.createShortSnackBar(ll_main,"Chat info updated");
 
                     }
                 }
@@ -633,7 +643,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
             return chatUpdate;
         }
-
 
 
 }

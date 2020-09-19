@@ -122,6 +122,11 @@
             android:name=".ui.attendeeChat.ChatActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".ui.attendeeChat.activity.AttendeeChatDetail"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
 
         <activity
             android:name=".ui.attendeeChat.activity.FullScreenImageActivity"
