@@ -1019,9 +1019,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         contentDialog.show();
 
-
         Button cancelbtn = contentDialog.findViewById(R.id.canclebtn);
         Button ratebtn = contentDialog.findViewById(R.id.ratebtn);
+
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_1)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_1)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_4)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_4)));
 
         final EditText etmsg = contentDialog.findViewById(R.id.etmsg);
 

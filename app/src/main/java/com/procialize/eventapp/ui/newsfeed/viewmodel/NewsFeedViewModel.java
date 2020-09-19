@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -82,6 +83,8 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
@@ -342,7 +345,7 @@ public class NewsFeedViewModel extends ViewModel {
             hideTv.setVisibility(View.VISIBLE);
             deleteTv.setVisibility(View.VISIBLE);
             reportuserTv.setVisibility(View.VISIBLE);
-            blockuserTv.setVisibility(View.VISIBLE);
+            //blockuserTv.setVisibility(View.VISIBLE);
             cancelTv.setVisibility(View.VISIBLE);
             //editIV.setVisibility(View.VISIBLE);
         } else {
@@ -351,7 +354,7 @@ public class NewsFeedViewModel extends ViewModel {
                reportTv.setVisibility(View.GONE);
                hideTv.setVisibility(View.GONE);
                reportuserTv.setVisibility(View.GONE);
-               blockuserTv.setVisibility(View.GONE);
+               //blockuserTv.setVisibility(View.GONE);
 
                deleteTv.setVisibility(View.VISIBLE);
                cancelTv.setVisibility(View.VISIBLE);
@@ -362,7 +365,7 @@ public class NewsFeedViewModel extends ViewModel {
                reportTv.setVisibility(View.VISIBLE);
                hideTv.setVisibility(View.VISIBLE);
                reportuserTv.setVisibility(View.VISIBLE);
-               blockuserTv.setVisibility(View.VISIBLE);
+               //blockuserTv.setVisibility(View.VISIBLE);
 
                deleteTv.setVisibility(View.GONE);
                cancelTv.setVisibility(View.VISIBLE);
@@ -430,15 +433,14 @@ public class NewsFeedViewModel extends ViewModel {
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge(token,"reportPost", feed.getNews_feed_id(),feed.getAttendee_id(),eventId);
+                showratedialouge(v.getContext(),token,"reportPost", feed.getNews_feed_id(),feed.getAttendee_id(),eventId);
             }
         });
-
 
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge(token,"reportUser",feed.getNews_feed_id(), feed.getAttendee_id(),eventId);
+                showratedialouge(v.getContext(),token,"reportUser",feed.getNews_feed_id(), feed.getAttendee_id(),eventId);
             }
         });
 
@@ -538,7 +540,7 @@ public class NewsFeedViewModel extends ViewModel {
         return mIsUpdating;
     }
 
-    private void showratedialouge(final String api_token, final String from, final String id, final String attnId, final String eventId) {
+    private void showratedialouge(Context context,final String api_token, final String from, final String id, final String attnId, final String eventId) {
 
         myDialog = new Dialog(activityVar);
         myDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -549,6 +551,12 @@ public class NewsFeedViewModel extends ViewModel {
 
         Button cancelbtn = myDialog.findViewById(R.id.canclebtn);
         Button ratebtn = myDialog.findViewById(R.id.ratebtn);
+
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
 
         final EditText etmsg = myDialog.findViewById(R.id.etmsg);
 
