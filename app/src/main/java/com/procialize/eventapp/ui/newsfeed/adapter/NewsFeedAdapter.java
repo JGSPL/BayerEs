@@ -185,17 +185,17 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 holder.tv_like.setText(feedData.getTotal_likes() + " Like");
             } else {
                 holder.tv_like.setText(feedData.getTotal_likes() + " Likes");
-
-                holder.vp_slider.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (feedData.getNews_feed_media().size() > 0) {
-
-                            listener.onContactSelected(feed_detail.get(position), position);
-                        }
-                    }
-                });
             }
+
+            holder.vp_slider.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (feedData.getNews_feed_media().size() > 0) {
+
+                        listener.onContactSelected(feed_detail.get(position), position);
+                    }
+                }
+            });
 
             holder.tv_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -227,7 +227,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             holder.iv_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onShareClick(feed_detail.get(position), position);
+                    listener.onShareClick(feed_detail.get(position), position,swipableAdapterPosition);
 
                 }
             });
@@ -511,7 +511,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
         void onLikeClick(Newsfeed_detail feed, int position);
 
-        void onShareClick(Newsfeed_detail feed, int position);
+        void onShareClick(Newsfeed_detail feed, int position, int swipeablePosition);
 
         void onSliderClick(Newsfeed_detail feed, int position);
 

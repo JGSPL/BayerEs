@@ -237,10 +237,10 @@ public class NewsFeedViewModel extends ViewModel {
                     } else {
                         dialogShare = new Dialog(activity);
                         dialogShare.show();
-                        shareImage(feed.getPost_date() + "\n" + feed.getPost_status(),    mediaPath+newsFeedMedia.get(position).getMedia_file().trim(), activityVar);
+                        shareImage(/*feed.getPost_date() + "\n" +*/ feed.getPost_status(),    mediaPath+newsFeedMedia.get(position).getMedia_file().trim(), activityVar);
                     }
                 } else {
-                    shareTextUrl(feed.getPost_date() + "\n" + feed.getPost_status(), StringEscapeUtils.unescapeJava(feed.getPost_status()));
+                    shareTextUrl(/*feed.getPost_date() + "\n" +*/ feed.getPost_status(), StringEscapeUtils.unescapeJava(feed.getPost_status()));
                 }
             }
             else {

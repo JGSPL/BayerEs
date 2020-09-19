@@ -167,7 +167,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         if (connectionDetector.isConnectingToInternet()) {
 
             profileActivityViewModel.getProfile(api_token, event_id);
-            profileActivityViewModel.getProfileDetails().observe(this, new Observer<Profile>() {
+            profileActivityViewModel.getProfileDetails().observeForever(new Observer<Profile>() {
                 @Override
                 public void onChanged(Profile profile) {
                     List<ProfileDetails> profileDetails = profile.getProfileDetails();
@@ -189,7 +189,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         et_mobile.setText(mobile);
 
                         if (profileDetails.get(0).getProfile_picture().trim() != null) {
-                            Glide.with(ProfileActivity.this)
+                            Glide.with(getApplicationContext())
                                     .load(profileDetails.get(0).getProfile_picture().trim())
                                     .listener(new RequestListener<Drawable>() {
                                         @Override
@@ -208,9 +208,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                     }
 
-                    /*if (profileActivityViewModel != null && profileActivityViewModel.getProfileDetails().hasObservers()) {
+                    if (profileActivityViewModel != null && profileActivityViewModel.getProfileDetails().hasObservers()) {
                         profileActivityViewModel.getProfileDetails().removeObservers(ProfileActivity.this);
-                    }*/
+                    }
                 }
             });
         }
@@ -337,7 +337,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
 
-        Glide.with(this).load(bm)
+        Glide.with(getApplicationContext()).load(bm)
                 .apply(RequestOptions.skipMemoryCacheOf(true))
                 .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).circleCrop()
                 .listener(new RequestListener<Drawable>() {
@@ -378,7 +378,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         }
 
-        Glide.with(this).load(tempUri)
+        Glide.with(getApplicationContext()).load(tempUri)
                 .apply(RequestOptions.skipMemoryCacheOf(true))
                 .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).circleCrop()
                 .listener(new RequestListener<Drawable>() {
@@ -558,14 +558,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 if(s.isEmpty()) {
                     profileActivityViewModel.updateProfile(api_token, event_id, first_name, last_name, designation, city,
                             email, mobile, company_name, profile_pic);
-                    profileActivityViewModel.UpdateProfileDetails().observe(ProfileActivity.this, new Observer<Profile>() {
+                    profileActivityViewModel.UpdateProfileDetails().observe(ProfileActivity.this,new Observer<Profile>() {
                         @Override
                         public void onChanged(final Profile profile) {
                             if (profile != null) {
                                 if (profile.getHeader().get(0).getType().equalsIgnoreCase("success")) {
 
                                     Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
-                                    final Handler handler = new Handler();
 
                                     HashMap<String, String> map = new HashMap<>();
                                     map.put(KEY_FNAME, profile.getProfileDetails().get(0).getFirst_name());
@@ -583,9 +582,15 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                     map.put(ATTENDEE_STATUS, profile.getProfileDetails().get(0).getIs_god());
                                     map.put(IS_LOGIN, "true");
                                     SharedPreference.putPref(ProfileActivity.this, map);
+                                    final Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
 
-                                    profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                                    profileActivityViewModel.updateProfileFlag(ProfileActivity.this, event_id);
+                                            profileActivityViewModel.openMainActivity(ProfileActivity.this);
+                                            profileActivityViewModel.updateProfileFlag(ProfileActivity.this, event_id);
+                                        }
+                                    }, 500);
 
                                 } else {
                                     Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());

@@ -97,11 +97,18 @@
             android:layout_height="20dp"
             android:src="@drawable/ic_search" />
     </TableRow>
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_event_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         tools:listitem="@layout/recycler_item_event_list"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
@@ -49,7 +50,6 @@ public class NewsfeedRepository {
 
     public MutableLiveData<FetchNewsfeedMultiple> getNewsFeed(String token, String event_id, String pageSize, String pageNumber) {
         newsfeedApi = ApiUtils.getAPIService();
-
         newsfeedApi.NewsFeedFetchMultiple(token, event_id, pageSize, pageNumber).enqueue(new Callback<FetchNewsfeedMultiple>() {
             @Override
             public void onResponse(Call<FetchNewsfeedMultiple> call,

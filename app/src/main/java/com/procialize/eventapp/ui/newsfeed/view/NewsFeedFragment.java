@@ -188,20 +188,34 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                     currentPage = PAGE_START;
                     init();
                 }
+                else
+                {
+                    Utility.createShortSnackBar(cl_main, "No Internet Connection");
+                }
             }
         });
         if (connectionDetector.isConnectingToInternet()) {
-
             newsfeedAdapter.getNewsFeedList().clear();
             newsfeedAdapter.notifyDataSetChanged();
             if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                 newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
             }
-
             init();
             feedrefresh.setRefreshing(false);
-            //showDataOfUploadingFromLocalDB();
+        }else {
+            getDataFromDb();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    setupRecyclerView();
+                }
+            }, 100);
         }
+
+            //showDataOfUploadingFromLocalDB();
+
         recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
             protected void loadMoreItems() {
@@ -249,6 +263,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         recycler_feed.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                NewsFeedAdapter.swipableAdapterPosition = 0;
                 JzvdStd.goOnPlayOnPause();
             }
         });
@@ -267,9 +282,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         if (fetchNewsfeedMultiple != null) {
                             newsfeedAdapter.getNewsFeedList().clear();
                             newsfeedAdapter.notifyDataSetChanged();
-
-
-
 
                             List<Newsfeed_detail> feedList = fetchNewsfeedMultiple.getNewsfeed_detail();
                             newsfeedAdapter.addAll(feedList);
@@ -400,7 +412,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     public void getDataFromDb() {
         newsFeedDatabaseViewModel.getNewsFeed(getActivity());
-        newsFeedDatabaseViewModel.getNewsFeedList().observe(getActivity(), new Observer<List<TableNewsFeed>>() {
+        newsFeedDatabaseViewModel.getNewsFeedList().observeForever( new Observer<List<TableNewsFeed>>() {
             @Override
             public void onChanged(List<TableNewsFeed> tableNewsFeeds) {
                 if (tableNewsFeeds != null) {
@@ -429,7 +441,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
 
                         newsFeedDatabaseViewModel.getNewsFeedMedia(getActivity(), tableNewsFeeds.get(i).getNews_feed_id());
-                        newsFeedDatabaseViewModel.getNewsFeedMediaDataList(getActivity(), tableNewsFeeds.get(i).getNews_feed_id()).observe(getActivity(), new Observer<List<TableNewsFeedMedia>>() {
+                        newsFeedDatabaseViewModel.getNewsFeedMediaDataList(getActivity(), tableNewsFeeds.get(i).getNews_feed_id()).observe(getActivity(),
+                                new Observer<List<TableNewsFeedMedia>>() {
                             @Override
                             public void onChanged(List<TableNewsFeedMedia> tableNewsFeedMedia) {
                                 Log.d("tableNewsFeedMedia_", "tableNewsFeedMedia");
@@ -456,6 +469,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         });
                         newsfeedArrayList.add(i, newsfeed_detail);
                     }
+                    newsfeedAdapter.addAll(newsfeedArrayList);
                     if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getNewsFeedList().hasObservers()) {
                         newsFeedDatabaseViewModel.getNewsFeedList().removeObservers(getActivity());
                     }
@@ -501,8 +515,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     @Override
-    public void onShareClick(Newsfeed_detail feed, int position) {
-        newsfeedViewModel.openShareTask(getActivity(), feed, position);
+    public void onShareClick(Newsfeed_detail feed, int position, int swipeablePosition) {
+        newsfeedViewModel.openShareTask(getActivity(), feed, swipeablePosition);
     }
 
     @Override

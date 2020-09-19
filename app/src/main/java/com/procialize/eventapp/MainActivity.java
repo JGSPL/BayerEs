@@ -24,6 +24,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -48,18 +50,27 @@ import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
+import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
+import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
+import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
+import com.procialize.eventapp.ui.profile.model.Profile;
+import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
+import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.eventapp.ui.quiz.view.QuizFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
@@ -67,6 +78,18 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_CITY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_COMPANY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_DESIGNATION;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_EMAIL;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_FNAME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_GCM_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_LNAME;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBILE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -79,11 +102,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event, tr_home, tr_profile;
+    TableRow tr_switch_event, tr_home, tr_profile,tr_logout;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
     FirebaseAuth mauth;
     private DatabaseReference mDatabase;
+    String api_token,eventid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mauth = FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-
-
-
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(this, EVENT_ID);
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
@@ -111,11 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
         String email = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_EMAIL);
         String event_id = SharedPreference.getPref(this, EVENT_ID);
-        ;
         String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
         String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
 
 
+        getProfileDetails();
         CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
         CommonFunction.showBackgroundImage(this, ll_main);
 
@@ -161,9 +184,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_switch_event = findViewById(R.id.tr_switch_event);
         tr_home = findViewById(R.id.tr_home);
         tr_profile = findViewById(R.id.tr_profile);
+        tr_logout = findViewById(R.id.tr_logout);
         tr_switch_event.setOnClickListener(this);
         tr_home.setOnClickListener(this);
         tr_profile.setOnClickListener(this);
+        tr_logout.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -264,6 +289,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
+
+        getAttendeeAndInsertIntoDB();
     }
 
     private void setUpToolbar() {
@@ -494,6 +521,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }
                 });
+    }
+
+    private void getAttendeeAndInsertIntoDB()
+    {
+        AttendeeViewModel attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
+        final AttendeeDatabaseViewModel attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+        attendeeViewModel.getAttendee(api_token,eventid, "", "1","5000");
+        attendeeViewModel.getEventList().observe(this, new Observer<FetchAttendee>() {
+            @Override
+            public void onChanged(FetchAttendee event) {
+                List<Attendee> attendeeList = event.getAttandeeList();
+
+                //Delete All attendee from local db and insert attendee
+                attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
+                attendeeDatabaseViewModel.insertIntoDb(MainActivity.this,attendeeList);
+            }
+        });
+    }
+
+    private void getProfileDetails()
+    {
+        if (ConnectionDetector.getInstance(MainActivity.this).isConnectingToInternet()) {
+            final ProfileActivityViewModel  profileActivityViewModel = ViewModelProviders.of(this).get(ProfileActivityViewModel.class);
+            profileActivityViewModel.getProfile(api_token, eventid);
+            profileActivityViewModel.getProfileDetails().observeForever(new Observer<Profile>() {
+                @Override
+                public void onChanged(Profile profile) {
+                    List<ProfileDetails> profileDetails = profile.getProfileDetails();
+                    if (profileDetails.size() > 0) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(KEY_FNAME, profile.getProfileDetails().get(0).getFirst_name());
+                        map.put(KEY_LNAME, profile.getProfileDetails().get(0).getLast_name());
+                        map.put(KEY_EMAIL, profile.getProfileDetails().get(0).getEmail());
+                        map.put(KEY_PASSWORD, "");
+                        map.put(KEY_DESIGNATION, profile.getProfileDetails().get(0).getDesignation());
+                        map.put(KEY_COMPANY, profile.getProfileDetails().get(0).getCompany_name());
+                        map.put(KEY_MOBILE, profile.getProfileDetails().get(0).getMobile());
+                        map.put(KEY_TOKEN, "");
+                        map.put(KEY_CITY, profile.getProfileDetails().get(0).getCity());
+                        map.put(KEY_GCM_ID, "");
+                        map.put(KEY_PROFILE_PIC, profile.getProfileDetails().get(0).getProfile_picture());
+                        map.put(KEY_ATTENDEE_ID, profile.getProfileDetails().get(0).getAttendee_id());
+                        map.put(ATTENDEE_STATUS, profile.getProfileDetails().get(0).getIs_god());
+                        map.put(IS_LOGIN, "true");
+                        SharedPreference.putPref(MainActivity.this, map);
+                    }
+
+                    if (profileActivityViewModel != null && profileActivityViewModel.getProfileDetails().hasObservers()) {
+                        profileActivityViewModel.getProfileDetails().removeObservers(MainActivity.this);
+                    }
+                }
+            });
+        }
     }
 
 }

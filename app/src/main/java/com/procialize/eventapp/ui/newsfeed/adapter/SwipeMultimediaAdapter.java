@@ -212,7 +212,7 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
         myImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
+                //if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
                     if(news_feed_media.size()>0) {
 
                         Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
@@ -220,21 +220,21 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
                         edit.putExtra("media_list", ( Serializable ) news_feed_media);
                         context.startActivity(edit);
                     }
-                }
+                //}
             }
         });
 
         videoview.thumbImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
+                //if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
                     if(news_feed_media.size()>0) {
                         Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
                         edit.putExtra("position", position);
                         edit.putExtra("media_list", ( Serializable ) news_feed_media);
                         context.startActivity(edit);
                     }
-                }
+                //}
             }
         });
 

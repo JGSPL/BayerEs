@@ -89,13 +89,13 @@ public class ProfileRepository {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     if (response.isSuccessful()) {
-                        profileMutableLiveData.setValue(response.body());
+                        profileMutableLiveData.postValue (response.body());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Profile> call, Throwable t) {
-                    profileMutableLiveData.setValue(null);
+                    profileMutableLiveData.postValue (null);
                 }
             });
         }

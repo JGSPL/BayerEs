@@ -787,10 +787,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             dialogShare = new Dialog(this);
                             dialogShare.show();
                             String newsFeedPath = SharedPreference.getPref(CommentActivity.this, NEWS_FEED_MEDIA_PATH);
-                            shareImage(newsfeed_detail.getPost_date() + "\n" + newsfeed_detail.getPost_status(), newsFeedPath + newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file(), this);
+                            shareImage(/*newsfeed_detail.getPost_date() + "\n" +*/ newsfeed_detail.getPost_status(), newsFeedPath + newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file(), this);
                         }
                     } else {
-                        shareTextUrl(newsfeed_detail.getPost_date() + "\n" + newsfeed_detail.getPost_status(), StringEscapeUtils.unescapeJava(newsfeed_detail.getPost_status()));
+                        shareTextUrl(/*newsfeed_detail.getPost_date() + "\n" +*/ newsfeed_detail.getPost_status(), StringEscapeUtils.unescapeJava(newsfeed_detail.getPost_status()));
                     }
                 } else {
                     Utility.createShortSnackBar(ll_main, "No Internet Connection..!");

@@ -19,7 +19,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -40,7 +39,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -89,10 +87,11 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
     private String strPath, url, imgname;
     boolean isShare;
     String newsFeedPath;
-    LinearLayout ll_dots,ll_main;
+    LinearLayout ll_dots, ll_main;
     int shareOrSaveImagePosition = 0;
-    ImageView headerlogoIv,iv_back;
-
+    ImageView headerlogoIv, iv_back, iv_left, iv_right;
+    ArrayList<String> imagesSelectednew;
+    ArrayList<String> imagesSelectednew1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,15 +121,19 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
         ll_main = findViewById(R.id.ll_main);
         headerlogoIv = findViewById(R.id.headerlogoIv);
         iv_back = findViewById(R.id.iv_back);
+        iv_left = findViewById(R.id.iv_left);
+        iv_right = findViewById(R.id.iv_right);
         iv_back.setOnClickListener(this);
+        iv_left.setOnClickListener(this);
+        iv_right.setOnClickListener(this);
 
         int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2));
         iv_back.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
-        btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4)));
-        btn_share.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_4)));
-        btn_save.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
-        btn_share.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
+        btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        btn_share.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        btn_save.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        btn_share.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
 
         btn_save.setOnClickListener(this);
         btn_share.setOnClickListener(this);
@@ -158,8 +161,8 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
     public void setupPagerAdapter() {
         if (news_feed_media != null) {
-            final ArrayList<String> imagesSelectednew = new ArrayList<>();
-            final ArrayList<String> imagesSelectednew1 = new ArrayList<>();
+            imagesSelectednew = new ArrayList<>();
+            imagesSelectednew1 = new ArrayList<>();
             final ImageView[] ivArrayDotsPager;
             for (int i = 0; i < news_feed_media.size(); i++) {
                 imagesSelectednew.add(news_feed_media.get(i).getMedia_file());
@@ -170,10 +173,19 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             vp_media.setAdapter(swipepagerAdapter);
             swipepagerAdapter.notifyDataSetChanged();
             vp_media.setCurrentItem(mediaPosition);
-
+            if (1 == news_feed_media.size()) {
+                iv_right.setVisibility(View.GONE);
+            } else {
+                iv_right.setVisibility(View.VISIBLE);
+            }
+            if (vp_media.getCurrentItem() == 0) {
+                iv_left.setVisibility(View.GONE);
+            } else {
+                iv_left.setVisibility(View.VISIBLE);
+            }
             if (imagesSelectednew.size() > 1) {
                 ivArrayDotsPager = new ImageView[imagesSelectednew.size()];
-               Utility.setupPagerIndidcatorDots(this,0, ll_dots, imagesSelectednew.size());
+                Utility.setupPagerIndidcatorDots(this, 0, ll_dots, imagesSelectednew.size());
                 vp_media.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -186,7 +198,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                     public void onPageSelected(int position1) {
                         shareOrSaveImagePosition = position1;
                         JzvdStd.releaseAllVideos();
-                        Utility.setupPagerIndidcatorDots(NewsFeedDetailsActivity.this,position1, ll_dots, imagesSelectednew.size());
+                        Utility.setupPagerIndidcatorDots(NewsFeedDetailsActivity.this, position1, ll_dots, imagesSelectednew.size());
                    /* NewsfeedAdapter.ViewHolder viewHolder = new NewsfeedAdapter.ViewHolder();
                     if (viewHolder.VideoView != null) {
                         viewHolder.VideoView.pause();
@@ -196,6 +208,20 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                         //-----------------------------------------------------------------------------------------------
                         MediaPlayer mediaPlayer = new MediaPlayer();
                         mediaPlayer.pause();
+
+                        int currentItem = vp_media.getCurrentItem();
+                        if (news_feed_media.size() > 1) {
+                            if (news_feed_media.size() == currentItem + 1) {
+                                iv_right.setVisibility(View.GONE);
+                            } else {
+                                iv_right.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if (position1 == 0) {
+                            iv_left.setVisibility(View.GONE);
+                        } else {
+                            iv_left.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
@@ -206,6 +232,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                     }
                 });
             }
+
         }
 
     }
@@ -215,6 +242,29 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
         switch (v.getId()) {
             case R.id.iv_back:
                 onBackPressed();
+                break;
+            case R.id.iv_left:
+                int position1 = vp_media.getCurrentItem() - 1;
+
+                vp_media.setCurrentItem(position1);
+                JzvdStd.releaseAllVideos();
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.pause();
+                shareOrSaveImagePosition = position1;
+                JzvdStd.releaseAllVideos();
+                Utility.setupPagerIndidcatorDots(NewsFeedDetailsActivity.this, shareOrSaveImagePosition, ll_dots, imagesSelectednew.size());
+
+                break;
+            case R.id.iv_right:
+
+                int position2 = vp_media.getCurrentItem() + 1;
+
+                vp_media.setCurrentItem(position2);
+                JzvdStd.releaseAllVideos();
+                shareOrSaveImagePosition = position2;
+                JzvdStd.releaseAllVideos();
+                Utility.setupPagerIndidcatorDots(NewsFeedDetailsActivity.this, position2, ll_dots, imagesSelectednew.size());
+
                 break;
             case R.id.btn_save:
                 /*String strUrlPathForSave = "";
@@ -243,7 +293,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                             if (url.contains("mp4")) {
                                 new DownloadFile().execute(url);
                             } else {
-                                url = newsFeedPath+ news_feed_media.get(shareOrSaveImagePosition).getMedia_file();
+                                url = newsFeedPath + news_feed_media.get(shareOrSaveImagePosition).getMedia_file();
                                 Picasso.with(NewsFeedDetailsActivity.this).load(url).into(new com.squareup.picasso.Target() {
                                     @Override
                                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -255,7 +305,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                                         }
                                         Date date = new Date();
                                         long time = date.getTime();
-                                        Utility.createShortSnackBar(ll_main,"Please check Folder "+Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY);
+                                        Utility.createShortSnackBar(ll_main, "Please check Folder " + Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY);
                                         String name = imgname + time + ".jpg";
                                         myDir = new File(myDir, name);
                                         FileOutputStream out = null;
@@ -283,7 +333,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                         }
                     }
                 } else {
-                    Utility.createShortSnackBar(ll_main,"No Internet Connection");
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection");
                 }
                 break;
             case R.id.btn_share:
@@ -309,9 +359,9 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
                     if (news_feed_media.size() > 0) {
 
-                        if (type.equals("Video")) {
+                        if (type.equalsIgnoreCase("Video")) {
                             boolean isPresentFile = false;
-                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY+ "/Downloads/");
+                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + "/Downloads/");
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
                                 for (int i = 0; i < children.length; i++) {
@@ -458,7 +508,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 // closing streams
                 output.close();
                 input.close();
-                return "Download completed- Please check Folder "+Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY;
+                return "Download completed- Please check Folder " + Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY;
 
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
@@ -498,16 +548,15 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
             } else {
-
-
-                Utility.createShortSnackBar(ll_main,message);
-
+                Utility.createShortSnackBar(ll_main, message);
             }
         }
     }
 
     static public void shareImage(String url, final Context context) {
         final Dialog dialog = new Dialog(context);
+
+
         Picasso.with(context).load(url).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -534,5 +583,11 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             }
         });
         // }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        JzvdStd.goOnPlayOnPause();
     }
 }

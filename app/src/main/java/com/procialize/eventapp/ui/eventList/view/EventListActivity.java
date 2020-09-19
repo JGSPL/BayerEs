@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
@@ -56,6 +57,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASS
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.ui.eventList.adapter.EventAdapter.isClickable;
+import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class EventListActivity extends AppCompatActivity implements EventAdapter.EventAdapterListner , View.OnClickListener {
 
@@ -70,6 +72,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     String api_token = "";
     boolean result;
     ImageView iv_logout;
+    SwipeRefreshLayout refresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         iv_logout = findViewById(R.id.iv_logout);
         ll_main = findViewById(R.id.ll_main);
         et_search = findViewById(R.id.et_search);
+        refresh = findViewById(R.id.refresh);
         rv_event_list = findViewById(R.id.rv_event_list);
         cd = ConnectionDetector.getInstance(this);
         eventListViewModel = ViewModelProviders.of(this).get(EventListViewModel.class);
@@ -116,6 +120,34 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }
+
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                et_search.setText("");
+                refresh.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    new RefreashToken(EventListActivity.this).callGetRefreashToken(EventListActivity.this);
+                    eventListViewModel.getEvent(api_token, "0", "");
+
+                    eventListViewModel.getEventList().observe(EventListActivity.this, new Observer<Event>() {
+                        @Override
+                        public void onChanged(Event event) {
+                            List<EventList> eventLists = event.getEventLists();
+                            String strFilePath = event.getFile_path();
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put(EVENT_LIST_MEDIA_PATH, strFilePath);
+                            SharedPreference.putPref(EventListActivity.this, map);
+                            setupEventAdapter(eventLists);
+                        }
+                    });
+                }
+                else
+                {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection");
+                }
+            }
+        });
 
         et_search.addTextChangedListener(new TextWatcher() {
 
