@@ -73,7 +73,7 @@
                     android:layout_weight="1"
                     android:autoLink="web"
                     android:textColorLink="@android:color/holo_blue_dark"
-                    android:text="Aparna Badhan"
+                    android:text=""
                     android:textColor="@color/black" />
 
                 <ImageView

@@ -99,6 +99,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
         if(comments.getProfile_picture().trim()!=null)
         {
+
             Glide.with(context)
                     .load(comments.getProfile_picture().trim())
                     .listener(new RequestListener<Drawable>() {
@@ -121,6 +122,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         if (comments.getComment().contains("gif")) {
             //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
             name1 = "<font color='"+eventColor1+"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
+                holder.tv_name.setText(Html.fromHtml(name1));
+            } else {
+                holder.tv_name.setText(Html.fromHtml(name1, Html.FROM_HTML_MODE_LEGACY));
+            }
             holder.fl_gif.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(comments.getComment())

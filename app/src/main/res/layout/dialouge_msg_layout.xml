@@ -42,7 +42,8 @@
                 android:layout_gravity="right|center"
                 android:layout_weight="1.5"
                 android:contentDescription="TODO"
-                android:src="@drawable/ic_close" />
+                android:src="@drawable/ic_close"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout

@@ -30,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -37,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
@@ -368,6 +370,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                                     String filename = children[i].toString();
                                     if (news_feed_media.get(shareOrSaveImagePosition).getMedia_file().equals(filename)) {
                                         isPresentFile = true;
+                                        // isPresentFile = false;
                                     }
                                 }
                             }
@@ -532,6 +535,9 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             this.progressDialog.dismiss();
 
             if (isShare) {
+
+                Uri contentUri = FileProvider.getUriForFile(NewsFeedDetailsActivity.this, BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));
+
                 ContentValues content = new ContentValues(4);
                 content.put(MediaStore.Video.VideoColumns.DATE_ADDED,
                         System.currentTimeMillis() / 1000);
@@ -545,7 +551,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 sharingIntent.setType("video/*");
                 sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
                 sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
-                sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                 startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
             } else {
                 Utility.createShortSnackBar(ll_main, message);
