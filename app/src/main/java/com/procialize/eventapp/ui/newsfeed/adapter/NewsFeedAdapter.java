@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -19,13 +20,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,7 +45,6 @@ import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
-import com.procialize.eventapp.ui.newsFeedDetails.viewModel.NewsFeedDetailsViewModel;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
@@ -81,13 +79,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
     String substring;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
+
     public NewsFeedAdapter() {
 
     }
 
     public NewsFeedAdapter(Context context,/* ArrayList<Newsfeed_detail> feed_detail,*/ FeedAdapterListner listener) {
         this.context = context;
-       // this.feed_detail = feed_detail;
+        // this.feed_detail = feed_detail;
         this.listener = listener;
         this.feed_detail = new ArrayList<>();
 
@@ -117,7 +116,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
             setDynamicColor(holder);
 
-            if (feedData.getFirst_name().equalsIgnoreCase("null") || (feedData.getFirst_name().equalsIgnoreCase("")|| (feedData==null))) {
+            if (feedData.getFirst_name().equalsIgnoreCase("null") || (feedData.getFirst_name().equalsIgnoreCase("") || (feedData == null))) {
                 holder.root.setVisibility(View.GONE);
             } else {
                 holder.root.setVisibility(View.VISIBLE);
@@ -125,7 +124,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             mediaPath = SharedPreference.getPref(context, NEWS_FEED_MEDIA_PATH);
 
 
-            holder.nameTv.setText(feedData.getFirst_name() + " " + feedData.getLast_name());
+            if (!feedData.getLast_name().equalsIgnoreCase("null")) {
+                holder.nameTv.setText(feedData.getFirst_name() + " " + feedData.getLast_name());
+            } else {
+                holder.nameTv.setText(feedData.getFirst_name());
+            }
+
             if (feedData.getCity_id() != null && !(feedData.getCity_id().equalsIgnoreCase(""))) {
                 holder.designationTv.setText(feedData.getDesignation() + " - " + feedData.getCity_id());
             } else {
@@ -191,7 +195,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 @Override
                 public void onClick(View v) {
                     if (feedData.getNews_feed_media().size() > 0) {
-
                         listener.onContactSelected(feed_detail.get(position), position);
                     }
                 }
@@ -200,13 +203,13 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             holder.tv_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onCommentClick(feed_detail.get(position), position,swipableAdapterPosition);
+                    listener.onCommentClick(feed_detail.get(position), position, swipableAdapterPosition);
                 }
             });
             holder.iv_comments.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onCommentClick(feed_detail.get(position), position,swipableAdapterPosition);
+                    listener.onCommentClick(feed_detail.get(position), position, swipableAdapterPosition);
                 }
             });
             holder.tv_like.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +230,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             holder.iv_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onShareClick(feed_detail.get(position), position,swipableAdapterPosition);
+                    listener.onShareClick(feed_detail.get(position), position, swipableAdapterPosition);
 
                 }
             });
@@ -238,7 +241,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                     if (cd.isConnectingToInternet()) {
                         listener.likeTvViewOnClick(v, feed_detail.get(position), position, holder.iv_like, holder.tv_like);
                     } else {
-                        Utility.createShortSnackBar(cl_main,"No Internet Connection");
+                        Utility.createShortSnackBar(cl_main, "No Internet Connection");
 
                     }
                 }
@@ -246,7 +249,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
 
             if (!feedData.getPost_status().isEmpty() && feedData.getPost_status() != null) {
-                holder.tv_status.setText(feedData.getPost_status());
+                holder.tv_status.setText(StringEscapeUtils.unescapeJava(feedData.getPost_status()));
                 holder.tv_status.setVisibility(View.VISIBLE);
             } else {
                 holder.tv_status.setVisibility(View.GONE);
@@ -278,7 +281,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
                     if (imagesSelectednew.size() > 1) {
                         //CommonFunction.
-                        Utility.setupPagerIndidcatorDots(context,0, holder.ll_dots, imagesSelectednew.size());
+                        Utility.setupPagerIndidcatorDots(context, 0, holder.ll_dots, imagesSelectednew.size());
                         holder.vp_slider.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                             @Override
                             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -289,7 +292,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                             public void onPageSelected(int position1) {
                                 JzvdStd.goOnPlayOnPause();
                                 swipableAdapterPosition = position1;
-                                Utility.setupPagerIndidcatorDots(context,position1, holder.ll_dots, imagesSelectednew.size());
+                                Utility.setupPagerIndidcatorDots(context, position1, holder.ll_dots, imagesSelectednew.size());
                                 //setupPagerIndidcatorDots(position1, holder.ll_dots, imagesSelectednew.size());
                             }
 
@@ -307,14 +310,19 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 }
             }
 
-            holder.testdata.setText((feedData.getPost_status()));
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.testdata.setText(Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                holder.testdata.setText(Html.fromHtml(feedData.getPost_status()));
+            }*/
+            holder.testdata.setText(StringEscapeUtils.unescapeJava(feedData.getPost_status()));
 
             final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
             if (feedData.getPost_status() != null) {
 
-                if(feedData.getPost_status().isEmpty()){
+                if (feedData.getPost_status().isEmpty()) {
                     holder.tv_status.setVisibility(View.GONE);
-                }else {
+                } else {
                     holder.tv_status.setVisibility(View.VISIBLE);
                 }
                 int flag = 0;
@@ -356,11 +364,11 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                             @Override
                                             public void onClick(View widget) {
                                                 EventAppDB eventAppDB = EventAppDB.getDatabase(context);
-                                                newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context,attendeeid);
-                                                newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context,new Observer<List<TableAttendee>>() {
+                                                newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context, attendeeid);
+                                                newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context, new Observer<List<TableAttendee>>() {
                                                     @Override
                                                     public void onChanged(List<TableAttendee> tableAttendees) {
-                                                        if(tableAttendees!=null) {
+                                                        if (tableAttendees != null) {
                                                             Intent intent = new Intent(context, AttendeeDetailActivity.class);
                                                             intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
                                                             intent.putExtra("lname", tableAttendees.get(0).getLast_name());
@@ -375,22 +383,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                         }
                                                     }
                                                 });
-                                                /*LiveData<List<TableAttendee>> attendeeDBList = eventAppDB.attendeeDao().getAttendeeDetailsFromId(attendeeid);
-                                                List<TableAttendee> attendeeData = attendeeDBList.getValue();
-                                                List<TableAttendee> attendeeData1 = attendeeData;
-                                                if(attendeeDBList.getValue()!=null) {
-                                                    Intent intent = new Intent(context, AttendeeDetailActivity.class);
-                                                    intent.putExtra("fname", attendeeDBList.getValue().get(0).getFirst_name());
-                                                    intent.putExtra("lname", attendeeDBList.getValue().get(0).getLast_name());
-                                                    intent.putExtra("company", attendeeDBList.getValue().get(0).getCompany_name());
-                                                    intent.putExtra("city", attendeeDBList.getValue().get(0).getCity());
-                                                    intent.putExtra("designation", attendeeDBList.getValue().get(0).getDesignation());
-                                                    intent.putExtra("prof_pic", attendeeDBList.getValue().get(0).getProfile_picture());
-                                                    intent.putExtra("attendee_type", attendeeDBList.getValue().get(0).getAttendee_type());
-                                                    intent.putExtra("mobile", attendeeDBList.getValue().get(0).getMobile());
-                                                    intent.putExtra("email", attendeeDBList.getValue().get(0).getEmail());
-                                                    context.startActivity(intent);
-                                                }*/
                                             }
                                         }, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         stringBuilder.replace(start, end + 1, substring);
@@ -428,11 +420,11 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                         stringBuilder.setSpan(new ClickableSpan() {
                                             @Override
                                             public void onClick(View widget) {
-                                                newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context,attendeeid);
-                                                newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context,new Observer<List<TableAttendee>>() {
+                                                newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context, attendeeid);
+                                                newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context, new Observer<List<TableAttendee>>() {
                                                     @Override
                                                     public void onChanged(List<TableAttendee> tableAttendees) {
-                                                        if(tableAttendees!=null) {
+                                                        if (tableAttendees != null) {
                                                             Intent intent = new Intent(context, AttendeeDetailActivity.class);
                                                             intent.putExtra("attendeeid", tableAttendees.get(0).getAttendee_id());
                                                             intent.putExtra("firebase_id", tableAttendees.get(0).getFirebase_id());
@@ -449,23 +441,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                         }
                                                     }
                                                 });
-                                                /*EventAppDB eventAppDB = EventAppDB.getDatabase(context);
-                                                LiveData<List<TableAttendee>> attendeeDBList = eventAppDB.attendeeDao().getAttendeeDetailsFromId(attendeeid);
-                                                List<TableAttendee> attendeeData = attendeeDBList.getValue();
-                                                List<TableAttendee> attendeeData1 = attendeeData;
-                                                if(attendeeDBList.getValue()!=null) {
-                                                    Intent intent = new Intent(context, AttendeeDetailActivity.class);
-                                                    intent.putExtra("fname", attendeeDBList.getValue().get(0).getFirst_name());
-                                                    intent.putExtra("lname", attendeeDBList.getValue().get(0).getLast_name());
-                                                    intent.putExtra("company", attendeeDBList.getValue().get(0).getCompany_name());
-                                                    intent.putExtra("city", attendeeDBList.getValue().get(0).getCity());
-                                                    intent.putExtra("designation", attendeeDBList.getValue().get(0).getDesignation());
-                                                    intent.putExtra("prof_pic", attendeeDBList.getValue().get(0).getProfile_picture());
-                                                    intent.putExtra("attendee_type", attendeeDBList.getValue().get(0).getAttendee_type());
-                                                    intent.putExtra("mobile", attendeeDBList.getValue().get(0).getMobile());
-                                                    intent.putExtra("email", attendeeDBList.getValue().get(0).getEmail());
-                                                    context.startActivity(intent);
-                                                }*/
                                             }
                                         }, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -490,6 +465,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -530,7 +506,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         TextView nameTv;
         TextView designationTv, tv_concat, companyTv, dateTv, tv_status, testdata;
         TextView tv_like, tv_comment;
-        ImageView moreIV, profileIV, iv_comments, iv_like,iv_share;
+        ImageView moreIV, profileIV, iv_comments, iv_like, iv_share;
         ProgressBar progressView;
         ViewPager vp_slider;
         LinearLayout ll_dots, ll_bottom;

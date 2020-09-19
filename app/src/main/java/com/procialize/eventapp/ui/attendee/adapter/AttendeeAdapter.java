@@ -29,6 +29,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.newsFeedLike.model.AttendeeList;
@@ -37,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyViewHolder> implements Filterable {
 
@@ -55,14 +58,13 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
 
 
     public AttendeeAdapter(Context context,List<Attendee> commentList, AttendeeAdapterListner listener) {
-        attendeeListFiltered = new ArrayList<>();
+        //attendeeListFiltered = new ArrayList<>();
         this.attendeeListFiltered = commentList;
         this.attendeeLists = commentList;
         this.listener = listener;
         this.context = context;
         SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         colorActive = "#00fffff";
-
     }
 
     @Override
@@ -79,18 +81,15 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
         try {
             final Attendee attendee = attendeeListFiltered.get(position);
 
+            String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
-            SessionManager sessionManager = new SessionManager(context);
-            /*eventSettingLists = SessionManager.loadEventList();
-            applySetting(eventSettingLists);*/
-            if (attendeeListFiltered.size()!=position+1) {
-                holder.linMain.setVisibility(View.VISIBLE);
-            } else {
-                holder.linMain.setVisibility(View.GONE);
-            }
+            String eventColor3Opacity40 = eventColor3.replace("#", "");
 
-
-
+            holder.nameTv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
+            holder.designationTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+            holder.locationTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+            holder.tv_concat.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+            holder.companyTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
 
             try {
                 if (attendee_location.equalsIgnoreCase("0")) {
@@ -247,6 +246,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
 
     @Override
     public Filter getFilter() {
+
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
@@ -254,23 +254,22 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                 if (charString.isEmpty()) {
                     attendeeListFiltered = attendeeLists;
                 } else {
-                    if (attendeeLists.size() == 0) {
-
-                    } else {
                         List<Attendee> filteredList = new ArrayList<>();
                         for (Attendee row : attendeeLists) {
-
+                            String name="";
                             // name match condition. this might differ depending on your requirement
                             // here we are looking for name or phone number match
-                            String name = row.getFirst_name().toLowerCase() /*+ " " + row.getLastName().toLowerCase()*/;
+                            if(row.getLast_name()!=null) {
+                                name = row.getFirst_name().toLowerCase() + " " + row.getLast_name().toLowerCase();
+                            }else{
+                                name = row.getFirst_name().toLowerCase();
+                            }
 
                             if (name.contains(charString.toLowerCase())) {
                                 filteredList.add(row);
                             }
                         }
-
                         attendeeListFiltered = filteredList;
-                    }
                 }
 
                 FilterResults filterResults = new FilterResults();
@@ -283,6 +282,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                 attendeeListFiltered = (ArrayList<Attendee>) filterResults.values;
 
                 if (attendeeListFiltered.size() == 0) {
+                    notifyDataSetChanged();
 //                    Toast.makeText(context, "No Attendee Found", Toast.LENGTH_SHORT).show();
                 }
                 // refresh the list with filtered data

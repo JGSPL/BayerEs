@@ -158,6 +158,7 @@ public class NewsFeedViewModel extends ViewModel {
         activity.startActivity(new Intent(activity, CommentActivity.class)
                 .putExtra("Newsfeed_detail", (Serializable) feed)
                 .putExtra("newsfeedId",feed.getNews_feed_id())
+                .putExtra("positionOfList",position)
                 .putExtra("position", "" + swipeablePosition));
     }
 
