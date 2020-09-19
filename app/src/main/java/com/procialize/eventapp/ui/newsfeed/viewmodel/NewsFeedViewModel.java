@@ -216,13 +216,13 @@ public class NewsFeedViewModel extends ViewModel {
                             builder.show();
 
                         } else if (isPresentFile) {
-                            String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + "/";
+                            String folder = Environment.getExternalStorageDirectory().toString() +  Constant.FOLDER_DIRECTORY + "/";
                             //Create androiddeft folder if it does not exist
                             File directory = new File(folder);
                             if (!directory.exists()) {
                                 directory.mkdirs();
                             }
-                            strPath = folder +  mediaPath+newsFeedMedia.get(position).getMedia_file();
+                            strPath = folder + newsFeedMedia.get(position).getMedia_file();
                             Uri contentUri = FileProvider.getUriForFile(activity,
 
                                     BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));

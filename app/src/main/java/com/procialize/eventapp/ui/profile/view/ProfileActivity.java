@@ -587,6 +587,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     try {
                         Intent intent = getIntent();
                         CommonFunction.saveBackgroundImage(ProfileActivity.this, intent.getStringExtra("eventBg"));
+                        CommonFunction.showBackgroundImage(this, ll_main);
                     } catch (Exception e) {
                     }
                 } else {
