@@ -1,37 +1,37 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+ADDED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
 	package
-		ADDED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:3:11-54
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:3:11-54
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-		ADDED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
 	android:versionCode
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-		ADDED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:11-69
+		ADDED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml:2:11-69
 uses-sdk
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-		ADDED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-		ADDED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
-		INJECTED from C:\Project\Git2020\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\NewEventApp\EventAppMVVM\imagelibrary\src\main\AndroidManifest.xml

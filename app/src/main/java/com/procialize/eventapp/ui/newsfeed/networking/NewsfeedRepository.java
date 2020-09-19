@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.procialize.eventapp.Constants.APIService;
@@ -28,7 +29,7 @@ import retrofit2.Response;
 
 public class NewsfeedRepository {
     private static NewsfeedRepository newsRepository;
-    MutableLiveData<FetchNewsfeedMultiple> newsData = new MutableLiveData<>();
+    MediatorLiveData<FetchNewsfeedMultiple> newsData = new MediatorLiveData<>();
     MutableLiveData<LoginOrganizer> newsDataUploaded = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> reportPostUpdate = new MutableLiveData<>();
     MutableLiveData<LikePost> liketPostUpdate = new MutableLiveData<>();
@@ -48,7 +49,7 @@ public class NewsfeedRepository {
         newsfeedApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<FetchNewsfeedMultiple> getNewsFeed(String token, String event_id, String pageSize, String pageNumber) {
+    public MediatorLiveData<FetchNewsfeedMultiple> getNewsFeed(String token, String event_id, String pageSize, String pageNumber) {
         newsfeedApi = ApiUtils.getAPIService();
         newsfeedApi.NewsFeedFetchMultiple(token, event_id, pageSize, pageNumber).enqueue(new Callback<FetchNewsfeedMultiple>() {
             @Override

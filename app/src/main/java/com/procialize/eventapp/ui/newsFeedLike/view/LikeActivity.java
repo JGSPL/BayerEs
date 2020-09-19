@@ -30,6 +30,7 @@ import com.procialize.eventapp.ui.newsFeedLike.adapter.LikeAdapter;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
 import com.procialize.eventapp.ui.newsFeedLike.viewModel.LikeViewModel;
+import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
 import java.util.List;
@@ -109,6 +110,7 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
+
                 onBackPressed();
                 break;
         }
@@ -120,4 +122,5 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
         iv_back.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(LikeActivity.this,EVENT_COLOR_4)));
     }
+
 }

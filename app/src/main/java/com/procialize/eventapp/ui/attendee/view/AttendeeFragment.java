@@ -235,12 +235,11 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 public void onTextChanged(CharSequence s, int start,
                                           int before, int count) {
 
-                    if (attendeeAdapter != null) {
-                        try {
-                            attendeeAdapter.getFilter().filter(s.toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        attendeeAdapter.getFilter().filter(s.toString());
+                        attendeeAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+
                     }
 
                 }

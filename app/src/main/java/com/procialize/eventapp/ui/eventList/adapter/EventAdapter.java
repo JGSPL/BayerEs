@@ -98,9 +98,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.NewsViewHold
         holder.ll_main_event_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onMoreSelected(events,position);
 
                 isClickable = false;
+                listener.onMoreSelected(events,position);
+
             }
         });
     }

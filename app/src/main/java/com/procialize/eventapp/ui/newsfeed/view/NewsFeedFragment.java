@@ -135,7 +135,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         root = inflater.inflate(R.layout.fragment_home, container, false);
         //Call Refresh token
         new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
-
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
         newsFeedDatabaseViewModel = ViewModelProviders.of(this).get(NewsFeedDatabaseViewModel.class);
 
@@ -528,12 +527,12 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     @Override
     public void likeTvViewOnClick(View v, Newsfeed_detail feed, final int position, final ImageView likeimage, final TextView liketext) {
+
         //newsfeedViewModel.openLikeimg(getActivity(), api_token, eventid, feed.getNews_feed_id(), v, feed, position, likeimage, liketext);
         noOfLikes = "0";
        // newsfeedViewModel.PostLike(api_token, eventid, feed.getNews_feed_id());
         newsfeedApi = ApiUtils.getAPIService();
-
-            newsfeedApi.PostLike(api_token, eventid, feed.getNews_feed_id()).enqueue(new Callback<LikePost>() {
+        newsfeedApi.PostLike(api_token, eventid, feed.getNews_feed_id()).enqueue(new Callback<LikePost>() {
                 @Override
                 public void onResponse(Call<LikePost> call,
                                        Response<LikePost> response) {
@@ -655,6 +654,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                                     String status = result.getHeader().get(0).getType();
                                                     String message = result.getHeader().get(0).getMsg();
                                                     Utility.createLongSnackBar(cl_main, message);
+
                                                     if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                                                         newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
                                                     }
