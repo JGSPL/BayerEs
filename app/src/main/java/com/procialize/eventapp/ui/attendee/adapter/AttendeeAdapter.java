@@ -81,15 +81,6 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
         try {
             final Attendee attendee = attendeeListFiltered.get(position);
 
-
-            SessionManager sessionManager = new SessionManager(context);
-            /*eventSettingLists = SessionManager.loadEventList();
-            applySetting(eventSettingLists);*/
-            if (attendeeListFiltered.size()!=position+1) {
-                holder.linMain.setVisibility(View.VISIBLE);
-            } else {
-                holder.linMain.setVisibility(View.GONE);
-            }
             String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
             String eventColor3Opacity40 = eventColor3.replace("#", "");
