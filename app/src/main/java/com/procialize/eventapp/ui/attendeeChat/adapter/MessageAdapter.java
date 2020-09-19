@@ -30,19 +30,18 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.danikula.videocache.CacheListener;
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.procialize.eventapp.App;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.Utility.MyJZVideoPlayerStandard;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.ui.attendeeChat.activity.FullScreenImageActivity;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
-import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -50,7 +49,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -61,7 +61,8 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
  */
 
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
+
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> implements CacheListener {
 
     private List<Messages> mMessagesList;
     private FirebaseAuth mAuth;
@@ -94,6 +95,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return new MessageViewHolder(view);
     }
 
+    @Override
+    public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
+       // Log.d("LOG_TAG", String.format("onCacheAvailable. percents: %d, file: %s, url: %s", percentsAvailable, file, url));
+
+    }
+
     //----RETURNING VIEW OF SINGLE HOLDER----
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
@@ -111,7 +118,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         RelativeLayout innerRl1,innerRl2;
         RelativeLayout messageSingleLayout3, messageSingleLayout2;
         ProgressBar progressBarRight, progressBarLeft;
-        MyJZVideoPlayerStandard videoplayer2, videoplayer;
+        public JzvdStd videoplayer2, videoplayer;
         LinearLayout linMain;
 
         public MessageViewHolder(View itemView) {
@@ -139,8 +146,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             progressBarRight = (ProgressBar) itemView.findViewById(R.id.progressBarRight);
             progressBarLeft = (ProgressBar) itemView.findViewById(R.id.progressBarLeft);
 
-            videoplayer2 = (MyJZVideoPlayerStandard) itemView.findViewById(R.id.videoplayer2);
-            videoplayer = (MyJZVideoPlayerStandard) itemView.findViewById(R.id.videoplayer);
+            videoplayer2 = (JzvdStd) itemView.findViewById(R.id.videoplayer2);
+            videoplayer = (JzvdStd) itemView.findViewById(R.id.videoplayer);
             linMain = (LinearLayout)itemView.findViewById(R.id. linMain);
 
             context = itemView.getContext();
@@ -292,15 +299,29 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 holder.messageImage2.setVisibility(View.GONE);
                 holder.videoplayer2.setVisibility(View.VISIBLE);
 
-                holder.videoplayer2.setUp(mes.getMessage()
-                        , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
+                /*holder.videoplayer2.setUp(mes.getMessage()
+                        , JzvdStd.SCREEN_WINDOW_NORMAL, "");
+
+                Glide.with(context)
+                        .asBitmap()
+                        .load(mes.getMessage())
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .into(holder.videoplayer2.thumbImageView);*/
+                HttpProxyCacheServer proxy = App.getProxy(context);
+                proxy.registerCacheListener(this, mes.getMessage());
+                String proxyUrl = proxy.getProxyUrl(mes.getMessage());
+                Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
+
+                holder.videoplayer2.setUp(proxyUrl.trim(), ""
+                        , JzvdStd.SCREEN_NORMAL);
+                JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
+
 
                 Glide.with(context)
                         .asBitmap()
                         .load(mes.getMessage())
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .into(holder.videoplayer2.thumbImageView);
-
 
 
             } else if(mes.getType().equalsIgnoreCase("image")){
@@ -422,8 +443,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 holder.videoplayer.setVisibility(View.VISIBLE);
                 holder.messageImage.setVisibility(View.GONE);
 
-                holder.videoplayer.setUp(mes.getMessage()
-                        , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");
+               /* holder.videoplayer.setUp(mes.getMessage()
+                        , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");*/
+                HttpProxyCacheServer proxy = App.getProxy(context);
+                proxy.registerCacheListener(this, mes.getMessage());
+                String proxyUrl = proxy.getProxyUrl(mes.getMessage());
+                Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
+
+                holder.videoplayer.setUp(proxyUrl.trim(), ""
+                        , JzvdStd.SCREEN_NORMAL);
+                JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
+
+
 
                 Glide.with(context)
                         .asBitmap()
@@ -497,6 +528,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return position;
     }
 
+
+
     @Override
     public int getItemViewType(int position) {
         /*if (directQuestionLists.get(position).getReceiver_id().equalsIgnoreCase(att_id)) {
@@ -539,6 +572,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
         return bitmap;
     }
+
+    private void checkCachedState(String url) {
+        HttpProxyCacheServer proxy = App.getProxy(context);
+        boolean fullyCached = proxy.isCached(url);
+
+    }
+
+
+
 }
 /*
     //----FOR SENDING IMAGE----

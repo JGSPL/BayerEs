@@ -24,7 +24,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -35,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -63,13 +61,11 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.Utility.MyJZVideoPlayerStandard;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
-import com.procialize.eventapp.ui.attendeeChat.model.GetTimeAgo;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
 import com.squareup.picasso.Picasso;
 
@@ -85,10 +81,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jzvd.JzvdStd;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -1364,7 +1360,7 @@ public class ChatActivity extends AppCompatActivity {
     {
         // TODO Auto-generated method stub
         super.onDestroy();
-        MyJZVideoPlayerStandard.releaseAllVideos();
+        JzvdStd.releaseAllVideos();
         Log.v("MyApp", "onDestroy");
     }
 

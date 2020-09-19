@@ -160,7 +160,7 @@ dependencies {
     implementation 'id.zelory:compressor:2.1.0'
 
 
-    implementation 'cn.jzvd:jiaozivideoplayer:6.2.3'
+   // implementation 'cn.jzvd:jiaozivideoplayer:6.2.3'
 //----CIRCULAR IMAGE VIEW----
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
