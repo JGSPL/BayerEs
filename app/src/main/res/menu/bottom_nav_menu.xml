@@ -5,28 +5,24 @@
     <item
         android:id="@+id/navigation_home"
         android:enabled="true"
-        android:icon="@drawable/ic_newsfeed"
-        android:title="@string/title_home"
+        android:icon="@drawable/newsfeed_selector"
         app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/navigation_agenda"
         android:enabled="true"
-        android:icon="@drawable/ic_agenda"
-        android:title="@string/title_agend"
+        android:icon="@drawable/agenda_selector"
         app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/navigation_attendee"
         android:enabled="true"
-        android:icon="@drawable/ic_attendee"
-        android:title="@string/title_attendee"
+        android:icon="@drawable/attendee_selector"
         app:showAsAction="collapseActionView" />
     <item
         android:id="@+id/navigation_speaker"
         android:enabled="true"
-        android:icon="@drawable/ic_speaker"
-        android:title="@string/title_speaker"
+        android:icon="@drawable/speaker_selector"
         app:showAsAction="collapseActionView" />
 
 

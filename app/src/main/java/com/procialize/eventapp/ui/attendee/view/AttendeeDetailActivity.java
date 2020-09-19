@@ -49,7 +49,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 
 public class AttendeeDetailActivity extends AppCompatActivity implements View.OnClickListener {
     String fname, lname, company, city, designation, prof_pic, attendee_type,mobile,email;
-    TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
+    TextView tv_header,tv_contact,tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
     EditText et_message;
     LinearLayout ll_send_message, ll_save_contact, ll_main, ll_save_contact_inner;
     ImageView iv_profile, iv_back, ic_email, iv_contact;
