@@ -530,7 +530,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     @Override
-    public void likeTvViewOnClick(View v, Newsfeed_detail feed, int position, final ImageView likeimage, final TextView liketext) {
+    public void likeTvViewOnClick(View v, Newsfeed_detail feed, final int position, final ImageView likeimage, final TextView liketext) {
         //newsfeedViewModel.openLikeimg(getActivity(), api_token, eventid, feed.getNews_feed_id(), v, feed, position, likeimage, liketext);
         noOfLikes = "0";
        // newsfeedViewModel.PostLike(api_token, eventid, feed.getNews_feed_id());
@@ -551,6 +551,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 } else {
                                     liketext.setText(LikeCount + " Likes");
                                 }
+                                List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                newsfeed_details.get(position).setLike_flag("1");
+                                newsfeed_details.get(position).setTotal_likes(LikeCount+"");
                                 likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_active_like));
                                 noOfLikes = "0";
                                 likeStatus = "";
@@ -565,6 +568,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                     }
                                     likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_like));
                                     noOfLikes = "0";
+                                    List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                    newsfeed_details.get(position).setLike_flag("0");
+                                    newsfeed_details.get(position).setTotal_likes(LikeCount+"");
                                 }
                                 noOfLikes = "0";
                                 likeStatus = "";

@@ -43,6 +43,9 @@ public class AttendeeDatabaseViewModel extends ViewModel {
                 mention_name = "<"+attendees.get(i).getAttendee_id()+"^"+attendees.get(i).getFirst_name()+">";
             }
             tableAttendee.setFld_mention_name(mention_name);
+            tableAttendee.setFirebase_id(attendees.get(i).getFirebase_id());
+            tableAttendee.setFirebase_name(attendees.get(i).getFirebase_name());
+            tableAttendee.setFirebase_username(attendees.get(i).getFirebase_username());
             eventAppDB.attendeeDao().insertAttendee(tableAttendee);
         }
     }

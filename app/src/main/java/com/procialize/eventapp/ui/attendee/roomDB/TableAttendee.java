@@ -38,6 +38,12 @@ public class TableAttendee implements Serializable {
     String total_sms;
     @ColumnInfo(name = "fld_mention_name")
     String fld_mention_name;
+    @ColumnInfo(name = "firebase_id")
+    String firebase_id;
+    @ColumnInfo(name = "firebase_name")
+    String firebase_name;
+    @ColumnInfo(name = "firebase_username")
+    String firebase_username;
 
     public int getId() {
         return id;
@@ -142,5 +148,29 @@ public class TableAttendee implements Serializable {
 
     public void setFld_mention_name(String fld_mention_name) {
         this.fld_mention_name = fld_mention_name;
+    }
+
+    public String getFirebase_id() {
+        return firebase_id;
+    }
+
+    public void setFirebase_id(String firebase_id) {
+        this.firebase_id = firebase_id;
+    }
+
+    public String getFirebase_name() {
+        return firebase_name;
+    }
+
+    public void setFirebase_name(String firebase_name) {
+        this.firebase_name = firebase_name;
+    }
+
+    public String getFirebase_username() {
+        return firebase_username;
+    }
+
+    public void setFirebase_username(String firebase_username) {
+        this.firebase_username = firebase_username;
     }
 }
