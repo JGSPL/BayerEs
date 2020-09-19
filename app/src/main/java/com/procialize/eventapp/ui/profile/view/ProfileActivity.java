@@ -121,11 +121,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         options = new UCrop.Options();
 
-       /* options.setToolbarColor(Color.parseColor(colorActive));
-        options.setCropFrameColor(Color.parseColor(colorActive));
-        options.setLogoColor(Color.parseColor(colorActive));
-        options.setActiveWidgetColor(Color.parseColor(colorActive));
-        options.setLogoColor(Color.parseColor(colorActive));*/
         options.setToolbarTitle("Edit Profile");
 
         options.setToolbarCancelDrawable(R.color.transperent);
@@ -359,12 +354,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         .start(this);
 
                 tv_profile_pic.setText(file.getAbsolutePath());
-                // PicassoTrustAll.getInstance(this).load(compressedImagePath).into(post_thumbnail);
-//                Glide.with(this).load(compressedImagePath).into(profileIV);
-
-
-                // PicassoTrustAll.getInstance(PostActivity.this).load(compressedImagePath)
-                // .into(post_thumbnail);
 
                 Toast.makeText(ProfileActivity.this, "Image selected",
                         Toast.LENGTH_SHORT).show();
@@ -632,14 +621,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        /*updateProfile(first_name,
-                last_name,
-                designation,
-                company_name,
-                city,
-                email,
-                mobile,
-                "");*/
+
         startActivity(new Intent(ProfileActivity.this, MainActivity.class));
         finish();
     }

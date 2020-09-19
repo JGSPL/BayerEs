@@ -282,11 +282,12 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     }
 
     private void doRefresh() {
-        progressBar.setVisibility(View.VISIBLE);
+
       /*  if (callTopRatedMoviesApi().isExecuted())
             callTopRatedMoviesApi().cancel();*/
 
         if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
             // TODO: Check if data is stale.
             //  Execute network request if cache is expired; otherwise do not update data.
             strAttendeeName = searchEt.getText().toString().trim();
@@ -295,6 +296,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             loadFirstPage("");
             attendeefeedrefresh.setRefreshing(false);
         } else {
+            progressBar.setVisibility(View.GONE);
             attendeefeedrefresh.setRefreshing(false);
 
             /*progressBar.setVisibility(View.GONE);
