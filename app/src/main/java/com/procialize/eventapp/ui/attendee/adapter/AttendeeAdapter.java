@@ -55,14 +55,13 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
 
 
     public AttendeeAdapter(Context context,List<Attendee> commentList, AttendeeAdapterListner listener) {
-        attendeeListFiltered = new ArrayList<>();
+        //attendeeListFiltered = new ArrayList<>();
         this.attendeeListFiltered = commentList;
         this.attendeeLists = commentList;
         this.listener = listener;
         this.context = context;
         SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         colorActive = "#00fffff";
-
     }
 
     @Override
@@ -78,19 +77,6 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
 
         try {
             final Attendee attendee = attendeeListFiltered.get(position);
-
-
-            SessionManager sessionManager = new SessionManager(context);
-            /*eventSettingLists = SessionManager.loadEventList();
-            applySetting(eventSettingLists);*/
-            if (attendeeListFiltered.size()!=position+1) {
-                holder.linMain.setVisibility(View.VISIBLE);
-            } else {
-                holder.linMain.setVisibility(View.GONE);
-            }
-
-
-
 
             try {
                 if (attendee_location.equalsIgnoreCase("0")) {
@@ -247,6 +233,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
 
     @Override
     public Filter getFilter() {
+
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
@@ -254,23 +241,22 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                 if (charString.isEmpty()) {
                     attendeeListFiltered = attendeeLists;
                 } else {
-                    if (attendeeLists.size() == 0) {
-
-                    } else {
                         List<Attendee> filteredList = new ArrayList<>();
                         for (Attendee row : attendeeLists) {
-
+                            String name="";
                             // name match condition. this might differ depending on your requirement
                             // here we are looking for name or phone number match
-                            String name = row.getFirst_name().toLowerCase() /*+ " " + row.getLastName().toLowerCase()*/;
+                            if(row.getLast_name()!=null) {
+                                name = row.getFirst_name().toLowerCase() + " " + row.getLast_name().toLowerCase();
+                            }else{
+                                name = row.getFirst_name().toLowerCase();
+                            }
 
                             if (name.contains(charString.toLowerCase())) {
                                 filteredList.add(row);
                             }
                         }
-
                         attendeeListFiltered = filteredList;
-                    }
                 }
 
                 FilterResults filterResults = new FilterResults();
@@ -283,6 +269,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                 attendeeListFiltered = (ArrayList<Attendee>) filterResults.values;
 
                 if (attendeeListFiltered.size() == 0) {
+                    notifyDataSetChanged();
 //                    Toast.makeText(context, "No Attendee Found", Toast.LENGTH_SHORT).show();
                 }
                 // refresh the list with filtered data
