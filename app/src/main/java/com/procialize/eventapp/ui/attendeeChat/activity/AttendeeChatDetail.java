@@ -1,11 +1,9 @@
-package com.procialize.eventapp.ui.attendee.view;
+package com.procialize.eventapp.ui.attendeeChat.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,12 +37,11 @@ import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
-import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.WRITE_CONTACTS;
 
-public class AttendeeDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class AttendeeChatDetail extends AppCompatActivity implements View.OnClickListener {
     String fname, lname, company, city, designation, prof_pic, attendee_type,mobile,email;
     TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
     EditText et_message;
@@ -62,7 +59,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendee_detail);
+        setContentView(R.layout.activity_chat_detail);
 
         getIntentData();
         attendeeDetailsViewModel = ViewModelProviders.of(this).get(AttendeeDetailsViewModel.class);
@@ -92,13 +89,11 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         tv_mobile.setText(mobile);
         tv_email.setText(email);
 
+        iv_back.setOnClickListener(this);
         CommonFunction.showBackgroundImage(this, ll_main);
 
-
-        iv_back.setOnClickListener(this);
-
         if (prof_pic.trim() != null) {
-            Glide.with(AttendeeDetailActivity.this)
+            Glide.with(AttendeeChatDetail.this)
                     .load(prof_pic.trim())
                     .listener(new RequestListener<Drawable>() {
                         @Override
@@ -187,7 +182,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
                                     //--OPENING CHAT ACTIVITY FOR CLICKED USER----
 
-                                    Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
+                                    Intent chatIntent = new Intent(AttendeeChatDetail.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
                                     chatIntent.putExtra("user_name", fname + " " + lname);
                                     chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
@@ -243,7 +238,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                                    Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
+                                    Intent chatIntent = new Intent(AttendeeChatDetail.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
                                     chatIntent.putExtra("user_name", fname + " " + lname);
                                     chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
@@ -307,7 +302,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
     private void RequestMultiplePermission() {
         // Creating String Array with Permissions.
-        ActivityCompat.requestPermissions(AttendeeDetailActivity.this, new String[]
+        ActivityCompat.requestPermissions(AttendeeChatDetail.this, new String[]
                 {
                         WRITE_CONTACTS,
                         READ_CONTACTS
@@ -328,7 +323,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 //                        Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_LONG).show();
                     } else {
 
-                        Toast.makeText(AttendeeDetailActivity.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AttendeeChatDetail.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
                         RequestMultiplePermission();
 
                     }

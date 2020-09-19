@@ -65,6 +65,7 @@ import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
+import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
 import com.squareup.picasso.Picasso;
@@ -199,7 +200,7 @@ public class ChatActivity extends AppCompatActivity {
         ivattDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChatActivity.this, AttendeeDetailActivity.class);
+                Intent intent = new Intent(ChatActivity.this, AttendeeChatDetail.class);
                 intent.putExtra("attendeeid",attendeeid);
                 intent.putExtra("firebase_id", firebase_id);
 

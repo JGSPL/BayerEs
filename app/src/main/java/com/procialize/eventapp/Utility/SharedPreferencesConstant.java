@@ -36,6 +36,11 @@ public final class SharedPreferencesConstant {
     public static final String KEY_ATTENDEE_ID = "id";
     public static final String ATTENDEE_STATUS = "attendee_status";
     public static final String IS_GOD = "isGod";
+    public static final String FIREBASE_ID = "firebaseid";
+    public static final String FIREBASE_NAME = "firebaseNmae";
+    public static final String FIREBASEUSER_NAME = "firebaseUsername";
+    public static final String FIREBASE_STATUS = "firebase_status";
+
 
     public static final String EVENT_NAME = "eventnamestr";
     public static final String EVENT_LOGO = "logoImg";
