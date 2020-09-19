@@ -291,11 +291,11 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 attendeeListFiltered = (ArrayList<Attendee>) filterResults.values;
 
-                if (attendeeListFiltered.size() == 0) {
+                /*if (attendeeListFiltered.size() == 0) {
 //                    Toast.makeText(context, "No Attendee Found", Toast.LENGTH_SHORT).show();
                 }
                 // refresh the list with filtered data
-                notifyDataSetChanged();
+                notifyDataSetChanged();*/
             }
         };
     }
