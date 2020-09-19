@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             register_user(fName,fireEmail,"12345678");
 
         }else{
-            login_user(fireEmail,"12345678");
+            normal_login_user(fireEmail,"12345678");
         }
 
 
@@ -544,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         Log.e("Login : ","Logged in Successfully" );
                                        // Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                        getChatUpdate(api_token,eventid,currentuser,fireEmail,fName);
+                                        getChatUpdate(api_token,eventid,currentuser,fireEmail,fName,"0");
 
                                     }
                                     else{
@@ -598,7 +598,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             Log.e("Login : ","Logged in Successfully" );
                                             // Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                             String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                            getChatUpdate(api_token,eventid,currentuser,fireEmail,fName);
+                                            getChatUpdate(api_token,eventid,currentuser,fireEmail,fName,"1");
 
                                         }
                                         else{
@@ -676,10 +676,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
         //Update Api
-        public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username) {
+        public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username , String id) {
             updateApi = ApiUtils.getAPIService();
 
-            updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail).enqueue(new Callback<LoginOrganizer>() {
+            updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail, id).enqueue(new Callback<LoginOrganizer>() {
                 @Override
                 public void onResponse(Call<LoginOrganizer> call,
                                        Response<LoginOrganizer> response) {

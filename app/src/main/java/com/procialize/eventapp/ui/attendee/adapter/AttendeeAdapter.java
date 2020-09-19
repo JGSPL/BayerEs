@@ -39,6 +39,7 @@ import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyViewHolder> implements Filterable {
 
@@ -90,9 +91,15 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             } else {
                 holder.linMain.setVisibility(View.GONE);
             }
+            String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
+            String eventColor3Opacity40 = eventColor3.replace("#", "");
 
             holder.nameTv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
+            holder.designationTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+            holder.locationTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+            holder.tv_concat.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+            holder.companyTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
 
             try {
                 if (attendee_location.equalsIgnoreCase("0")) {
