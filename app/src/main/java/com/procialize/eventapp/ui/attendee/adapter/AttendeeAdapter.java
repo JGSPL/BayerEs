@@ -29,6 +29,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.newsFeedLike.model.AttendeeList;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyViewHolder> implements Filterable {
 
@@ -90,7 +92,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             }
 
 
-
+            holder.nameTv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
 
             try {
                 if (attendee_location.equalsIgnoreCase("0")) {
