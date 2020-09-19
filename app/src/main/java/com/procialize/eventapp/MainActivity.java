@@ -541,7 +541,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         //---OPENING MAIN ACTIVITY---
                                         Log.e("Login : ","Logged in Successfully" );
-                                       // Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                        Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         getChatUpdate(api_token,eventid,currentuser,fireEmail,fName,"0");
 
@@ -595,7 +595,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                             //---OPENING MAIN ACTIVITY---
                                             Log.e("Login : ","Logged in Successfully" );
-                                            // Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                             Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                             String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                             getChatUpdate(api_token,eventid,currentuser,fireEmail,fName,"1");
 
@@ -689,7 +689,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                        Response<LoginOrganizer> response) {
                     if (response.isSuccessful()) {
                         chatUpdate.setValue(response.body());
-                       // Utility.createShortSnackBar(ll_main,"Chat info updated");
+                        Utility.createShortSnackBar(ll_main,"Chat info updated");
 
                     }
                 }

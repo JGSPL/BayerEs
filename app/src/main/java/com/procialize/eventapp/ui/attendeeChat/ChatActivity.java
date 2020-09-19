@@ -710,8 +710,149 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-        } else                 if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_VIDEO_CAPTURE) {
+        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_VIDEO_CAPTURE) {
             uri = data.getData();
+
+            ArrayList<String> supportedMedia = new ArrayList<String>();
+
+            supportedMedia.add(".mp4");
+            supportedMedia.add(".mov");
+            supportedMedia.add(".3gp");
+
+
+            videoUrl = ScalingUtilities.getPath(ChatActivity.this, data.getData());
+//                    pathToStoredVideo = getRealPathFromURIPathVideo(uri, ChatActivity.this);
+            videoFile = new File(videoUrl);
+            file = new File(videoUrl);
+
+            String fileExtnesion = videoUrl.substring(videoUrl.lastIndexOf("."));
+
+            if (supportedMedia.contains(fileExtnesion)) {
+
+
+                long file_size = Integer.parseInt(String.valueOf(videoFile.length()));
+//                long fileMb = AudioPost.bytesToMeg(file_size);
+
+                try {
+                    MediaPlayer mplayer = new MediaPlayer();
+                    mplayer.reset();
+                    mplayer.setDataSource(videoUrl);
+                    mplayer.prepare();
+
+                    long totalFileDuration = mplayer.getDuration();
+                    Log.i("android", "data is " + totalFileDuration);
+
+                    int sec = (int) ((totalFileDuration / (1000)));
+
+                    Log.i("android", "data is " + sec);
+
+                    Bitmap b = ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND);
+
+                    file = videoFile;
+
+                    if (sec > 15) {
+                        Toast.makeText(ChatActivity.this, "Select an video not more than 15 seconds",
+                                Toast.LENGTH_SHORT).show();
+                       // finish();
+                    } else {
+                        progressBar.setVisibility(View.VISIBLE);
+
+                        pathToStoredVideo = getRealPathFromURIPathVideo(uri, ChatActivity.this);
+                        Log.d("video", "Recorded Video Path " + pathToStoredVideo);
+
+                        //Store the video to your server
+                        file = new File(pathToStoredVideo);
+
+
+                        final String current_user_ref = "messages/" + mCurrentUserId + "/" + mChatUser;
+                        final String chat_user_ref = "messages/" + mChatUser + "/" + mCurrentUserId;
+
+                        DatabaseReference user_message_push = mRootReference.child("messages")
+                                .child(mCurrentUserId).child(mChatUser).push();
+
+                        final String push_id = user_message_push.getKey();
+
+                        //
+// StorageReference
+                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                        final StorageReference photoRef = /*storageRef.child("message_video").child(".mp4");*/mImageStorage.child("message_videos").child(push_id + ".mp4");
+// add File/URI
+                        photoRef.putFile(Uri.fromFile(file))
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        // Upload succeeded
+                                        Toast.makeText(getApplicationContext(), "Upload Success...", Toast.LENGTH_SHORT).show();
+                                        // String download_url = taskSnapshot.getResult().getDownloadUrl().toString();
+
+                                        progressBar.setVisibility(View.GONE);
+
+                                        String download_url = taskSnapshot.getDownloadUrl().toString();
+                                        Map messageMap = new HashMap();
+                                        messageMap.put("message", download_url);
+                                        messageMap.put("seen", false);
+                                        messageMap.put("type", "video");
+                                        messageMap.put("time", ServerValue.TIMESTAMP);
+                                        messageMap.put("from", mCurrentUserId);
+                                        // messageMap.put("thumb_img", thumbImage);
+
+
+                                        Map messageUserMap = new HashMap();
+                                        messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+                                        messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
+
+                                        mRootReference.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+
+                                            @Override
+                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                if (databaseError != null) {
+                                                    Log.e("CHAT_ACTIVITY", "Cannot add message to database");
+                                                } else {
+                                                    Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                                    mMessageView.setText("");
+                                                }
+
+                                            }
+                                        });
+                                    }
+
+
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Upload failed
+                                        Toast.makeText(getApplicationContext(), "Upload failed...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnProgressListener(
+                                new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                        //calculating progress percentage
+                                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                                    }
+                                });
+
+                        Toast.makeText(ChatActivity.this, "Video selected",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+
+
+                    Log.i("android", "exception is " + e.getLocalizedMessage() + " " + e.getStackTrace());
+
+                }
+
+
+            } else {
+
+
+                Toast.makeText(ChatActivity.this, "Only .mp4,.mov,.3gp File formats allowed ", Toast.LENGTH_SHORT).show();
+
+            }
+
+           /* uri = data.getData();
             MediaPlayer mp = MediaPlayer.create(this, uri);
             int duration = mp.getDuration();
             mp.release();
@@ -738,7 +879,7 @@ public class ChatActivity extends AppCompatActivity {
             //
 // StorageReference
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            final StorageReference photoRef = /*storageRef.child("message_video").child(".mp4");*/mImageStorage.child("message_videos").child(push_id + ".mp4");
+            final StorageReference photoRef = *//*storageRef.child("message_video").child(".mp4");*//*mImageStorage.child("message_videos").child(push_id + ".mp4");
 // add File/URI
             photoRef.putFile(Uri.fromFile(file))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -796,7 +937,7 @@ public class ChatActivity extends AppCompatActivity {
 
                         }
                     });
-
+*/
 
 
 
