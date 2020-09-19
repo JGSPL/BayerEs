@@ -310,12 +310,15 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 }
             }
 
-            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                holder.testdata.setText(Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT));
-            } else {
-                holder.testdata.setText(Html.fromHtml(feedData.getPost_status()));
-            }*/
-            holder.testdata.setText(StringEscapeUtils.unescapeJava(feedData.getPost_status()));
+            if(feedData.getPost_status().contains("<p>")) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    holder.testdata.setText(Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT));
+                } else {
+                    holder.testdata.setText(Html.fromHtml(feedData.getPost_status()));
+                }
+            }else {
+                holder.testdata.setText(StringEscapeUtils.unescapeJava(feedData.getPost_status()));
+            }
 
             final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
             if (feedData.getPost_status() != null) {

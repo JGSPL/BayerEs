@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
@@ -143,7 +142,11 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
                                 break;
                         }
 //                        Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
-                        Utility.createShortSnackBar(view, message);
+                        try {
+                            Utility.createShortSnackBar(view, message);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         progressBar.setVisibility(View.GONE);
                     }
@@ -205,8 +208,6 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
 //                    }).into(videoview.thumbImageView);
 
 
-
-
         }
 
         view.addView(myImageLayout, 0);
@@ -215,13 +216,13 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
             @Override
             public void onClick(View v) {
                 //if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
-                    if(news_feed_media.size()>0) {
+                if (news_feed_media.size() > 0) {
 
-                        Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
-                        edit.putExtra("position", position);
-                        edit.putExtra("media_list", ( Serializable ) news_feed_media);
-                        context.startActivity(edit);
-                    }
+                    Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
+                    edit.putExtra("position", position);
+                    edit.putExtra("media_list", (Serializable) news_feed_media);
+                    context.startActivity(edit);
+                }
                 //}
             }
         });
@@ -230,12 +231,12 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
             @Override
             public void onClick(View v) {
                 //if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
-                    if(news_feed_media.size()>0) {
-                        Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
-                        edit.putExtra("position", position);
-                        edit.putExtra("media_list", ( Serializable ) news_feed_media);
-                        context.startActivity(edit);
-                    }
+                if (news_feed_media.size() > 0) {
+                    Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
+                    edit.putExtra("position", position);
+                    edit.putExtra("media_list", (Serializable) news_feed_media);
+                    context.startActivity(edit);
+                }
                 //}
             }
         });
