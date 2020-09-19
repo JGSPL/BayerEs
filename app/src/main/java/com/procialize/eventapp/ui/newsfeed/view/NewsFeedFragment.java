@@ -110,7 +110,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 5;
+    int newsFeedPageSize = 100;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -661,7 +661,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                                     currentPage = PAGE_START;
                                                     init();
                                                     }
-                                                }, 1000);
+                                                }, 5000);
 
                                                 } else {
                                                     Utility.createLongSnackBar(cl_main, "failure");
