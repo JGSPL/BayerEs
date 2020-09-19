@@ -430,6 +430,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                     public void onChanged(List<TableAttendee> tableAttendees) {
                                                         if(tableAttendees!=null) {
                                                             Intent intent = new Intent(context, AttendeeDetailActivity.class);
+                                                            intent.putExtra("attendeeid", tableAttendees.get(0).getAttendee_id());
+                                                            intent.putExtra("firebase_id", tableAttendees.get(0).getFirebase_id());
                                                             intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
                                                             intent.putExtra("lname", tableAttendees.get(0).getLast_name());
                                                             intent.putExtra("company", tableAttendees.get(0).getCompany_name());
@@ -468,17 +470,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                         holder.tv_status.setMovementMethod(LinkMovementMethod.getInstance());
 
                                         holder.tv_status.setText(stringBuilder);
-
                                     }
                                 }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                     }
                 }
-
                 holder.tv_status.setText(stringBuilder);
             } else {
                 holder.tv_status.setVisibility(View.GONE);
@@ -491,7 +490,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
     @Override
     public int getItemCount() {
-        return feed_detail.size();
+        return (null != feed_detail ? feed_detail.size() : 0);
+        //return feed_detail.size();
     }
 
     @Override

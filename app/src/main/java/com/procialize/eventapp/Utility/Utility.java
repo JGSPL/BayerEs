@@ -405,6 +405,7 @@ compare < 0, if date1 is smaller than date2*/
             InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         } catch(Exception ignored) {
+            ignored.printStackTrace();
         }
     }
 }
