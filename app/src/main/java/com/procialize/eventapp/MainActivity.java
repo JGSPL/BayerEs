@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
-        String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
+         fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
         String lName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
         String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
         String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
@@ -181,11 +181,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //Chat related process
-        if(storeFireid.equalsIgnoreCase("0")){
-            register_user(fName,fireEmail,"12345678");
+        if(ConnectionDetector.getInstance(this).isConnectingToInternet()) {
+            if (storeFireid.equalsIgnoreCase("0")) {
+                register_user(fName, fireEmail, "12345678");
 
-        }else{
-            normal_login_user(fireEmail,"12345678");
+            } else {
+                normal_login_user(fireEmail, "12345678");
+            }
         }
 
 
@@ -542,7 +544,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         //---OPENING MAIN ACTIVITY---
                                         Log.e("Login : ","Logged in Successfully" );
-                                        Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                      //  Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         getChatUpdate(api_token,eventid,currentuser,fireEmail,fName,"0");
 
@@ -560,8 +562,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         else{
                             //---IF AUTHENTICATION IS WRONG----
-                            Toast.makeText(MainActivity.this, "Wrong Credentials" +
-                                    "", Toast.LENGTH_SHORT).show();
+                           /* Toast.makeText(MainActivity.this, "Wrong Credentials" +
+                                    "", Toast.LENGTH_SHORT).show();*/
                         }
                     }
                 });
@@ -596,7 +598,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                             //---OPENING MAIN ACTIVITY---
                                             Log.e("Login : ","Logged in Successfully" );
-                                             Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                          //   Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                             String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                             getChatUpdate(api_token,eventid,currentuser,fireEmail,fName,"1");
 
@@ -614,8 +616,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             else{
                                 //---IF AUTHENTICATION IS WRONG----
-                                Toast.makeText(MainActivity.this, "Wrong Credentials" +
-                                        "", Toast.LENGTH_SHORT).show();
+                               /* Toast.makeText(MainActivity.this, "Wrong Credentials" +
+                                        "", Toast.LENGTH_SHORT).show();*/
                             }
                         }
                     });
@@ -679,13 +681,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username , String id) {
             updateApi = ApiUtils.getAPIService();
 
-            updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail, id).enqueue(new Callback<LoginOrganizer>() {
+            updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail,id).enqueue(new Callback<LoginOrganizer>() {
                 @Override
                 public void onResponse(Call<LoginOrganizer> call,
                                        Response<LoginOrganizer> response) {
                     if (response.isSuccessful()) {
                         chatUpdate.setValue(response.body());
-                        Utility.createShortSnackBar(ll_main,"Chat info updated");
+                    //    Utility.createShortSnackBar(ll_main,"Chat info updated");
 
                     }
                 }
