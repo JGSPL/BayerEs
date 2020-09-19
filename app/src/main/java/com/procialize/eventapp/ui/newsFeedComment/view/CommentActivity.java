@@ -656,6 +656,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void onChanged(Boolean aBoolean) {
                             if (aBoolean) {
+                                Utility.hideKeyboard(ll_main);
                                 commentViewModel.postComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), commentText, "1");
                                 commentViewModel.postCommentResponse().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                                     @Override

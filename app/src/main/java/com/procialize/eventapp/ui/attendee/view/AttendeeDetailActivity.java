@@ -3,9 +3,7 @@ package com.procialize.eventapp.ui.attendee.view;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,12 +31,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
-import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.WRITE_CONTACTS;
@@ -63,6 +61,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendee_detail);
 
+        try {
+            Intent intent = getIntent();
+            CommonFunction.saveBackgroundImage(AttendeeDetailActivity.this,intent.getStringExtra("eventBg"));
+        }catch (Exception e) {
+
+        }
         getIntentData();
         attendeeDetailsViewModel = ViewModelProviders.of(this).get(AttendeeDetailsViewModel.class);
         progressView = findViewById(R.id.progressView);
@@ -92,7 +96,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         tv_email.setText(email);
 
         iv_back.setOnClickListener(this);
-
+        CommonFunction.showBackgroundImage(this, ll_main);
         if (prof_pic.trim() != null) {
             Glide.with(AttendeeDetailActivity.this)
                     .load(prof_pic.trim())
@@ -321,7 +325,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                     boolean readContactPermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean writeContactpermjission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (readContactPermission && writeContactpermjission) {
-//                        Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_LONG).show();
+                        try {
+                            attendeeDetailsViewModel.saveContact(this, fname + " " + lname, company, mobile, designation, email);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     } else {
 
                         Toast.makeText(AttendeeDetailActivity.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
