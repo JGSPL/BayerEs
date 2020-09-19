@@ -55,13 +55,15 @@ public class NewsfeedRepository {
             public void onResponse(Call<FetchNewsfeedMultiple> call,
                                    Response<FetchNewsfeedMultiple> response) {
                 if (response.isSuccessful()) {
-                    newsData.setValue(response.body());
+                    //newsData.setValue(response.body());
+                    newsData.postValue(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
-                newsData.setValue(null);
+                //newsData.setValue(null);
+                newsData.postValue(null);
 
             }
         });

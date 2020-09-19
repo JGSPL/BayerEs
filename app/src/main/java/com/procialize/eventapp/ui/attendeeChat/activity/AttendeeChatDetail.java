@@ -1,9 +1,7 @@
-package com.procialize.eventapp.ui.attendee.view;
+package com.procialize.eventapp.ui.attendeeChat.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -39,20 +37,16 @@ import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
-import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.WRITE_CONTACTS;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
-public class AttendeeDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class AttendeeChatDetail extends AppCompatActivity implements View.OnClickListener {
     String fname, lname, company, city, designation, prof_pic, attendee_type,mobile,email;
-    TextView tv_header,tv_contact,tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
+    TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
     EditText et_message;
-    LinearLayout ll_send_message, ll_save_contact, ll_main, ll_save_contact_inner;
-    ImageView iv_profile, iv_back, ic_email, iv_contact;
+    LinearLayout ll_send_message, ll_save_contact,ll_main;
+    ImageView iv_profile,iv_back;
     ProgressBar progressView;
     public static final int RequestPermissionCode = 100;
     AttendeeDetailsViewModel attendeeDetailsViewModel;
@@ -60,26 +54,18 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     private DatabaseReference mUsersDatabase;
     private DatabaseReference mMessageDatabase;
     private FirebaseAuth mAuth;
-    String mCurrent_user_id, attendeeid, firebase_id;
-
+    String  mCurrent_user_id,attendeeid, firebase_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendee_detail);
+        setContentView(R.layout.activity_chat_detail);
 
-        try {
-            Intent intent = getIntent();
-            CommonFunction.saveBackgroundImage(AttendeeDetailActivity.this,intent.getStringExtra("eventBg"));
-        }catch (Exception e) {
-
-        }
         getIntentData();
         attendeeDetailsViewModel = ViewModelProviders.of(this).get(AttendeeDetailsViewModel.class);
         progressView = findViewById(R.id.progressView);
         iv_profile = findViewById(R.id.iv_profile);
         iv_back = findViewById(R.id.iv_back);
-        ic_email = findViewById(R.id.ic_email);
         tv_attendee_name = findViewById(R.id.tv_attendee_name);
         tv_attendee_designation = findViewById(R.id.tv_attendee_designation);
         tv_attendee_company_name = findViewById(R.id.tv_attendee_company_name);
@@ -88,10 +74,6 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         tv_email = findViewById(R.id.tv_email);
         et_message = findViewById(R.id.et_message);
         tv_sendmess = findViewById(R.id.tv_sendmess);
-        tv_header = findViewById(R.id.tv_header);
-        ll_save_contact_inner = findViewById(R.id.ll_save_contact_inner);
-        iv_contact = findViewById(R.id.iv_contact);
-        tv_contact = findViewById(R.id.tv_contact);
 
         ll_send_message = findViewById(R.id.ll_send_message);
         ll_save_contact = findViewById(R.id.ll_save_contact);
@@ -107,24 +89,11 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         tv_mobile.setText(mobile);
         tv_email.setText(email);
 
+        iv_back.setOnClickListener(this);
         CommonFunction.showBackgroundImage(this, ll_main);
 
-
-        iv_back.setOnClickListener(this);
-
-        CommonFunction.showBackgroundImage(AttendeeDetailActivity.this, ll_main);
-        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
-        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
-        ll_send_message.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        ic_email.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
-        tv_sendmess.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
-        ll_save_contact.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        ll_save_contact_inner.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
-        iv_contact.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
-        tv_contact.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-
         if (prof_pic.trim() != null) {
-            Glide.with(AttendeeDetailActivity.this)
+            Glide.with(AttendeeChatDetail.this)
                     .load(prof_pic.trim())
                     .listener(new RequestListener<Drawable>() {
                         @Override
@@ -142,7 +111,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         }
 
         //--GETTING CURRENT USER ID---
-        mAuth = FirebaseAuth.getInstance();
+        mAuth= FirebaseAuth.getInstance();
         mCurrent_user_id = mAuth.getCurrentUser().getUid();
 
         //---REFERENCE TO CHATS CHILD IN FIREBASE DATABASE-----
@@ -151,7 +120,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         //---OFFLINE FEATURE---
         mConvDatabase.keepSynced(true);
 
-        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("users");
         mUsersDatabase.keepSynced(true);
 
         mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("messages").child(mCurrent_user_id);
@@ -182,15 +151,18 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         switch (v.getId()) {
             case R.id.ll_send_message:
 
-                if (message.isEmpty()) {
-                    Utility.createShortSnackBar(ll_main, "Please enter message..");
+                if(message.isEmpty())
+                {
+                    Utility.createShortSnackBar(ll_main,"Please enter message..");
 
-                } else {
-                    if (firebase_id.equalsIgnoreCase("0")) {
+                }
+                else
+                {
+                    if(firebase_id.equalsIgnoreCase("0")){
                         et_message.setText("");
                         Utility.createShortSnackBar(ll_main, "User not valid for chat...!");
 
-                    } else {
+                    }else {
                         if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
                             mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -210,7 +182,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
                                     //--OPENING CHAT ACTIVITY FOR CLICKED USER----
 
-                                    Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
+                                    Intent chatIntent = new Intent(AttendeeChatDetail.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
                                     chatIntent.putExtra("user_name", fname + " " + lname);
                                     chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
@@ -248,22 +220,25 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.tv_sendmess:
 
-                if (message.isEmpty()) {
-                    Utility.createShortSnackBar(ll_main, "Please enter message..");
+                if(message.isEmpty())
+                {
+                    Utility.createShortSnackBar(ll_main,"Please enter message..");
 
-                } else {
-                    if (firebase_id.equalsIgnoreCase("0")) {
+                }
+                else
+                {
+                    if(firebase_id.equalsIgnoreCase("0")){
                         et_message.setText("");
                         Utility.createShortSnackBar(ll_main, "User not valid for chat...!");
 
-                    } else {
+                    }else {
                         if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
                             mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                                    Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
+                                    Intent chatIntent = new Intent(AttendeeChatDetail.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
                                     chatIntent.putExtra("user_name", fname + " " + lname);
                                     chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
@@ -304,7 +279,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                     if (!CheckingPermissionIsEnabledOrNot()) {
                         RequestMultiplePermission();
                     } else {
-                        attendeeDetailsViewModel.saveContact(this, fname + " " + lname, company, mobile, designation, email);
+                        attendeeDetailsViewModel.saveContact(this,fname+" "+lname,company,mobile,designation,email);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -327,7 +302,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
     private void RequestMultiplePermission() {
         // Creating String Array with Permissions.
-        ActivityCompat.requestPermissions(AttendeeDetailActivity.this, new String[]
+        ActivityCompat.requestPermissions(AttendeeChatDetail.this, new String[]
                 {
                         WRITE_CONTACTS,
                         READ_CONTACTS
@@ -345,15 +320,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                     boolean readContactPermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean writeContactpermjission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (readContactPermission && writeContactpermjission) {
-                        try {
-                            attendeeDetailsViewModel.saveContact(this, fname + " " + lname, company, mobile, designation, email);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+//                        Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_LONG).show();
                     } else {
 
-                        Toast.makeText(AttendeeDetailActivity.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AttendeeChatDetail.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
                         RequestMultiplePermission();
 
                     }

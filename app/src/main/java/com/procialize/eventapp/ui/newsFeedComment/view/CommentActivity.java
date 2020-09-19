@@ -251,7 +251,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(testdataPost.getText());
         if (newsfeed_detail.getPost_status() != null) {
 
-            tv_status.setVisibility(View.VISIBLE);
+            if(newsfeed_detail.getPost_status().isEmpty()){tv_status.setVisibility(View.GONE);}else {
+                tv_status.setVisibility(View.VISIBLE);
+            }
             int flag = 0;
             for (int i = 0; i < stringBuilder.length(); i++) {
                 String sample = stringBuilder.toString();

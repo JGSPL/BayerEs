@@ -288,6 +288,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
                             newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
                             insertIntoDb(feedList);
+
                             String mediaPath = fetchNewsfeedMultiple.getMedia_path();
                             totalPages = Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
 
@@ -306,19 +307,15 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-
                         }
-                        if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                        /*if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                             newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-                        }
+                        }*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             });
-
-
         } else {
             getDataFromDb();
         }
@@ -596,6 +593,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_whats_on_mind:
+                JzvdStd.releaseAllVideos();
                 startActivity(new Intent(getActivity(), PostNewActivity.class));
                 break;
         }
@@ -647,19 +645,23 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                         newsfeedViewModel.sendPost(api_token, eventid, postText, uploadMultimedia);
                                         newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
                                             @Override
-                                            public void onChanged(@Nullable LoginOrganizer result) {
+                                            public void onChanged(@Nullable final LoginOrganizer result) {
                                                 if (result != null) {
                                                     newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
 
-                                               /*new Handler().postDelayed(new Runnable() {
+                                               new Handler().postDelayed(new Runnable() {
                                                     @Override
-                                                    public void run() {*/
+                                                    public void run() {
                                                     String status = result.getHeader().get(0).getType();
                                                     String message = result.getHeader().get(0).getMsg();
                                                     Utility.createLongSnackBar(cl_main, message);
+                                                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                                                        newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                                                    }
+                                                    currentPage = PAGE_START;
                                                     init();
-                                                   /* }
-                                                }, 1000);*/
+                                                    }
+                                                }, 1000);
 
                                                 } else {
                                                     Utility.createLongSnackBar(cl_main, "failure");

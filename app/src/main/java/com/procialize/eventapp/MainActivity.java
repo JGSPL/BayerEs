@@ -74,6 +74,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jzvd.JzvdStd;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -121,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String api_token,eventid;
     String fName;
     String fireEmail;
+
+    String storeFireid, storeFirename, stoeUsername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +154,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String event_id = SharedPreference.getPref(this, EVENT_ID);
         String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
         String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
+        storeFireid = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_ID);
+        storeFirename = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_NAME);
+        stoeUsername = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASEUSER_NAME);
 
 
         getProfileDetails();
@@ -175,7 +181,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //Chat related process
-        register_user(fName,fireEmail,"12345678");
+        if(storeFireid.equalsIgnoreCase("0")){
+            register_user(fName,fireEmail,"12345678");
+
+        }else{
+            login_user(fireEmail,"12345678");
+        }
 
 
         Glide.with(MainActivity.this)
@@ -266,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         // Switch to page one
+                        JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
@@ -273,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_agenda:
                         // Switch to page two
+                        JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, AgendaFragment.newInstance(), "")
@@ -280,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_attendee:
                         // Switch to page three
+                        JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, AttendeeFragment.newInstance(), "")
@@ -287,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_speaker:
                         // Switch to page four
+                        JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, SpeakerFragment.newInstance(), "")
@@ -294,6 +309,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_logout:
                         //Logout from app
+                        JzvdStd.releaseAllVideos();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         finishAffinity();
                         break;
@@ -379,6 +395,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+
+        JzvdStd.releaseAllVideos();
         if (doubleBackToExitPressedOnce) {
             ActivityCompat.finishAffinity(MainActivity.this);
             return;
@@ -400,10 +418,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_edit:
+                JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
             case R.id.tr_switch_event:
+                JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, EventListActivity.class));
                 SessionManager.clearCurrentEvent(MainActivity.this);
@@ -415,10 +435,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
                 break;
             case R.id.tr_profile:
+                JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
             case R.id.tr_logout:
+                JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 SessionManager.clearCurrentEvent(MainActivity.this);
                 SessionManager.logoutUser(MainActivity.this);
@@ -520,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                                         //---OPENING MAIN ACTIVITY---
                                         Log.e("Login : ","Logged in Successfully" );
-                                        Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                       // Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                         getChatUpdate(api_token,eventid,currentuser,fireEmail,fName);
 
@@ -608,7 +630,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                        Response<LoginOrganizer> response) {
                     if (response.isSuccessful()) {
                         chatUpdate.setValue(response.body());
-                        Utility.createShortSnackBar(ll_main,"Chat info updated");
+                       // Utility.createShortSnackBar(ll_main,"Chat info updated");
 
                     }
                 }
@@ -621,7 +643,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
             return chatUpdate;
         }
-
 
 
 }
