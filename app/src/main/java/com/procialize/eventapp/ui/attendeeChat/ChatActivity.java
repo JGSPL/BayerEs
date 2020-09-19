@@ -61,6 +61,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
@@ -68,6 +69,7 @@ import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
+import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -86,6 +88,9 @@ import cn.jzvd.JzvdStd;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_CAMERA;
+import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 
 
 public class ChatActivity extends AppCompatActivity {
@@ -1031,17 +1036,25 @@ public class ChatActivity extends AppCompatActivity {
                         userChoosenTask = "Video From camera";
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             // Android M Permission check
-                            if (ChatActivity.this.checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED && ChatActivity.this.checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                                final String[] permissions = new String[]{"android.permission.READ_EXTERNAL_STORAGE"};
+                            if (ChatActivity.this.checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED
+                                    && ChatActivity.this.checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
+                                final String[] permissions = new String[]{"android.permission.READ_EXTERNAL_STORAGE" };
                                 final String[] permissionswrite = new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"};
                                 ActivityCompat.requestPermissions(ChatActivity.this, permissionswrite, 0);
                                 ActivityCompat.requestPermissions(ChatActivity.this, permissions, 0);
                             } else {
+                                if (ChatActivity.this.checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                    final String[] permissions = new String[]{android.Manifest.permission.CAMERA};
+                                    ActivityCompat.requestPermissions(ChatActivity.this,
+                                            permissions, REQUEST_TAKE_PHOTO);
+                                } else {
 
-                                Intent videoCaptureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
-                                if (videoCaptureIntent.resolveActivity(getPackageManager()) != null) {
-                                    startActivityForResult(videoCaptureIntent, REQUEST_VIDEO_CAPTURE);
+                                    Intent videoCaptureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+                                    if (videoCaptureIntent.resolveActivity(getPackageManager()) != null) {
+                                        startActivityForResult(videoCaptureIntent, REQUEST_VIDEO_CAPTURE);
+                                    }
                                 }
 
                             }
@@ -1364,6 +1377,48 @@ public class ChatActivity extends AppCompatActivity {
         JzvdStd.releaseAllVideos();
         Log.v("MyApp", "onDestroy");
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    cameraTask();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //profileActivityViewModel.cameraIntent(ProfileActivity.this);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                       /* Intent intent = getIntent();
+                        CommonFunction.saveBackgroundImage(ChatActivity.this, intent.getStringExtra("eventBg"));
+                        CommonFunction.showBackgroundImage(this, ll_main);*/
+                    } catch (Exception e) {
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
 
 
 }

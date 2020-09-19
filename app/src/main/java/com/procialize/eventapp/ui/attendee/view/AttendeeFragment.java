@@ -131,7 +131,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         iv_search = root.findViewById(R.id.iv_search);
         //searchBtn.setTextColor(getResources().getColor(R.color.colorwhite));
         //searchBtn.setBackgroundColor(Color.parseColor(colorActive));
-        iv_search.setOnClickListener(new View.OnClickListener() {
+        /*iv_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 strAttendeeName = searchEt.getText().toString().trim();
@@ -139,7 +139,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 attendeeAdapter.notifyDataSetChanged();
                 loadFirstPage(strAttendeeName);
             }
-        });
+        });*/
 
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
@@ -236,11 +236,11 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                                           int before, int count) {
 
                     if (attendeeAdapter != null) {
-                        /*try {
+                        try {
                             attendeeAdapter.getFilter().filter(s.toString());
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }*/
+                        }
                     }
 
                 }

@@ -8,11 +8,14 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -28,13 +31,14 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.newsFeedLike.model.AttendeeList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyViewHolder> {
+public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyViewHolder> implements Filterable {
 
     //List<EventSettingList> eventSettingLists;
     String attendee_design = "1", attendee_company = "1", attendee_location = "1", attendee_mobile = "1", attendee_save_contact = "1";
@@ -47,11 +51,13 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
     private String picPath;
     private boolean retryPageLoad = false;
     private boolean isLoadingAdded = false;
+    private List<Attendee> attendeeLists = new ArrayList<>();
 
 
     public AttendeeAdapter(Context context,List<Attendee> commentList, AttendeeAdapterListner listener) {
         attendeeListFiltered = new ArrayList<>();
         this.attendeeListFiltered = commentList;
+        this.attendeeLists = commentList;
         this.listener = listener;
         this.context = context;
         SharedPreferences prefs = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
@@ -239,6 +245,51 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
         return attendeeListFiltered.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    attendeeListFiltered = attendeeLists;
+                } else {
+                    if (attendeeLists.size() == 0) {
+
+                    } else {
+                        List<Attendee> filteredList = new ArrayList<>();
+                        for (Attendee row : attendeeLists) {
+
+                            // name match condition. this might differ depending on your requirement
+                            // here we are looking for name or phone number match
+                            String name = row.getFirst_name().toLowerCase() /*+ " " + row.getLastName().toLowerCase()*/;
+
+                            if (name.contains(charString.toLowerCase())) {
+                                filteredList.add(row);
+                            }
+                        }
+
+                        attendeeListFiltered = filteredList;
+                    }
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = attendeeListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                attendeeListFiltered = (ArrayList<Attendee>) filterResults.values;
+
+                if (attendeeListFiltered.size() == 0) {
+//                    Toast.makeText(context, "No Attendee Found", Toast.LENGTH_SHORT).show();
+                }
+                // refresh the list with filtered data
+                notifyDataSetChanged();
+            }
+        };
+    }
 /*
     public void applySetting(List<EventSettingList> eventSettingLists) {
         for (int i = 0; i < eventSettingLists.size(); i++) {
