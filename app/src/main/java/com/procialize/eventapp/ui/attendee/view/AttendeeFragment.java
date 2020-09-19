@@ -246,8 +246,13 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             e.printStackTrace();
         }
 
+//        attendeefeedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                doRefresh();
+//            }
+//        });
 
-        //attendeefeedrefresh.setOnRefreshListener(/*this::doRefresh*/);
         return root;
     }
     private void doRefresh() {
@@ -270,8 +275,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             attendeesDBList = dbHelper.getAllAttendeeDetails("0", attendeePageSize + "");
             attendeeAdapter.addAll(attendeesDBList);
             attendeefeedrefresh.setRefreshing(false);*/
-
-
         }
     }
 

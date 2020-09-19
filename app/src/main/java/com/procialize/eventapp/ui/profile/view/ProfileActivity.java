@@ -169,7 +169,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
-        CommonFunction.showBackgroundImage(this, ll_main);
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                CommonFunction.showBackgroundImage(ProfileActivity.this, ll_main);
+            }
+        }, 2000);
+
         if (connectionDetector.isConnectingToInternet()) {
 
             profileActivityViewModel.getProfile(api_token, event_id);
@@ -580,6 +587,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     try {
                         Intent intent = getIntent();
                         CommonFunction.saveBackgroundImage(ProfileActivity.this, intent.getStringExtra("eventBg"));
+                        CommonFunction.showBackgroundImage(this, ll_main);
                     } catch (Exception e) {
                     }
                 } else {

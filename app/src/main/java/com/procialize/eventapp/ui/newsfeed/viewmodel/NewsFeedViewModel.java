@@ -216,13 +216,13 @@ public class NewsFeedViewModel extends ViewModel {
                             builder.show();
 
                         } else if (isPresentFile) {
-                            String folder = Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + "/";
+                            String folder = Environment.getExternalStorageDirectory().toString() +  Constant.FOLDER_DIRECTORY + "/";
                             //Create androiddeft folder if it does not exist
                             File directory = new File(folder);
                             if (!directory.exists()) {
                                 directory.mkdirs();
                             }
-                            strPath = folder +  mediaPath+newsFeedMedia.get(position).getMedia_file();
+                            strPath = folder + newsFeedMedia.get(position).getMedia_file();
                             Uri contentUri = FileProvider.getUriForFile(activity,
 
                                     BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));
@@ -381,10 +381,10 @@ public class NewsFeedViewModel extends ViewModel {
                                 // remove the item from recycler view
                                 // feedAdapter.removeItem(viewHolder.getAdapterPosition());
                                 adapter.notifyItemRemoved(position);
+                                adapter.notifyItemRangeChanged(position, adapter.getItemCount());
                                 List<Header> heaserList = loginOrganizer.getHeader();
                                 Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
-
                             }
                         }
                     });
@@ -463,11 +463,14 @@ public class NewsFeedViewModel extends ViewModel {
 
     //--------------Start Background service to compress media------------------------
     public void startBackgroundService(Activity activity){//, List<UploadMultimedia> uploadMultimedia) {
-        Log.d("Bg Service","Start Service");
-        mIsUpdating.setValue(true);
-        Intent intent = new Intent(activity, BackgroundServiceToCompressMedia.class);
-        //intent.putExtra("MediaList", (Serializable) uploadMultimedia);
-        activity.startService(intent);
+        try {
+            Log.d("Bg Service", "Start Service");
+            mIsUpdating.setValue(true);
+            Intent intent = new Intent(activity, BackgroundServiceToCompressMedia.class);
+            //intent.putExtra("MediaList", (Serializable) uploadMultimedia);
+            activity.startService(intent);
+        }catch (Exception e)
+        {mIsUpdating.setValue(false);}
     }
 
     public void stopBackgroundService(Activity activity){//, List<UploadMultimedia> uploadMultimedia) {
@@ -576,18 +579,20 @@ public class NewsFeedViewModel extends ViewModel {
         cancelbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utility.hideKeyboard(v);
                 myDialog.dismiss();
             }
         });
 
         ratebtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
                 if (etmsg.getText().toString().length() > 0) {
 
                     String msg = StringEscapeUtils.escapeJava(etmsg.getText().toString());
                     dialog.cancel();
+                    Utility.hideKeyboard(v);
                     if (from.equalsIgnoreCase("reportPost")) {
 
                         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
@@ -599,12 +604,14 @@ public class NewsFeedViewModel extends ViewModel {
                                     if (loginOrganizer != null) {
                                         List<Header> heaserList = loginOrganizer.getHeader();
                                         Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
-                                         myDialog.cancel();
+                                        myDialog.cancel();
+                                        Utility.hideKeyboard(v);
 
                                     }
                                 }
                             });
                         } else {
+                            Utility.hideKeyboard(v);
                             myDialog.cancel();
                             Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                         }
@@ -612,6 +619,7 @@ public class NewsFeedViewModel extends ViewModel {
                         /*newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
                         myDialog.cancel();*/
                         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
+                            Utility.hideKeyboard(v);
                             newsfeedHide = newsRepository.ReportUser(api_token,eventId, attnId,id, msg);
                             newsRepository.getPostActivity().observe((LifecycleOwner) activityVar, new Observer<LoginOrganizer>() {
                                 @Override
@@ -620,11 +628,13 @@ public class NewsFeedViewModel extends ViewModel {
                                         List<Header> heaserList = loginOrganizer.getHeader();
                                         Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                         myDialog.cancel();
+                                        Utility.hideKeyboard(v);
                                     }
                                 }
                             });
                         } else {
                             myDialog.cancel();
+                            Utility.hideKeyboard(v);
                             Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                         }
                     }
@@ -632,7 +642,6 @@ public class NewsFeedViewModel extends ViewModel {
 
                 else {
                     Utility.createShortSnackBar(NewsFeedFragment.cl_main, "Enter Something");
-                   // Toast.makeText(activityVar, "Enter Something", Toast.LENGTH_SHORT).show();
                 }
             }
         });

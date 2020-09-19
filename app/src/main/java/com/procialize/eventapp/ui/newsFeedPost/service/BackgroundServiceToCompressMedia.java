@@ -236,7 +236,7 @@ String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), 
                 //"-vcodec",
                 "-c:v",
                 "libx264",  "-maxrate", "1984k",
-        "-bufsize", "3968k","-b:v", "1000k", "-b:a", "48000",
+        "-bufsize", "3968k","-b:v", "3000k", "-b:a", "48000",
         "-movflags", "+faststart", "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "ultrafast",  "-ac", "2", "-ar", "22050", filePath };
 
        /* String[] complexCommand = new String[]{

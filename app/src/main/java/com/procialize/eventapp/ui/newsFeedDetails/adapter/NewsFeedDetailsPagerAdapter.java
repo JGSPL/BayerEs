@@ -41,6 +41,7 @@ import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 import static android.content.Context.MODE_PRIVATE;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.procialize.eventapp.Utility.Utility;
 
 public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheListener {
 
@@ -113,22 +114,23 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheLi
                         String message = null;
                         switch (failReason.getType()) {
                             case IO_ERROR:
-                                message = "Input/Output error";
+                                message = "file not downloded ";
                                 break;
                             case DECODING_ERROR:
-                                message = "Image can't be decoded";
+                                message = "file not downloded ";
                                 break;
                             case NETWORK_DENIED:
-                                message = "Downloads are denied";
+                                message = "file not downloded ";
                                 break;
                             case OUT_OF_MEMORY:
-                                message = "Out Of Memory error";
+                                message = "file not downloded ";
                                 break;
                             case UNKNOWN:
-                                message = "Unknown error";
+                                message = "file not downloded ";
                                 break;
                         }
-                        Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(view.getContext(), message, Toast.LENGTH_SHORT).show();
+                        Utility.createShortSnackBar(view, message);
 
                         progressBar.setVisibility(View.GONE);
                     }
