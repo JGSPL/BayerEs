@@ -84,7 +84,7 @@ public class UsersAdapter extends RecyclerArrayAdapter<TableAttendee, UsersAdapt
 
         if (mentionsUser != null && StringUtils.isNotBlank(mentionsUser.getFirst_name())) {
 
-            String profilePic = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_PROFILE_PIC);
+            String profilePic =mentionsUser.getProfile_picture();
             Glide.with(context)
                     .load(profilePic)
                     .listener(new RequestListener<Drawable>() {
