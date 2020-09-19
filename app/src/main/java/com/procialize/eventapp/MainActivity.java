@@ -74,6 +74,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jzvd.JzvdStd;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -266,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         // Switch to page one
+                        JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
@@ -273,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_agenda:
                         // Switch to page two
+                        JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, AgendaFragment.newInstance(), "")
@@ -280,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_attendee:
                         // Switch to page three
+                        JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, AttendeeFragment.newInstance(), "")
@@ -287,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_speaker:
                         // Switch to page four
+                        JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, SpeakerFragment.newInstance(), "")
@@ -294,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_logout:
                         //Logout from app
+                        JzvdStd.releaseAllVideos();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         finishAffinity();
                         break;
@@ -379,6 +385,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+
+        JzvdStd.releaseAllVideos();
         if (doubleBackToExitPressedOnce) {
             ActivityCompat.finishAffinity(MainActivity.this);
             return;
@@ -400,10 +408,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_edit:
+                JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
             case R.id.tr_switch_event:
+                JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, EventListActivity.class));
                 SessionManager.clearCurrentEvent(MainActivity.this);
@@ -415,10 +425,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
                 break;
             case R.id.tr_profile:
+                JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
             case R.id.tr_logout:
+                JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 SessionManager.clearCurrentEvent(MainActivity.this);
                 SessionManager.logoutUser(MainActivity.this);
