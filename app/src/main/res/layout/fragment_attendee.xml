@@ -13,13 +13,13 @@
         android:layout_margin="10dp"
         android:padding="10dp"
         android:gravity="center_vertical"
-        android:background="@color/colorwhite"
+        android:background="@drawable/profile_edit_text_bg"
         android:orientation="horizontal">
         <EditText
             android:id="@+id/searchEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorwhite"
+            android:background="@android:color/transparent"
             android:hint="@string/searchattendee"
             android:imeOptions="actionDone|actionSend"
             android:layout_weight="1"
@@ -34,7 +34,7 @@
                 android:layout_margin="2dp"
                 android:src="@drawable/ic_search"
                 android:layout_gravity="center"
-                android:background="@color/colorwhite"/>
+                android:background="@android:color/transparent"/>
 
     </LinearLayout>
 
@@ -45,6 +45,7 @@
         android:layout_marginTop="@dimen/marginsmall"
         android:layout_marginBottom="@dimen/marginsmall"
         android:gravity="center"
+        android:visibility="gone"
         android:text="@string/pullrefresh"
         android:textSize="@dimen/textsizesmaller"
          />
