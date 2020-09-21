@@ -129,6 +129,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         iv_back.setOnClickListener(this);
 
         CommonFunction.showBackgroundImage(AttendeeDetailActivity.this, ll_main);
+        tv_attendee_name.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         ll_send_message.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
