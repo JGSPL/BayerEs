@@ -47,6 +47,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -312,6 +313,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.navigation_logout:
                         //Logout from app
                         JzvdStd.releaseAllVideos();
+                        EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                        EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
+                        EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         finishAffinity();
                         break;
@@ -427,9 +431,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_switch_event:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, EventListActivity.class));
                 SessionManager.clearCurrentEvent(MainActivity.this);
                 SessionManager.logoutUser(MainActivity.this);
+                EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
+                EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
+                startActivity(new Intent(MainActivity.this, EventListActivity.class));
                 //SharedPreference.clearAllPref(this);
                 break;
             case R.id.tr_home:
@@ -448,7 +455,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SessionManager.logoutUser(MainActivity.this);
                 SharedPreference.clearPref(this, AUTHERISATION_KEY);
                 SharedPreference.clearPref(this, IS_LOGIN);
-
+                EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
+                EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
