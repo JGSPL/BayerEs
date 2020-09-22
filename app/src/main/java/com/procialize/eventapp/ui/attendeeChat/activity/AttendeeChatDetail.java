@@ -106,6 +106,7 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         iv_back.setOnClickListener(this);
 
         CommonFunction.showBackgroundImage(AttendeeChatDetail.this, ll_main);
+        tv_attendee_name.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         ll_send_message.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
