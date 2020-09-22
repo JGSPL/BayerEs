@@ -50,6 +50,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
@@ -118,11 +120,16 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         cd = ConnectionDetector.getInstance(getActivity());
         sessionManager = new SessionManager(getContext());
         attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
-        attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
-        searchEt.setHintTextColor(Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4)));
-        searchEt.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4)));
 
-        int color = Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4));
+        String eventColor3 = SharedPreference.getPref(getContext(), EVENT_COLOR_4);
+
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+
+
+        attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+        searchEt.setHintTextColor(Color.parseColor(eventColor3));
+        searchEt.setTextColor(Color.parseColor(eventColor3));
+        int color = Color.parseColor(eventColor3);
        iv_search.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
 

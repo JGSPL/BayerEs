@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,7 +94,8 @@ import static com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewMo
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int RequestPermissionCode = 101;
-    LinearLayout ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobile, ll_main,ll_bg;
+    RelativeLayout ll_main;
+    LinearLayout ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobile, ll_bg;
     EditText et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile;
     ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;

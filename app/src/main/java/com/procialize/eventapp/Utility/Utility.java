@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -313,6 +314,10 @@ public class Utility {
             return 0;
     }
 
+    public static void displayToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
     public static boolean isTimeGreater(String datetime) {
         Date currentdateTime, pickedTime;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -321,9 +326,6 @@ public class Utility {
         try {
             currentdateTime = sdf.parse(currentTimeString);
             pickedTime = sdf.parse(datetime);
-
-
-
             Calendar now = Calendar.getInstance();
             now.add(Calendar.SECOND, 5);
             Date date = now.getTime();

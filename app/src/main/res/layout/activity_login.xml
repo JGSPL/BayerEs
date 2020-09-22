@@ -35,7 +35,7 @@
             <LinearLayout
                 android:id="@+id/linear_LoginView"
                 android:layout_width="match_parent"
-                android:layout_height="206dp"
+                android:layout_height="wrap_content"
                 android:layout_above="@+id/txt_designdevelop"
                 android:layout_below="@+id/imageView"
                 android:layout_marginTop="90dp"
@@ -44,52 +44,63 @@
                 android:visibility="visible">
 
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextview
                     android:id="@+id/txt_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageView"
                     android:layout_marginTop="20dp"
                     android:gravity="center|top"
-                    android:text="Login"
+                    android:text="LOGIN"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/textsizenormal" />
 
-                <EditText
-                    android:id="@+id/inEmail"
+                <com.procialize.eventapp.fonts.RobotoTextview
+                    android:id="@+id/txt_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txt_login"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="50dp"
-                    android:layout_marginRight="20dp"
+                    android:gravity="left"
+                    android:text="Email ID/Mobile No."
+                    android:textSize="13dp" />
+
+                <com.procialize.eventapp.fonts.RobotoEditext
+                    android:id="@+id/inEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txt_hint"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
                     android:background="@drawable/edit_login"
-                    android:hint="Email/Mobile No."
                     android:padding="10dp"
                     android:singleLine="true"
                     android:text="@={viewModel.userEmail}"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/black"
-                    android:textCursorDrawable="@color/black"
-                    android:textSize="10sp" />
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/cursor_drawable"
+                    android:textSize="13dp" />
 
-                <Button
+                <com.procialize.eventapp.fonts.RobotoButton
                     android:id="@+id/btn_submit"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/inEmail"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="30dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="10dp"
                     android:background="@color/blue"
+                    android:minHeight="0dp"
                     android:onClick="@{()-> viewModel.onLoginClicked()}"
+                    android:padding="10dp"
                     android:text="Submit"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
                     bind:toastMessage="@{viewModel.toastMessage}" />
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextview
                     android:id="@+id/txt_mobileno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,6 +112,8 @@
                     android:textColor="@color/txtcolor"
                     android:textSize="@dimen/textsizesmaller"
                     android:visibility="gone" />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -130,7 +143,7 @@
                         android:onClick="@{()-> viewModel.onBackClicked()}"
                         android:src="@drawable/backarrow" />
 
-                    <TextView
+                    <com.procialize.eventapp.fonts.RobotoTextview
                         android:id="@+id/txt_headingOTP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -151,7 +164,7 @@
             android:visibility="visible"
            android:layout_below="@+id/imageView">
 
-            <TextView
+            <com.procialize.eventapp.fonts.RobotoTextview
                 android:id="@+id/txt_otp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -159,27 +172,23 @@
                 android:gravity="left"
                 android:text="Enter OTP"
                 android:textColor="@color/txtcolor"
-                android:textSize="@dimen/textsizesmaller"
-                android:visibility="visible"
-                 />
+                android:textSize="13dp"
+                android:visibility="visible" />
 
-            <EditText
+            <com.procialize.eventapp.fonts.RobotoEditext
                 android:id="@+id/edit_otp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="0dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_login"
-                android:hint="Enter OTP"
                 android:layout_below="@+id/txt_login"
                 android:inputType="number"
                 android:padding="10dp"
                 android:singleLine="true"
                 android:text="@={viewModel.userOTP}"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textCursorDrawable="@color/black"
-                android:textSize="10sp"
+                android:textCursorDrawable="@drawable/cursor_drawable"
+                android:textSize="13dp"
                 android:visibility="visible" />
 
             <LinearLayout
@@ -190,32 +199,44 @@
                 android:visibility="visible"
                 android:layout_below="@+id/imageView">
 
-            <Button
-                android:id="@+id/btn_OTPSubmit"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="10dp"
-                android:layout_weight="5"
-                android:background="@color/blue"
-                android:onClick="@{()-> viewModel.onOTPSubmitClicked()}"
-                android:text="Submit"
-                android:textColor="@color/white" />
+                <com.procialize.eventapp.fonts.RobotoButton
+                    android:id="@+id/btn_OTPSubmit"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="5"
+                    android:background="@color/blue"
+                    android:minHeight="0dp"
+                    android:onClick="@{()-> viewModel.onOTPSubmitClicked()}"
+                    android:padding="10dp"
+                    android:text="Submit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13dp" />
 
-            <Button
-                android:id="@+id/btn_resendOTP"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="10dp"
-                android:layout_weight="5"
-                android:background="@drawable/buttonbackground"
-                android:onClick="@{()-> viewModel.onResendOTPClicked()}"
-                android:text="Resend OTP"
-                android:textColor="@color/blue" />
+                <com.procialize.eventapp.fonts.RobotoButton
+                    android:id="@+id/btn_resendOTP"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="5"
+                    android:background="@drawable/buttonbackground"
+                    android:minHeight="0dp"
+                    android:onClick="@{()-> viewModel.onResendOTPClicked()}"
+                    android:padding="10dp"
+                    android:text="Resend OTP"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blue"
+                    android:textSize="13dp" />
             </LinearLayout>
         </LinearLayout>
             </LinearLayout>
 
-            <TextView
+            <com.procialize.eventapp.fonts.RobotoTextview
                 android:id="@+id/txt_designdevelop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
