@@ -108,7 +108,8 @@ public class LoginActivity extends AppCompatActivity {
             } else {
 //                Constant.displayToast(view.getContext(), message);
                 Utility.hideKeyboard(view);
-                Utility.createShortSnackBar(view, message);
+//                Utility.createShortSnackBar(view, message);
+                Utility.displayToast(view.getContext(), message);
 
             }
         }

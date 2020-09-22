@@ -394,8 +394,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     });
 
             navView.setItemIconTintList(iconsColorStates);
-            navView.setItemTextColor(textColorStates);
-            navView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+//            navView.setItemTextColor(textColorStates);
+//            navView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         }
     }
 
