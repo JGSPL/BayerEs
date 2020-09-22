@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -88,6 +89,7 @@ import cn.jzvd.JzvdStd;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_CAMERA;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
@@ -106,7 +108,7 @@ public class ChatActivity extends AppCompatActivity {
     DatabaseReference mDatabaseReference;
     private DatabaseReference mRootReference;
 
-    private ImageButton mChatSendButton,mChatAddButton;
+    private ImageView mChatSendButton,mChatAddButton;
     private EditText mMessageView;
 
     private RecyclerView mMessagesList;
@@ -147,8 +149,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
-        mChatAddButton = (ImageButton)findViewById(R.id.chatAddButton);
-        mChatSendButton = (ImageButton)findViewById(R.id.chatSendButton);
+        mChatAddButton = (ImageView)findViewById(R.id.chatAddButton);
+        mChatSendButton = (ImageView)findViewById(R.id.chatSendButton);
         lineaeSend = findViewById(R.id.lineaeSend);
         mMessageView = (EditText)findViewById(R.id.chatMessageView);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
@@ -194,6 +196,10 @@ public class ChatActivity extends AppCompatActivity {
 
         mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1));
+        mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
         linBack.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,22 +10,22 @@
         android:layout_alignParentStart="true"
         android:orientation="horizontal"
         android:paddingTop="0dp"
-        android:weightSum="1"
+        android:weightSum="10"
         android:background="#FFFFFF"
         android:id="@+id/linearLayout">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/chatAddButton"
-            android:layout_width="39dp"
+            android:layout_width="34dp"
             android:layout_height="39dp"
-            android:layout_marginBottom="2dp"
             android:layout_gravity="bottom"
-            android:tint="@color/black"
-            android:background="@drawable/addbutton" />
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/addbutton"
+            />
 
         <EditText
             android:id="@+id/chatMessageView"
-            android:layout_width="137dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Message"
             android:layout_gravity="center"
@@ -33,21 +33,24 @@
             android:background="@color/colorwhite"
             android:paddingRight="10dp"
             android:maxHeight="300dp"
-            android:layout_weight="0.99" />
+            android:layout_weight="8.5" />
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:padding="2dp"
+            android:gravity="center"
+            android:layout_weight="1.5"
             android:id="@+id/lineaeSend"
             android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/chatSendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="34dp"
-                android:layout_gravity="center"
-                android:background="@mipmap/ic_send"
-                android:backgroundTint="@color/colorwhite"
-                android:padding="5dp" />
+        <ImageView
+            android:id="@+id/chatSendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:backgroundTint="@color/colorwhite"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_send"
+            />
         </LinearLayout>
 
     </LinearLayout>

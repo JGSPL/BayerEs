@@ -3,6 +3,8 @@ package com.procialize.eventapp.ui.attendee.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -106,6 +108,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
+        iv_search = root.findViewById(R.id.iv_search);
 
         searchEt = root.findViewById(R.id.searchEt);
         attendeefeedrefresh = root.findViewById(R.id.swiperefresh_attendee);
@@ -116,6 +119,11 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         sessionManager = new SessionManager(getContext());
         attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
         attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+        searchEt.setHintTextColor(Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4)));
+        searchEt.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4)));
+
+        int color = Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4));
+       iv_search.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
 
         // use a linear layout manager
@@ -131,7 +139,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         mAPIService = ApiUtils.getAPIService();
 
-        iv_search = root.findViewById(R.id.iv_search);
         //searchBtn.setTextColor(getResources().getColor(R.color.colorwhite));
         //searchBtn.setBackgroundColor(Color.parseColor(colorActive));
         /*iv_search.setOnClickListener(new View.OnClickListener() {

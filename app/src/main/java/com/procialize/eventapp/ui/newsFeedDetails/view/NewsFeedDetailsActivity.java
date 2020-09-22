@@ -363,7 +363,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
                         if (type.equalsIgnoreCase("Video")) {
                             boolean isPresentFile = false;
-                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY + "/Downloads/");
+                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY );
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
                                 for (int i = 0; i < children.length; i++) {
@@ -397,24 +397,23 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                                 builder.show();
 
                             } else if (isPresentFile) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(NewsFeedDetailsActivity.this);
-                                builder.setTitle("Download and Share");
-                                builder.setMessage("Video will be share only after download,\nDo you want to continue for download and share?");
-                                builder.setNegativeButton("NO",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog,
-                                                                int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                builder.setPositiveButton("YES",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog,
-                                                                int which) {
-                                                new DownloadFile().execute(newsFeedPath/*Constant.newsfeedwall*/ + news_feed_media.get(shareOrSaveImagePosition).getMedia_file());
-                                            }
-                                        });
-                                builder.show();
+                                String folder = Environment.getExternalStorageDirectory().toString() +  Constant.FOLDER_DIRECTORY + "/";
+                                //Create androiddeft folder if it does not exist
+                                File directory = new File(folder);
+                                if (!directory.exists()) {
+                                    directory.mkdirs();
+                                }
+                                strPath = folder + news_feed_media.get(shareOrSaveImagePosition).getMedia_file();
+                                Uri contentUri = FileProvider.getUriForFile(NewsFeedDetailsActivity.this,
+
+                                        BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));
+
+                                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                                sharingIntent.setType("video/*");
+                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
+                                sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+                                sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                                startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
                             }
                         } else {
                             shareImage(newsFeedPath/*Constant.newsfeedwall*/ + news_feed_media.get(shareOrSaveImagePosition).getMedia_file(), NewsFeedDetailsActivity.this);

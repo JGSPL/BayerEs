@@ -17,7 +17,7 @@
     <cn.jzvd.JzvdStd
         android:id="@+id/videoview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="320dp"
         android:layout_centerInParent="true"
         android:screenOrientation="portrait"
         android:visibility="gone" />

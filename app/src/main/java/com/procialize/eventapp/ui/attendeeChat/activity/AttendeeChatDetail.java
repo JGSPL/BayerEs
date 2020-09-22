@@ -106,6 +106,7 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         iv_back.setOnClickListener(this);
 
         CommonFunction.showBackgroundImage(AttendeeChatDetail.this, ll_main);
+        tv_attendee_name.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         ll_send_message.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
@@ -339,6 +340,11 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
                     boolean writeContactpermjission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (readContactPermission && writeContactpermjission) {
 //                        Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_LONG).show();
+                        try {
+                            attendeeDetailsViewModel.saveContact(this, fname + " " + lname, company, mobile, designation, email);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
 
                         Toast.makeText(AttendeeChatDetail.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
