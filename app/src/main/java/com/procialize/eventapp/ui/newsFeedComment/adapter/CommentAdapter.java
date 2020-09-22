@@ -115,6 +115,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
         if(comments.getProfile_picture().trim()!=null)
         {
+
             Glide.with(context)
                     .load(comments.getProfile_picture().trim())
                     .listener(new RequestListener<Drawable>() {
@@ -131,6 +132,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                         }
                     }).into(holder.iv_profile);
         }
+
 
         if (comments.getComment().contains("gif")) {
             //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
@@ -332,14 +334,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
                     /*name1 = "<font color='"+eventColor1 +"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + " " +
                             "<font color='"+eventColor3 +"'>" + stringBuilder + "</font>" ;*/
-
+                    String eventColor4Opacity40 = eventColor3.replace("#", "");
                     holder.tv_name.setMovementMethod(LinkMovementMethod.getInstance());
                     if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
                         holder.tv_name.setText(Html.fromHtml(name1));
-                        holder.tv_name.append(stringBuilder);
+                        String name2 = "<font color='"+Color.parseColor("#66" + eventColor4Opacity40)+"'>" + stringBuilder + " " + "</font>";
+                        holder.tv_name.append(Html.fromHtml(name2));
                     } else {
                         holder.tv_name.setText(Html.fromHtml(name1, Html.FROM_HTML_MODE_LEGACY));   //set text
-                        holder.tv_name.append(stringBuilder);   //append text into textView
+                        String name2 = "<font color='"+Color.parseColor("#66" + eventColor4Opacity40)+"'>" + stringBuilder + " " + "</font>";
+                        holder.tv_name.append(Html.fromHtml(name2));   //append text into textView
                     }
                 } else {
                     //holder.tv_name.setVisibility(View.GONE);
@@ -357,8 +361,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         int color = Color.parseColor( eventColor3);
         holder.iv_options.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.iv_options.setAlpha(150);
+       // holder.tv_name.setAlpha(0.5f);
         holder.ll_root.setBackgroundColor(Color.parseColor(eventColor2));
-        holder.v_divider.setBackgroundColor(Color.parseColor(eventColor3));
+        holder.v_divider.setBackgroundColor(Color.parseColor("#66" + eventColor3Opacity40));
     }
 
     @Override

@@ -1314,7 +1314,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         int color = Color.parseColor(eventColor1);
         moreIV.setColorFilter(Color.parseColor(eventColor3), PorterDuff.Mode.SRC_ATOP);
-        iv_send.setColorFilter(Color.parseColor(eventColor1), PorterDuff.Mode.SRC_ATOP);
+        iv_send.setColorFilter(getResources().getColor(R.color.transperent));
         iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_share.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
@@ -1322,7 +1322,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         iv_likes.setAlpha(180);
         iv_comments.setAlpha(180);
         iv_share.setAlpha(180);
-        iv_send.setAlpha(180);
+       // iv_send.setAlpha(180);
         fl_post_comment.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
         int color4 = Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4));

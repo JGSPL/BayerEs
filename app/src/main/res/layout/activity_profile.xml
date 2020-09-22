@@ -84,6 +84,7 @@
                         android:background="@color/transperent" />
 
                     <View
+                        android:id="@+id/view_down"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -167,6 +168,7 @@
             </FrameLayout>
 
             <LinearLayout
+                android:id="@+id/ll_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
@@ -185,6 +187,7 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:id="@+id/iv_first_name"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
@@ -212,6 +215,7 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:id="@+id/iv_last_name"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
@@ -239,6 +243,7 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:id="@+id/iv_designation"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
@@ -266,6 +271,7 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:id="@+id/iv_company_name"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
@@ -293,6 +299,7 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:id="@+id/iv_city"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
@@ -321,6 +328,7 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:id="@+id/iv_email"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
@@ -350,6 +358,7 @@
                     android:padding="10dp">
 
                     <ImageView
+                        android:id="@+id/iv_mobile"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"

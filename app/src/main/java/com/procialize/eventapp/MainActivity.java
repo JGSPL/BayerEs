@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
@@ -71,6 +73,7 @@ import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.eventapp.ui.quiz.view.QuizFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +83,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.eventapp.Constants.Constant.FOLDER_DIRECTORY;
 import static com.procialize.eventapp.Utility.Constant.colorunselect;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
@@ -429,6 +433,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
             case R.id.tr_switch_event:
+                String root = Environment.getExternalStorageDirectory().toString();
+                File myDir = new File(root + "/" + FOLDER_DIRECTORY);
+                if (!myDir.exists()) {
+                    myDir.mkdirs();
+                }
+                String name = "background.jpg";
+                File fdelete = new File(Uri.parse(myDir+"/"+name).getPath());
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        System.out.println("file Deleted :" + Uri.parse(myDir+"/"+name).getPath());
+                    } else {
+                        System.out.println("file not Deleted :" + Uri.parse(myDir+"/"+name).getPath());
+                    }
+                }
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 SessionManager.clearCurrentEvent(MainActivity.this);

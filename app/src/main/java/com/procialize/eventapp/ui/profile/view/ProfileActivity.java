@@ -68,6 +68,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
@@ -92,9 +93,11 @@ import static com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewMo
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int RequestPermissionCode = 101;
-    LinearLayout ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobile, ll_main;
+    LinearLayout ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobile, ll_main,ll_bg;
     EditText et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile;
+    ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
+    View view_down;
     TextView tv_profile_pic, tv_header;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
@@ -130,6 +133,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         progressView = findViewById(R.id.progressView);
         ll_main = findViewById(R.id.ll_main);
+        ll_bg = findViewById(R.id.ll_bg);
         ll_name = findViewById(R.id.ll_name);
         ll_last_name = findViewById(R.id.ll_last_name);
         ll_designation = findViewById(R.id.ll_designation);
@@ -138,6 +142,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         ll_email = findViewById(R.id.ll_email);
         ll_mobile = findViewById(R.id.ll_mobile);
         iv_back = findViewById(R.id.iv_back);
+        view_down = findViewById(R.id.view_down);
 
         iv_profile = findViewById(R.id.iv_profile);
         iv_change_profile = findViewById(R.id.iv_change_profile);
@@ -148,6 +153,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         et_city = findViewById(R.id.et_city);
         et_email = findViewById(R.id.et_email);
         et_mobile = findViewById(R.id.et_mobile);
+        iv_first_name = findViewById(R.id.iv_first_name);
+        iv_last_name = findViewById(R.id.iv_last_name);
+        iv_designation = findViewById(R.id.iv_designation);
+        iv_company_name = findViewById(R.id.iv_company_name);
+        iv_city = findViewById(R.id.iv_city);
+        iv_email = findViewById(R.id.iv_email);
+        iv_mobile = findViewById(R.id.iv_mobile);
         tv_profile_pic = findViewById(R.id.tv_profile_pic);
         tv_header = findViewById(R.id.tv_header);
 
@@ -156,11 +168,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         iv_change_profile.setOnClickListener(this);
         iv_back.setOnClickListener(this);
 
-        btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        btn_save.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
-        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
-
-        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        setDynamicColor();
 
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
@@ -863,5 +871,34 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         return inSampleSize;
+    }
+
+    public void setDynamicColor()
+    {
+        btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        ll_bg.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
+        view_down.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
+        btn_save.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+
+        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+
+        iv_first_name.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)), PorterDuff.Mode.SRC_ATOP);
+        iv_last_name.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)), PorterDuff.Mode.SRC_ATOP);
+        iv_designation.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)), PorterDuff.Mode.SRC_ATOP);
+        iv_company_name.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)), PorterDuff.Mode.SRC_ATOP);
+        iv_city.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)), PorterDuff.Mode.SRC_ATOP);
+        iv_email.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)), PorterDuff.Mode.SRC_ATOP);
+        iv_mobile.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)), PorterDuff.Mode.SRC_ATOP);
+
+        et_first_name.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_last_name.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_designation.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_company_name.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_city.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_email.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_mobile.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+
     }
 }
