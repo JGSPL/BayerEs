@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -40,6 +42,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -61,7 +64,9 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
+import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -84,6 +89,7 @@ import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Mention;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
+import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
 import com.procialize.eventapp.ui.tagging.adapter.UsersAdapter;
@@ -91,6 +97,7 @@ import com.procialize.eventapp.ui.tagging.model.TaggingComment;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.Jsoup;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -123,7 +130,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         CommentAdapter.CommentAdapterListner, QueryListener, SuggestionsListener {
 
     private static final String API_KEY = "TVG20YJW1MXR";
-    ImageView iv_gif, iv_back_gif, iv_likes, iv_comments, iv_share, iv_profile, iv_back;
+    ImageView iv_gif, iv_back_gif, iv_likes, iv_comments, iv_share, iv_profile, iv_back, moreIV, iv_send;
     EditText et_comment, et_search_gif;
     FrameLayout fl_gif_container, fl_post_comment;
     LinearLayout ll_comment_container, ll_media_dots, ll_main, ll_root;
@@ -153,12 +160,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private Mentions mentions;
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
     List<TableAttendee> attendeeList = null;
-
+    private static NewsfeedRepository newsRepository;
+    Dialog  myDialog;
+    String spannedString;
+    String postStatus ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
+        newsRepository = NewsfeedRepository.getInstance();
         //Call Refresh token
         new RefreashToken(this).callGetRefreashToken(this);
 
@@ -193,6 +204,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_header = findViewById(R.id.tv_header);
         iv_back = findViewById(R.id.iv_back);
         iv_gif = findViewById(R.id.iv_gif);
+        iv_send = findViewById(R.id.iv_send);
+        moreIV = findViewById(R.id.moreIV);
         iv_likes = findViewById(R.id.iv_likes);
         iv_profile = findViewById(R.id.iv_profile);
         iv_comments = findViewById(R.id.iv_comments);
@@ -224,7 +237,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         textData = findViewById(R.id.textData);
         v_divider = findViewById(R.id.v_divider);
         tv_no_of_likes.setOnClickListener(this);
+        moreIV.setOnClickListener(this);
         CommonFunction.showBackgroundImage(this, ll_main);
+
 
         iv_share.setOnClickListener(this);
         iv_back_gif.setOnClickListener(this);
@@ -243,14 +258,34 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
         try {
-            String postStatus = newsfeed_detail.getPost_status().trim();
+            /*String postStatus = newsfeed_detail.getPost_status().trim();
             if (!postStatus.trim().isEmpty()) {
                 tv_status.setText(postStatus);
                 tv_status.setVisibility(View.VISIBLE);
             } else {
                 tv_status.setVisibility(View.GONE);
             }
-            testdataPost.setText(postStatus);
+            testdataPost.setText(postStatus);*/
+
+            /**
+             * Code for HTML text + Tagging
+             */
+            if (newsfeed_detail.getPost_status().contains("\n")) {
+                postStatus = newsfeed_detail.getPost_status().trim().replace("\n", "<br/>");
+            } else {
+                postStatus = newsfeed_detail.getPost_status().trim();
+            }
+            spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+                testdataPost.setText(Utility.trimTrailingWhitespace(strPost));
+            }else
+            {
+                Spanned strPost = Html.fromHtml(spannedString);
+                testdataPost.setText(Utility.trimTrailingWhitespace(strPost));
+            }
+
             final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(testdataPost.getText());
             if (newsfeed_detail.getPost_status() != null) {
 
@@ -529,6 +564,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 @Override
                 public void onChanged(Comment comment) {
                     if (comment != null) {
+                        commentList.clear();
                         commentList = comment.getCommentDetails();
                         setupCommentAdapter(commentList);
                         showCommentCount(commentList);
@@ -708,7 +744,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         iv_likes.setImageDrawable(getDrawable(R.drawable.ic_active_like));
 
                                         newsfeed_detail.setLike_flag("1");
-                                        newsfeed_detail.setTotal_likes(Integer.parseInt(noOfLikes) + 1+"");
+                                        newsfeed_detail.setTotal_likes(Integer.parseInt(noOfLikes) + 1 + "");
 
                                         noOfLikes = "0";
                                         likeStatus = "";
@@ -834,6 +870,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
                 break;
+            case R.id.moreIV:
+                openMoreDetails(newsfeed_detail);
+                break;
         }
     }
 
@@ -912,7 +951,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    public void openMoreOptions(Activity activity, final Newsfeed_detail newsfeed_detail, final CommentDetail commentDetail, final int position, final LinearLayout ll_main) {
+    public void openMoreOptions(Activity activity, final Newsfeed_detail newsfeed_detail, final CommentDetail commentDetail,
+                                final int position, final LinearLayout ll_main) {
         dialog = new BottomSheetDialog(activity);
         dialog.setContentView(R.layout.botomcommentdialouge);
         TextView reportTv = dialog.findViewById(R.id.reportTv);
@@ -1022,11 +1062,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Button cancelbtn = contentDialog.findViewById(R.id.canclebtn);
         Button ratebtn = contentDialog.findViewById(R.id.ratebtn);
 
-        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_1)));
-        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_1)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_1)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_1)));
 
-        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_4)));
-        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_4)));
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4)));
 
         final EditText etmsg = contentDialog.findViewById(R.id.etmsg);
 
@@ -1130,7 +1170,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
     }
-
 
     private void shareTextUrl(String data, String url) {
         Intent share = new Intent(Intent.ACTION_SEND);
@@ -1274,15 +1313,17 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         v_divider.setBackgroundColor(Color.parseColor("#66" + eventColor3Opacity40));
 
         int color = Color.parseColor(eventColor1);
-        //moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        moreIV.setColorFilter(Color.parseColor(eventColor3), PorterDuff.Mode.SRC_ATOP);
+        iv_send.setColorFilter(Color.parseColor(eventColor1), PorterDuff.Mode.SRC_ATOP);
         iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_share.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        //moreIV.setAlpha(150);
+        moreIV.setAlpha(150);
         iv_likes.setAlpha(180);
         iv_comments.setAlpha(180);
         iv_share.setAlpha(180);
-
+        iv_send.setAlpha(180);
+        fl_post_comment.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
         int color4 = Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4));
         iv_back.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
@@ -1386,10 +1427,222 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         return commentTextView.getText().toString();
     }
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         JzvdStd.releaseAllVideos();
+    }
+
+    //------------------Open More dot features------------------
+    public void openMoreDetails(final Newsfeed_detail feed) {
+        ATTENDEE_STATUS = SharedPreference.getPref(this, IS_GOD);
+        ATTENDEE_ID = SharedPreference.getPref(this, KEY_ATTENDEE_ID);
+        dialog = new BottomSheetDialog(this);
+        dialog.setContentView(R.layout.botomfeeddialouge);
+
+        TextView reportTv = dialog.findViewById(R.id.reportTv);
+        TextView hideTv = dialog.findViewById(R.id.hideTv);
+        TextView deleteTv = dialog.findViewById(R.id.deleteTv);
+        TextView reportuserTv = dialog.findViewById(R.id.reportuserTv);
+        TextView cancelTv = dialog.findViewById(R.id.cancelTv);
+
+        if (ATTENDEE_STATUS.equalsIgnoreCase("1")) {
+            reportTv.setVisibility(View.VISIBLE);
+            hideTv.setVisibility(View.VISIBLE);
+            deleteTv.setVisibility(View.VISIBLE);
+            reportuserTv.setVisibility(View.VISIBLE);
+            cancelTv.setVisibility(View.VISIBLE);
+        } else {
+            if (ATTENDEE_ID.equalsIgnoreCase(feed.getAttendee_id())) {
+                reportTv.setVisibility(View.GONE);
+                hideTv.setVisibility(View.GONE);
+                reportuserTv.setVisibility(View.GONE);
+                deleteTv.setVisibility(View.VISIBLE);
+                cancelTv.setVisibility(View.VISIBLE);
+            } else {
+                reportTv.setVisibility(View.VISIBLE);
+                hideTv.setVisibility(View.VISIBLE);
+                reportuserTv.setVisibility(View.VISIBLE);
+                deleteTv.setVisibility(View.GONE);
+                cancelTv.setVisibility(View.VISIBLE);
+            }
+        }
+
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        reportTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showratedialouge(v.getContext(),api_token,"reportPost", feed.getNews_feed_id(),feed.getAttendee_id(),event_id);
+            }
+        });
+        hideTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ConnectionDetector.getInstance(CommentActivity.this).isConnectingToInternet()) {
+                   newsRepository.PostHide(api_token,event_id, feed.getNews_feed_id());
+                    newsRepository.getPostActivity().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
+                        @Override
+                        public void onChanged(LoginOrganizer loginOrganizer) {
+                            if (loginOrganizer != null) {
+                                List<Header> heaserList = loginOrganizer.getHeader();
+                                Utility.createShortSnackBar(ll_main,heaserList.get(0).getMsg());
+                                dialog.cancel();
+                                startActivity(new Intent(CommentActivity.this, MainActivity.class));
+                                finish();
+                            }
+                        }
+                    });
+                } else {
+                    dialog.cancel();
+                    Utility.createShortSnackBar(ll_main,"No Internet Connection");
+                }
+            }
+        });
+        deleteTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ConnectionDetector.getInstance(CommentActivity.this).isConnectingToInternet()) {
+                    newsRepository.DeletePost(api_token, event_id, feed.getNews_feed_id());
+                    newsRepository.getPostActivity().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
+                        @Override
+                        public void onChanged(LoginOrganizer loginOrganizer) {
+                        if (loginOrganizer != null) {
+                            List<Header> heaserList = loginOrganizer.getHeader();
+                            Utility.createShortSnackBar(ll_main, heaserList.get(0).getMsg());
+                            dialog.cancel();
+                            startActivity(new Intent(CommentActivity.this, MainActivity.class));
+                            finish();
+                        }
+                        }
+                    });
+                } else {
+                    dialog.cancel();
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection");
+                }
+            }
+        });
+        reportuserTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showratedialouge(v.getContext(),api_token,"reportUser", feed.getNews_feed_id(),feed.getAttendee_id(),event_id);
+            }
+        });
+        dialog.show();
+    }
+
+    private void showratedialouge(Context context,final String api_token, final String from, 
+                                  final String newsfeedIdId, final String attnId, final String eventId) {
+
+        myDialog = new Dialog(CommentActivity.this);
+        myDialog.setContentView(R.layout.dialouge_msg_layout);
+        myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
+        myDialog.show();
+
+        Button cancelbtn = myDialog.findViewById(R.id.canclebtn);
+        Button ratebtn = myDialog.findViewById(R.id.ratebtn);
+
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
+
+        final EditText etmsg = myDialog.findViewById(R.id.etmsg);
+        final TextView counttv = myDialog.findViewById(R.id.counttv);
+        final TextView nametv = myDialog.findViewById(R.id.nametv);
+
+        nametv.setText("To " + "Admin");
+
+        etmsg.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                count = 250 - s.length();
+                counttv.setText(count + "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.hideKeyboard(v);
+                myDialog.dismiss();
+            }
+        });
+
+        ratebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                if (etmsg.getText().toString().length() > 0) {
+                    String msg = StringEscapeUtils.escapeJava(etmsg.getText().toString());
+                    dialog.cancel();
+                    Utility.hideKeyboard(v);
+                    if (from.equalsIgnoreCase("reportPost")) {
+                        if (ConnectionDetector.getInstance(CommentActivity.this).isConnectingToInternet()) {
+                            newsRepository.ReportPost(api_token,eventId, newsfeedIdId, msg);
+                            newsRepository.getPostActivity().observe((LifecycleOwner) CommentActivity.this, new Observer<LoginOrganizer>() {
+                                @Override
+                                public void onChanged(LoginOrganizer loginOrganizer) {
+                                    if (loginOrganizer != null) {
+                                        List<Header> heaserList = loginOrganizer.getHeader();
+                                        Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
+                                        myDialog.cancel();
+                                        Utility.hideKeyboard(v);
+                                        startActivity(new Intent(CommentActivity.this,MainActivity.class));
+                                        finish();
+                                    }
+                                }
+                            });
+                        } else {
+                            Utility.hideKeyboard(v);
+                            myDialog.cancel();
+                            Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
+                        }
+                    }
+                    else if (from.equalsIgnoreCase("reportUser")) {
+                        if (ConnectionDetector.getInstance(CommentActivity.this).isConnectingToInternet()) {
+                            Utility.hideKeyboard(v);
+                            newsRepository.ReportUser(api_token,eventId, attnId,newsfeedIdId, msg);
+                            newsRepository.getPostActivity().observe((LifecycleOwner) CommentActivity.this, new Observer<LoginOrganizer>() {
+                                @Override
+                                public void onChanged(LoginOrganizer loginOrganizer) {
+                                    if (loginOrganizer != null) {
+                                        List<Header> heaserList = loginOrganizer.getHeader();
+                                        Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
+                                        myDialog.cancel();
+                                        Utility.hideKeyboard(v);
+                                        startActivity(new Intent(CommentActivity.this,MainActivity.class));
+                                        finish();
+                                    }
+                                }
+                            });
+                        } else {
+                            myDialog.cancel();
+                            Utility.hideKeyboard(v);
+                            Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
+                        }
+                    }
+                }
+                else {
+                    Utility.createShortSnackBar(NewsFeedFragment.cl_main, "Enter Something");
+                }
+            }
+        });
     }
 }

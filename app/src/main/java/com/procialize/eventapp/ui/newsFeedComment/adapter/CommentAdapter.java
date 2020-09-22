@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -41,6 +43,7 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -51,6 +54,7 @@ import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +76,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
     CommentAdapterListner listener;
     String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
+    String spannedString;
+    String postStatus ;
+
     public CommentAdapter(Context context, List<CommentDetail> commentDetails, CommentAdapterListner listener) {
         this.context = context;
         this.commentDetails = commentDetails;
@@ -97,9 +104,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         //Newsfeed_detail feedData = feed_detail.get(position);
         CommentDetail comments = commentDetails.get(position);
 
+        if(position+1==commentDetails.size())
+        {
+            holder.v_divider.setVisibility(View.GONE);
+        }
+        else
+            {
+            holder.v_divider.setVisibility(View.VISIBLE);
+        }
+
         if(comments.getProfile_picture().trim()!=null)
         {
-
             Glide.with(context)
                     .load(comments.getProfile_picture().trim())
                     .listener(new RequestListener<Drawable>() {
@@ -117,8 +132,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                     }).into(holder.iv_profile);
         }
 
-        //holder.tv_name.setText(comments.getFirst_name()+" "+comments.getLast_name()+" "+comments.getComment());
-        //String name1 = "<font color='"+colorActive+"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
         if (comments.getComment().contains("gif")) {
             //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
             name1 = "<font color='"+eventColor1+"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
@@ -150,8 +163,28 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
             holder.fl_gif.setVisibility(View.GONE);
 
             try {
-                
-                holder.testdata.setText(StringEscapeUtils.unescapeJava(comments.getComment()));
+
+                /**
+                 * Code for HTML text + Tagging
+                 */
+                if (comments.getComment().contains("\n")) {
+                    postStatus = comments.getComment().trim().replace("\n", "<br/>");
+                } else {
+                    postStatus = comments.getComment().trim();
+                }
+                spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+                    holder.testdata.setText(Utility.trimTrailingWhitespace(strPost));
+                }else
+                {
+                    Spanned strPost = Html.fromHtml(spannedString);
+                    holder.testdata.setText(Utility.trimTrailingWhitespace(strPost));
+                }
+
+
+                //holder.testdata.setText(StringEscapeUtils.unescapeJava(comments.getComment()));
 
                 final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
                 if (comments.getComment() != null) {
@@ -316,14 +349,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
 
         }
-        /*holder.tv_name.setMovementMethod(LinkMovementMethod.getInstance());
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
-            holder.tv_name.setText(Html.fromHtml(name1));
-            //holder.tv_name.append(stringBuilder);
-        } else {
-            holder.tv_name.setText(Html.fromHtml(name1, Html.FROM_HTML_MODE_LEGACY));   //set text
-            // holder.tv_name.append(stringBuilder);   //append text into textView
-        }*/
+
         holder.tv_date_time.setText(CommonFunction.convertDate(comments.getDateTime()));
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");

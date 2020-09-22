@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,7 +41,6 @@ import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -51,10 +49,8 @@ import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.RecyclerItemClickListener;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
-import com.procialize.eventapp.ui.newsFeedLike.model.AttendeeList;
 import com.procialize.eventapp.ui.newsFeedPost.adapter.ViewPagerMultimediaAdapter;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
-import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.viewModel.PostNewsFeedViewModel;
 import com.procialize.eventapp.ui.newsfeed.model.Mention;
 import com.procialize.eventapp.ui.tagging.adapter.UsersAdapter;
@@ -62,10 +58,8 @@ import com.procialize.eventapp.ui.tagging.model.TaggingComment;
 import com.yanzhenjie.album.AlbumFile;
 
 import java.io.File;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -77,11 +71,11 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
-public class PostNewActivity extends AppCompatActivity implements View.OnClickListener , QueryListener, SuggestionsListener {
+public class PostNewActivity extends AppCompatActivity implements View.OnClickListener, QueryListener, SuggestionsListener {
 
-    LinearLayout ll_upload_media, ll_media_dots, linear,ll_info;
+    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info,ll_post;
     EditText et_post;
-    TextView btn_post, tv_count,tv_name,txtUploadImg,tv_header,tv_total_count,textData;
+    TextView btn_post, tv_count, tv_name, txtUploadImg, tv_header, tv_total_count, textData;
     PostNewsFeedViewModel postNewsFeedViewModel;
     ArrayList<SelectedImages> resultList = new ArrayList<>();
     private ArrayList<AlbumFile> mAlbumFiles = new ArrayList<>();//Array For selected images and videos
@@ -93,12 +87,13 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     private int dotscount;
     ConnectionDetector cd;
     EventAppDB eventAppDB;
-    ImageView iv_back,iv_profile,imguploadimg;
-    String event_id, api_token, postText ="" ;
+    ImageView iv_back, iv_profile, imguploadimg;
+    String event_id, api_token, postText = "";
     UsersAdapter usersAdapter;
     private Mentions mentions;
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
     List<TableAttendee> attendeeList = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +115,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         iv_profile = findViewById(R.id.iv_profile);
         ll_media_dots = findViewById(R.id.ll_media_dots);
         ll_info = findViewById(R.id.ll_info);
+        ll_post = findViewById(R.id.ll_post);
         linear = findViewById(R.id.linear);
         btn_post = findViewById(R.id.btn_post);
         tv_count = findViewById(R.id.tv_count);
@@ -139,7 +135,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         String lName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
         String designation = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_DESIGNATION);
         String city = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_CITY);
-        tv_name.setText(fName + " "+lName);
+        tv_name.setText(fName + " " + lName);
         Glide.with(PostNewActivity.this)
                 .load(profilePic)
                 .listener(new RequestListener<Drawable>() {
@@ -162,13 +158,15 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 tv_count.setText(String.valueOf(s.length()));
-                /*if (s.length() > 0) {
-                    btn_post.setTextColor(getResources().getColor(R.color.white));
-                    btn_post.setBackgroundColor(Color.parseColor(colorActive));
+                if (s.length() > 0 || resultList.size()>0) {
+                    btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+                    btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                    ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
                 } else {
-                    btn_post.setTextColor(Color.parseColor(colorActive));
-                    btn_post.setBackgroundColor(getResources().getColor(R.color.white));
-                }*/
+                    btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                    btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+                    ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                }
             }
 
             @Override
@@ -242,8 +240,6 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                 if (from != null) {
                                     postNewsFeedViewModel.copyFile(mAlbumFiles.get(j).getPath(), from.getName(), moviesDir.toString());
                                 }
-
-
                                 try {
                                     thumb = new File(moviesDir + "/" + from.getName());
                                     if (moviesDir.exists()) {
@@ -255,8 +251,6 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                     e.printStackTrace();
                                     thumb = new File(mAlbumFiles.get(j).getPath());
                                 }
-
-
                             } else {
                                 strMediaType = "image";
                                 Random r = new Random();
@@ -286,7 +280,6 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                     thumb = new File(mAlbumFiles.get(j).getPath());
                                 }
                             }
-
                             resultList.add(new SelectedImages(tovideo.getPath(),
                                     tovideo.getPath(), mAlbumFiles.get(j).getThumbPath(), false, strMediaType, mAlbumFiles.get(j).getMimeType()));
                             if (mAlbumFiles.get(j).getMediaType() == AlbumFile.TYPE_VIDEO) {
@@ -297,15 +290,16 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     }
 
                     try {
-                        Log.d("Result List Size", "" + resultList.size());
-                            /*if (videoPositionArray.size() > 0) {
-                                if (mAlbumFiles.get(videoPositionArray.get(0)).getMediaType() == AlbumFile.TYPE_VIDEO) {
-                                    String strPath = mAlbumFiles.get(videoPositionArray.get(0)).getPath();
-                                    executeCutVideoCommand(startMsForVideoCutting, endMsForVideoCutting, Uri.parse(strPath), videoPositionArray.get(0));
-                                }
-                            } else {*/
+                        if (resultList.size() > 0) {
+                            btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+                            btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                            ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+                        } else {
+                            btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                            btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+                            ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                        }
                         setPagerAdapter(resultList);
-                        //}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -410,9 +404,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void setPagerAdapter(List<SelectedImages> resultList) {
-        for (int j=0;j<resultList.size();j++)
-        {
-            Log.d("path",resultList.get(j).getmPath());
+        for (int j = 0; j < resultList.size(); j++) {
+            Log.d("path", resultList.get(j).getmPath());
         }
         viewPagerAdapter = new ViewPagerMultimediaAdapter(PostNewActivity.this, resultList);
         viewPagerAdapter.notifyDataSetChanged();
@@ -464,25 +457,25 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void setDynamicColor()
-    {
+    private void setDynamicColor() {
         CommonFunction.showBackgroundImage(this, linear);
-        ll_info.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_2)));
-        tv_name.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1)));
-        ll_upload_media.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1)));
+        ll_info.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
+        tv_name.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+        ll_upload_media.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
 
-        txtUploadImg.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1)));
-        tv_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_3)));
-        tv_total_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_3)));
-        btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1)));
-        btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_4)));
+        txtUploadImg.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+        tv_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_3)));
+        tv_total_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_3)));
+        btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+        btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+        ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
 
-        int color1 = Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_1));
+        int color1 = Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1));
         imguploadimg.setColorFilter(color1, PorterDuff.Mode.SRC_ATOP);
 
-        int color4 = Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_4));
+        int color4 = Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4));
         iv_back.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
-        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this,EVENT_COLOR_4)));
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
     }
 
     //Tagging Functionality
@@ -493,7 +486,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         mentionsList.setLayoutManager(new LinearLayoutManager(this));
         usersAdapter = new UsersAdapter(this);
         mentionsList.setAdapter(usersAdapter);
-        InputMethodManager inputManager = ( InputMethodManager ) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
         // set on item click listener
         mentionsList.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
@@ -518,12 +511,11 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onQueryReceived(String s) {
-        postNewsFeedViewModel.searchUsers(s,attendeeList);
-        postNewsFeedViewModel.getAttendeeList().observe(this,new Observer<List<TableAttendee>>() {
+        postNewsFeedViewModel.searchUsers(s, attendeeList);
+        postNewsFeedViewModel.getAttendeeList().observe(this, new Observer<List<TableAttendee>>() {
             @Override
             public void onChanged(List<TableAttendee> tableAttendees) {
-                if(tableAttendees!=null && !tableAttendees.isEmpty())
-                {
+                if (tableAttendees != null && !tableAttendees.isEmpty()) {
                     ArrayList<String> arr = new ArrayList<String>(tableAttendees.size());
                     for (int j = 0; j < tableAttendees.size(); j++) {
                         arr.add(tableAttendees.get(j).getAttendee_id());
@@ -542,11 +534,9 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     }
                     usersAdapter.clear();
                     usersAdapter.addAll(tableAttendees);
-                    postNewsFeedViewModel.showMentionsList(PostNewActivity.this,true);
-                }
-                else
-                {
-                    postNewsFeedViewModel.showMentionsList(PostNewActivity.this,false);
+                    postNewsFeedViewModel.showMentionsList(PostNewActivity.this, true);
+                } else {
+                    postNewsFeedViewModel.showMentionsList(PostNewActivity.this, false);
                 }
                 if (postNewsFeedViewModel != null && postNewsFeedViewModel.getAttendeeList().hasObservers()) {
                     postNewsFeedViewModel.getAttendeeList().removeObservers(PostNewActivity.this);

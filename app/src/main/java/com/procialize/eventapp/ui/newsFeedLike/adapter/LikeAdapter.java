@@ -21,8 +21,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
-import com.procialize.eventapp.ui.newsFeedLike.model.AttendeeList;
-import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
 
 import java.util.List;
@@ -34,7 +32,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 
 
-public class LikeAdapter  extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> {
+public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> {
 
     private List<LikeDetail> likeDetails;
     private Context context;
@@ -45,7 +43,8 @@ public class LikeAdapter  extends RecyclerView.Adapter<LikeAdapter.MyViewHolder>
         public ImageView iv_profile;
         ProgressBar pb_profile;
         LinearLayout ll_main;
-View v_divider;
+        View v_divider;
+
         public MyViewHolder(View view) {
             super(view);
             tv_name = view.findViewById(R.id.tv_name);
@@ -79,6 +78,12 @@ View v_divider;
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         LikeDetail likeDetail = likeDetails.get(position);
+
+        if (position + 1 == likeDetails.size()) {
+            holder.v_divider.setVisibility(View.GONE);
+        } else {
+            holder.v_divider.setVisibility(View.VISIBLE);
+        }
 
         if (likeDetail.getProfile_picture() != null) {
             Glide.with(context).load(likeDetail.getProfile_picture().trim()).listener(new RequestListener<Drawable>() {

@@ -5,8 +5,8 @@
     android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@mipmap/bg_1"
+    android:orientation="vertical"
     tools:context=".ui.eventList.view.EventListActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -59,9 +59,9 @@
                     android:layout_height="30dp"
                     android:layout_gravity="left"
                     android:contentDescription=" "
+                    android:padding="@dimen/margin"
                     android:src="@drawable/ic_logout"
-                    android:visibility="invisible"
-                    android:padding="@dimen/margin" />
+                    android:visibility="invisible" />
 
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -70,33 +70,34 @@
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/edit_white"
-        android:padding="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="1dp">
-
+        android:layout_marginBottom="1dp"
+        android:background="@drawable/edit_white"
+        android:padding="10dp">
 
 
         <EditText
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/search_event_here"
-            android:imeOptions="actionDone"
-            android:background="@color/transperent"
-            android:textColor="@color/black"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
+            android:background="@color/transperent"
+            android:hint="@string/search_event_here"
+            android:imeOptions="actionDone"
+            android:textColor="@color/black"
             android:textSize="@dimen/textsizesmall" />
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_search" />
+            android:src="@drawable/ic_search"
+            android:tint="@color/textcolorLight" />
     </TableRow>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
@@ -104,11 +105,12 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_event_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        tools:listitem="@layout/recycler_item_event_list"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_event_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            tools:listitem="@layout/recycler_item_event_list" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

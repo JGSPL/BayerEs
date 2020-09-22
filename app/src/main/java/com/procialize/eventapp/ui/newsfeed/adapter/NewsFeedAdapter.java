@@ -9,6 +9,7 @@ import android.os.Build;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -51,6 +52,7 @@ import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +80,8 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
     private boolean isLoadingAdded = false;
     String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
     String substring;
+    String spannedString;
+    String postStatus;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
 
     public NewsFeedAdapter() {
@@ -114,13 +118,20 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         final Newsfeed_detail feedData = feed_detail.get(position);
         try {
 
-            setDynamicColor(holder);
-
-            if (feedData.getFirst_name().equalsIgnoreCase("null") || (feedData.getFirst_name().equalsIgnoreCase("") || (feedData == null))) {
+            if (position + 1 == getNewsFeedList().size()) {
                 holder.root.setVisibility(View.GONE);
             } else {
                 holder.root.setVisibility(View.VISIBLE);
             }
+            /*if (feedData.getFirst_name().equalsIgnoreCase("null") || (feedData.getFirst_name().equalsIgnoreCase("") || (feedData == null))) {
+                holder.root.setVisibility(View.GONE);
+            } else {
+                holder.root.setVisibility(View.VISIBLE);
+            }*/
+
+            setDynamicColor(holder);
+
+
             mediaPath = SharedPreference.getPref(context, NEWS_FEED_MEDIA_PATH);
 
 
@@ -302,22 +313,29 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                             }
                         });
                     } else {
-                        holder.ll_dots.setVisibility(View.GONE);
+                        holder.ll_dots.setVisibility(View.INVISIBLE);
                     }
                 } else /*if (feedData.getNews_feed_media().size() == 0)*/ {
-                    holder.ll_dots.setVisibility(View.GONE);
+                    holder.ll_dots.setVisibility(View.INVISIBLE);
                     holder.vp_slider.setVisibility(View.GONE);
                 }
             }
+            /**
+             * Code for HTML text + Tagging
+             */
+            if (feedData.getPost_status().contains("\n")) {
+                postStatus = feedData.getPost_status().trim().replace("\n", "<br/>");
+            } else {
+                postStatus = feedData.getPost_status().trim();
+            }
+            spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
 
-            if(feedData.getPost_status().contains("<p>")) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    holder.testdata.setText(Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT));
-                } else {
-                    holder.testdata.setText(Html.fromHtml(feedData.getPost_status()));
-                }
-            }else {
-                holder.testdata.setText(StringEscapeUtils.unescapeJava(feedData.getPost_status()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+                holder.testdata.setText(Utility.trimTrailingWhitespace(strPost));
+            } else {
+                Spanned strPost = Html.fromHtml(spannedString);
+                holder.testdata.setText(Utility.trimTrailingWhitespace(strPost));
             }
 
             final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
@@ -328,6 +346,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 } else {
                     holder.tv_status.setVisibility(View.VISIBLE);
                 }
+
                 int flag = 0;
                 for (int i = 0; i < stringBuilder.length(); i++) {
                     String sample = stringBuilder.toString();
@@ -464,6 +483,10 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             } else {
                 holder.tv_status.setVisibility(View.GONE);
             }
+           /* }else
+            {
+                holder.tv_status.setText(holder.testdata.getText());
+            }*/
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -638,7 +661,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         holder.v_divider.setBackgroundColor(Color.parseColor("#8C" + eventColor3Opacity40));
 
         int color = Color.parseColor(eventColor1);
-        holder.moreIV.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        holder.moreIV.setColorFilter(Color.parseColor(eventColor3), PorterDuff.Mode.SRC_ATOP);
         holder.iv_like.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.iv_share.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);

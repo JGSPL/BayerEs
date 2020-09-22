@@ -24,7 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -46,14 +45,11 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
-import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
-import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
@@ -75,9 +71,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
@@ -119,8 +113,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     LinearLayoutManager linearLayoutManager;
     private APIService newsfeedApi;
     String noOfLikes = "0";
-    String likeStatus="";
-    String strPath="", mediaPath="";
+    String likeStatus = "";
+    String strPath = "", mediaPath = "";
     NewsFeedAdapter adapter;
     private List<UploadMultimedia> mediaList;
 
@@ -182,26 +176,30 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                newsfeedAdapter.getNewsFeedList().clear();
+                newsfeedAdapter.notifyDataSetChanged();
                 feedrefresh.setRefreshing(false);
                 if (connectionDetector.isConnectingToInternet()) {
+                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                        newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                    }
                     currentPage = PAGE_START;
                     init();
-                }
-                else
-                {
+                } else {
                     Utility.createShortSnackBar(cl_main, "No Internet Connection");
                 }
             }
         });
+        //getDataFromDb();
         if (connectionDetector.isConnectingToInternet()) {
-            newsfeedAdapter.getNewsFeedList().clear();
-            newsfeedAdapter.notifyDataSetChanged();
+           /* newsfeedAdapter.getNewsFeedList().clear();
+            newsfeedAdapter.notifyDataSetChanged();*/
             if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                 newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
             }
             init();
             feedrefresh.setRefreshing(false);
-        }else {
+        } else {
             getDataFromDb();
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -213,7 +211,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             }, 100);
         }
 
-            //showDataOfUploadingFromLocalDB();
+        //showDataOfUploadingFromLocalDB();
 
         recycler_feed.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
@@ -243,18 +241,21 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         String colorFour = SharedPreference.getPref(getActivity(), EVENT_COLOR_4);
         tv_whats_on_mind.setHintTextColor(Color.parseColor(colorFour));
         tv_whats_on_mind.setAlpha(0.4f);
-
-        newsfeedViewModel.startBackgroundService(getActivity());
-        newsfeedViewModel.getIsUpdating().observe(getActivity(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean aBoolean) {
-                if (aBoolean) {
-                    showProgressBar();
-                } else {
-                    hideProgressBar();
+        EventAppDB eventAppDB = EventAppDB.getDatabase(getActivity());
+        List<UploadMultimedia> mediaListDB = eventAppDB.uploadMultimediaDao().getNonCompressesMultimediaBg();
+        if (mediaListDB.size() > 0) {
+            newsfeedViewModel.startBackgroundService(getActivity());
+            newsfeedViewModel.getIsUpdating().observe(getActivity(), new Observer<Boolean>() {
+                @Override
+                public void onChanged(@Nullable Boolean aBoolean) {
+                    if (aBoolean) {
+                        showProgressBar();
+                    } /*else {
+                        hideProgressBar();
+                    }*/
                 }
-            }
-        });
+            });
+        }
         mReceiver = new UploadMultimediaBackgroundReceiver();
         mFilter = new IntentFilter(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, mFilter);
@@ -272,6 +273,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
+
+            newsfeedAdapter.getNewsFeedList().clear();
+            newsfeedAdapter.notifyDataSetChanged();
 
             newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
             newsfeedViewModel.getNewsRepository().observeForever(new Observer<FetchNewsfeedMultiple>() {
@@ -352,7 +356,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         insertIntoDb(feedList);
                     }
 
-                   if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                         newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
                     }
                     if (currentPage != totalPages) {
@@ -408,75 +412,78 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     public void getDataFromDb() {
         newsFeedDatabaseViewModel.getNewsFeed(getActivity());
-        newsFeedDatabaseViewModel.getNewsFeedList().observeForever( new Observer<List<TableNewsFeed>>() {
+        newsFeedDatabaseViewModel.getNewsFeedList().observeForever(new Observer<List<TableNewsFeed>>() {
             @Override
             public void onChanged(List<TableNewsFeed> tableNewsFeeds) {
-                if (tableNewsFeeds != null) {
-                    if (newsfeedArrayList.size() > 0) {
-                        newsfeedArrayList.clear();
-                    }
-                    for (int i = 0; i < tableNewsFeeds.size(); i++) {
-                        final Newsfeed_detail newsfeed_detail = new Newsfeed_detail();
-                        newsfeed_detail.setNews_feed_id(tableNewsFeeds.get(i).getNews_feed_id());
-                        newsfeed_detail.setType(tableNewsFeeds.get(i).getType());
-                        newsfeed_detail.setPost_status(tableNewsFeeds.get(i).getPost_status());
-                        newsfeed_detail.setEvent_id(tableNewsFeeds.get(i).getEvent_id());
-                        newsfeed_detail.setPost_date(tableNewsFeeds.get(i).getPost_date());
-                        newsfeed_detail.setFirst_name(tableNewsFeeds.get(i).getFirst_name());
-                        newsfeed_detail.setLast_name(tableNewsFeeds.get(i).getLast_name());
-                        newsfeed_detail.setCompany_name(tableNewsFeeds.get(i).getCompany_name());
-                        newsfeed_detail.setDesignation(tableNewsFeeds.get(i).getDesignation());
-                        newsfeed_detail.setCity_id(tableNewsFeeds.get(i).getCity_id());
-                        newsfeed_detail.setProfile_pic(tableNewsFeeds.get(i).getProfile_pic());
-                        newsfeed_detail.setAttendee_id(tableNewsFeeds.get(i).getAttendee_id());
-                        newsfeed_detail.setAttendee_type(tableNewsFeeds.get(i).getAttendee_type());
-                        newsfeed_detail.setLike_flag(tableNewsFeeds.get(i).getLike_flag());
-                        newsfeed_detail.setLike_type(tableNewsFeeds.get(i).getLike_type());
-                        newsfeed_detail.setTotal_likes(tableNewsFeeds.get(i).getTotal_likes());
-                        newsfeed_detail.setTotal_comments(tableNewsFeeds.get(i).getTotal_comments());
-
-
-                        newsFeedDatabaseViewModel.getNewsFeedMedia(getActivity(), tableNewsFeeds.get(i).getNews_feed_id());
-                        newsFeedDatabaseViewModel.getNewsFeedMediaDataList(getActivity(), tableNewsFeeds.get(i).getNews_feed_id()).observe(getActivity(),
-                                new Observer<List<TableNewsFeedMedia>>() {
-                            @Override
-                            public void onChanged(List<TableNewsFeedMedia> tableNewsFeedMedia) {
-                                Log.d("tableNewsFeedMedia_", "tableNewsFeedMedia");
-                                if (tableNewsFeedMedia != null) {
-                                    Log.d("Media_Count", tableNewsFeedMedia.size() + "");
-                                    List<News_feed_media> newsFeedMediaList = new ArrayList<>();
-
-                                    for (int j = 0; j < tableNewsFeedMedia.size(); j++) {
-                                        Log.d("Media_Id", "Position_" + j + "");
-                                        Log.d("Media_file", tableNewsFeedMedia.get(j).getMedia_file());
-                                        News_feed_media news_feed_media = new News_feed_media();
-                                        news_feed_media.setMedia_id(tableNewsFeedMedia.get(j).getMedia_id());
-                                        news_feed_media.setNews_feed_id(tableNewsFeedMedia.get(j).getNews_feed_id());
-                                        news_feed_media.setMedia_type(tableNewsFeedMedia.get(j).getMedia_type());
-                                        news_feed_media.setMedia_file(tableNewsFeedMedia.get(j).getMedia_file());
-                                        news_feed_media.setThumb_image(tableNewsFeedMedia.get(j).getThumb_image());
-                                        news_feed_media.setWidth(tableNewsFeedMedia.get(j).getWidth());
-                                        news_feed_media.setHeight(tableNewsFeedMedia.get(j).getHeight());
-                                        newsFeedMediaList.add(news_feed_media);
-                                    }
-                                    newsfeed_detail.setNews_feed_media(newsFeedMediaList);
-                                }
-                            }
-                        });
-                        newsfeedArrayList.add(i, newsfeed_detail);
-                    }
-                    newsfeedAdapter.addAll(newsfeedArrayList);
-                    if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getNewsFeedList().hasObservers()) {
-                        newsFeedDatabaseViewModel.getNewsFeedList().removeObservers(getActivity());
-                    }
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            setupRecyclerView();
+                try {
+                    if (tableNewsFeeds != null) {
+                        if (newsfeedArrayList.size() > 0) {
+                            newsfeedArrayList.clear();
                         }
-                    }, 100);
+                        for (int i = 0; i < tableNewsFeeds.size(); i++) {
+                            final Newsfeed_detail newsfeed_detail = new Newsfeed_detail();
+                            newsfeed_detail.setNews_feed_id(tableNewsFeeds.get(i).getNews_feed_id());
+                            newsfeed_detail.setType(tableNewsFeeds.get(i).getType());
+                            newsfeed_detail.setPost_status(tableNewsFeeds.get(i).getPost_status());
+                            newsfeed_detail.setEvent_id(tableNewsFeeds.get(i).getEvent_id());
+                            newsfeed_detail.setPost_date(tableNewsFeeds.get(i).getPost_date());
+                            newsfeed_detail.setFirst_name(tableNewsFeeds.get(i).getFirst_name());
+                            newsfeed_detail.setLast_name(tableNewsFeeds.get(i).getLast_name());
+                            newsfeed_detail.setCompany_name(tableNewsFeeds.get(i).getCompany_name());
+                            newsfeed_detail.setDesignation(tableNewsFeeds.get(i).getDesignation());
+                            newsfeed_detail.setCity_id(tableNewsFeeds.get(i).getCity_id());
+                            newsfeed_detail.setProfile_pic(tableNewsFeeds.get(i).getProfile_pic());
+                            newsfeed_detail.setAttendee_id(tableNewsFeeds.get(i).getAttendee_id());
+                            newsfeed_detail.setAttendee_type(tableNewsFeeds.get(i).getAttendee_type());
+                            newsfeed_detail.setLike_flag(tableNewsFeeds.get(i).getLike_flag());
+                            newsfeed_detail.setLike_type(tableNewsFeeds.get(i).getLike_type());
+                            newsfeed_detail.setTotal_likes(tableNewsFeeds.get(i).getTotal_likes());
+                            newsfeed_detail.setTotal_comments(tableNewsFeeds.get(i).getTotal_comments());
 
+
+                            newsFeedDatabaseViewModel.getNewsFeedMedia(getActivity(), tableNewsFeeds.get(i).getNews_feed_id());
+                            newsFeedDatabaseViewModel.getNewsFeedMediaDataList(getActivity(), tableNewsFeeds.get(i).getNews_feed_id()).observe(getActivity(),
+                                    new Observer<List<TableNewsFeedMedia>>() {
+                                        @Override
+                                        public void onChanged(List<TableNewsFeedMedia> tableNewsFeedMedia) {
+                                            Log.d("tableNewsFeedMedia_", "tableNewsFeedMedia");
+                                            if (tableNewsFeedMedia != null) {
+                                                Log.d("Media_Count", tableNewsFeedMedia.size() + "");
+                                                List<News_feed_media> newsFeedMediaList = new ArrayList<>();
+
+                                                for (int j = 0; j < tableNewsFeedMedia.size(); j++) {
+                                                    Log.d("Media_Id", "Position_" + j + "");
+                                                    Log.d("Media_file", tableNewsFeedMedia.get(j).getMedia_file());
+                                                    News_feed_media news_feed_media = new News_feed_media();
+                                                    news_feed_media.setMedia_id(tableNewsFeedMedia.get(j).getMedia_id());
+                                                    news_feed_media.setNews_feed_id(tableNewsFeedMedia.get(j).getNews_feed_id());
+                                                    news_feed_media.setMedia_type(tableNewsFeedMedia.get(j).getMedia_type());
+                                                    news_feed_media.setMedia_file(tableNewsFeedMedia.get(j).getMedia_file());
+                                                    news_feed_media.setThumb_image(tableNewsFeedMedia.get(j).getThumb_image());
+                                                    news_feed_media.setWidth(tableNewsFeedMedia.get(j).getWidth());
+                                                    news_feed_media.setHeight(tableNewsFeedMedia.get(j).getHeight());
+                                                    newsFeedMediaList.add(news_feed_media);
+                                                }
+                                                newsfeed_detail.setNews_feed_media(newsFeedMediaList);
+                                            }
+                                        }
+                                    });
+                            newsfeedArrayList.add(i, newsfeed_detail);
+                        }
+                        newsfeedAdapter.addAll(newsfeedArrayList);
+                        if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getNewsFeedList().hasObservers()) {
+                            newsFeedDatabaseViewModel.getNewsFeedList().removeObservers(getActivity());
+                        }
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                setupRecyclerView();
+                            }
+                        }, 100);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -492,7 +499,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         } else {
             newsfeedAdapter.notifyDataSetChanged();
         }
-
     }
 
     @Override
@@ -530,63 +536,62 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
         //newsfeedViewModel.openLikeimg(getActivity(), api_token, eventid, feed.getNews_feed_id(), v, feed, position, likeimage, liketext);
         noOfLikes = "0";
-       // newsfeedViewModel.PostLike(api_token, eventid, feed.getNews_feed_id());
+        // newsfeedViewModel.PostLike(api_token, eventid, feed.getNews_feed_id());
         newsfeedApi = ApiUtils.getAPIService();
         newsfeedApi.PostLike(api_token, eventid, feed.getNews_feed_id()).enqueue(new Callback<LikePost>() {
-                @Override
-                public void onResponse(Call<LikePost> call,
-                                       Response<LikePost> response) {
-                    if (response.isSuccessful()) {
-                            likeStatus = response.body().getLike_status();
-                            noOfLikes = liketext.getText().toString().split(" ")[0];
-                            if (likeStatus.equalsIgnoreCase("1")) {
-                                //showLikeCount(Integer.parseInt(noOfLikes) + 1);
-                                int LikeCount = Integer.parseInt(noOfLikes) + 1;
-                                if (LikeCount == 1) {
-                                    liketext.setText(LikeCount + " Like");
-                                } else {
-                                    liketext.setText(LikeCount + " Likes");
-                                }
-                                List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
-                                newsfeed_details.get(position).setLike_flag("1");
-                                newsfeed_details.get(position).setTotal_likes(LikeCount+"");
-                                likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_active_like));
-                                noOfLikes = "0";
-                                likeStatus = "";
+            @Override
+            public void onResponse(Call<LikePost> call,
+                                   Response<LikePost> response) {
+                if (response.isSuccessful()) {
+                    likeStatus = response.body().getLike_status();
+                    noOfLikes = liketext.getText().toString().split(" ")[0];
+                    if (likeStatus.equalsIgnoreCase("1")) {
+                        //showLikeCount(Integer.parseInt(noOfLikes) + 1);
+                        int LikeCount = Integer.parseInt(noOfLikes) + 1;
+                        if (LikeCount == 1) {
+                            liketext.setText(LikeCount + " Like");
+                        } else {
+                            liketext.setText(LikeCount + " Likes");
+                        }
+                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                        newsfeed_details.get(position).setLike_flag("1");
+                        newsfeed_details.get(position).setTotal_likes(LikeCount + "");
+                        likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_active_like));
+                        noOfLikes = "0";
+                        likeStatus = "";
+                    } else {
+                        if (Integer.parseInt(noOfLikes) > 0) {
+                            // showLikeCount(Integer.parseInt(noOfLikes) - 1);
+                            int LikeCount = Integer.parseInt(noOfLikes) - 1;
+                            if (LikeCount == 1) {
+                                liketext.setText(LikeCount + " Like");
                             } else {
-                                if (Integer.parseInt(noOfLikes) > 0) {
-                                    // showLikeCount(Integer.parseInt(noOfLikes) - 1);
-                                    int LikeCount = Integer.parseInt(noOfLikes) - 1;
-                                    if (LikeCount == 1) {
-                                        liketext.setText(LikeCount + " Like");
-                                    } else {
-                                        liketext.setText(LikeCount + " Likes");
-                                    }
-                                    likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_like));
-                                    noOfLikes = "0";
-                                    List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
-                                    newsfeed_details.get(position).setLike_flag("0");
-                                    newsfeed_details.get(position).setTotal_likes(LikeCount+"");
-                                }
-                                noOfLikes = "0";
-                                likeStatus = "";
+                                liketext.setText(LikeCount + " Likes");
                             }
-                            Utility.createShortSnackBar(cl_main, response.body().getHeader().get(0).getMsg());
-
-
+                            likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_like));
+                            noOfLikes = "0";
+                            List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                            newsfeed_details.get(position).setLike_flag("0");
+                            newsfeed_details.get(position).setTotal_likes(LikeCount + "");
+                        }
+                        noOfLikes = "0";
+                        likeStatus = "";
                     }
-                }
+                    Utility.createShortSnackBar(cl_main, response.body().getHeader().get(0).getMsg());
 
-                @Override
-                public void onFailure(Call<LikePost> call, Throwable t) {
-                   // liketPostUpdate.setValue(null);
-                    Utility.createShortSnackBar(cl_main, "Failure..");
 
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(Call<LikePost> call, Throwable t) {
+                // liketPostUpdate.setValue(null);
+                Utility.createShortSnackBar(cl_main, "Failure..");
+
+            }
+        });
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -633,13 +638,13 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         newsfeedViewModel.getNewsFeedToUpload().observeForever(new Observer<List<UploadMultimedia>>() {
                             @Override
                             public void onChanged(List<UploadMultimedia> uploadMultimedia) {
-                                if(uploadMultimedia != null) {
+                                if (uploadMultimedia != null) {
                                     String postText = "";
                                     if (uploadMultimedia.size() > 0) {
                                         postText = uploadMultimedia.get(0).getPost_status();
-                                            if (!postText.isEmpty()) {
-                                                uploadMultimedia.remove(0);
-                                            }
+                                        if (!postText.isEmpty()) {
+                                            uploadMultimedia.remove(0);
+                                        }
 
                                         newsfeedViewModel.sendPost(api_token, eventid, postText, uploadMultimedia);
                                         newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
@@ -648,20 +653,22 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                                 if (result != null) {
                                                     newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
 
-                                               new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                    String status = result.getHeader().get(0).getType();
-                                                    String message = result.getHeader().get(0).getMsg();
-                                                    Utility.createLongSnackBar(cl_main, message);
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            String status = result.getHeader().get(0).getType();
+                                                            String message = result.getHeader().get(0).getMsg();
+                                                            Utility.createLongSnackBar(cl_main, message);
 
-                                                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
-                                                        newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-                                                    }
-                                                    currentPage = PAGE_START;
-                                                    init();
-                                                    }
-                                                }, 5000);
+                                                            if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                                                                newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                                                            }
+                                                            currentPage = PAGE_START;
+                                                            init();
+
+                                                            hideProgressBar();
+                                                        }
+                                                    }, 5000);
 
                                                 } else {
                                                     Utility.createLongSnackBar(cl_main, "failure");
@@ -682,7 +689,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         }
     }
 
-
     private void showProgressBar() {
         Animation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(1000); //You can manage the blinking time with this parameter
@@ -698,26 +704,24 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         tv_uploding_multimedia.setVisibility(View.GONE);
     }
 
-    private List<Newsfeed_detail> showDataOfUploadingFromLocalDB()
-    {
+    private List<Newsfeed_detail> showDataOfUploadingFromLocalDB() {
         List<Newsfeed_detail> feedList_of_uploading_data = new ArrayList<>();
-        String post_status = "",dateTime="";
+        String post_status = "", dateTime = "";
         EventAppDB eventAppDB = EventAppDB.getDatabase(getActivity());
         mediaList = eventAppDB.uploadMultimediaDao().getNonUploadMultimedia();
         List<News_feed_media> news_feed_mediaList = new ArrayList<>();
-        for(int i=0;i<mediaList.size();i++)
-        {
+        for (int i = 0; i < mediaList.size(); i++) {
             post_status = mediaList.get(i).getPost_status();
             dateTime = Utility.getDate(Long.parseLong(mediaList.get(i).getFolderUniqueId()));
             News_feed_media news_feed_media = new News_feed_media();
-            news_feed_media.setMedia_id(mediaList.get(i).getMultimedia_id()+"");
+            news_feed_media.setMedia_id(mediaList.get(i).getMultimedia_id() + "");
             news_feed_media.setNews_feed_id("");
             news_feed_media.setMedia_type(mediaList.get(i).getMedia_type());
             news_feed_media.setMedia_file(mediaList.get(i).getMedia_file());
             news_feed_media.setThumb_image(mediaList.get(i).getMedia_file_thumb());
             news_feed_media.setWidth("");
             news_feed_media.setHeight("");
-            news_feed_mediaList.add(i,news_feed_media);
+            news_feed_mediaList.add(i, news_feed_media);
         }
 
         Newsfeed_detail newsfeed_detail = new Newsfeed_detail();
@@ -725,21 +729,21 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         newsfeed_detail.setNews_feed_id("");
         newsfeed_detail.setType("media");
         newsfeed_detail.setPost_status(post_status);
-        newsfeed_detail.setEvent_id(SharedPreference.getPref(getActivity(),EVENT_ID));
+        newsfeed_detail.setEvent_id(SharedPreference.getPref(getActivity(), EVENT_ID));
         newsfeed_detail.setPost_date(dateTime);
-        newsfeed_detail.setFirst_name(SharedPreference.getPref(getActivity(),KEY_FNAME));
-        newsfeed_detail.setLast_name(SharedPreference.getPref(getActivity(),KEY_LNAME));
-        newsfeed_detail.setCompany_name(SharedPreference.getPref(getActivity(),KEY_COMPANY));
-        newsfeed_detail.setDesignation(SharedPreference.getPref(getActivity(),KEY_DESIGNATION));
-        newsfeed_detail.setCity_id(SharedPreference.getPref(getActivity(),KEY_CITY));
-        newsfeed_detail.setProfile_pic(SharedPreference.getPref(getActivity(),KEY_PROFILE_PIC));
-        newsfeed_detail.setAttendee_id(SharedPreference.getPref(getActivity(),KEY_ATTENDEE_ID));
-        newsfeed_detail.setAttendee_type(SharedPreference.getPref(getActivity(),IS_GOD));
+        newsfeed_detail.setFirst_name(SharedPreference.getPref(getActivity(), KEY_FNAME));
+        newsfeed_detail.setLast_name(SharedPreference.getPref(getActivity(), KEY_LNAME));
+        newsfeed_detail.setCompany_name(SharedPreference.getPref(getActivity(), KEY_COMPANY));
+        newsfeed_detail.setDesignation(SharedPreference.getPref(getActivity(), KEY_DESIGNATION));
+        newsfeed_detail.setCity_id(SharedPreference.getPref(getActivity(), KEY_CITY));
+        newsfeed_detail.setProfile_pic(SharedPreference.getPref(getActivity(), KEY_PROFILE_PIC));
+        newsfeed_detail.setAttendee_id(SharedPreference.getPref(getActivity(), KEY_ATTENDEE_ID));
+        newsfeed_detail.setAttendee_type(SharedPreference.getPref(getActivity(), IS_GOD));
         newsfeed_detail.setLike_flag("0");
         newsfeed_detail.setLike_type("0");
         newsfeed_detail.setTotal_likes("0");
         newsfeed_detail.setTotal_comments("0");
-        feedList_of_uploading_data.add(0,newsfeed_detail);
+        feedList_of_uploading_data.add(0, newsfeed_detail);
         newsfeedAdapter.addAll(feedList_of_uploading_data);
         return feedList_of_uploading_data;
     }

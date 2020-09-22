@@ -257,7 +257,8 @@ public class NewsFeedViewModel extends ViewModel {
 
 
     //---------------View Like Action mechanism--------------------------------
-    public void openLikeimg(Activity activity, String token, String event_id, String newsfeedid, View v, Newsfeed_detail feed, int position, final ImageView likeimage, final TextView liketext) {
+    public void openLikeimg(Activity activity, String token, String event_id, String newsfeedid, View v,
+                            Newsfeed_detail feed, int position, final ImageView likeimage, final TextView liketext) {
          activityVar = activity;
         newsRepository = NewsfeedRepository.getInstance();
         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
@@ -321,7 +322,8 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     ///------------------Open More dot features------------------
-    public void openMoreDetails(final Activity activity, final Newsfeed_detail feed, final int position, final String token, final String eventId, NewsFeedAdapter newsadapter) {
+    public void openMoreDetails(final Activity activity, final Newsfeed_detail feed, final int position,
+                                final String token, final String eventId, NewsFeedAdapter newsadapter) {
 
         ATTENDEE_STATUS = SharedPreference.getPref(activity,IS_GOD);
         ATTENDEE_ID = SharedPreference.getPref(activity,KEY_ATTENDEE_ID);
