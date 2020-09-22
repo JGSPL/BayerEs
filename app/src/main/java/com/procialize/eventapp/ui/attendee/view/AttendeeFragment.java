@@ -120,6 +120,8 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
         attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
         searchEt.setHintTextColor(Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4)));
+        searchEt.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4)));
+
         int color = Color.parseColor(SharedPreference.getPref(getContext(),SharedPreferencesConstant.EVENT_COLOR_4));
        iv_search.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
