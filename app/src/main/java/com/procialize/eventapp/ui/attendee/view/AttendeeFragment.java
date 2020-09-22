@@ -3,6 +3,8 @@ package com.procialize.eventapp.ui.attendee.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -48,6 +50,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
@@ -106,6 +110,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
+        iv_search = root.findViewById(R.id.iv_search);
 
         searchEt = root.findViewById(R.id.searchEt);
         attendeefeedrefresh = root.findViewById(R.id.swiperefresh_attendee);
@@ -115,7 +120,17 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         cd = ConnectionDetector.getInstance(getActivity());
         sessionManager = new SessionManager(getContext());
         attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
+
+        String eventColor3 = SharedPreference.getPref(getContext(), EVENT_COLOR_4);
+
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+
+
         attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+        searchEt.setHintTextColor(Color.parseColor(eventColor3));
+        searchEt.setTextColor(Color.parseColor(eventColor3));
+        int color = Color.parseColor(eventColor3);
+       iv_search.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
 
         // use a linear layout manager
@@ -131,7 +146,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         mAPIService = ApiUtils.getAPIService();
 
-        iv_search = root.findViewById(R.id.iv_search);
         //searchBtn.setTextColor(getResources().getColor(R.color.colorwhite));
         //searchBtn.setBackgroundColor(Color.parseColor(colorActive));
         /*iv_search.setOnClickListener(new View.OnClickListener() {

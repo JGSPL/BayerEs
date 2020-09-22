@@ -58,7 +58,10 @@ public class ProfileRepository {
 
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
-                profileMutableLiveData.setValue(null);
+                try {
+                    profileMutableLiveData.setValue(null);
+                }catch (Exception e)
+                {}
             }
         });
 

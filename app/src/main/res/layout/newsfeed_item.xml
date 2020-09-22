@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
-    android:visibility="gone"
+    android:visibility="visible"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
@@ -13,7 +13,7 @@
         <LinearLayout
             android:id="@+id/ll_swipe"
             android:layout_width="match_parent"
-            android:layout_height="65sp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -32,7 +32,8 @@
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    app:cardCornerRadius="25dp">
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="0dp">
 
                     <ImageView
                         android:id="@+id/profileIV"
@@ -55,10 +56,11 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
-                android:layout_weight="5.25"
+                android:layout_weight="0.7"
+                android:layout_marginLeft="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -114,10 +116,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
-                android:layout_weight="3"
+                android:layout_weight="1"
 
                 android:orientation="vertical">
 
@@ -162,8 +164,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="web"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
             android:paddingBottom="5dp"
             android:text=""
             android:textColor="@color/inactivetab"
@@ -187,47 +190,51 @@
                 android:id="@+id/vp_slider"
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
+                android:layout_marginTop="5dp"
                 android:visibility="gone"/>
 
-            <LinearLayout
-                android:id="@+id/ll_dots"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@+id/vp_slider"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="visible" />
+
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:gravity="center"
+            android:layout_below="@+id/vp_slider"
             android:orientation="horizontal"
-            android:padding="2dp"
-            android:weightSum="2">
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp">
 
             <TextView
                 android:id="@+id/tv_like"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:gravity="left"
                 android:paddingTop="4dp"
                 android:text="0 Like"
                 android:textColor="@color/inactivetab"
                 android:textSize="13dp" />
-
+            <LinearLayout
+                android:id="@+id/ll_dots"
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_marginTop="-3dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="visible" />
             <TextView
                 android:id="@+id/tv_comment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
+                android:layout_height="25dp"
+                android:layout_weight="1.5"
+                android:gravity="right|center_vertical"
                 android:text="0 Comments"
                 android:textColor="@color/inactivetab"
                 android:textSize="13dp" />
@@ -247,6 +254,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:padding="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal"
             android:weightSum="3">
 
@@ -256,9 +266,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="7dp"
+                android:padding="5dp"
                 android:src="@drawable/ic_like" />
-
 
             <ImageView
                 android:id="@+id/iv_comments"
@@ -266,7 +275,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="7dp"
+                android:padding="5dp"
                 android:src="@drawable/ic_comment" />
 
 
@@ -276,7 +285,7 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="7dp"
+                android:padding="5dp"
                 android:src="@drawable/ic_share" />
 
 

@@ -81,7 +81,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/grey_light" />
+                        android:background="@android:color/transparent" />
 
                     <View
                         android:layout_width="match_parent"
@@ -150,14 +150,14 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextview
                     android:id="@+id/tv_attendee_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="Aparna Badhan"
+                    android:text=""
                     android:textSize="15dp" />
 
                 <View
@@ -166,7 +166,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextview
                     android:id="@+id/tv_attendee_designation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -183,14 +183,14 @@
                     android:background="@color/linecolor" />
 
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextview
                     android:id="@+id/tv_attendee_company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="Aparna Badhan"
+                    android:text=""
                     android:textSize="15dp" />
 
                 <View
@@ -199,7 +199,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextview
                     android:id="@+id/tv_attendee_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -215,7 +215,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextview
                     android:id="@+id/tv_mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -230,7 +230,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextview
                     android:id="@+id/tv_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -307,6 +307,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_gravity="center"
                         android:layout_weight="1"
+                        android:visibility="gone"
                         android:background="@color/activetab"
                         android:gravity="center"
                         android:layout_marginLeft="10dp"

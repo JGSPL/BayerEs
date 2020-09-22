@@ -377,7 +377,7 @@ compare < 0, if date1 is smaller than date2*/
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(context);
             dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(30);
+            dots[i].setTextSize(24);
            // dots[i].setTextColor(Color.parseColor("#343434"));
             dots[i].setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
             ll_dots.addView(dots[i]);
@@ -409,5 +409,19 @@ compare < 0, if date1 is smaller than date2*/
         } catch(Exception ignored) {
             ignored.printStackTrace();
         }
+    }
+
+    public static CharSequence trimTrailingWhitespace(CharSequence source) {
+
+        if(source == null)
+            return "";
+
+        int i = source.length();
+
+        // loop back to the first non-whitespace character
+        while(--i >= 0 && Character.isWhitespace(source.charAt(i))) {
+        }
+
+        return source.subSequence(0, i+1);
     }
 }

@@ -11,7 +11,7 @@
     <string name="title_document">Document</string>
     <string name="title_generalinfo">General Info</string>
     <string name="title_qrbadge">QR Badge</string>
-    <string name="news_edit_title">What\'s on your mind?</string>
+    <string name="news_edit_title">| What\'s on your mind?</string>
     <string name="searchattendee">Type here to search Attendee</string>
     <string name="searchevent">Type here to search Event</string>
     <string name="searchspeaker">Type here to search Speaker</string>

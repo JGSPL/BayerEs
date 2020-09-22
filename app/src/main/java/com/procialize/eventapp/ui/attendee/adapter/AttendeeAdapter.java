@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,6 +88,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             holder.locationTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
             holder.tv_concat.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
             holder.companyTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+            holder.ic_rightarrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
 
             try {
                 if (attendee_location.equalsIgnoreCase("0")) {

@@ -23,4 +23,7 @@ public interface ProfileUpdateDao {
     @Query("SELECT * from tbl_profile_event_id  where fld_event_id=:event_id")
     List<ProfileEventId> getProfileWithEventId(String event_id);
 
+    @Query("DELETE from tbl_profile_event_id")
+   public void deleteData();
+
 }
