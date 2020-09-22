@@ -21,7 +21,5 @@ public class Constant {
         public static final boolean DEVELOPER_MODE = false;
     }
 
-    public static void displayToast(Context context, String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-    }
+
 }

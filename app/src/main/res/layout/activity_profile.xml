@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/ll_main"
-    android:background="@mipmap/bg_1"
     android:orientation="vertical"
     tools:context=".ui.profile.view.ProfileActivity.ProfileActivity">
 
@@ -42,25 +41,24 @@
                 android:src="@mipmap/ic_back"
                 android:visibility="visible" />
 
-            <TextView
+            <com.procialize.eventapp.fonts.RobotoTextview
                 android:id="@+id/tv_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginLeft="10dp"
                 android:text="Edit Profile"
-                android:textColor="@color/black"
-                android:textSize="16dp"/>
+                android:textSize="16dp" />
 
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:scrollbars="none">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_alignParentBottom="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,9 +77,9 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="95dp"
+                        android:id="@+id/view_one"
                         android:layout_weight="1"
-                        android:background="@color/grey_light" />
+                        android:layout_height="180dp" />
 
                     <View
                         android:layout_width="match_parent"
@@ -168,13 +166,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="fill_parent"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingLeft="20dp"
-                android:paddingTop="10dp"
+                android:paddingTop="20dp"
                 android:paddingRight="20dp"
-                android:paddingBottom="10dp">
+                android:paddingBottom="100dp">
 
                 <LinearLayout
                     android:id="@+id/ll_name"
@@ -191,7 +189,7 @@
                         android:src="@drawable/ic_name"
                         android:padding="3dp"/>
 
-                    <EditText
+                    <com.procialize.eventapp.fonts.RobotoEditext
                         android:id="@+id/et_first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -206,7 +204,7 @@
                     android:id="@+id/ll_last_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp">
@@ -218,7 +216,7 @@
                         android:src="@drawable/ic_name"
                         android:padding="3dp"/>
 
-                    <EditText
+                    <com.procialize.eventapp.fonts.RobotoEditext
                         android:id="@+id/et_last_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -233,7 +231,7 @@
                     android:id="@+id/ll_designation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp">
@@ -245,7 +243,7 @@
                         android:padding="3dp"
                         android:src="@drawable/ic_designation" />
 
-                    <EditText
+                    <com.procialize.eventapp.fonts.RobotoEditext
                         android:id="@+id/et_designation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -260,7 +258,7 @@
                     android:id="@+id/ll_company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp">
@@ -272,7 +270,7 @@
                         android:padding="3dp"
                         android:src="@drawable/ic_designation" />
 
-                    <EditText
+                    <com.procialize.eventapp.fonts.RobotoEditext
                         android:id="@+id/et_company_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -287,7 +285,7 @@
                     android:id="@+id/ll_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp">
@@ -299,7 +297,7 @@
                         android:padding="3dp"
                         android:src="@drawable/ic_location" />
 
-                    <EditText
+                    <com.procialize.eventapp.fonts.RobotoEditext
                         android:id="@+id/et_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -308,14 +306,14 @@
                         android:hint="City"
                         android:singleLine="true"
                         android:textSize="13dp"
-                        android:imeOptions="actionDone"/>
+                        android:imeOptions="actionDone" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp">
@@ -327,7 +325,7 @@
                         android:padding="3dp"
                         android:src="@drawable/ic_email" />
 
-                    <EditText
+                    <com.procialize.eventapp.fonts.RobotoEditext
                         android:id="@+id/et_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -344,7 +342,7 @@
                     android:id="@+id/ll_mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp">
@@ -356,7 +354,7 @@
                         android:padding="3dp"
                         android:src="@drawable/ic_mobile" />
 
-                    <EditText
+                    <com.procialize.eventapp.fonts.RobotoEditext
                         android:id="@+id/et_mobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -369,11 +367,11 @@
                         android:textSize="13dp" />
                 </LinearLayout>
 
-                <Button
+                <com.procialize.eventapp.fonts.RobotoButton
                     android:id="@+id/btn_save"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:background="@color/colorPrimary"
                     android:minHeight="0dp"
                     android:padding="10dp"
@@ -381,7 +379,7 @@
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
-</LinearLayout>
+</RelativeLayout>

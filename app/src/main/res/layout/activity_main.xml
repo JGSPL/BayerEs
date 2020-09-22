@@ -52,8 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="bottom"
-            android:background="@color/white"
-            app:elevation="8dp"
+            android:background="@android:color/transparent"
+            app:elevation="0dp"
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/bottom_nav_menu" />
 
