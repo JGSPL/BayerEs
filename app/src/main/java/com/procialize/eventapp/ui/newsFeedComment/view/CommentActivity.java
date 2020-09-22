@@ -169,6 +169,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
+        newsRepository = NewsfeedRepository.getInstance();
         //Call Refresh token
         new RefreashToken(this).callGetRefreashToken(this);
 
@@ -239,7 +240,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         moreIV.setOnClickListener(this);
         CommonFunction.showBackgroundImage(this, ll_main);
 
-        fl_post_comment.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+
         iv_share.setOnClickListener(this);
         iv_back_gif.setOnClickListener(this);
 
@@ -563,6 +564,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 @Override
                 public void onChanged(Comment comment) {
                     if (comment != null) {
+                        commentList.clear();
                         commentList = comment.getCommentDetails();
                         setupCommentAdapter(commentList);
                         showCommentCount(commentList);
@@ -1321,7 +1323,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         iv_comments.setAlpha(180);
         iv_share.setAlpha(180);
         iv_send.setAlpha(180);
-
+        fl_post_comment.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
         int color4 = Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4));
         iv_back.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
@@ -1429,13 +1431,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void onBackPressed() {
         super.onBackPressed();
         JzvdStd.releaseAllVideos();
-    }
-
-    public static NewsfeedRepository getInstance() {
-        if (newsRepository == null) {
-            newsRepository = new NewsfeedRepository();
-        }
-        return newsRepository;
     }
 
     //------------------Open More dot features------------------
@@ -1609,7 +1604,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                         myDialog.cancel();
                                         Utility.hideKeyboard(v);
-
+                                        startActivity(new Intent(CommentActivity.this,MainActivity.class));
+                                        finish();
                                     }
                                 }
                             });
@@ -1631,6 +1627,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                         myDialog.cancel();
                                         Utility.hideKeyboard(v);
+                                        startActivity(new Intent(CommentActivity.this,MainActivity.class));
+                                        finish();
                                     }
                                 }
                             });

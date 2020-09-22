@@ -60,18 +60,34 @@
                     android:text="Create Post"
                     android:textColor="@color/black" />
 
-                <TextView
-                    android:id="@+id/btn_post"
-                    android:layout_width="80dp"
-                    android:layout_height="30dp"
+
+                <LinearLayout
+                    android:id="@+id/ll_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_margin="10dp"
+                    android:background="@color/activetab"
+                    android:gravity="center"
+                    android:text="Post"
+                    android:padding="2dp"
+                    android:elevation="0dp"
+                    android:textColor="@color/black" >
+
+                <TextView
+                    android:id="@+id/btn_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:maxHeight="30dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:text="Post"
                     android:textColor="@color/black" />
-
+                </LinearLayout>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
