@@ -73,7 +73,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 
 public class PostNewActivity extends AppCompatActivity implements View.OnClickListener, QueryListener, SuggestionsListener {
 
-    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info,ll_post;
+    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info,ll_post,ll_inner_layout;
     EditText et_post;
     TextView btn_post, tv_count, tv_name, txtUploadImg, tv_header, tv_total_count, textData;
     PostNewsFeedViewModel postNewsFeedViewModel;
@@ -116,6 +116,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         ll_media_dots = findViewById(R.id.ll_media_dots);
         ll_info = findViewById(R.id.ll_info);
         ll_post = findViewById(R.id.ll_post);
+        ll_inner_layout = findViewById(R.id.ll_inner_layout);
         linear = findViewById(R.id.linear);
         btn_post = findViewById(R.id.btn_post);
         tv_count = findViewById(R.id.tv_count);
@@ -160,12 +161,12 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                 tv_count.setText(String.valueOf(s.length()));
                 if (s.length() > 0 || resultList.size()>0) {
                     btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-                    btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                    btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
                     ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
                 } else {
-                    btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                    btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
                     btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-                    ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+                    ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
                 }
             }
 
@@ -462,13 +463,14 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         ll_info.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
         tv_name.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         ll_upload_media.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+        ll_inner_layout.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
 
         txtUploadImg.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         tv_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_3)));
         tv_total_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_3)));
-        btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+        btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
         btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-        ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+        ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
 
         int color1 = Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1));
         imguploadimg.setColorFilter(color1, PorterDuff.Mode.SRC_ATOP);
