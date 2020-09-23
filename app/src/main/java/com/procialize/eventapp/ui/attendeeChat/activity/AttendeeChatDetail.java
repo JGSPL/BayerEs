@@ -43,6 +43,8 @@ import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.WRITE_CONTACTS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 public class AttendeeChatDetail extends AppCompatActivity implements View.OnClickListener {
@@ -60,7 +62,8 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
     private DatabaseReference mMessageDatabase;
     private FirebaseAuth mAuth;
     String mCurrent_user_id, attendeeid, firebase_id;
-
+    LinearLayout bgLinear;
+    View bgView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +102,8 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         tv_attendee_city.setText(city);
         tv_mobile.setText(mobile);
         tv_email.setText(email);
-
+        bgLinear = findViewById(R.id.bgLinear);
+        bgView = findViewById(R.id.bgView);
         CommonFunction.showBackgroundImage(this, ll_main);
 
 
@@ -116,7 +120,20 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         ll_save_contact_inner.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         iv_contact.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
         tv_contact.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        bgLinear.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
 
+        String eventColor3 = SharedPreference.getPref(this, EVENT_COLOR_3);
+        et_message.setHintTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_message.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+
+        tv_attendee_designation.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tv_attendee_company_name.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tv_attendee_city.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tv_mobile.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tv_email.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         if (prof_pic.trim() != null) {
             Glide.with(AttendeeChatDetail.this)
                     .load(prof_pic.trim())
