@@ -873,7 +873,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.moreIV:
-                openMoreDetails(newsfeed_detail);
+                openMoreDetailsForPost(newsfeed_detail);
                 break;
         }
     }
@@ -947,13 +947,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onMoreSelected(final CommentDetail comment, final int position) {
         if (connectionDetector.isConnectingToInternet()) {
-            openMoreOptions(this, newsfeed_detail, comment, position, ll_main);
+            openMoreOptionsForComment(this, newsfeed_detail, comment, position, ll_main);
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
     }
 
-    public void openMoreOptions(Activity activity, final Newsfeed_detail newsfeed_detail, final CommentDetail commentDetail,
+    public void openMoreOptionsForComment(Activity activity, final Newsfeed_detail newsfeed_detail, final CommentDetail commentDetail,
                                 final int position, final LinearLayout ll_main) {
         dialog = new BottomSheetDialog(activity);
         dialog.setContentView(R.layout.botomcommentdialouge);
@@ -1032,14 +1032,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContentdialouge("reportComment", commentDetail.getComment_id(), commentDetail.getUser_id());
+                showContentdialougeForComment("reportComment", commentDetail.getComment_id(), commentDetail.getUser_id());
             }
         });
 
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContentdialouge("reportUser", commentDetail.getComment_id(), commentDetail.getUser_id());
+                showContentdialougeForComment("reportUser", commentDetail.getComment_id(), commentDetail.getUser_id());
             }
         });
 
@@ -1053,7 +1053,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         dialog.show();
     }
 
-    private void showContentdialouge(final String from, final String commentId, final String userId) {
+    private void showContentdialougeForComment(final String from, final String commentId, final String userId) {
 
         contentDialog = new Dialog(this);
         contentDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -1064,7 +1064,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Button cancelbtn = contentDialog.findViewById(R.id.canclebtn);
         Button ratebtn = contentDialog.findViewById(R.id.ratebtn);
 
-        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_1)));
+/*        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_1)));
         cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_1)));
 
         ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4)));
@@ -1072,7 +1072,23 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         final EditText etmsg = contentDialog.findViewById(R.id.etmsg);
 
+        final TextView counttv = contentDialog.findViewById(R.id.counttv);*/
+        TextView title = contentDialog.findViewById(R.id.title);
+        final LinearLayout ll_main = contentDialog.findViewById(R.id.ll_main);
         final TextView counttv = contentDialog.findViewById(R.id.counttv);
+        final EditText etmsg = contentDialog.findViewById(R.id.etmsg);
+
+        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_2)));
+        title.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        counttv.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        etmsg.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        etmsg.setHintTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_3)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_3)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_2)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_2)));
+
         final TextView nametv = contentDialog.findViewById(R.id.nametv);
 
         nametv.setText("To " + "Admin");
@@ -1436,7 +1452,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //------------------Open More dot features------------------
-    public void openMoreDetails(final Newsfeed_detail feed) {
+    public void openMoreDetailsForPost(final Newsfeed_detail feed) {
         ATTENDEE_STATUS = SharedPreference.getPref(this, IS_GOD);
         ATTENDEE_ID = SharedPreference.getPref(this, KEY_ATTENDEE_ID);
         dialog = new BottomSheetDialog(this);
@@ -1480,7 +1496,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge(v.getContext(),api_token,"reportPost", feed.getNews_feed_id(),feed.getAttendee_id(),event_id);
+                showratedialougeForPost(v.getContext(),api_token,"reportPost", feed.getNews_feed_id(),feed.getAttendee_id(),event_id);
+            }
+        });
+        reportuserTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showratedialougeForPost(v.getContext(),api_token,"reportUser", feed.getNews_feed_id(),feed.getAttendee_id(),event_id);
             }
         });
         hideTv.setOnClickListener(new View.OnClickListener() {
@@ -1492,10 +1514,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void onChanged(LoginOrganizer loginOrganizer) {
                             if (loginOrganizer != null) {
+
+                                NewsFeedFragment.newsfeedAdapter.getNewsFeedList().remove(positionOfList);
+                                NewsFeedFragment.newsfeedAdapter.notifyItemRemoved(positionOfList);
+
                                 List<Header> heaserList = loginOrganizer.getHeader();
                                 Utility.createShortSnackBar(ll_main,heaserList.get(0).getMsg());
                                 dialog.cancel();
-                                startActivity(new Intent(CommentActivity.this, MainActivity.class));
+                                //startActivity(new Intent(CommentActivity.this, MainActivity.class));
                                 finish();
                             }
                         }
@@ -1518,7 +1544,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             List<Header> heaserList = loginOrganizer.getHeader();
                             Utility.createShortSnackBar(ll_main, heaserList.get(0).getMsg());
                             dialog.cancel();
-                            startActivity(new Intent(CommentActivity.this, MainActivity.class));
+                            //startActivity(new Intent(CommentActivity.this, MainActivity.class));
                             finish();
                         }
                         }
@@ -1529,16 +1555,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
-        reportuserTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showratedialouge(v.getContext(),api_token,"reportUser", feed.getNews_feed_id(),feed.getAttendee_id(),event_id);
-            }
-        });
         dialog.show();
     }
 
-    private void showratedialouge(Context context,final String api_token, final String from, 
+    private void showratedialougeForPost(Context context,final String api_token, final String from,
                                   final String newsfeedIdId, final String attnId, final String eventId) {
 
         myDialog = new Dialog(CommentActivity.this);
@@ -1549,14 +1569,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Button cancelbtn = myDialog.findViewById(R.id.canclebtn);
         Button ratebtn = myDialog.findViewById(R.id.ratebtn);
 
-        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
-        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
-
-        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
-        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
-
-        final EditText etmsg = myDialog.findViewById(R.id.etmsg);
+        TextView title = myDialog.findViewById(R.id.title);
+        final LinearLayout ll_main = myDialog.findViewById(R.id.ll_main);
         final TextView counttv = myDialog.findViewById(R.id.counttv);
+        final EditText etmsg = myDialog.findViewById(R.id.etmsg);
+
+        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_2)));
+        title.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        counttv.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        etmsg.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        etmsg.setHintTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_3)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_3)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_2)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this,EVENT_COLOR_2)));
         final TextView nametv = myDialog.findViewById(R.id.nametv);
 
         nametv.setText("To " + "Admin");
@@ -1606,7 +1633,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                         myDialog.cancel();
                                         Utility.hideKeyboard(v);
-                                        startActivity(new Intent(CommentActivity.this,MainActivity.class));
+                                        //startActivity(new Intent(CommentActivity.this,MainActivity.class));
                                         finish();
                                     }
                                 }
@@ -1629,7 +1656,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                         myDialog.cancel();
                                         Utility.hideKeyboard(v);
-                                        startActivity(new Intent(CommentActivity.this,MainActivity.class));
+                                        //startActivity(new Intent(CommentActivity.this,MainActivity.class));
                                         finish();
                                     }
                                 }

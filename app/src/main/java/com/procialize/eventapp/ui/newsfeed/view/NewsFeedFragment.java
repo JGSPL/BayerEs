@@ -87,7 +87,7 @@ import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAG
 
 public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAdapterListner, View.OnClickListener {
     ArrayList<Newsfeed_detail> newsfeedArrayList = new ArrayList<>();
-    NewsFeedAdapter newsfeedAdapter;
+   public static NewsFeedAdapter newsfeedAdapter;
     RecyclerView recycler_feed;
     NewsFeedViewModel newsfeedViewModel;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
@@ -115,7 +115,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     String noOfLikes = "0";
     String likeStatus = "";
     String strPath = "", mediaPath = "";
-    NewsFeedAdapter adapter;
     private List<UploadMultimedia> mediaList;
 
     public static NewsFeedFragment newInstance() {
