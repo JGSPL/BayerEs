@@ -54,6 +54,7 @@ import static android.Manifest.permission.WRITE_CONTACTS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
@@ -74,6 +75,8 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     APIService updateApi;
     MutableLiveData<LoginOrganizer> chatUpdate = new MutableLiveData<>();
     String api_token,eventid;
+    LinearLayout bgLinear;
+    View bgView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         iv_contact = findViewById(R.id.iv_contact);
         tv_contact = findViewById(R.id.tv_contact);
 
+        bgLinear = findViewById(R.id.bgLinear);
+        bgView = findViewById(R.id.bgView);
+
+
         ll_send_message = findViewById(R.id.ll_send_message);
         ll_save_contact = findViewById(R.id.ll_save_contact);
         ll_main = findViewById(R.id.ll_main);
@@ -133,12 +140,27 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         ll_send_message.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        ic_email.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
-        tv_sendmess.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        ic_email.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+        tv_sendmess.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         ll_save_contact.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        ll_save_contact_inner.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        ll_save_contact_inner.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         iv_contact.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
         tv_contact.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+
+        bgLinear.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+
+        String eventColor3 = SharedPreference.getPref(this, EVENT_COLOR_3);
+        et_message.setHintTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_message.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+
+        tv_attendee_designation.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tv_attendee_company_name.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tv_attendee_city.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tv_mobile.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tv_email.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
 
         if (prof_pic.trim() != null) {
             Glide.with(AttendeeDetailActivity.this)
