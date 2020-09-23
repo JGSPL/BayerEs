@@ -559,8 +559,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     public void getComments() {
         if (connectionDetector.isConnectingToInternet()) {
-            commentViewModel.getComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
-            commentViewModel.getCommentList().observe(this, new Observer<Comment>() {
+            String newsFeedId = newsfeed_detail.getNews_feed_id();
+            commentViewModel.getComment(api_token, event_id, newsFeedId, "100", "1");
+            commentViewModel.getCommentList().observeForever( new Observer<Comment>() {
                 @Override
                 public void onChanged(Comment comment) {
                     if (comment != null) {
@@ -568,7 +569,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         commentList = comment.getCommentDetails();
                         setupCommentAdapter(commentList);
                         showCommentCount(commentList);
-                    }
+                    }else
+                    { setupCommentAdapter(commentList);}
                 }
             });
         } else {
@@ -1314,7 +1316,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         int color = Color.parseColor(eventColor1);
         moreIV.setColorFilter(Color.parseColor(eventColor3), PorterDuff.Mode.SRC_ATOP);
-        iv_send.setColorFilter(Color.parseColor(eventColor1), PorterDuff.Mode.SRC_ATOP);
+        iv_send.setColorFilter(getResources().getColor(R.color.transperent));
         iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_comments.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         iv_share.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
@@ -1322,7 +1324,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         iv_likes.setAlpha(180);
         iv_comments.setAlpha(180);
         iv_share.setAlpha(180);
-        iv_send.setAlpha(180);
+       // iv_send.setAlpha(180);
         fl_post_comment.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
         int color4 = Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4));
