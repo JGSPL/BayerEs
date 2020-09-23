@@ -151,6 +151,8 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
 
         String eventColor3 = SharedPreference.getPref(this, EVENT_COLOR_3);
+        et_message.setHintTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+        et_message.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
 
