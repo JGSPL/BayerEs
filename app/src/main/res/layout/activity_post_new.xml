@@ -60,8 +60,60 @@
                     android:text="Create Post"
                     android:textColor="@color/black" />
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <View
+                        android:id="@+id/view_top"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/activetab"/>
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <View
+                        android:id="@+id/view_left"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/activetab"/>
+                    <TextView
+                        android:id="@+id/btn_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:background="@color/transperent"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="20dp"
+                        android:paddingBottom="5dp"
+                        android:text="Post"
+                        android:textColor="@color/black" />
+                    <View
+                        android:id="@+id/view_right"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/activetab"/>
+
+                </LinearLayout>
+
+                    <View
+                        android:id="@+id/view_bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/activetab"/>
+                </LinearLayout>
+
+               <!-- <LinearLayout
                     android:id="@+id/ll_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,22 +124,23 @@
                     android:text="Post"
                     android:padding="2dp"
                     android:elevation="0dp"
-                    android:textColor="@color/black" >
+                    android:textColor="@color/black"
+                    android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/btn_post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="Post"
-                    android:textColor="@color/black" />
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/btn_post"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:background="@color/transperent"
+                        android:gravity="center"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="20dp"
+                        android:paddingBottom="5dp"
+                        android:text="Post"
+                        android:textColor="@color/black" />
+                </LinearLayout>-->
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 

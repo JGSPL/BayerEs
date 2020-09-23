@@ -66,7 +66,6 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -161,9 +160,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
     List<TableAttendee> attendeeList = null;
     private static NewsfeedRepository newsRepository;
-    Dialog  myDialog;
+    Dialog myDialog;
     String spannedString;
-    String postStatus ;
+    String postStatus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -280,8 +280,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
                 testdataPost.setText(Utility.trimTrailingWhitespace(strPost));
-            }else
-            {
+            } else {
                 Spanned strPost = Html.fromHtml(spannedString);
                 testdataPost.setText(Utility.trimTrailingWhitespace(strPost));
             }
@@ -561,7 +560,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         if (connectionDetector.isConnectingToInternet()) {
             String newsFeedId = newsfeed_detail.getNews_feed_id();
             commentViewModel.getComment(api_token, event_id, newsFeedId, "100", "1");
-            commentViewModel.getCommentList().observeForever( new Observer<Comment>() {
+            commentViewModel.getCommentList().observeForever(new Observer<Comment>() {
                 @Override
                 public void onChanged(Comment comment) {
                     if (comment != null) {
@@ -569,8 +568,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         commentList = comment.getCommentDetails();
                         setupCommentAdapter(commentList);
                         showCommentCount(commentList);
-                    }else
-                    { setupCommentAdapter(commentList);}
+                    } else {
+                        setupCommentAdapter(commentList);
+                    }
                 }
             });
         } else {
@@ -873,7 +873,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.moreIV:
-                openMoreDetails(newsfeed_detail);
+                openMoreDetailsForPost(newsfeed_detail);
                 break;
         }
     }
@@ -947,14 +947,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onMoreSelected(final CommentDetail comment, final int position) {
         if (connectionDetector.isConnectingToInternet()) {
-            openMoreOptions(this, newsfeed_detail, comment, position, ll_main);
+            openMoreOptionsForComment(this, newsfeed_detail, comment, position, ll_main);
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
     }
 
-    public void openMoreOptions(Activity activity, final Newsfeed_detail newsfeed_detail, final CommentDetail commentDetail,
-                                final int position, final LinearLayout ll_main) {
+    public void openMoreOptionsForComment(Activity activity, final Newsfeed_detail newsfeed_detail, final CommentDetail commentDetail,
+                                          final int position, final LinearLayout ll_main) {
         dialog = new BottomSheetDialog(activity);
         dialog.setContentView(R.layout.botomcommentdialouge);
         TextView reportTv = dialog.findViewById(R.id.reportTv);
@@ -1032,14 +1032,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContentdialouge("reportComment", commentDetail.getComment_id(), commentDetail.getUser_id());
+                showContentdialougeForComment("reportComment", commentDetail.getComment_id(), commentDetail.getUser_id());
             }
         });
 
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showContentdialouge("reportUser", commentDetail.getComment_id(), commentDetail.getUser_id());
+                showContentdialougeForComment("reportUser", commentDetail.getComment_id(), commentDetail.getUser_id());
             }
         });
 
@@ -1053,7 +1053,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         dialog.show();
     }
 
-    private void showContentdialouge(final String from, final String commentId, final String userId) {
+    private void showContentdialougeForComment(final String from, final String commentId, final String userId) {
 
         contentDialog = new Dialog(this);
         contentDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -1064,7 +1064,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Button cancelbtn = contentDialog.findViewById(R.id.canclebtn);
         Button ratebtn = contentDialog.findViewById(R.id.ratebtn);
 
-        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_1)));
+/*        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_1)));
         cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_1)));
 
         ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4)));
@@ -1072,7 +1072,23 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         final EditText etmsg = contentDialog.findViewById(R.id.etmsg);
 
+        final TextView counttv = contentDialog.findViewById(R.id.counttv);*/
+        TextView title = contentDialog.findViewById(R.id.title);
+        final LinearLayout ll_main = contentDialog.findViewById(R.id.ll_main);
         final TextView counttv = contentDialog.findViewById(R.id.counttv);
+        final EditText etmsg = contentDialog.findViewById(R.id.etmsg);
+
+        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_2)));
+        title.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        counttv.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        etmsg.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        etmsg.setHintTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_2)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_2)));
+
         final TextView nametv = contentDialog.findViewById(R.id.nametv);
 
         nametv.setText("To " + "Admin");
@@ -1324,7 +1340,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         iv_likes.setAlpha(180);
         iv_comments.setAlpha(180);
         iv_share.setAlpha(180);
-       // iv_send.setAlpha(180);
+        // iv_send.setAlpha(180);
         fl_post_comment.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
         int color4 = Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4));
@@ -1436,7 +1452,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //------------------Open More dot features------------------
-    public void openMoreDetails(final Newsfeed_detail feed) {
+    public void openMoreDetailsForPost(final Newsfeed_detail feed) {
         ATTENDEE_STATUS = SharedPreference.getPref(this, IS_GOD);
         ATTENDEE_ID = SharedPreference.getPref(this, KEY_ATTENDEE_ID);
         dialog = new BottomSheetDialog(this);
@@ -1480,29 +1496,39 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge(v.getContext(),api_token,"reportPost", feed.getNews_feed_id(),feed.getAttendee_id(),event_id);
+                showratedialougeForPost(v.getContext(), api_token, "reportPost", feed.getNews_feed_id(), feed.getAttendee_id(), event_id);
+            }
+        });
+        reportuserTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showratedialougeForPost(v.getContext(), api_token, "reportUser", feed.getNews_feed_id(), feed.getAttendee_id(), event_id);
             }
         });
         hideTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ConnectionDetector.getInstance(CommentActivity.this).isConnectingToInternet()) {
-                   newsRepository.PostHide(api_token,event_id, feed.getNews_feed_id());
+                    newsRepository.PostHide(api_token, event_id, feed.getNews_feed_id());
                     newsRepository.getPostActivity().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                         @Override
                         public void onChanged(LoginOrganizer loginOrganizer) {
                             if (loginOrganizer != null) {
+
+                                NewsFeedFragment.newsfeedAdapter.getNewsFeedList().remove(positionOfList);
+                                NewsFeedFragment.newsfeedAdapter.notifyItemRemoved(positionOfList);
+
                                 List<Header> heaserList = loginOrganizer.getHeader();
-                                Utility.createShortSnackBar(ll_main,heaserList.get(0).getMsg());
+                                Utility.createShortSnackBar(ll_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
-                                startActivity(new Intent(CommentActivity.this, MainActivity.class));
+                                //startActivity(new Intent(CommentActivity.this, MainActivity.class));
                                 finish();
                             }
                         }
                     });
                 } else {
                     dialog.cancel();
-                    Utility.createShortSnackBar(ll_main,"No Internet Connection");
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection");
                 }
             }
         });
@@ -1514,13 +1540,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     newsRepository.getPostActivity().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                         @Override
                         public void onChanged(LoginOrganizer loginOrganizer) {
-                        if (loginOrganizer != null) {
-                            List<Header> heaserList = loginOrganizer.getHeader();
-                            Utility.createShortSnackBar(ll_main, heaserList.get(0).getMsg());
-                            dialog.cancel();
-                            startActivity(new Intent(CommentActivity.this, MainActivity.class));
-                            finish();
-                        }
+                            if (loginOrganizer != null) {
+                                List<Header> heaserList = loginOrganizer.getHeader();
+                                NewsFeedFragment.newsfeedAdapter.getNewsFeedList().remove(positionOfList);
+                                NewsFeedFragment.newsfeedAdapter.notifyItemRemoved(positionOfList);
+                                NewsFeedFragment.newsfeedAdapter.notifyItemRangeChanged(positionOfList, NewsFeedFragment.newsfeedAdapter.getItemCount());
+                                Utility.createShortSnackBar(ll_main, heaserList.get(0).getMsg());
+                                dialog.cancel();
+                                //startActivity(new Intent(CommentActivity.this, MainActivity.class));
+                                finish();
+                            }
                         }
                     });
                 } else {
@@ -1529,17 +1558,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
-        reportuserTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showratedialouge(v.getContext(),api_token,"reportUser", feed.getNews_feed_id(),feed.getAttendee_id(),event_id);
-            }
-        });
         dialog.show();
     }
 
-    private void showratedialouge(Context context,final String api_token, final String from, 
-                                  final String newsfeedIdId, final String attnId, final String eventId) {
+    private void showratedialougeForPost(Context context, final String api_token, final String from,
+                                         final String newsfeedIdId, final String attnId, final String eventId) {
 
         myDialog = new Dialog(CommentActivity.this);
         myDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -1549,14 +1572,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Button cancelbtn = myDialog.findViewById(R.id.canclebtn);
         Button ratebtn = myDialog.findViewById(R.id.ratebtn);
 
-        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
-        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
-
-        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
-        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
-
-        final EditText etmsg = myDialog.findViewById(R.id.etmsg);
+        TextView title = myDialog.findViewById(R.id.title);
+        final LinearLayout ll_main = myDialog.findViewById(R.id.ll_main);
         final TextView counttv = myDialog.findViewById(R.id.counttv);
+        final EditText etmsg = myDialog.findViewById(R.id.etmsg);
+
+        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_2)));
+        title.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        counttv.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        etmsg.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        etmsg.setHintTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_3)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_2)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_2)));
         final TextView nametv = myDialog.findViewById(R.id.nametv);
 
         nametv.setText("To " + "Admin");
@@ -1597,7 +1627,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     Utility.hideKeyboard(v);
                     if (from.equalsIgnoreCase("reportPost")) {
                         if (ConnectionDetector.getInstance(CommentActivity.this).isConnectingToInternet()) {
-                            newsRepository.ReportPost(api_token,eventId, newsfeedIdId, msg);
+                            newsRepository.ReportPost(api_token, eventId, newsfeedIdId, msg);
                             newsRepository.getPostActivity().observe((LifecycleOwner) CommentActivity.this, new Observer<LoginOrganizer>() {
                                 @Override
                                 public void onChanged(LoginOrganizer loginOrganizer) {
@@ -1606,7 +1636,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                         myDialog.cancel();
                                         Utility.hideKeyboard(v);
-                                        startActivity(new Intent(CommentActivity.this,MainActivity.class));
+                                        //startActivity(new Intent(CommentActivity.this,MainActivity.class));
                                         finish();
                                     }
                                 }
@@ -1616,11 +1646,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             myDialog.cancel();
                             Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                         }
-                    }
-                    else if (from.equalsIgnoreCase("reportUser")) {
+                    } else if (from.equalsIgnoreCase("reportUser")) {
                         if (ConnectionDetector.getInstance(CommentActivity.this).isConnectingToInternet()) {
                             Utility.hideKeyboard(v);
-                            newsRepository.ReportUser(api_token,eventId, attnId,newsfeedIdId, msg);
+                            newsRepository.ReportUser(api_token, eventId, attnId, newsfeedIdId, msg);
                             newsRepository.getPostActivity().observe((LifecycleOwner) CommentActivity.this, new Observer<LoginOrganizer>() {
                                 @Override
                                 public void onChanged(LoginOrganizer loginOrganizer) {
@@ -1629,7 +1658,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                         myDialog.cancel();
                                         Utility.hideKeyboard(v);
-                                        startActivity(new Intent(CommentActivity.this,MainActivity.class));
+                                        //startActivity(new Intent(CommentActivity.this,MainActivity.class));
                                         finish();
                                     }
                                 }
@@ -1640,8 +1669,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                         }
                     }
-                }
-                else {
+                } else {
                     Utility.createShortSnackBar(NewsFeedFragment.cl_main, "Enter Something");
                 }
             }
