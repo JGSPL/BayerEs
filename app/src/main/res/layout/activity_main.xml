@@ -251,6 +251,7 @@
                 android:textColor="@color/black"
                 android:textFontWeight="1"
                 android:textSize="15dp"
+                android:id="@+id/txt_version"
                 android:textStyle="bold" />
 
         </LinearLayout>

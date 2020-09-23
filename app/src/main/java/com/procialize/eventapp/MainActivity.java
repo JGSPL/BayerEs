@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile,tr_logout;
+    TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
     FirebaseAuth mauth;
@@ -216,6 +217,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_home = findViewById(R.id.tr_home);
         tr_profile = findViewById(R.id.tr_profile);
         tr_logout = findViewById(R.id.tr_logout);
+        txt_version = findViewById(R.id.txt_version);
+
+        txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
         tr_home.setOnClickListener(this);
         tr_profile.setOnClickListener(this);
