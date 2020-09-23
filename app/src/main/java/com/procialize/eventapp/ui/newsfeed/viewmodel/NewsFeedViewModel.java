@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +85,8 @@ import retrofit2.Response;
 import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
@@ -550,19 +553,25 @@ public class NewsFeedViewModel extends ViewModel {
 
         myDialog.show();
 
-
         Button cancelbtn = myDialog.findViewById(R.id.canclebtn);
         Button ratebtn = myDialog.findViewById(R.id.ratebtn);
-
-        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
-        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
-
-        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
-        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
-
+        TextView title = myDialog.findViewById(R.id.title);
+        LinearLayout ll_main = myDialog.findViewById(R.id.ll_main);
+        final TextView counttv = myDialog.findViewById(R.id.counttv);
         final EditText etmsg = myDialog.findViewById(R.id.etmsg);
 
-        final TextView counttv = myDialog.findViewById(R.id.counttv);
+        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
+        counttv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
+        etmsg.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
+        etmsg.setHintTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+
+
         final TextView nametv = myDialog.findViewById(R.id.nametv);
 
         nametv.setText("To " + "Admin");
@@ -577,7 +586,7 @@ public class NewsFeedViewModel extends ViewModel {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 count = 250 - s.length();
-                counttv.setText(count + "");
+                counttv.setText(count + "/250");
             }
 
             @Override

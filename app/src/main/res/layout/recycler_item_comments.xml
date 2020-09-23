@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:baselineAligned="false"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/margin"
+        android:paddingLeft="@dimen/padding"
         android:paddingTop="@dimen/padding"
         android:paddingRight="@dimen/margin">
 
@@ -124,7 +124,7 @@
                 android:id="@+id/v_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:background="#80000000" />
         </LinearLayout>
 

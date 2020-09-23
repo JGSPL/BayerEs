@@ -73,7 +73,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 
 public class PostNewActivity extends AppCompatActivity implements View.OnClickListener, QueryListener, SuggestionsListener {
 
-    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info,ll_post,ll_inner_layout;
+    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info, ll_inner_layout,ll_post_status;//, ll_post
     EditText et_post;
     TextView btn_post, tv_count, tv_name, txtUploadImg, tv_header, tv_total_count, textData;
     PostNewsFeedViewModel postNewsFeedViewModel;
@@ -93,6 +93,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     private Mentions mentions;
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
     List<TableAttendee> attendeeList = null;
+    View view_top, view_left, view_right, view_bottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +116,9 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         iv_profile = findViewById(R.id.iv_profile);
         ll_media_dots = findViewById(R.id.ll_media_dots);
         ll_info = findViewById(R.id.ll_info);
-        ll_post = findViewById(R.id.ll_post);
+        //ll_post = findViewById(R.id.ll_post);
         ll_inner_layout = findViewById(R.id.ll_inner_layout);
+        ll_post_status = findViewById(R.id.ll_post_status);
         linear = findViewById(R.id.linear);
         btn_post = findViewById(R.id.btn_post);
         tv_count = findViewById(R.id.tv_count);
@@ -125,6 +127,10 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         txtUploadImg = findViewById(R.id.txtUploadImg);
         tv_total_count = findViewById(R.id.tv_total_count);
         textData = findViewById(R.id.textData);
+        view_top = findViewById(R.id.view_top);
+        view_left = findViewById(R.id.view_left);
+        view_right = findViewById(R.id.view_right);
+        view_bottom = findViewById(R.id.view_bottom);
         et_post = findViewById(R.id.et_post);
         imguploadimg = findViewById(R.id.imguploadimg);
         iv_back.setOnClickListener(this);
@@ -159,7 +165,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 tv_count.setText(String.valueOf(s.length()));
-                if (s.length() > 0 || resultList.size()>0) {
+                /*if (s.length() > 0 || resultList.size()>0) {
                     btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
                     btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
                     ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
@@ -167,7 +173,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
                     btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
                     ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
-                }
+                }*/
             }
 
             @Override
@@ -291,7 +297,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     }
 
                     try {
-                        if (resultList.size() > 0) {
+                        /*if (resultList.size() > 0) {
                             btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
                             btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
                             ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
@@ -299,7 +305,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                             btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
                             btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
                             ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
-                        }
+                        }*/
                         setPagerAdapter(resultList);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -464,14 +470,21 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         tv_name.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         ll_upload_media.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         ll_inner_layout.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
+        et_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
+        ll_post_status.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
 
+        et_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+        et_post.setHintTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         txtUploadImg.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         tv_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_3)));
         tv_total_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_3)));
-        btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
-        btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-        ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
-
+        btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+        //btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+        //ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+        view_top.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+        view_left.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+        view_right.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
+        view_bottom.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
         int color1 = Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1));
         imguploadimg.setColorFilter(color1, PorterDuff.Mode.SRC_ATOP);
 
