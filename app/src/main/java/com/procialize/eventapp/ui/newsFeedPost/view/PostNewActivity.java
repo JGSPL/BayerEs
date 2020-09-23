@@ -73,7 +73,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 
 public class PostNewActivity extends AppCompatActivity implements View.OnClickListener, QueryListener, SuggestionsListener {
 
-    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info, ll_inner_layout;//, ll_post
+    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info, ll_inner_layout,ll_post_status;//, ll_post
     EditText et_post;
     TextView btn_post, tv_count, tv_name, txtUploadImg, tv_header, tv_total_count, textData;
     PostNewsFeedViewModel postNewsFeedViewModel;
@@ -118,6 +118,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         ll_info = findViewById(R.id.ll_info);
         //ll_post = findViewById(R.id.ll_post);
         ll_inner_layout = findViewById(R.id.ll_inner_layout);
+        ll_post_status = findViewById(R.id.ll_post_status);
         linear = findViewById(R.id.linear);
         btn_post = findViewById(R.id.btn_post);
         tv_count = findViewById(R.id.tv_count);
@@ -469,7 +470,11 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         tv_name.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         ll_upload_media.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         ll_inner_layout.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
+        et_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_2)));
+        ll_post_status.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
 
+        et_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
+        et_post.setHintTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         txtUploadImg.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
         tv_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_3)));
         tv_total_count.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_3)));

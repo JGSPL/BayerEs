@@ -589,14 +589,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             imagesSelectednew1.add(mediaPath + newsfeed_detail.getNews_feed_media().get(i).getThumb_image());
         }
 
-        setupPagerIndidcatorDots(0, ll_media_dots, imagesSelectednew.size());
+        Utility.setupPagerIndidcatorDots(this,0, ll_media_dots, imagesSelectednew.size());
         SwipeMultimediaAdapter swipepagerAdapter = new SwipeMultimediaAdapter(CommentActivity.this, imagesSelectednew, imagesSelectednew1, newsfeed_detail.getNews_feed_media());
         vp_media.setAdapter(swipepagerAdapter);
         swipepagerAdapter.notifyDataSetChanged();
         vp_media.setCurrentItem(Integer.parseInt(mediaPosition));
 
         if (imagesSelectednew.size() > 1) {
-            setupPagerIndidcatorDots(0, ll_media_dots, imagesSelectednew.size());
+            Utility.setupPagerIndidcatorDots(this,0, ll_media_dots, imagesSelectednew.size());
             vp_media.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -607,7 +607,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 public void onPageSelected(int position1) {
                     JzvdStd.goOnPlayOnPause();
                     swipableAdapterPosition = position1;
-                    setupPagerIndidcatorDots(position1, ll_media_dots, imagesSelectednew.size());
+                    Utility.setupPagerIndidcatorDots(CommentActivity.this,position1, ll_media_dots, imagesSelectednew.size());
                 }
 
                 @Override
@@ -618,8 +618,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             ll_media_dots.setVisibility(View.GONE);
         }
-
-
     }
 
     public void setupCommentAdapter(List<CommentDetail> commentList) {
@@ -904,29 +902,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    private void setupPagerIndidcatorDots(int currentPage, LinearLayout ll_dots, int size) {
-
-        TextView[] dots = new TextView[size];
-        ll_dots.removeAllViews();
-        for (int i = 0; i < dots.length; i++) {
-            dots[i] = new TextView(this);
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(30);
-            dots[i].setTextColor(Color.parseColor("#343434"));
-            ll_dots.addView(dots[i]);
-        }
-
-        try {
-            if (dots.length > 0) {
-                if (dots.length != currentPage) {
-                    dots[currentPage].setTextColor(Color.parseColor("#A2A2A2"));
-                    // dots[currentPage].setTextColor(Color.parseColor(colorActive));
-                }
-            }
-        } catch (Exception e) {
-
-        }
-    }
 
     public void showCommentCount(List<CommentDetail> commentList) {
         if (commentList.size() == 1) {

@@ -220,15 +220,23 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <include layout="@layout/users_list" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_post_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black">
                     <EditText
                         android:id="@+id/et_post"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/black_border"
+                        android:background="@color/white"
                         android:gravity="top|left"
                         android:hint="@string/typeMessage"
                         android:imeOptions="actionSend|flagNoEnterAction"
@@ -241,7 +249,7 @@
                         android:scrollbars="vertical"
                         android:textColorHint="@color/black"
                         android:textSize="15dp" />
-
+                    </LinearLayout>
                     <TextView
                         android:id="@+id/textData"
                         android:layout_width="match_parent"
