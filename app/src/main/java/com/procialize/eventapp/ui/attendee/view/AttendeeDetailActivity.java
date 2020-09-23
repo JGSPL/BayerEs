@@ -77,7 +77,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     String api_token,eventid;
     LinearLayout bgLinear;
     View bgView;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
