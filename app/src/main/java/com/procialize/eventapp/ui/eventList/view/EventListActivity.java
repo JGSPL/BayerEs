@@ -287,4 +287,14 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        isClickable = true;
+        SessionManager.clearCurrentEvent(EventListActivity.this);
+        SessionManager.logoutUser(EventListActivity.this);
+        SharedPreference.clearAllPref(EventListActivity.this);
+        startActivity(new Intent(EventListActivity.this, LoginActivity.class));
+        finish();
+    }
 }

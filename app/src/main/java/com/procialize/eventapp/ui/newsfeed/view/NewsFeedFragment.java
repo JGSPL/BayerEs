@@ -116,6 +116,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     String likeStatus = "";
     String strPath = "", mediaPath = "";
     private List<UploadMultimedia> mediaList;
+    public boolean isFromUploading = false;
 
     public static NewsFeedFragment newInstance() {
         return new NewsFeedFragment();
@@ -175,10 +176,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         feedrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                newsfeedAdapter.getNewsFeedList().clear();
-                newsfeedAdapter.notifyDataSetChanged();
+
                 feedrefresh.setRefreshing(false);
                 if (connectionDetector.isConnectingToInternet()) {
+                    newsfeedAdapter.getNewsFeedList().clear();
+                    newsfeedAdapter.notifyDataSetChanged();
                     if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                         newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
                     }
@@ -189,7 +191,17 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 }
             }
         });
-        //getDataFromDb();
+
+        getDataFromDb();
+        final Handler handler1 = new Handler();
+        handler1.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                setupRecyclerView();
+            }
+        }, 100);
+
         if (connectionDetector.isConnectingToInternet()) {
            /* newsfeedAdapter.getNewsFeedList().clear();
             newsfeedAdapter.notifyDataSetChanged();*/
@@ -291,6 +303,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
                             insertIntoDb(feedList);
 
+
+
                             String mediaPath = fetchNewsfeedMultiple.getMedia_path();
                             totalPages = Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
 
@@ -309,6 +323,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            /*if(isFromUploading)
+                                hideProgressBar();*/
                         }
                         /*if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                             newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
@@ -416,6 +433,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             public void onChanged(List<TableNewsFeed> tableNewsFeeds) {
                 try {
                     if (tableNewsFeeds != null) {
+                        newsfeedAdapter.getNewsFeedList().clear();
+                        newsfeedAdapter.notifyDataSetChanged();
+
                         if (newsfeedArrayList.size() > 0) {
                             newsfeedArrayList.clear();
                         }
@@ -664,10 +684,10 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                                             }
                                                             currentPage = PAGE_START;
                                                             init();
-
+                                                            //isFromUploading = true;
                                                             hideProgressBar();
                                                         }
-                                                    }, 5000);
+                                                    }, 3000);
 
                                                 } else {
                                                     Utility.createLongSnackBar(cl_main, "failure");

@@ -322,7 +322,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin"
                 android:nestedScrollingEnabled="false"
-                tools:listitem="@layout/recycler_item_comments" />
+                tools:listitem="@layout/recycler_item_comments"
+                android:visibility="visible"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

@@ -152,7 +152,7 @@ public class CommentRepository {
      * @return
      */
     public MutableLiveData<Comment> getCommentList(String token,String event_id, String news_feed_id) {//, String pageSize, String pageNumber) {
-        commentList.setValue(null);
+        //commentList.setValue(null);
         commentApi.getComment(token,event_id,
                 news_feed_id/*,
                 pageSize,

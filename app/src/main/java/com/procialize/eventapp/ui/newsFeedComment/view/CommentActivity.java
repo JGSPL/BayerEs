@@ -61,6 +61,7 @@ import com.percolate.mentions.QueryListener;
 import com.percolate.mentions.SuggestionsListener;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
@@ -111,6 +112,9 @@ import java.util.Date;
 import java.util.List;
 
 import cn.jzvd.JzvdStd;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
@@ -240,6 +244,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         moreIV.setOnClickListener(this);
         CommonFunction.showBackgroundImage(this, ll_main);
 
+        setupCommentAdapter(commentList);
 
         iv_share.setOnClickListener(this);
         iv_back_gif.setOnClickListener(this);
@@ -559,20 +564,41 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void getComments() {
         if (connectionDetector.isConnectingToInternet()) {
             String newsFeedId = newsfeed_detail.getNews_feed_id();
-            commentViewModel.getComment(api_token, event_id, newsFeedId, "100", "1");
-            commentViewModel.getCommentList().observeForever(new Observer<Comment>() {
+            /*commentViewModel.getComment(api_token, event_id, newsFeedId, "100", "1");
+            commentViewModel.getCommentList().observe(this,new Observer<Comment>() {
                 @Override
                 public void onChanged(Comment comment) {
                     if (comment != null) {
-                        commentList.clear();
+                        //rv_comments.setVisibility(View.VISIBLE);
                         commentList = comment.getCommentDetails();
                         setupCommentAdapter(commentList);
                         showCommentCount(commentList);
-                    } else {
+                    } *//*else {
                         setupCommentAdapter(commentList);
-                    }
+                    }*//*
                 }
-            });
+
+            });*/
+            ApiUtils.getAPIService().getComment(api_token,event_id,
+                    newsFeedId/*,
+                pageSize,
+                pageNumber*/)
+                    .enqueue(new Callback<Comment>() {
+                        @Override
+                        public void onResponse(Call<Comment> call, Response<Comment> response) {
+                            if (response.isSuccessful()) {
+                                commentList = response.body().getCommentDetails();
+                                setupCommentAdapter(commentList);
+                                showCommentCount(commentList);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Comment> call, Throwable t) {
+                            //commentList.setValue(null);
+                        }
+                    });
+
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }

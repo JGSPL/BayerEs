@@ -343,6 +343,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                 postNewsFeedViewModel.selectAlbum(this);
                 break;
             case R.id.btn_post:
+                Utility.hideKeyboard(v);
                 if (cd.isConnectingToInternet()) {
                     //Call Refresh token
                     new RefreashToken(this).callGetRefreashToken(this);

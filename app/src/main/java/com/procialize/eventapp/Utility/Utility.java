@@ -48,6 +48,7 @@ import java.util.Enumeration;
 import java.util.Locale;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 
 public class Utility {
@@ -379,7 +380,9 @@ compare < 0, if date1 is smaller than date2*/
             dots[i].setText(Html.fromHtml("&#8226;"));
             dots[i].setTextSize(24);
            // dots[i].setTextColor(Color.parseColor("#343434"));
-            dots[i].setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
+            String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+            String eventColor3Opacity40 = eventColor3.replace("#", "");
+            dots[i].setTextColor(Color.parseColor("#8C"+eventColor3Opacity40));
             ll_dots.addView(dots[i]);
         }
 
