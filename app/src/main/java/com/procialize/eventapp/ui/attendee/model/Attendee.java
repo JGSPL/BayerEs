@@ -54,7 +54,7 @@ public class Attendee {
     @Expose
     private String firebase_username;
 
-    @SerializedName("firebase_status")
+    @SerializedName("chat_status")
     @Expose
     private String firebase_status;
 

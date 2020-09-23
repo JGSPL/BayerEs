@@ -413,7 +413,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     @Override
     public void onContactSelected(Attendee attendee) {
-        if (!(attendee.getFirebase_id().equalsIgnoreCase("0"))) {
+        if (!(attendee.getFirebase_status().equalsIgnoreCase("0"))) {
             final String SprofilePic = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_PROFILE_PIC);
             final String SUserNmae = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_FNAME);
             final String SlName = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_LNAME);

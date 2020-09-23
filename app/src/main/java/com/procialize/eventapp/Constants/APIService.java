@@ -261,6 +261,10 @@ public interface APIService{
                                          @Field("firebase_id") String search_text,
                                          @Field("firebase_name") String firebase_name,
                                          @Field("firebase_username") String pageNumber);
-
+ @POST(" Attendee_api/UpdateChatStatus")
+ @FormUrlEncoded
+ Call<LoginOrganizer> UpdateChatStatus(@Header("authorization") String auth,
+                                         @Field("event_id") String organizer_id,
+                                         @Field("receiver_id") String search_text);
 
 }

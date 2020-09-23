@@ -79,6 +79,7 @@
                         android:layout_width="match_parent"
                         android:id="@+id/view_one"
                         android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:background="@color/transperent" />
 
                     <View

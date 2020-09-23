@@ -249,6 +249,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                     // convViewHolder.setUserImage(userThumb,this);
 
                                     //--OPENING CHAT ACTIVITY FOR CLICKED USER----
+                                    getChatUpdate(api_token,eventid,attendeeid);
 
                                     Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
@@ -301,8 +302,8 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                             mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                                    getChatUpdate(api_token,eventid,attendeeid);
 
-                                    getChatUpdate(api_token,eventid,firebase_id, fname,FireEmaile);
                                     Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
                                     chatIntent.putExtra("user_name", fname + " " + lname);
@@ -403,10 +404,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         }
     }
     //Update Api
-    public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username ) {
+    public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String receiver_id) {
         updateApi = ApiUtils.getAPIService();
 
-        updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail,"1").enqueue(new Callback<LoginOrganizer>() {
+        updateApi.UpdateChatStatus(token, event_id, receiver_id).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
