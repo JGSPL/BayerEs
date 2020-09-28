@@ -37,6 +37,7 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
 
+import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.speaker.adapter.SpeakerAdapter;
@@ -46,6 +47,7 @@ import com.procialize.eventapp.ui.speaker.roomDB.TableSpeaker;
 import com.procialize.eventapp.ui.speaker.viewmodel.SpeakerDtabaseViewModel;
 import com.procialize.eventapp.ui.speaker.viewmodel.SpeakerViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -343,6 +345,7 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
 
     @Override
     public void onContactSelected(Speaker Speaker) {
-        
+        getActivity().startActivity(new Intent(getContext(), SpeakerDetailActivity.class)
+                .putExtra("Speaker", (Serializable) Speaker));
     }
 }

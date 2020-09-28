@@ -3,7 +3,9 @@ package com.procialize.eventapp.ui.speaker.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Speaker {
+import java.io.Serializable;
+
+public class Speaker implements Serializable {
     @SerializedName("mobile")
     @Expose
     private String mobile;
