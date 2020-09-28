@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:id="@+id/linMain"
+    android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="9"
+        android:orientation="vertical"
+        android:gravity="left|center">
+
+        <com.procialize.eventapp.fonts.RobotoTextViewHeader
+            android:id="@+id/nameTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/designationTv"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_gravity="center"
+            android:gravity="left"
+            android:lines="3"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:text="="
+            android:textColor="@color/black"
+            android:textSize="@dimen/textsizesmall"/>
+
+        <com.procialize.eventapp.fonts.RobotoTextview
+            android:id="@+id/statusTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/designationTv"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_gravity="center"
+            android:gravity="left"
+            android:paddingTop="0dp"
+            android:visibility="gone"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:text="Tap to participate"
+            android:textColor="@color/colorAccent"
+            android:textSize="10sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:id="@+id/ivewComplete"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/activetab">
+
+        </View>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/ic_rightarrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:tint="@color/colorAccent"
+            android:contentDescription="TODO"
+            android:src="@drawable/ic_rightarrow" />
+
+    </LinearLayout>
+</LinearLayout>
+</LinearLayout>
