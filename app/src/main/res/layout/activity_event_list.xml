@@ -89,7 +89,8 @@
             android:hint="@string/search_event_here"
             android:imeOptions="actionDone"
             android:textColor="@color/black"
-            android:textSize="@dimen/textsizesmall" />
+            android:textSize="@dimen/textsizesmall"
+            android:textColorHint="@color/txtcolor"/>
 
         <ImageView
             android:layout_width="20dp"

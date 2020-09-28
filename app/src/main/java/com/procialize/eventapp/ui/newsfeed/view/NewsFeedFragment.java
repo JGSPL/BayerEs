@@ -193,14 +193,14 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         });
 
         getDataFromDb();
-        final Handler handler1 = new Handler();
+        /*final Handler handler1 = new Handler();
         handler1.postDelayed(new Runnable() {
             @Override
             public void run() {
 
                 setupRecyclerView();
             }
-        }, 100);
+        }, 100);*/
 
         if (connectionDetector.isConnectingToInternet()) {
            /* newsfeedAdapter.getNewsFeedList().clear();
@@ -428,7 +428,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     public void getDataFromDb() {
         newsFeedDatabaseViewModel.getNewsFeed(getActivity());
-        newsFeedDatabaseViewModel.getNewsFeedList().observeForever(new Observer<List<TableNewsFeed>>() {
+        newsFeedDatabaseViewModel.getNewsFeedList().observe(getActivity(),new Observer<List<TableNewsFeed>>() {
             @Override
             public void onChanged(List<TableNewsFeed> tableNewsFeeds) {
                 try {
@@ -485,9 +485,13 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                                 }
                                                 newsfeed_detail.setNews_feed_media(newsFeedMediaList);
                                             }
+
                                         }
                                     });
                             newsfeedArrayList.add(i, newsfeed_detail);
+                            if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getNewsFeedMediaDataList(getActivity(), tableNewsFeeds.get(i).getNews_feed_id()).hasObservers()) {
+                                newsFeedDatabaseViewModel.getNewsFeedMediaDataList(getActivity(), tableNewsFeeds.get(i).getNews_feed_id()).removeObservers(getActivity());
+                            }
                         }
                         newsfeedAdapter.addAll(newsfeedArrayList);
                         if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getNewsFeedList().hasObservers()) {

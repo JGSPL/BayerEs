@@ -26,9 +26,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -654,15 +654,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getAttendeeAndInsertIntoDB()
     {
-        if(ConnectionDetector.getInstance(MainActivity.this).isConnectingToInternet()) {
-            AttendeeViewModel attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
-            final AttendeeDatabaseViewModel attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
-            attendeeViewModel.getAttendee(api_token, eventid, "", "1", "5000");
-            attendeeViewModel.getAttendeeList().observe(this, new Observer<FetchAttendee>() {
-                @Override
-                public void onChanged(FetchAttendee event) {
-                    List<Attendee> attendeeList = event.getAttandeeList();
+        try {
+            if (ConnectionDetector.getInstance(MainActivity.this).isConnectingToInternet()) {
+                AttendeeViewModel attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
+                final AttendeeDatabaseViewModel attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+                attendeeViewModel.getAttendee(api_token, eventid, "", "1", "5000");
+                attendeeViewModel.getAttendeeList().observe(this, new Observer<FetchAttendee>() {
+                    @Override
+                    public void onChanged(FetchAttendee event) {
+                        List<Attendee> attendeeList = event.getAttandeeList();
 
+                        try {
                             //Delete All attendee from local db and insert attendee
                             attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
                             attendeeDatabaseViewModel.insertIntoDb(MainActivity.this, attendeeList);

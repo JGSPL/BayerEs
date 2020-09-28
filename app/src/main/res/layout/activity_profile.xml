@@ -175,7 +175,7 @@
                 android:paddingLeft="20dp"
                 android:paddingTop="20dp"
                 android:paddingRight="20dp"
-                android:paddingBottom="100dp">
+                android:paddingBottom="300dp">
 
                 <LinearLayout
                     android:id="@+id/ll_name"
@@ -213,7 +213,8 @@
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/iv_last_name"
@@ -271,7 +272,8 @@
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/iv_company_name"

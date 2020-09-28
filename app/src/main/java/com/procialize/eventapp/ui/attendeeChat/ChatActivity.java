@@ -231,13 +231,8 @@ public class ChatActivity extends AppCompatActivity {
         mRootReference = FirebaseDatabase.getInstance().getReference();
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
-        try {
-            mAuth = FirebaseAuth.getInstance();
-            mCurrentUserId = mAuth.getCurrentUser().getUid();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUserId = mAuth.getCurrentUser().getUid();
 
         mMessageAdapter = new MessageAdapter(messagesList, userName,loginUser_name,sProfilepic,prof_pic);
 
