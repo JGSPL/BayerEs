@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin">
+    android:orientation="vertical"
+    android:id="@+id/linear">
 
 
-    <EditText
-        android:id="@+id/editText"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittexthmbg"
-        android:hint="@string/searchspeaker"
-        android:inputType="textPersonName"
-        android:padding="@dimen/padding_edit"
-        android:textSize="@dimen/textsizesmall"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="96dp"
-        tools:layout_editor_absoluteY="15dp" />
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/profile_edit_text_bg"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/searchEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="@string/searchspeaker"
+            android:imeOptions="actionDone|actionSend"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textsizesmall"/>
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_margin="2dp"
+            android:src="@drawable/ic_search"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/txt_pullrefresh"
@@ -29,23 +45,29 @@
         android:layout_marginTop="@dimen/marginsmall"
         android:layout_marginBottom="@dimen/marginsmall"
         android:gravity="center"
+        android:visibility="gone"
         android:text="@string/pullrefresh"
         android:textSize="@dimen/textsizesmaller"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        />
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh"
-        android:id="@+id/swiperefresh_speaker">
+        android:layout_gravity="center"
+        android:background="@drawable/loader"
+        android:visibility="gone" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh_speaker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_speaker"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            tools:listitem="@layout/attendee_row"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -15,9 +15,11 @@ import com.procialize.eventapp.ui.newsfeed.roomDB.TableNewsFeed;
 import com.procialize.eventapp.ui.newsfeed.roomDB.TableNewsFeedMedia;
 import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 import com.procialize.eventapp.ui.profile.roomDB.ProfileUpdateDao;
+import com.procialize.eventapp.ui.speaker.roomDB.SpeakerDao;
+import com.procialize.eventapp.ui.speaker.roomDB.TableSpeaker;
 
 @Database(entities = {UploadMultimedia.class, TableNewsFeed.class, TableNewsFeedMedia.class,
-        ProfileEventId.class, TableAttendee.class},
+        ProfileEventId.class, TableAttendee.class, TableSpeaker.class},
         version = 1, exportSchema = false)
 public abstract class EventAppDB extends RoomDatabase {
 
@@ -26,6 +28,7 @@ public abstract class EventAppDB extends RoomDatabase {
     public abstract NewsFeedDao newsFeedDao();
     public abstract ProfileUpdateDao profileUpdateDao();
     public abstract AttendeeDao attendeeDao();
+    public abstract SpeakerDao speakerDao();
 
     public static EventAppDB getDatabase(final Context context) {
         if (eventAppDB == null) {

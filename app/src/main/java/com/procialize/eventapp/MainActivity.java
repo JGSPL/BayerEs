@@ -654,6 +654,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getAttendeeAndInsertIntoDB()
     {
+        try{
         if(ConnectionDetector.getInstance(MainActivity.this).isConnectingToInternet()) {
             AttendeeViewModel attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
             final AttendeeDatabaseViewModel attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
@@ -662,7 +663,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onChanged(FetchAttendee event) {
                     List<Attendee> attendeeList = event.getAttandeeList();
-
+                        try{
                             //Delete All attendee from local db and insert attendee
                             attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
                             attendeeDatabaseViewModel.insertIntoDb(MainActivity.this, attendeeList);

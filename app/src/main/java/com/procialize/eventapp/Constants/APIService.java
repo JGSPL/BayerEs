@@ -13,6 +13,7 @@ import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.profile.model.Profile;
+import com.procialize.eventapp.ui.speaker.model.FetchSpeaker;
 import com.procialize.eventapp.ui.splash.view.SplashAcivity;
 
 import java.util.HashMap;
@@ -261,10 +262,18 @@ public interface APIService{
                                          @Field("firebase_id") String search_text,
                                          @Field("firebase_name") String firebase_name,
                                          @Field("firebase_username") String pageNumber);
- @POST(" Attendee_api/UpdateChatStatus")
+ @POST("Attendee_api/UpdateChatStatus")
  @FormUrlEncoded
  Call<LoginOrganizer> UpdateChatStatus(@Header("authorization") String auth,
                                          @Field("event_id") String organizer_id,
                                          @Field("receiver_id") String search_text);
+
+ @POST("Speaker_api/SpeakerList")
+ @FormUrlEncoded
+ Call<FetchSpeaker> SpeakerList(@Header("authorization") String auth,
+                                @Field("event_id") String organizer_id,
+                                @Field("search_text") String search_text);
+
+
 
 }
