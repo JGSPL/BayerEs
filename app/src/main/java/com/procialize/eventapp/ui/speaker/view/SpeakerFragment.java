@@ -292,12 +292,17 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
                 List<Speaker> eventLists = event.getSpeakerList();
 
                 //Delete All Speaker from local db and insert Speaker
-                SpeakerDtabaseViewModel.deleteAllSpeaker(getActivity());
-                SpeakerDtabaseViewModel.insertIntoDb(getActivity(), eventLists);
+                if(eventLists!=null) {
+                    SpeakerDtabaseViewModel.deleteAllSpeaker(getActivity());
+                    SpeakerDtabaseViewModel.insertIntoDb(getActivity(), eventLists);
 
-                progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
 
-                setupEventAdapter(eventLists);
+                    setupEventAdapter(eventLists);
+                }else{
+                    progressBar.setVisibility(View.GONE);
+
+                }
             }
         });
     }
