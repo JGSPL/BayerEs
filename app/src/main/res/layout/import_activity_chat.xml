@@ -20,6 +20,7 @@
             android:layout_height="39dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="2dp"
+            android:tint="@color/black"
             android:src="@drawable/addbutton"
             />
 
@@ -30,6 +31,8 @@
             android:hint="Message"
             android:layout_gravity="center"
             android:paddingLeft="5dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:background="@color/colorwhite"
             android:paddingRight="10dp"
             android:maxHeight="300dp"
@@ -49,6 +52,7 @@
             android:padding="5dp"
             android:backgroundTint="@color/colorwhite"
             android:layout_gravity="center"
+            android:tint="@color/black"
             android:src="@mipmap/ic_send"
             />
         </LinearLayout>
