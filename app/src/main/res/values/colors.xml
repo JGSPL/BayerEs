@@ -18,6 +18,7 @@
     <color name="star_color">#fbc375</color>
     <color name="trans">#80000000</color>
     <color name="colorgrey">#e6e6e6</color>
+    <color name="logintxt">#818181</color>
 
     <color name="colorwhite">#ffffff</color>
     <color name="colorBackground">#7E57C2</color>

@@ -322,6 +322,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                     chatIntent.putExtra("attendee_type", attendee_type);
                                     chatIntent.putExtra("mobile", mobile);
                                     chatIntent.putExtra("email", email);
+                                    getChatUpdate(api_token,eventid,firebase_id);
 
                                     startActivity(chatIntent);
                                     finish();

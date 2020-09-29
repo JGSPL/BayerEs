@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this));
+        activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this, activityLoginBinding));
         activityLoginBinding.executePendingBindings();
 
 
@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                 activityLoginBinding.linearOTPView.setVisibility(View.VISIBLE);
             } else if (message.equalsIgnoreCase("back")) {
                 Utility.hideKeyboard(view);
+                activityLoginBinding.editOtp.setText("");
                 activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
                 activityLoginBinding.linearOTPView.setVisibility(View.GONE);
             } else if (message.equalsIgnoreCase("Successfully Login")) {

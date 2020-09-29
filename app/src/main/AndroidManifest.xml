@@ -46,15 +46,15 @@
         <activity
             android:name=".ui.attendee.view.AttendeeDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity
             android:name=".ui.profile.view.ProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity
             android:name=".ui.eventList.view.EventListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity
             android:name=".ui.splash.view.SplashAcivity"
             android:screenOrientation="portrait"
@@ -75,7 +75,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustNothing"></activity>
+            android:windowSoftInputMode="stateHidden|adjustNothing"/>
         <activity
             android:name=".ui.newsFeedDetails.view.NewsFeedDetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

@@ -48,7 +48,6 @@ import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
-import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
@@ -193,7 +192,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         email = profileDetails.get(0).getEmail();
                         mobile = profileDetails.get(0).getMobile();
 
-                        et_first_name.setText(first_name);
+                        et_first_name.setText(first_name + " " + last_name);
                         et_last_name.setText(last_name);
                         et_designation.setText(designation);
                         et_company_name.setText(company_name);
@@ -269,8 +268,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save:
-                first_name = et_first_name.getText().toString().trim();
-                last_name = et_last_name.getText().toString().trim();
+                try {
+                    String name = et_first_name.getText().toString().trim();
+                    String[] separated = name.split(" ");
+                    first_name = separated[0];
+                    last_name = separated[1];
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+//                last_name = et_last_name.getText().toString().trim();
                 designation = et_designation.getText().toString().trim();
                 company_name = et_company_name.getText().toString().trim();
                 city = et_city.getText().toString().trim();
@@ -643,9 +651,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onChanged(String s) {
                 if(s.isEmpty()) {
+                    btn_save.setClickable(false);
+                    btn_save.setEnabled(false);
                     profileActivityViewModel.updateProfile(api_token, event_id, first_name, last_name, designation, city,
                             email, mobile, company_name, profile_pic);
-                    profileActivityViewModel.UpdateProfileDetails().observe(ProfileActivity.this,new Observer<Profile>() {
+                    profileActivityViewModel.UpdateProfileDetails().observe(ProfileActivity.this, new Observer<Profile>() {
                         @Override
                         public void onChanged(final Profile profile) {
                             if (profile != null) {
