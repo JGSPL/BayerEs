@@ -10,14 +10,15 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorwhite"
         android:elevation="10dp"
         tools:ignore="UnusedAttribute">
 
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="@dimen/size_avatar_toolbar"
-            android:layout_height="@dimen/size_avatar_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_back"
             android:layout_marginEnd="@dimen/spacing_double"
             android:layout_marginRight="@dimen/spacing_double"
             tools:ignore="UnusedAttribute" />
@@ -37,5 +38,15 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"/>
+    <cn.jzvd.JzvdStd
+        android:id="@+id/videoplayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:screenOrientation="portrait"
+        android:scaleType="fitCenter"
+
+        android:visibility="gone"/>
+
 
 </RelativeLayout>

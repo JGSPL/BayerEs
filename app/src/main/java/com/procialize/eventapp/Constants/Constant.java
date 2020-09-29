@@ -16,6 +16,7 @@ public class Constant {
     public static final String IMAGE_DIRECTORY = "/Images";
     public static final String VIDEO_DIRECTORY = "/Video";
     public static final String BROADCAST_UPLOAD_MULTIMEDIA_ACTION = "com.procialize.eventsapp.UPLOAD_MULTIMEDIA";
+    public static String FIREBASE_TOKEN = "";
 
     public static class Config {
         public static final boolean DEVELOPER_MODE = false;

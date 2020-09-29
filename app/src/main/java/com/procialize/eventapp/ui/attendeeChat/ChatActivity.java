@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -59,6 +60,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -114,7 +116,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 10;
+    public static final int TOTAL_ITEM_TO_LOAD = 25;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
@@ -139,6 +141,7 @@ public class ChatActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     String  lname, company, city, designation,  attendee_type,mobile,email,attendeeid,firebase_id,firstMessage, page;
     LinearLayout lineaeSend;
+    public static String videoflag = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,17 +196,17 @@ public class ChatActivity extends AppCompatActivity {
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - "+ city);
 
-        mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+       // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        //lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1));
-        mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+       // mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+      //  mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
 
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
         linBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -402,7 +405,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     // Check for new messages
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-/*
+
                     if (currentUser != null){
                         String UID = currentUser.getUid();
                         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -443,10 +446,13 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         });
                     }
-*/
 
 
 
+
+
+                }else{
+                    Toast.makeText(ChatActivity.this, "Please enter any message", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -1219,7 +1225,6 @@ public class ChatActivity extends AppCompatActivity {
 
                 }else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
-                    finish();
                 }
             }
         });
@@ -1565,6 +1570,18 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
+    @Override
+    public void onBackPressed() {
+
+        JzvdStd.releaseAllVideos();
+        if (videoflag.equalsIgnoreCase("1")) {
+
+        }else{
+            finish();
+        }
+
+    }
+
 
 
 

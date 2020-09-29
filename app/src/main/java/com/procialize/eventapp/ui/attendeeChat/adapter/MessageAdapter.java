@@ -38,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.procialize.eventapp.App;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.FullScreenImageActivity;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
 
@@ -154,6 +155,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
             //---DELETE FUNCTION---
+/*
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -166,9 +168,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         public void onClick(DialogInterface dialog, int which) {
 
                             if(which == 0){
-                                /*
+                                */
+/*
                                         ....CODE FOR DELETING THE MESSAGE IS YET TO BE WRITTEN HERE...
-                                 */
+                                 *//*
+
                                 long mesPos = getAdapterPosition();
                                 String mesId = mMessagesList.get((int)mesPos).toString();
                                 Log.e("Message Id is ", mesId);
@@ -187,6 +191,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     return true;
                 }
             });
+*/
 
         }
 
@@ -204,49 +209,48 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String message_type = mes.getType();
 
         holder.innerRl2.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
-        holder.innerRl1.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
+       // holder.innerRl1.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
 
         holder.messageText2.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
+        if(from_user_id!=null) {
+            if (from_user_id.equals(current_user_id)) {
+                holder.messageSingleLayout2.setVisibility(View.GONE);
+                holder.messageSingleLayout3.setVisibility(View.VISIBLE);
+                //----CHANGING TIMESTAMP TO TIME-----
+
+                long timeStamp = mes.getTime();
+                Calendar calendar = GregorianCalendar.getInstance();
+                calendar.setTimeInMillis(timeStamp);
+                String cal[] = calendar.getTime().toString().split(" ");
+
+                String time = cal[3];
+
+                SimpleDateFormat date12Format = new SimpleDateFormat("HH:mm:ss");
+
+                SimpleDateFormat date24Format = new SimpleDateFormat("hh:mm a");
+
+                try {
+                    System.out.println(date24Format.format(date12Format.parse(time)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String time_of_message = null;
+                try {
+
+                    // time_of_message = cal[2] + " " +cal[1] + " " +  cal[5]+ ", " + /*cal[3].substring(0, 5)*/date24Format.format(date12Format.parse(time));
+                    time_of_message = date24Format.format(date12Format.parse(time));
+
+                    holder.displayTime2.setText(time_of_message);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Log.e("TIME IS : ", calendar.getTime().toString());
 
 
-        if(from_user_id.equals(current_user_id)){
-            holder.messageSingleLayout2.setVisibility(View.GONE);
-            holder.messageSingleLayout3.setVisibility(View.VISIBLE);
-            //----CHANGING TIMESTAMP TO TIME-----
+                mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(from_user_id);
 
-            long timeStamp = mes.getTime();
-            Calendar calendar = GregorianCalendar.getInstance();
-            calendar.setTimeInMillis(timeStamp);
-            String cal[] = calendar.getTime().toString().split(" ");
-
-            String time = cal[3];
-
-            SimpleDateFormat date12Format = new SimpleDateFormat("HH:mm:ss");
-
-            SimpleDateFormat date24Format = new SimpleDateFormat("hh:mm a");
-
-            try {
-                System.out.println(date24Format.format(date12Format.parse(time)));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            String time_of_message = null;
-            try {
-
-               // time_of_message = cal[2] + " " +cal[1] + " " +  cal[5]+ ", " + /*cal[3].substring(0, 5)*/date24Format.format(date12Format.parse(time));
-                time_of_message = date24Format.format(date12Format.parse(time));
-
-                holder.displayTime2.setText(time_of_message);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            Log.e("TIME IS : ", calendar.getTime().toString());
-
-
-            mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(from_user_id);
-
-            //---ADDING NAME THUMB_IMAGE TO THE HOLDER----
+                //---ADDING NAME THUMB_IMAGE TO THE HOLDER----
 /*
             mDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -266,38 +270,38 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 }
             });
 */
-            holder.displayName2.setText(sName);
+                holder.displayName2.setText(sName);
 
-            Glide.with(context).load((sprofilpic))
-                    .placeholder(R.drawable.profilepic_placeholder)
-                    .apply(RequestOptions.skipMemoryCacheOf(false))
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).fitCenter()
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
+                Glide.with(context).load((sprofilpic))
+                        .placeholder(R.drawable.profilepic_placeholder)
+                        .apply(RequestOptions.skipMemoryCacheOf(false))
+                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).fitCenter()
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                return false;
+                            }
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            return false;
-                        }
-                    }).into(holder.profileImage2);
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                return false;
+                            }
+                        }).into(holder.profileImage2);
 
-            // holder.messageText.setText(mes.getMessage());
-            if (message_type.equals("text")) {
-                holder.videoplayer2.setVisibility(View.GONE);
-                holder.messageText2.setVisibility(View.VISIBLE);
+                // holder.messageText.setText(mes.getMessage());
+                if (message_type.equals("text")) {
+                    holder.videoplayer2.setVisibility(View.GONE);
+                    holder.messageText2.setVisibility(View.VISIBLE);
 
-                holder.messageText2.setText(mes.getMessage());
-                holder.messageImage2.setVisibility(View.GONE);
-                holder.progressBarRight.setVisibility(View.INVISIBLE);
+                    holder.messageText2.setText(mes.getMessage());
+                    holder.messageImage2.setVisibility(View.GONE);
+                    holder.progressBarRight.setVisibility(View.INVISIBLE);
 
-            } else if (message_type.equals("video")) {
-                holder.messageText2.setVisibility(View.GONE);
-                holder.progressBarRight.setVisibility(View.GONE);
-                holder.messageImage2.setVisibility(View.GONE);
-                holder.videoplayer2.setVisibility(View.VISIBLE);
+                } else if (message_type.equals("video")) {
+                    holder.messageText2.setVisibility(View.GONE);
+                    holder.progressBarRight.setVisibility(View.GONE);
+                    holder.messageImage2.setVisibility(View.GONE);
+                    holder.videoplayer2.setVisibility(View.VISIBLE);
 
                 /*holder.videoplayer2.setUp(mes.getMessage()
                         , JzvdStd.SCREEN_WINDOW_NORMAL, "");
@@ -307,192 +311,177 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         .load(mes.getMessage())
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .into(holder.videoplayer2.thumbImageView);*/
-                HttpProxyCacheServer proxy = App.getProxy(context);
-                proxy.registerCacheListener(this, mes.getMessage());
-                String proxyUrl = proxy.getProxyUrl(mes.getMessage());
-                Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
+                    HttpProxyCacheServer proxy = App.getProxy(context);
+                    proxy.registerCacheListener(this, mes.getMessage());
+                    String proxyUrl = proxy.getProxyUrl(mes.getMessage());
+                    Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
 
-                holder.videoplayer2.setUp(proxyUrl.trim(), ""
-                        , JzvdStd.SCREEN_NORMAL);
-                JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
-
-
-                Glide.with(context)
-                        .asBitmap()
-                        .load(mes.getMessage())
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.videoplayer2.thumbImageView);
+                    holder.videoplayer2.setUp(proxyUrl.trim(), ""
+                            , JzvdStd.SCREEN_NORMAL);
+                    JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
 
 
-            } else if(mes.getType().equalsIgnoreCase("image")){
+                    Glide.with(context)
+                            .asBitmap()
+                            .load(mes.getMessage())
+                            .diskCacheStrategy(DiskCacheStrategy.DATA)
+                            .into(holder.videoplayer2.thumbImageView);
 
-                holder.messageText2.setVisibility(View.GONE);
-                holder.messageImage2.setVisibility(View.VISIBLE);
-                //Picasso.with(holder.profileImage.getContext()).load(mes.getMessage()).placeholder(R.drawable.user_img).into(holder.messageImage);
-                holder.videoplayer2.setVisibility(View.GONE);
 
-                Glide.with(context).load((mes.getMessage()))
-                        .placeholder(R.drawable.gallery_placeholder)
+                } else if (mes.getType().equalsIgnoreCase("image")) {
+
+                    holder.messageText2.setVisibility(View.GONE);
+                    holder.messageImage2.setVisibility(View.VISIBLE);
+                    //Picasso.with(holder.profileImage.getContext()).load(mes.getMessage()).placeholder(R.drawable.user_img).into(holder.messageImage);
+                    holder.videoplayer2.setVisibility(View.GONE);
+
+                    Glide.with(context).load((mes.getMessage()))
+                            .placeholder(R.drawable.gallery_placeholder)
+                            .apply(RequestOptions.skipMemoryCacheOf(false))
+                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).fitCenter()
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    holder.progressBarRight.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    holder.progressBarRight.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            }).into(holder.messageImage2);
+
+
+                }
+
+            } else {
+
+                holder.messageSingleLayout3.setVisibility(View.GONE);
+                holder.messageSingleLayout2.setVisibility(View.VISIBLE);
+                //----CHANGING TIMESTAMP TO TIME-----
+
+                long timeStamp = mes.getTime();
+                Calendar calendar = GregorianCalendar.getInstance();
+                calendar.setTimeInMillis(timeStamp);
+                String cal[] = calendar.getTime().toString().split(" ");
+                //  String time_of_message = cal[2] + " " + cal[1] + " "+ cal[5]+ "  "+ cal[3].substring(0, 5);
+                Log.e("TIME IS : ", calendar.getTime().toString());
+                String time = cal[3];
+
+                SimpleDateFormat date12Format = new SimpleDateFormat("HH:mm:ss");
+
+                SimpleDateFormat date24Format = new SimpleDateFormat("hh:mm a");
+
+                try {
+                    System.out.println(date24Format.format(date12Format.parse(time)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                try {
+
+                    // String time_of_message = cal[2] + " " +cal[1] + " " +  cal[5]+ ", " + /*cal[3].substring(0, 5)*/date24Format.format(date12Format.parse(time));
+                    String time_of_message = date24Format.format(date12Format.parse(time));
+
+                    holder.displayTime.setText(time_of_message);
+
+                } catch (ParseException e) {
+
+
+                    e.printStackTrace();
+                }
+                //  holder.displayTime.setText(time_of_message);
+
+                mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(from_user_id);
+
+                //---ADDING NAME THUMB_IMAGE TO THE HOLDER----
+                holder.displayName.setText(receiverUser);
+                Glide.with(context).load((rprofilPic))
+                        .placeholder(R.drawable.profilepic_placeholder)
                         .apply(RequestOptions.skipMemoryCacheOf(false))
                         .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).fitCenter()
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                holder.progressBarRight.setVisibility(View.GONE);
                                 return false;
                             }
 
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                holder.progressBarRight.setVisibility(View.GONE);
                                 return false;
                             }
-                        }).into(holder.messageImage2);
+                        }).into(holder.profileImage);
 
+                // holder.messageText.setText(mes.getMessage());
+                if (message_type.equals("text")) {
+                    holder.messageText.setVisibility(View.VISIBLE);
+                    holder.messageText.setText(mes.getMessage());
+                    holder.messageImage.setVisibility(View.GONE);
+                    holder.progressBarLeft.setVisibility(View.INVISIBLE);
+                    holder.videoplayer.setVisibility(View.GONE);
 
-            }
+                } else if (message_type.equals("video")) {
 
-        }else {
-
-            holder.messageSingleLayout3.setVisibility(View.GONE);
-            holder.messageSingleLayout2.setVisibility(View.VISIBLE);
-            //----CHANGING TIMESTAMP TO TIME-----
-
-            long timeStamp = mes.getTime();
-            Calendar calendar = GregorianCalendar.getInstance();
-            calendar.setTimeInMillis(timeStamp);
-            String cal[] = calendar.getTime().toString().split(" ");
-          //  String time_of_message = cal[2] + " " + cal[1] + " "+ cal[5]+ "  "+ cal[3].substring(0, 5);
-            Log.e("TIME IS : ", calendar.getTime().toString());
-            String time = cal[3];
-
-            SimpleDateFormat date12Format = new SimpleDateFormat("HH:mm:ss");
-
-            SimpleDateFormat date24Format = new SimpleDateFormat("hh:mm a");
-
-            try {
-                System.out.println(date24Format.format(date12Format.parse(time)));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            try {
-
-               // String time_of_message = cal[2] + " " +cal[1] + " " +  cal[5]+ ", " + /*cal[3].substring(0, 5)*/date24Format.format(date12Format.parse(time));
-                String time_of_message = date24Format.format(date12Format.parse(time));
-
-                holder.displayTime.setText(time_of_message);
-
-            } catch (ParseException e) {
-
-
-
-                e.printStackTrace();
-            }
-          //  holder.displayTime.setText(time_of_message);
-
-            mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(from_user_id);
-
-            //---ADDING NAME THUMB_IMAGE TO THE HOLDER----
-/*
-            mDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String name = dataSnapshot.child("name").getValue().toString();
-                    String image = dataSnapshot.child("thumb_image").getValue().toString();
-
-                    holder.displayName.setText(name);
-                    Picasso.with(holder.profileImage.getContext()).load(image).
-                            placeholder(R.drawable.profilepic_placeholder).into(holder.profileImage);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-*/
-            holder.displayName.setText(receiverUser);
-            Glide.with(context).load((rprofilPic))
-                    .placeholder(R.drawable.profilepic_placeholder)
-                    .apply(RequestOptions.skipMemoryCacheOf(false))
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).fitCenter()
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            return false;
-                        }
-                    }).into(holder.profileImage);
-
-            // holder.messageText.setText(mes.getMessage());
-            if (message_type.equals("text")) {
-                holder.messageText.setVisibility(View.VISIBLE);
-                holder.messageText.setText(mes.getMessage());
-                holder.messageImage.setVisibility(View.GONE);
-                holder.progressBarLeft.setVisibility(View.INVISIBLE);
-                holder.videoplayer.setVisibility(View.GONE);
-
-            } else if (message_type.equals("video")) {
-
-                holder.messageText.setVisibility(View.GONE);
-                holder.progressBarLeft.setVisibility(View.GONE);
-                holder.videoplayer.setVisibility(View.VISIBLE);
-                holder.messageImage.setVisibility(View.GONE);
+                    holder.messageText.setVisibility(View.GONE);
+                    holder.progressBarLeft.setVisibility(View.GONE);
+                    holder.videoplayer.setVisibility(View.VISIBLE);
+                    holder.messageImage.setVisibility(View.GONE);
 
                /* holder.videoplayer.setUp(mes.getMessage()
                         , JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, "");*/
-                HttpProxyCacheServer proxy = App.getProxy(context);
-                proxy.registerCacheListener(this, mes.getMessage());
-                String proxyUrl = proxy.getProxyUrl(mes.getMessage());
-                Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
+                    HttpProxyCacheServer proxy = App.getProxy(context);
+                    proxy.registerCacheListener(this, mes.getMessage());
+                    String proxyUrl = proxy.getProxyUrl(mes.getMessage());
+                    Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
 
-                holder.videoplayer.setUp(proxyUrl.trim(), ""
-                        , JzvdStd.SCREEN_NORMAL);
-                JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
-
-
-
-                Glide.with(context)
-                        .asBitmap()
-                        .load(mes.getMessage())
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(holder.videoplayer.thumbImageView);
+                    holder.videoplayer.setUp(proxyUrl.trim(), ""
+                            , JzvdStd.SCREEN_NORMAL);
+                    JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
 
 
-
-            }else if (message_type.equalsIgnoreCase("image")) {
-
-                holder.messageText.setVisibility(View.GONE);
-                holder.messageImage.setVisibility(View.VISIBLE);
-                //Picasso.with(holder.profileImage.getContext()).load(mes.getMessage()).placeholder(R.drawable.user_img).into(holder.messageImage);
-                holder.videoplayer.setVisibility(View.GONE);
+                    Glide.with(context)
+                            .asBitmap()
+                            .load(mes.getMessage())
+                            .diskCacheStrategy(DiskCacheStrategy.DATA)
+                            .into(holder.videoplayer.thumbImageView);
 
 
+                } else if (message_type.equalsIgnoreCase("image")) {
 
-                Glide.with(context).load((mes.getMessage()))
-                        .placeholder(R.drawable.gallery_placeholder)
-                        .apply(RequestOptions.skipMemoryCacheOf(false))
-                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                holder.progressBarLeft.setVisibility(View.GONE);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                holder.progressBarLeft.setVisibility(View.GONE);
-                                return false;
-                            }
-                        }).into(holder.messageImage);
+                    holder.messageText.setVisibility(View.GONE);
+                    holder.messageImage.setVisibility(View.VISIBLE);
+                    //Picasso.with(holder.profileImage.getContext()).load(mes.getMessage()).placeholder(R.drawable.user_img).into(holder.messageImage);
+                    holder.videoplayer.setVisibility(View.GONE);
 
 
+                    Glide.with(context).load((mes.getMessage()))
+                            .placeholder(R.drawable.gallery_placeholder)
+                            .apply(RequestOptions.skipMemoryCacheOf(false))
+                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    holder.progressBarLeft.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    holder.progressBarLeft.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            }).into(holder.messageImage);
+
+
+                }
             }
+        }else{
+            holder.innerRl1.setVisibility(View.GONE);
+            holder.innerRl2.setVisibility(View.GONE);
+            holder.displayTime.setVisibility(View.GONE);
+
+
         }
 
         holder.linMain.setOnClickListener(new View.OnClickListener() {
@@ -502,11 +491,49 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     Intent comment = new Intent(context, FullScreenImageActivity.class);
                     comment.putExtra("nameUser", uName);
                     comment.putExtra("urlPhotoUser", uImage);
+                    comment.putExtra("type", mes.getType());
+
+                    comment.putExtra("urlPhotoClick", mes.getMessage());
+                    context.startActivity(comment);
+                }else if(mes.getType().equalsIgnoreCase(("video"))) {
+                    Intent comment = new Intent(context, FullScreenImageActivity.class);
+                    comment.putExtra("nameUser", uName);
+
+                    comment.putExtra("type", mes.getType());
+                    comment.putExtra("urlPhotoUser", uImage);
                     comment.putExtra("urlPhotoClick", mes.getMessage());
                     context.startActivity(comment);
                 }
 
 
+            }
+        });
+        ChatActivity.videoflag = "0";
+        holder.videoplayer.fullscreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ChatActivity.videoflag = "1";
+                Intent comment = new Intent(context, FullScreenImageActivity.class);
+                comment.putExtra("nameUser", uName);
+
+                comment.putExtra("type", mes.getType());
+                comment.putExtra("urlPhotoUser", uImage);
+                comment.putExtra("urlPhotoClick", mes.getMessage());
+                context.startActivity(comment);
+            }
+        });
+
+        holder.videoplayer2.fullscreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ChatActivity.videoflag = "1";
+                Intent comment = new Intent(context, FullScreenImageActivity.class);
+                comment.putExtra("nameUser", uName);
+
+                comment.putExtra("type", mes.getType());
+                comment.putExtra("urlPhotoUser", uImage);
+                comment.putExtra("urlPhotoClick", mes.getMessage());
+                context.startActivity(comment);
             }
         });
 
