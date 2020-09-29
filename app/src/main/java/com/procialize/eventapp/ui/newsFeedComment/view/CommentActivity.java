@@ -68,6 +68,7 @@ import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -204,7 +205,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
         }
 
-
+        CommonFirebase.crashlytics("CommentActivity", api_token);
+        CommonFirebase.firbaseAnalytics(this, "CommentActivity", api_token);
         tv_header = findViewById(R.id.tv_header);
         iv_back = findViewById(R.id.iv_back);
         iv_gif = findViewById(R.id.iv_gif);
@@ -930,10 +932,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
 
     public void showCommentCount(List<CommentDetail> commentList) {
-        if (commentList.size() == 1) {
-            tv_no_of_comments.setText(commentList.size() + " Comment");
-        } else {
-            tv_no_of_comments.setText(commentList.size() + " Comments");
+        try {
+            if (commentList.size() == 1) {
+                tv_no_of_comments.setText(commentList.size() + " Comment");
+            } else {
+                tv_no_of_comments.setText(commentList.size() + " Comments");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

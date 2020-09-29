@@ -52,6 +52,7 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -148,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
 
+        CommonFirebase.crashlytics("MainActivity", api_token);
+        CommonFirebase.firbaseAnalytics(this, "MainActivity", api_token);
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);

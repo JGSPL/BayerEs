@@ -42,6 +42,7 @@ import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
@@ -112,6 +113,8 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             e.printStackTrace();
         }
 
+        CommonFirebase.crashlytics("NewsfeedDetail", "");
+        CommonFirebase.firbaseAnalytics(NewsFeedDetailsActivity.this, "NewsfeedDetail", "");
         final Random myRandom = new Random();
         imgname = String.valueOf(myRandom.nextInt(500));
         newsFeedPath = SharedPreference.getPref(this, NEWS_FEED_MEDIA_PATH);

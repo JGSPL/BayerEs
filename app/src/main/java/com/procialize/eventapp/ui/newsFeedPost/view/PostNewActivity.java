@@ -42,6 +42,7 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -106,6 +107,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
+        CommonFirebase.crashlytics("PostActivity", api_token);
+        CommonFirebase.firbaseAnalytics(this, "PostActivity", api_token);
         Log.d("tot_count", String.valueOf(eventAppDB.uploadMultimediaDao().getRowCount()));
         postNewsFeedViewModel = ViewModelProviders.of(this).get(PostNewsFeedViewModel.class);
         attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);

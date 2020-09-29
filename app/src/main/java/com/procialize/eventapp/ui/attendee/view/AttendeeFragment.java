@@ -33,6 +33,7 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.session.SessionManager;
@@ -143,7 +144,8 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         // pullrefresh.setTextColor(Color.parseColor(colorActive));
 
-
+        CommonFirebase.crashlytics("Attendee", api_token);
+        CommonFirebase.firbaseAnalytics(getActivity(), "Attendee", api_token);
         mAPIService = ApiUtils.getAPIService();
 
         //searchBtn.setTextColor(getResources().getColor(R.color.colorwhite));

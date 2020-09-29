@@ -45,6 +45,7 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
@@ -134,7 +135,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
-
+        CommonFirebase.crashlytics("Newsfeed", api_token);
+        CommonFirebase.firbaseAnalytics(getActivity(), "Newsfeed", api_token);
         Log.d("On news feed fragment", "Yes");
 
         cl_main = root.findViewById(R.id.cl_main);

@@ -21,13 +21,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -62,15 +60,13 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
-import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
-import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -175,6 +171,9 @@ public class ChatActivity extends AppCompatActivity {
         firstMessage = intent.getStringExtra("Message");
         page = intent.getStringExtra("page");
 
+        CommonFirebase.crashlytics("ChatActivity", "");
+        CommonFirebase.firbaseAnalytics(this, "ChatActivity", "");
+
         //---SETTING ONLINE------
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
 
@@ -183,7 +182,7 @@ public class ChatActivity extends AppCompatActivity {
         //---INFLATING APP BAR LAYOUT INTO ACTION BAR----
 
 
-        View actionBarView = findViewById( R.id.headerlayout ); // root View id from that link
+        View actionBarView = findViewById(R.id.headerlayout); // root View id from that link
 
         //---ADDING DATA ON ACTION BAR----
         mUserName=(TextView) actionBarView.findViewById(R.id.textView3);

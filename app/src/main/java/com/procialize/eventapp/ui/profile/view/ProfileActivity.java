@@ -46,6 +46,7 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
@@ -174,6 +175,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
+        CommonFirebase.crashlytics("Profile", api_token);
+        CommonFirebase.firbaseAnalytics(this, "Profile", api_token);
         CommonFunction.showBackgroundImage(ProfileActivity.this, ll_main);
 
         if (connectionDetector.isConnectingToInternet()) {

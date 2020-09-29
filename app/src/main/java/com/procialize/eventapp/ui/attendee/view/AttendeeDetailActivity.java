@@ -37,6 +37,7 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -92,7 +93,8 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         getIntentData();
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
-
+        CommonFirebase.crashlytics("AttendeeDetail", api_token);
+        CommonFirebase.firbaseAnalytics(this, "AttendeeDetail", api_token);
 
         attendeeDetailsViewModel = ViewModelProviders.of(this).get(AttendeeDetailsViewModel.class);
         progressView = findViewById(R.id.progressView);
