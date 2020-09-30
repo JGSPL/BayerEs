@@ -75,15 +75,12 @@ public class RefreashToken {
         map.put(KEY_EMAIL, jwt.getClaim("email").asString());
         map.put(KEY_MOBILE, jwt.getClaim("mobile").asString());
         map.put(KEY_TOKEN, jwt.getClaim("refresh_token").asString());
-        map.put(KEY_PROFILE_PIC, jwt.getClaim("profile_pic").asString());
         map.put(USER_TYPE, jwt.getClaim("user_type").asString());
         map.put(IS_GOD, jwt.getClaim("is_god").asString());
         map.put(VERIFY_OTP, jwt.getClaim("verify_otp").asString());
         map.put(EXPIRY_TIME, jwt.getClaim("expiry_time").asString());
         map.put(TIME, jwt.getClaim("time").asString());
         map.put(TOTAL_EVENT, jwt.getClaim("total_event").asString());
-//        Timestamp timestamp_open = new Timestamp(Long.parseLong(time));
-//        Timestamp timestamp_expiry = new Timestamp(Long.parseLong(expiry_time));
         SharedPreference.putPref(context, map);
 
     }
