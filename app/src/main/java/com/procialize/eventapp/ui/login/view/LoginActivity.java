@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -72,10 +73,11 @@ public class LoginActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
-        activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this));
+        activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this, activityLoginBinding));
         activityLoginBinding.executePendingBindings();
 
-
+        CommonFirebase.crashlytics("Login Screen", "");
+        CommonFirebase.firbaseAnalytics(this, "Login Screen", "");
     }
 
     @BindingAdapter({"toastMessage"})
@@ -87,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                 activityLoginBinding.linearOTPView.setVisibility(View.VISIBLE);
             } else if (message.equalsIgnoreCase("back")) {
                 Utility.hideKeyboard(view);
+                activityLoginBinding.editOtp.setText("");
                 activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);
                 activityLoginBinding.linearOTPView.setVisibility(View.GONE);
             } else if (message.equalsIgnoreCase("Successfully Login")) {

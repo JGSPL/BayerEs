@@ -1,64 +1,55 @@
-package com.procialize.eventapp.ui.speaker.model;
+package com.procialize.eventapp.ui.speaker.roomDB;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-public class Speaker implements Serializable {
-    @SerializedName("mobile")
-    @Expose
-    private String mobile;
+@Entity(tableName = "tbl_speaker")
 
-    @SerializedName("email")
-    @Expose
-    private String email;
+public class TableSpeaker implements Serializable {
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "fld_id")
+    int id;
+    @ColumnInfo(name = "fld_mobile")
+    String mobile;
+    @ColumnInfo(name = "fld_email")
+    String email;
+    @ColumnInfo(name = "fld_attendee_id")
+    String attendee_id;
+    @ColumnInfo(name = "fld_first_name")
+    String first_name;
+    @ColumnInfo(name = "fld_last_name")
+    String last_name;
+    @ColumnInfo(name = "fld_profile_picture")
+    String profile_picture;
+    @ColumnInfo(name = "fld_city")
+    String city;
+    @ColumnInfo(name = "fld_designation")
+    String designation;
+    @ColumnInfo(name = "fld_company_name")
+    String company_name;
+    @ColumnInfo(name = "fld_attendee_type")
+    String attendee_type;
+    @ColumnInfo(name = "fld_total_sms")
+    String total_sms;
+    @ColumnInfo(name = "firebase_id")
+    String firebase_id;
+    @ColumnInfo(name = "firebase_name")
+    String firebase_name;
+    @ColumnInfo(name = "firebase_username")
+    String firebase_username;
 
+    public int getId() {
+        return id;
+    }
 
-    @SerializedName("attendee_id")
-    @Expose
-    private String attendee_id;
-
-    @SerializedName("first_name")
-    @Expose
-    private String first_name;
-
-    @SerializedName("last_name")
-    @Expose
-    private String last_name;
-    @SerializedName("profile_picture")
-    @Expose
-    private String profile_picture;
-
-    @SerializedName("city")
-    @Expose
-    private String city;
-    @SerializedName("designation")
-    @Expose
-    private String designation;
-    @SerializedName("company_name")
-    @Expose
-    private String company_name;
-    @SerializedName("attendee_type")
-    @Expose
-    private String attendee_type;
-    @SerializedName("total_sms")
-    @Expose
-    private String total_sms;
-
-    @SerializedName("firebase_id")
-    @Expose
-    private String firebase_id;
-    @SerializedName("firebase_name")
-    @Expose
-    private String firebase_name;
-    @SerializedName("firebase_username")
-    @Expose
-    private String firebase_username;
-
-    @SerializedName("chat_status")
-    @Expose
-    private String firebase_status;
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getMobile() {
         return mobile;
@@ -170,13 +161,5 @@ public class Speaker implements Serializable {
 
     public void setFirebase_username(String firebase_username) {
         this.firebase_username = firebase_username;
-    }
-
-    public String getFirebase_status() {
-        return firebase_status;
-    }
-
-    public void setFirebase_status(String firebase_status) {
-        this.firebase_status = firebase_status;
     }
 }

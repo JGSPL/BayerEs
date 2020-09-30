@@ -151,13 +151,13 @@ public class ProfileActivityViewModel extends ViewModel {
     public void validation(String first_name, String last_name, String designation, String company_name, String city) {
         if (first_name.isEmpty()) {
             message.setValue("Please Enter First Name");
-        } else if (last_name.isEmpty()) {
+        } /*else if (last_name.isEmpty()) {
             message.setValue("Please Enter Last Name");
-        } else if (designation.isEmpty()) {
+        } */else if (designation.isEmpty()) {
             message.setValue("Please Enter Designation");
-        } else if (company_name.isEmpty()) {
+        } /*else if (company_name.isEmpty()) {
             message.setValue("Please Enter Company Name");
-        } else if (city.isEmpty()) {
+        }*/ else if (city.isEmpty()) {
             message.setValue("Please Enter City");
         }
         else {message.setValue("");}

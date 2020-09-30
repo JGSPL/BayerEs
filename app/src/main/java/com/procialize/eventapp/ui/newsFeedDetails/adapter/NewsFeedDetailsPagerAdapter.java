@@ -69,7 +69,7 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheLi
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
-                .displayer(new FadeInBitmapDisplayer(300))
+                .displayer(new FadeInBitmapDisplayer(10))
                 .build();
     }
 

@@ -40,6 +40,8 @@
     <string name="blockuser">Block User</string>
     <string name="sendmsg">Submit</string>
     <string name="search_event_here">Type here to search event</string>
-    <string name="attendeedetail">Attendee Detail</string>
+    <string name="attendeedetail">Attendee details</string>
+    <string name="speakerdetail">Speaker Detail</string>
+
     <string name="designandeveloped"><u>Design  Developed by Procialize</u></string>
 </resources>

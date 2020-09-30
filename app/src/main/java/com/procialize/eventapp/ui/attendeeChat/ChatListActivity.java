@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.ui.attendeeChat.model.Conv;
 import com.squareup.picasso.Picasso;
 
@@ -67,6 +68,8 @@ public class ChatListActivity extends AppCompatActivity {
         mConvList.setHasFixedSize(true);
         mConvList.setLayoutManager(linearLayoutManager);
 
+        CommonFirebase.crashlytics("ChatList", "");
+        CommonFirebase.firbaseAnalytics(this, "ChatList", "");
     }
     @Override
     public void onStart() {

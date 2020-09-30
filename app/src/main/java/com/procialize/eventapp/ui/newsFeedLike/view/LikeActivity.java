@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
@@ -74,7 +75,8 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        CommonFirebase.crashlytics("Like", api_token);
+        CommonFirebase.firbaseAnalytics(this, "Like", api_token);
         setDynamicColor();
         CommonFunction.showBackgroundImage(this,ll_main);
         geLikes();

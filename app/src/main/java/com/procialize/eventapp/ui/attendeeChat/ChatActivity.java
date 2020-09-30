@@ -20,14 +20,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
-
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -61,16 +60,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
-import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
-import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -118,7 +116,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 10;
+    public static final int TOTAL_ITEM_TO_LOAD = 25;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
@@ -143,6 +141,7 @@ public class ChatActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     String  lname, company, city, designation,  attendee_type,mobile,email,attendeeid,firebase_id,firstMessage, page;
     LinearLayout lineaeSend;
+    public static String videoflag = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +174,9 @@ public class ChatActivity extends AppCompatActivity {
         firstMessage = intent.getStringExtra("Message");
         page = intent.getStringExtra("page");
 
+        CommonFirebase.crashlytics("ChatActivity", "");
+        CommonFirebase.firbaseAnalytics(this, "ChatActivity", "");
+
         //---SETTING ONLINE------
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
 
@@ -183,7 +185,7 @@ public class ChatActivity extends AppCompatActivity {
         //---INFLATING APP BAR LAYOUT INTO ACTION BAR----
 
 
-        View actionBarView = findViewById( R.id.headerlayout ); // root View id from that link
+        View actionBarView = findViewById(R.id.headerlayout); // root View id from that link
 
         //---ADDING DATA ON ACTION BAR----
         mUserName=(TextView) actionBarView.findViewById(R.id.textView3);
@@ -194,17 +196,17 @@ public class ChatActivity extends AppCompatActivity {
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - "+ city);
 
-        mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+       // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        //lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1));
-        mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+       // mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+      //  mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
 
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
         linBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -231,13 +233,8 @@ public class ChatActivity extends AppCompatActivity {
         mRootReference = FirebaseDatabase.getInstance().getReference();
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
-        try {
-            mAuth = FirebaseAuth.getInstance();
-            mCurrentUserId = mAuth.getCurrentUser().getUid();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUserId = mAuth.getCurrentUser().getUid();
 
         mMessageAdapter = new MessageAdapter(messagesList, userName,loginUser_name,sProfilepic,prof_pic);
 
@@ -408,7 +405,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     // Check for new messages
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-/*
+
                     if (currentUser != null){
                         String UID = currentUser.getUid();
                         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -449,10 +446,13 @@ public class ChatActivity extends AppCompatActivity {
                             }
                         });
                     }
-*/
 
 
 
+
+
+                }else{
+                    Toast.makeText(ChatActivity.this, "Please enter any message", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -1225,7 +1225,6 @@ public class ChatActivity extends AppCompatActivity {
 
                 }else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
-                    finish();
                 }
             }
         });
@@ -1571,6 +1570,18 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
+    @Override
+    public void onBackPressed() {
+
+        JzvdStd.releaseAllVideos();
+        if (videoflag.equalsIgnoreCase("1")) {
+
+        }else{
+            finish();
+        }
+
+    }
+
 
 
 

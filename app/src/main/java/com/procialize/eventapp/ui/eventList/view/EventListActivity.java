@@ -1,11 +1,13 @@
 package com.procialize.eventapp.ui.eventList.view;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,11 +20,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
@@ -77,6 +83,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     boolean result;
     ImageView iv_logout;
     SwipeRefreshLayout refresh;
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +106,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
+        CommonFirebase.crashlytics("EventListing", api_token);
+        CommonFirebase.firbaseAnalytics(this, "EventListing", api_token);
         iv_logout = findViewById(R.id.iv_logout);
         ll_main = findViewById(R.id.ll_main);
         et_search = findViewById(R.id.et_search);
@@ -176,7 +186,24 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
 
             }
         });
+
+        if (checkPlayServices()) {
+
+
+            device_token = SharedPreference.getPref(this, KEY_GCM_ID);;
+
+            if (device_token.isEmpty()) {
+
+                new getGCMRegId().execute();
+            }
+
+        } else {
+            Log.i("GCMDemo", "No valid Google Play Services APK found.");
+        }
+
     }
+
+
 
     public void setupEventAdapter(List<EventList> commentList) {
         eventAdapter = new EventAdapter(EventListActivity.this, commentList, EventListActivity.this);
@@ -219,7 +246,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     map.put(KEY_MOBILE, userData.get(0).getMobile());
                     map.put(KEY_TOKEN, "");
                     map.put(KEY_CITY, userData.get(0).getCity());
-                    map.put(KEY_GCM_ID, "");
+                   // map.put(KEY_GCM_ID, device_token);
                     map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
                     map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
                     map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
@@ -239,10 +266,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     }
                     if( userData.get(0).getFirebase_username()==null){
                         map.put(FIREBASEUSER_NAME, "");
-
                     }else{
                         map.put(FIREBASEUSER_NAME, userData.get(0).getFirebase_username());
-
                     }
                     map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
 
@@ -297,4 +322,66 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         startActivity(new Intent(EventListActivity.this, LoginActivity.class));
         finish();
     }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i("GCMDemo", "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private class getGCMRegId extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+
+            try {
+                //gcmRegID = gcmRegistrationHelper.GCMRegister(REG_ID);
+                String token = FirebaseInstanceId.getInstance().getToken();
+                Log.d("MYTAG", "This is your Firebase token" + token);
+
+                device_token = token;
+
+                HashMap<String, String> map = new HashMap<>();
+                map.put(KEY_GCM_ID, device_token);
+                SharedPreference.putPref(EventListActivity.this, map);
+
+                // storeRegistrationId(getApplicationContext(), gcmRegID);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            // session = new SessionManagement(getApplicationContext());
+            // if (session.isLoggedIn()) {
+            // Update GCM ID to Server
+            // new updateGCMRegId().execute();
+            // }
+
+        }
+    }
+
+
 }

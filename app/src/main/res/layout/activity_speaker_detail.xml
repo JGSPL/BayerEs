@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@mipmap/bg_1"
     android:orientation="vertical"
     tools:context=".ui.newsFeedComment.view.CommentActivity">
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:layout_marginLeft="10dp"
-                android:text="@string/attendeedetail"
+                android:text="@string/speakerdetail"
                 android:textColor="@color/black" />
 
 
@@ -147,7 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="15dp"
-                android:paddingBottom="350dp"
+                android:paddingBottom="250dp"
                 android:paddingRight="15dp"
                 android:paddingTop="15dp"
                 android:id="@+id/bgLinear"
@@ -245,19 +245,6 @@
                     android:text="Email"
                     android:textSize="15dp" />
 
-                <EditText
-                    android:id="@+id/et_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/edit_background"
-                    android:gravity="top"
-                    android:hint="Type your message..."
-                    android:maxLines="5"
-                    android:padding="10dp"
-                    android:visibility="gone"
-                    android:textSize="13dp" />
 
 
                 <LinearLayout
@@ -268,89 +255,7 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/ll_send_message"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:visibility="gone"
-                        android:layout_alignParentBottom="true"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:background="@color/activetab"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        >
 
-                        <ImageView
-                            android:id="@+id/ic_email"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:src="@drawable/ic_email"
-                            android:tint="@color/white" />
-
-                        <com.procialize.eventapp.fonts.RobotoButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="4dp"
-                            android:layout_marginRight="3dp"
-                            android:background="@color/transperent"
-                            android:text="Send Message"
-                            android:textAllCaps="true"
-                            android:id="@+id/tv_sendmess"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/textsizesmall" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_save_contact"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:visibility="gone"
-                        android:background="@color/activetab"
-                        android:gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:orientation="horizontal"
-                        android:padding="1dp">
-
-                        <LinearLayout
-                            android:id="@+id/ll_save_contact_inner"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentBottom="true"
-                            android:layout_gravity="center"
-                            android:background="@color/white"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-                            <ImageView
-                                android:id="@+id/iv_contact"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_name"
-                                android:tint="@color/activetab"
-                                android:background="@color/white"/>
-
-                            <TextView
-                                android:id="@+id/tv_contact"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:minHeight="0dp"
-                                android:layout_marginLeft="10dp"
-                                android:text="Save Contact"
-                                android:textAllCaps="true"
-                                android:textColor="@color/activetab"
-                                android:textSize="@dimen/textsizesmall"
-                                android:elevation="0dp"
-                                android:gravity="center_vertical"/>
-                        </LinearLayout>
-                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

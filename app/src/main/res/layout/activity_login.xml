@@ -63,8 +63,8 @@
                     android:layout_marginTop="50dp"
                     android:gravity="left"
                     android:text="Email ID/Mobile No."
-                    android:textSize="13dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/txtcolor"
+                    android:textSize="13dp" />
 
                 <com.procialize.eventapp.fonts.RobotoEditext
                     android:id="@+id/inEmail"
@@ -78,9 +78,9 @@
                     android:cursorVisible="true"
                     android:padding="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/black"
                     android:text="@={viewModel.userEmail}"
                     android:textCursorDrawable="@drawable/cursor_drawable"
+                    android:textColor="@color/txtcolor"
                     android:textSize="13dp" />
 
                 <com.procialize.eventapp.fonts.RobotoButton
@@ -192,7 +192,7 @@
                 android:text="@={viewModel.userOTP}"
                 android:textCursorDrawable="@drawable/cursor_drawable"
                 android:textSize="13dp"
-                android:textColor="@color/black"
+                android:textColor="@color/txtcolor"
                 android:visibility="visible" />
 
             <LinearLayout
@@ -250,7 +250,8 @@
                 android:text="@string/designandeveloped"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:textSize="@dimen/textsizesmallest"
-                android:onClick="@{()-> viewModel.onTextDesignClicked()}" />
+                android:onClick="@{()-> viewModel.onTextDesignClicked()}"
+                android:textColor="@color/txtcolor" />
 
 
         </RelativeLayout>
