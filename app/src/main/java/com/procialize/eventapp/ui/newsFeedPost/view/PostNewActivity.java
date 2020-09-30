@@ -1,6 +1,7 @@
 package com.procialize.eventapp.ui.newsFeedPost.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -60,6 +61,7 @@ import com.yanzhenjie.album.AlbumFile;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -232,13 +234,17 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                         tothumb = null;
                         tovideo = null;
                         //To check selected image/video is already present in previous arraylist
+                        Log.d("org_path->",(mAlbumFiles.get(j).getPath()));
                         if (!selectedFileList.contains(mAlbumFiles.get(j).getPath())) {
                             if (mAlbumFiles.get(j).getMediaType() == AlbumFile.TYPE_VIDEO) {
                                 strMediaType = "video";
-                                Random r = new Random();
-                                int i1 = r.nextInt(80 - 65) + 65;
-                                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                videofile = "video_" + i1 + timeStamp + "_";
+                               // Random r = new Random();
+                                //int i1 = r.nextInt(80 - 65) + 65;
+                                //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                                Calendar calendar = Calendar.getInstance();
+                                //Returns current time in millis
+                                long timeStamp = calendar.getTimeInMillis();
+                                videofile = "video_" /*+ i1 */+ timeStamp + "_";
                                 from = new File(mAlbumFiles.get(j).getPath());
 
                                 String root = Environment.getExternalStorageDirectory().toString();
@@ -260,14 +266,19 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                 }
                             } else {
                                 strMediaType = "image";
-                                Random r = new Random();
-                                int i1 = r.nextInt(80 - 65) + 65;
-                                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                imagefile = "image_" + i1 + timeStamp + "_";
+                              /*  Random r = new Random();
+                                int i1 = r.nextInt(80 - 65) + 65;*/
+                               // String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+                                Calendar calendar = Calendar.getInstance();
+                                //Returns current time in millis
+                                long timeStamp = calendar.getTimeInMillis();
+                                imagefile = "image_" /*+ i1*/ + timeStamp + "_";
                                 from = new File(mAlbumFiles.get(j).getPath());
 
                                 String root = Environment.getExternalStorageDirectory().toString();
-                                File moviesDir = new File(root + Constant.FOLDER_DIRECTORY + Constant.VIDEO_DIRECTORY);
+                                File moviesDir = new File(root + Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY);
+                                Log.d("dest_path",moviesDir.getPath()+"/"+from.getName());
                                 if (from != null) {
                                     postNewsFeedViewModel.copyFile(mAlbumFiles.get(j).getPath(), from.getName(), moviesDir.toString());
                                 }
@@ -306,6 +317,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                             btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
                             ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
                         }*/
+
+
                         setPagerAdapter(resultList);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -413,7 +426,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
     private void setPagerAdapter(List<SelectedImages> resultList) {
         for (int j = 0; j < resultList.size(); j++) {
-            Log.d("path", resultList.get(j).getmPath());
+            Log.d("mpath", resultList.get(j).getmPath());
         }
         viewPagerAdapter = new ViewPagerMultimediaAdapter(PostNewActivity.this, resultList);
         viewPagerAdapter.notifyDataSetChanged();
@@ -594,4 +607,17 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         return commentTextView.getText().toString();
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        finish();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

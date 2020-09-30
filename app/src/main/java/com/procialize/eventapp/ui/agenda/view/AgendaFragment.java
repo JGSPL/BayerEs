@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-
-import com.procialize.eventapp.R;
 import com.procialize.eventapp.ui.agenda.viewmodel.AgendaViewModel;
+import com.procialize.eventapp.R;
 
 public class AgendaFragment extends Fragment {
 

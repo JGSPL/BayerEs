@@ -675,7 +675,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                         public void run() {
 
                                             profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                                            profileActivityViewModel.updateProfileFlag(ProfileActivity.this, event_id);
+                                            profileActivityViewModel.updateProfileFlag(ProfileActivity.this, event_id,profile.getProfileDetails().get(0).getAttendee_id());
                                         }
                                     }, 500);
 

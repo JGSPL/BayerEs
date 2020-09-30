@@ -23,6 +23,8 @@ public class ProfileEventId implements Serializable {
     String fld_event_id;
     @ColumnInfo(name = "fld_is_profile_update")
     String fld_is_profile_update;
+    @ColumnInfo(name = "fld_attendee_id")
+    String fld_attendee_id;
 
     public int getId() {
         return id;
@@ -46,5 +48,13 @@ public class ProfileEventId implements Serializable {
 
     public void setFld_is_profile_update(String fld_is_profile_update) {
         this.fld_is_profile_update = fld_is_profile_update;
+    }
+
+    public String getFld_attendee_id() {
+        return fld_attendee_id;
+    }
+
+    public void setFld_attendee_id(String fld_attendee_id) {
+        this.fld_attendee_id = fld_attendee_id;
     }
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -14,9 +13,8 @@
         android:baselineAligned="false"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/padding"
-        android:paddingTop="@dimen/padding"
+        android:paddingTop="10dp"
         android:paddingRight="@dimen/margin">
-
 
 
         <RelativeLayout
@@ -58,24 +56,57 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="-2dp"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
+                <com.procialize.eventapp.fonts.RobotoTextViewHeader
                     android:id="@+id/tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:autoLink="web"
-                    android:textColorLink="@android:color/holo_blue_dark"
+                    android:maxLines="10"
+                    android:singleLine="false"
                     android:text=""
-                    android:textColor="@color/black" />
+                    android:textSize="16dp"
+                    android:textColor="@color/black"
+                    android:textColorLink="@android:color/holo_blue_dark" />
+
+                <TextView
+                    android:id="@+id/tv_date_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="left"
+                    android:text="8 Aug 2020 at 10:30 pm"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/date_time_size" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <com.procialize.eventapp.fonts.RobotoTextview
+                    android:id="@+id/tv_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:autoLink="web"
+                    android:maxLines="10"
+                    android:singleLine="false"
+                    android:text=""
+                    android:textSize="14dp"
+                    android:textColor="@color/black"
+                    android:textColorLink="@android:color/holo_blue_dark" />
 
                 <ImageView
                     android:id="@+id/iv_options"
@@ -85,18 +116,8 @@
                     android:padding="3dp"
                     android:scaleType="fitXY"
                     android:src="@mipmap/three_dot" />
-            </TableRow>
 
-            <TextView
-                android:id="@+id/tv_date_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="@dimen/margin"
-                android:gravity="left"
-                android:text="8 Aug 2020 at 10:30 pm"
-                android:textColor="@color/black"
-                android:textSize="@dimen/date_time_size" />
+            </TableRow>
 
             <FrameLayout
                 android:id="@+id/fl_gif"
@@ -117,7 +138,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </FrameLayout>
 
             <View
@@ -135,8 +156,10 @@
         android:id="@+id/testdata"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="10"
         android:paddingLeft="15dp"
         android:paddingBottom="5dp"
+        android:singleLine="false"
         android:text=""
         android:textColor="@color/inactivetab"
         android:textSize="@dimen/textsizesmall"

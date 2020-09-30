@@ -304,7 +304,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             insertIntoDb(feedList);
 
 
-
                             String mediaPath = fetchNewsfeedMultiple.getMedia_path();
                             totalPages = Integer.parseInt(fetchNewsfeedMultiple.getTotalRecords());
 
@@ -575,6 +574,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
                         newsfeed_details.get(position).setLike_flag("1");
                         newsfeed_details.get(position).setTotal_likes(LikeCount + "");
+
                         likeimage.setImageDrawable(getContext().getDrawable(R.drawable.ic_active_like));
                         noOfLikes = "0";
                         likeStatus = "";
