@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public static ActivityLoginBinding activityLoginBinding;
     public static SessionManager sessionManager;
-
+    public static RefreashToken refreashToken;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         eventListViewModel.getEventList().observeForever( new Observer<Event>() {
             @Override
             public void onChanged(Event event) {
-                RefreashToken refreashToken = new RefreashToken(view.getContext());
+                refreashToken = new RefreashToken(view.getContext());
                 String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
                 String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getFile_path()));
 
@@ -160,7 +160,12 @@ public class LoginActivity extends AppCompatActivity {
                 eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
                     @Override
                     public void onChanged(UpdateDeviceInfo updateDeviceInfo) {
-                        final List<LoginUserInfo> userData = updateDeviceInfo.getLoginUserInfoList();
+                        String decrypteventdetail = refreashToken.decryptedData(updateDeviceInfo.getDetail());
+
+                        Gson gson = new Gson();
+                        List<LoginUserInfo> userData = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<LoginUserInfo>>() {
+                        }.getType());
+//                        final List<LoginUserInfo> userData = updateDeviceInfo.getLoginUserInfoList();
                         HashMap<String, String> map = new HashMap<>();
                         map.put(KEY_FNAME, userData.get(0).getFirst_name());
                         map.put(KEY_LNAME, userData.get(0).getLast_name());

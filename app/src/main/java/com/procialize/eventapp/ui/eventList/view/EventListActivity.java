@@ -234,7 +234,12 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
                 @Override
                 public void onChanged(UpdateDeviceInfo event) {
-                    final List<LoginUserInfo> userData = event.getLoginUserInfoList();
+                    RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                    String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+
+                    Gson gson = new Gson();
+                    List<LoginUserInfo> userData = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<LoginUserInfo>>() {
+                    }.getType());
                   /*  String fname = userData.get(0).getFirst_name();
                     String lName = userData.get(0).getLast_name();
                     String designation = userData.get(0).getDesignation();
