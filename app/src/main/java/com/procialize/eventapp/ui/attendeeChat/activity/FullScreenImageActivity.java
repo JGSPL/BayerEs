@@ -92,7 +92,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
         Log.i("TAG", "imagem recebida " + urlPhotoClick);
         tvUser.setText(nameUser); // Name
         Glide.with(this).load(urlPhotoUser).centerCrop().override(40, 40).into(ivUser);
-        if (type.equalsIgnoreCase("image{")) {
+        if (type.equalsIgnoreCase("image")) {
             videoplayer.setVisibility(View.GONE);
             mImageView.setVisibility(View.VISIBLE);
             Glide.with(this).load((urlPhotoClick))

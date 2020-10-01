@@ -24,9 +24,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
@@ -73,7 +70,6 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASS
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.ui.eventList.adapter.EventAdapter.isClickable;
-import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class EventListActivity extends AppCompatActivity implements EventAdapter.EventAdapterListner , View.OnClickListener {
 
@@ -129,27 +125,16 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             eventListViewModel.getEventList().observe(this, new Observer<Event>() {
                 @Override
                 public void onChanged(Event event) {
-                    //List<EventList> eventLists = new ArrayList<>();
-                    String strEventList = event.getEventListEncrypted();
-                    try {
-                        RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
-                        String data = refreashToken.decryptedData(strEventList);
-                        JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                        ArrayList<EventList> eventLists = new Gson().fromJson(jsonArray, new TypeToken<List<EventList>>(){}.getType());
-
-                   /* if (jsonArray != null) {
-                        for (int i=0;i<jsonArray.size();i++){
-                            eventLists.add(jsonArray.getAsJsonArray());
-                        }
-                    }
-                    List<EventList> eventLists = event.getEventLists();*/
-                        String strFilePath = event.getFile_path();
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put(EVENT_LIST_MEDIA_PATH, strFilePath);
-                        SharedPreference.putPref(EventListActivity.this, map);
-                        setupEventAdapter(eventLists);
-                    }catch (Exception e)
-                    {e.printStackTrace();}
+                    RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                    String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                    String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getFile_path()));
+                    Gson gson = new Gson();
+                    List<EventList> gsonevent = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<EventList>>() {
+                    }.getType());
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(EVENT_LIST_MEDIA_PATH, strFilePath.replace("\\/","/"));
+                    SharedPreference.putPref(EventListActivity.this, map);
+                    setupEventAdapter(gsonevent);
                 }
             });
         } else {
@@ -168,22 +153,20 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     eventListViewModel.getEventList().observe(EventListActivity.this, new Observer<Event>() {
                         @Override
                         public void onChanged(Event event) {
-                            String strEventList = event.getEventListEncrypted();
                             RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
-                            String data = refreashToken.decryptedData(strEventList);
-                            JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                            ArrayList<EventList> eventLists = new Gson().fromJson(jsonArray, new TypeToken<List<EventList>>(){}.getType());
-                            //List<EventList> eventLists = event.getEventLists();
-                            String strFilePath = event.getFile_path();
+                            String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                            String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getFile_path()));
+
+                            Gson gson = new Gson();
+                            List<EventList> eventLists = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<EventList>>() {
+                            }.getType());
                             HashMap<String, String> map = new HashMap<>();
-                            map.put(EVENT_LIST_MEDIA_PATH, strFilePath);
+                            map.put(EVENT_LIST_MEDIA_PATH, strFilePath.replace("\\/","/"));
                             SharedPreference.putPref(EventListActivity.this, map);
                             setupEventAdapter(eventLists);
                         }
                     });
-                }
-                else
-                {
+                } else {
                     Utility.createShortSnackBar(ll_main, "No Internet Connection");
                 }
             }
@@ -251,14 +234,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
                 @Override
                 public void onChanged(UpdateDeviceInfo event) {
-
-                    String strEventList = event.getDetail();
-                    RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
-                    String data = refreashToken.decryptedData(strEventList);
-                    JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                    ArrayList<LoginUserInfo> userData = new Gson().fromJson(jsonArray, new TypeToken<List<LoginUserInfo>>(){}.getType());
-                    //getDetail
-                    //final List<LoginUserInfo> userData = event.getLoginUserInfoList();
+                    final List<LoginUserInfo> userData = event.getLoginUserInfoList();
                   /*  String fname = userData.get(0).getFirst_name();
                     String lName = userData.get(0).getLast_name();
                     String designation = userData.get(0).getDesignation();
@@ -302,7 +278,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     }else{
                         map.put(FIREBASEUSER_NAME, userData.get(0).getFirebase_username());
                     }
-                    map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
+                  //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
 
                     map.put(IS_LOGIN, "true");
                     map.put(EVENT_ID, eventId);

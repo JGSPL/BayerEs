@@ -13,6 +13,7 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.resendOTP;
 import com.procialize.eventapp.GetterSetter.validateOTP;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.databinding.ActivityLoginBinding;
@@ -237,12 +238,11 @@ public class LoginViewModel extends BaseObservable {
                     RefreashToken refreashToken = new RefreashToken(context);
                     String data = refreashToken.decryptedData(response.body().getToken().toString().trim());
                     refreashToken.decodeRefreashToken(data);
-
-                    HashMap<String,String> map = new HashMap<>();
+                    HashMap<String, String> map = new HashMap<>();
                     map.put(SharedPreferencesConstant.OTP, otp);
-                    String token = data.substring(1, data.length() - 1);
-                    map.put(AUTHERISATION_KEY,token);
-                    SharedPreference.putPref(context,map);
+                    String authorizationtolen= CommonFunction.stripquotes(data);
+                    map.put(AUTHERISATION_KEY, authorizationtolen);
+                    SharedPreference.putPref(context, map);
                 } else {
                     activityLoginBinding.btnOTPSubmit.setClickable(true);
                     if (response.body() != null) {
@@ -251,6 +251,7 @@ public class LoginViewModel extends BaseObservable {
                         } else {
                             setToastMessage(response.body().getHeader().get(0).getMsg());
                         }
+
                     } else {
                         setToastMessage("Invalid OTP");
                     }

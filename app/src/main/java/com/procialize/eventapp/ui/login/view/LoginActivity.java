@@ -19,8 +19,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.Constants.RefreashToken;
@@ -125,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public static void getEventDetails(View view) {
+    public static void getEventDetails(final View view) {
 
         final Context context = view.getContext();
         final String device_token = "11111";
@@ -142,16 +140,16 @@ public class LoginActivity extends AppCompatActivity {
         eventListViewModel.getEventList().observeForever( new Observer<Event>() {
             @Override
             public void onChanged(Event event) {
-                String strEventList = event.getEventListEncrypted();
-                RefreashToken refreashToken = new RefreashToken((Activity) context);
-                String data = refreashToken.decryptedData(strEventList);
-                JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                ArrayList<EventList> eventLists = new Gson().fromJson(jsonArray, new TypeToken<List<EventList>>(){}.getType());
+                RefreashToken refreashToken = new RefreashToken(view.getContext());
+                String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getFile_path()));
 
-               // List<EventList> eventLists = event.getEventLists();
-                String strFilePath = event.getFile_path();
-                HashMap<String,String> map1 = new HashMap<>();
-                map1.put(EVENT_LIST_MEDIA_PATH, strFilePath);
+                Gson gson = new Gson();
+                List<EventList> eventLists = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<EventList>>() {
+                }.getType());
+//                List<EventList> eventLists = event.getEventLists();
+                HashMap<String, String> map1 = new HashMap<>();
+                map1.put(EVENT_LIST_MEDIA_PATH, strFilePath.replace("\\/","/"));
                 SharedPreference.putPref(context, map1);
                 final String eventId = eventLists.get(0).getEvent_id();
                 final String eventBg = eventLists.get(0).getBackground_image();
@@ -162,13 +160,7 @@ public class LoginActivity extends AppCompatActivity {
                 eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
                     @Override
                     public void onChanged(UpdateDeviceInfo updateDeviceInfo) {
-                        String strEventList = updateDeviceInfo.getDetail();
-                        RefreashToken refreashToken = new RefreashToken((Activity) context);
-                        String data = refreashToken.decryptedData(strEventList);
-                        JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                        ArrayList<LoginUserInfo> userData = new Gson().fromJson(jsonArray, new TypeToken<List<LoginUserInfo>>(){}.getType());
-
-                       // final List<LoginUserInfo> userData = updateDeviceInfo.getLoginUserInfoList();
+                        final List<LoginUserInfo> userData = updateDeviceInfo.getLoginUserInfoList();
                         HashMap<String, String> map = new HashMap<>();
                         map.put(KEY_FNAME, userData.get(0).getFirst_name());
                         map.put(KEY_LNAME, userData.get(0).getLast_name());
@@ -206,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
 
-                        map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
+                      //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
 
                         map.put(IS_LOGIN, "true");
                         map.put(EVENT_ID, eventId);

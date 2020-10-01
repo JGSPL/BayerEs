@@ -32,8 +32,8 @@ public class EventRepository {
         eventApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<Event> getEventList(String token, String organizer_id, String search_text) {//, String pageSize, String pageNumber) {
-        eventApi.getEventList(token, organizer_id, search_text)
+    public MutableLiveData<Event> getEventList(String token,String organizer_id, String search_text) {
+        eventApi.getEventList(token, organizer_id,search_text)
                 .enqueue(new Callback<Event>() {
                     @Override
                     public void onResponse(Call<Event> call, Response<Event> response) {

@@ -22,8 +22,6 @@ import androidx.core.content.FileProvider;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
-import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -240,6 +238,13 @@ public class CommonFunction {
             e.printStackTrace();
         }
         return bmpUri;
+    }
+
+    public static String stripquotes(String token) {
+        if (token.charAt(0) == '"' && token.charAt(token.length() - 1) == '"') {
+            return token.substring(1, token.length() - 1);
+        }
+        return token;
     }
 
 }
