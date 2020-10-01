@@ -115,7 +115,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             }
 
 
-            try {
+           /* try {
                 if (attendee_design.equalsIgnoreCase("0")) {
                     holder.designationTv.setVisibility(View.INVISIBLE);
                 } else {
@@ -163,15 +163,41 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             } catch (Exception e) {
                 e.printStackTrace();
                 holder.designationTv.setVisibility(View.INVISIBLE);
-            }
+            }*/
 
-            if (attendee.getCompany_name().equalsIgnoreCase("") &&
+          /*  if (attendee.getCompany_name().equalsIgnoreCase("") &&
                     attendee.getDesignation().equalsIgnoreCase("")) {
                 holder.tv_concat.setVisibility(View.INVISIBLE);
             } else {
                 holder.tv_concat.setVisibility(View.VISIBLE);
-            }
+            }*/
+            try {
+                if (attendee_company.equalsIgnoreCase("0")) {
+                    holder.companyTv.setVisibility(View.INVISIBLE);
+                } else {
+                    if (attendee.getCompany_name().equalsIgnoreCase("N A")) {
+                        holder.companyTv.setVisibility(View.INVISIBLE);
+                        holder.tv_concat.setVisibility(View.INVISIBLE);
+                    }
+                    if (attendee.getCompany_name().equalsIgnoreCase("")) {
+                        holder.companyTv.setVisibility(View.INVISIBLE);
+                        holder.tv_concat.setVisibility(View.INVISIBLE);
+                    }
+                    if (attendee.getCompany_name().equalsIgnoreCase(" ")) {
+                        holder.companyTv.setVisibility(View.INVISIBLE);
+                        holder.tv_concat.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.tv_concat.setVisibility(View.GONE);
+                        holder.designationTv.setVisibility(View.GONE);
 
+                        holder.companyTv.setVisibility(View.VISIBLE);
+                        holder.companyTv.setText(attendee.getDesignation()+ " - " + attendee.getCompany_name());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                holder.designationTv.setVisibility(View.INVISIBLE);
+            }
             if (attendee_design.equalsIgnoreCase("0") &&
                     attendee_company.equalsIgnoreCase("0")) {
                 holder.tv_concat.setVisibility(View.INVISIBLE);

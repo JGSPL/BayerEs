@@ -48,7 +48,7 @@ public class LoginUserInfo implements Serializable {
     @Expose
     private String firebase_username;
 
-    @SerializedName("firebase_status")
+   /* @SerializedName("firebase_status")
     @Expose
     private String firebase_status;
 
@@ -58,7 +58,7 @@ public class LoginUserInfo implements Serializable {
 
     public void setFirebase_status(String firebase_status) {
         this.firebase_status = firebase_status;
-    }
+    }*/
 
     public void setMobile(String mobile) {
         this.mobile = mobile;

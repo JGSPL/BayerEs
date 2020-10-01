@@ -1,6 +1,8 @@
 package com.procialize.eventapp.ui.attendeeChat;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -23,10 +26,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -36,18 +43,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -62,18 +80,26 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.GetterSetter.Header;
+import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
+import com.procialize.eventapp.costumTools.TouchImageView;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
+import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
+import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -87,11 +113,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_CAMERA;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static com.procialize.eventapp.Utility.Utility.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
@@ -104,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
     TextView mUserLastSeen;
     CircleImageView mUserImage;
     private FirebaseAuth mAuth;
-
+    private BottomSheetDialog myDialog;
     String mCurrentUserId;
 
     DatabaseReference mDatabaseReference;
@@ -157,6 +186,8 @@ public class ChatActivity extends AppCompatActivity {
         lineaeSend = findViewById(R.id.lineaeSend);
         mMessageView = (EditText)findViewById(R.id.chatMessageView);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
+        getWindow().setBackgroundDrawable(getDrawable(R.drawable.chat_bg));
 
         //-----GETING FROM INTENT----
         mChatUser = getIntent().getStringExtra("user_id");
@@ -246,6 +277,16 @@ public class ChatActivity extends AppCompatActivity {
        // mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayoutManager);
         mMessagesList.setAdapter(mMessageAdapter);
+
+        mMessagesList.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                JzvdStd.goOnPlayOnPause();
+            }
+        });
+
+
         if(messagesList.size()==0){
             progressBar.setVisibility(View.GONE);
         }
@@ -614,7 +655,8 @@ public class ChatActivity extends AppCompatActivity {
 
             //---GETTING IMAGE DATA IN FORM OF URI--
             Uri imageUri = data.getData();
-            final String current_user_ref = "messages/"+mCurrentUserId+"/"+mChatUser;
+            showMediaialouge(this,imageUri,"image");
+            /*final String current_user_ref = "messages/"+mCurrentUserId+"/"+mChatUser;
             final String chat_user_ref = "messages/"+ mChatUser +"/"+mCurrentUserId;
 
             DatabaseReference user_message_push = mRootReference.child("messages")
@@ -661,7 +703,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
 
                 }
-            });
+            });*/
 
 
         }else  if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
@@ -1577,10 +1619,161 @@ public class ChatActivity extends AppCompatActivity {
         JzvdStd.releaseAllVideos();
         if (videoflag.equalsIgnoreCase("1")) {
 
-        }else{
+        } else {
             finish();
         }
 
+    }
+
+
+    private void showMediaialouge(Context context, final Uri url, final String type) {
+
+        myDialog = new BottomSheetDialog(this);
+        myDialog.setContentView(R.layout.dialog_chat_item);
+        myDialog.setCancelable(false);
+        myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
+
+        myDialog.show();
+
+        Button cancelbtn = myDialog.findViewById(R.id.canclebtn);
+        ImageView chatSendButton = myDialog.findViewById(R.id.chatSendButton);
+        LinearLayout ll_main = myDialog.findViewById(R.id.ll_main);
+        TextView title = myDialog.findViewById(R.id.title);
+        TouchImageView imageView = myDialog.findViewById(R.id.imageView);
+        JzvdStd videoplayer = myDialog.findViewById(R.id.videoplayer);
+        ImageView imgCancel = myDialog.findViewById(R.id.imgCancel);
+        ProgressBar progessLoad = myDialog.findViewById(R.id.progessLoad);
+
+        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
+       // chatSendButton.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
+
+       // chatSendButton.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
+
+        imgCancel.setColorFilter(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+
+        imgCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.hideKeyboard(v);
+                myDialog.dismiss();
+            }
+        });
+        if (type.equalsIgnoreCase("image")) {
+            videoplayer.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+            Glide.with(this).load((url))
+                    .placeholder(R.drawable.gallery_placeholder)
+                    .apply(RequestOptions.skipMemoryCacheOf(false))
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).fitCenter()
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(imageView);
+        }else{
+            videoplayer.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.GONE);
+            String uri_to_string;
+            uri_to_string= url.toString();
+            videoplayer.setUp(uri_to_string, ""
+                    , JzvdStd.SCREEN_NORMAL);
+            JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
+
+
+
+            Glide.with(this)
+                    .asBitmap()
+                    .load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .into(videoplayer.thumbImageView);
+
+
+
+        }
+
+
+
+
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.hideKeyboard(v);
+                myDialog.dismiss();
+            }
+        });
+
+        chatSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                if(type.equalsIgnoreCase("image")){
+                    final String current_user_ref = "messages/"+mCurrentUserId+"/"+mChatUser;
+                    final String chat_user_ref = "messages/"+ mChatUser +"/"+mCurrentUserId;
+                    progressBar.setVisibility(View.VISIBLE);
+
+                    DatabaseReference user_message_push = mRootReference.child("messages")
+                            .child(mCurrentUserId).child(mChatUser).push();
+
+                    final String push_id = user_message_push.getKey();
+
+                    //---PUSHING IMAGE INTO STORAGE---
+                    StorageReference filepath = mImageStorage.child("message_images").child(push_id+".jpg");
+                    filepath.putFile(url).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                            if(task.isSuccessful()){
+
+                                @SuppressWarnings("VisibleForTests")
+                                String download_url = task.getResult().getDownloadUrl().toString();
+
+                                Map messageMap = new HashMap();
+                                messageMap.put("message",download_url);
+                                messageMap.put("seen",false);
+                                messageMap.put("type","image");
+                                messageMap.put("time", ServerValue.TIMESTAMP);
+                                messageMap.put("from",mCurrentUserId);
+
+                                Map messageUserMap = new HashMap();
+                                messageUserMap.put(current_user_ref+"/"+push_id,messageMap);
+                                messageUserMap.put(chat_user_ref+"/"+push_id,messageMap);
+
+                                mRootReference.updateChildren(messageUserMap, new DatabaseReference.CompletionListener(){
+
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        if(databaseError != null){
+                                            progressBar.setVisibility(View.GONE);
+
+                                            Log.e("CHAT_ACTIVITY","Cannot add message to database");
+                                        }
+                                        else{
+                                            progressBar.setVisibility(View.GONE);
+
+                                            Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
+                                            mMessageView.setText("");
+                                            myDialog.dismiss();
+                                        }
+
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                }
+
+
+            }
+        });
     }
 
 
