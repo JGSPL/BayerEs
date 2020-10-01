@@ -676,9 +676,9 @@ public class ChatActivity extends AppCompatActivity {
         }else if (resultCode == Activity.RESULT_OK && requestCode == SELECT_FILE) {
 
             Uri Videouri = data.getData();
-            showMediaialouge(this, Videouri, "video",data);
+          //  showMediaialouge(this, Videouri, "video",data);
 
-            /*ArrayList<String> supportedMedia = new ArrayList<String>();
+            ArrayList<String> supportedMedia = new ArrayList<String>();
 
             supportedMedia.add(".mp4");
             supportedMedia.add(".mov");
@@ -742,7 +742,7 @@ public class ChatActivity extends AppCompatActivity {
 
 // StorageReference
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                    final StorageReference photoRef = *//*storageRef.child("message_video").child(".mp4");*//*mImageStorage.child("message_videos").child(push_id + ".mp4");
+                    final StorageReference photoRef = /*storageRef.child("message_video").child(".mp4");*/mImageStorage.child("message_videos").child(push_id + ".mp4");
 // add File/URI
                     photoRef.putFile(Uri.fromFile(file))
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -819,7 +819,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 Toast.makeText(ChatActivity.this, "Only .mp4,.mov,.3gp File formats allowed ", Toast.LENGTH_SHORT).show();
 
-            }*/
+            }
         }
     }
 
@@ -1436,6 +1436,7 @@ public class ChatActivity extends AppCompatActivity {
                     });
                 }else if(type.equalsIgnoreCase("video")){
                     ArrayList<String> supportedMedia = new ArrayList<String>();
+                    progessLoad.setVisibility(View.VISIBLE);
 
                     supportedMedia.add(".mp4");
                     supportedMedia.add(".mov");
@@ -1477,7 +1478,7 @@ public class ChatActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
                                 // finish();
                             } else {
-                                progressBar.setVisibility(View.VISIBLE);
+                                progessLoad.setVisibility(View.VISIBLE);
 
                                 pathToStoredVideo = getRealPathFromURIPathVideo(uri, ChatActivity.this);
                                 Log.d("video", "Recorded Video Path " + pathToStoredVideo);
@@ -1507,7 +1508,7 @@ public class ChatActivity extends AppCompatActivity {
                                                 Toast.makeText(getApplicationContext(), "Upload Success...", Toast.LENGTH_SHORT).show();
                                                 // String download_url = taskSnapshot.getResult().getDownloadUrl().toString();
 
-                                                progressBar.setVisibility(View.GONE);
+                                                progessLoad.setVisibility(View.GONE);
 
                                                 String download_url = taskSnapshot.getDownloadUrl().toString();
                                                 Map messageMap = new HashMap();
