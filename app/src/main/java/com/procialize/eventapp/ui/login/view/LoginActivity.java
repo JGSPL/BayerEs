@@ -198,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
 
-                        map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
+                      //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
 
                         map.put(IS_LOGIN, "true");
                         map.put(EVENT_ID, eventId);

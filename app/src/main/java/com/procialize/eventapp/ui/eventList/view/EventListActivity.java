@@ -278,7 +278,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     }else{
                         map.put(FIREBASEUSER_NAME, userData.get(0).getFirebase_username());
                     }
-                    map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
+                  //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
 
                     map.put(IS_LOGIN, "true");
                     map.put(EVENT_ID, eventId);

@@ -471,4 +471,20 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         }
         // getActivity().finish();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (cd.isConnectingToInternet()) {
+            strAttendeeName = searchEt.getText().toString().trim();
+            if (attendeeAdapter != null) {
+                attendeeAdapter.getAttendeeListFiltered().clear();
+                attendeeAdapter.notifyDataSetChanged();
+            }
+            loadFirstPage("");
+
+        } else {
+            getAttendeeFromDb();
+        }
+    }
 }
