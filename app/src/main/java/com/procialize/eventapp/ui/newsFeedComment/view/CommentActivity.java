@@ -203,8 +203,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
             newsfeedId = intent.getStringExtra("newsfeedId");
             mediaPosition = intent.getStringExtra("position");
+            String strpositionOfList = intent.getStringExtra("positionOfList");
             swipableAdapterPosition = Integer.parseInt(mediaPosition);
-            positionOfList = Integer.parseInt("positionOfList");
+            positionOfList = Integer.parseInt(strpositionOfList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -586,10 +587,19 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 if (commentList != null) {
                                     setupCommentAdapter(commentList);
                                     showCommentCount(commentList);
+
+                                    List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                    newsfeed_details.get(positionOfList).setTotal_comments(commentList.size()+"");
+                                    newsfeedAdapter.notifyDataSetChanged();
+
                                 } else {
                                     commentList = new ArrayList<>();
                                     setupCommentAdapter(commentList);
                                     showCommentCount(commentList);
+
+                                    List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                    newsfeed_details.get(positionOfList).setTotal_comments(commentList.size()+"");
+                                    newsfeedAdapter.notifyDataSetChanged();
                                 }
                             }
                         }
@@ -755,9 +765,54 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.iv_likes:
                 if (connectionDetector.isConnectingToInternet()) {
-                    noOfLikes = "0";
+
                     commentViewModel.likePost(api_token, event_id, newsfeed_detail.getNews_feed_id());
-                    commentViewModel.likePostData().observe(CommentActivity.this, new Observer<LikePost>() {
+
+                    ApiUtils.getAPIService().PostLikeFromComment(api_token,event_id, newsfeed_detail.getNews_feed_id()).enqueue(new Callback<LikePost>() {
+                        @Override
+                        public void onResponse(Call<LikePost> call, Response<LikePost> response) {
+                            if (response.isSuccessful()) {
+                                String status = response.body().getHeader().get(0).getType();
+
+                                if (status.equalsIgnoreCase("success")) {
+                                    likeStatus = response.body().getLike_status();
+                                    noOfLikes = tv_no_of_likes.getText().toString().split(" ")[0];
+                                    if (likeStatus.equalsIgnoreCase("1")) {
+                                        showLikeCount(Integer.parseInt(noOfLikes) + 1);
+                                        iv_likes.setImageDrawable(getDrawable(R.drawable.ic_active_like));
+
+                                        int totLikes = Integer.parseInt(noOfLikes) + 1;
+                                        newsfeed_detail.setLike_flag("1");
+                                        newsfeed_detail.setTotal_likes(totLikes + "");
+
+                                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                        newsfeed_details.get(positionOfList).setLike_flag("1");
+                                        newsfeed_details.get(positionOfList).setTotal_likes(totLikes + "");
+                                        newsfeed_detail.setTotal_likes(totLikes + "");
+                                        newsfeedAdapter.notifyDataSetChanged();
+                                    } else {
+                                        if (Integer.parseInt(noOfLikes) > 0) {
+                                            showLikeCount(Integer.parseInt(noOfLikes) - 1);
+                                            iv_likes.setImageDrawable(getDrawable(R.drawable.ic_like));
+                                        }
+                                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                        newsfeed_details.get(positionOfList).setLike_flag("0");
+                                        newsfeed_details.get(positionOfList).setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) - 1 + "");
+                                        newsfeed_detail.setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) - 1 + "");
+                                        newsfeedAdapter.notifyDataSetChanged();
+                                    }
+                                    Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LikePost> call, Throwable t) {
+                            Utility.createShortSnackBar(ll_main, "Please try after some time");
+
+                        }
+                    });
+                   /* commentViewModel.likePostData().observe(CommentActivity.this, new Observer<LikePost>() {
                         @Override
                         public void onChanged(LikePost likePost) {
                             if (likePost != null) {
@@ -772,13 +827,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         newsfeed_detail.setLike_flag("1");
                                         newsfeed_detail.setTotal_likes(Integer.parseInt(noOfLikes) + 1 + "");
 
-                                      /*  noOfLikes = "0";
-                                        likeStatus = "";*/
-
-                                        /*List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                      *//*  noOfLikes = "0";
+                                        likeStatus = "";*//*
+                                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
                                         newsfeed_details.get(positionOfList).setLike_flag("1");
-                                        newsfeed_details.get(positionOfList).setTotal_likes(noOfLikes + "");
-                                        newsfeedAdapter.notifyDataSetChanged();*/
+                                        newsfeed_details.get(positionOfList).setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) + 1 + "");
+                                        newsfeed_detail.setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) + 1 + "");
+                                        newsfeedAdapter.notifyDataSetChanged();
                                     } else {
                                         if (Integer.parseInt(noOfLikes) > 0) {
                                             showLikeCount(Integer.parseInt(noOfLikes) - 1);
@@ -786,13 +841,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                             noOfLikes = "0";
 
                                         }
-                                       /* noOfLikes = "0";
-                                        likeStatus = "";*/
+                                       *//* noOfLikes = "0";
+                                        likeStatus = "";*//*
 
-                                      /*  List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
                                         newsfeed_details.get(positionOfList).setLike_flag("0");
-                                        newsfeed_details.get(positionOfList).setTotal_likes(noOfLikes + "");
-                                        newsfeedAdapter.notifyDataSetChanged();*/
+                                        newsfeed_details.get(positionOfList).setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) - 1 + "");
+                                        newsfeed_detail.setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) - 1 + "");
+                                        newsfeedAdapter.notifyDataSetChanged();
                                     }
                                     Utility.createShortSnackBar(ll_main, likePost.getHeader().get(0).getMsg());
                                 }
@@ -803,7 +859,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 Utility.createShortSnackBar(ll_main, "Failure..");
                             }
                         }
-                    });
+                    });*/
                 } else {
                     Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
                 }

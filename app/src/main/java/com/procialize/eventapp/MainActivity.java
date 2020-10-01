@@ -58,6 +58,7 @@ import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.AgendaDetails.view.AgendaDetailsFragment;
+import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;

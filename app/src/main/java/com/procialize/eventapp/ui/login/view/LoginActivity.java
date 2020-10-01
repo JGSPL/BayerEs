@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                         map.put(KEY_TOKEN, "");
                         map.put(KEY_CITY, userData.get(0).getCity());
                         map.put(KEY_GCM_ID, "");
-                        //map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
+                        map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
                         map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
                         map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
 

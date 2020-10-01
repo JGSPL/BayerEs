@@ -118,7 +118,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         final Newsfeed_detail feedData = feed_detail.get(position);
         try {
 
-            if (position + 1 == getNewsFeedList().size()) {
+            if (feedData.getAttendee_id()==null ) {
                 holder.root.setVisibility(View.GONE);
             } else {
                 holder.root.setVisibility(View.VISIBLE);

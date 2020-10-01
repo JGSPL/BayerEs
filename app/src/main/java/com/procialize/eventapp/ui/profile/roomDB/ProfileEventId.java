@@ -5,12 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
-
 import java.io.Serializable;
-import java.util.List;
 
 @Entity(tableName = "tbl_profile_event_id")
 public class ProfileEventId implements Serializable {

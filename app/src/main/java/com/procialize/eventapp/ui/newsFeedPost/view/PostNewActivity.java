@@ -229,7 +229,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
                     String strMediaType;
 
-                    for (int j = 0; j < mAlbumFiles.size(); j++) {
+                    /*for (int j = 0; j < mAlbumFiles.size(); j++) {
                         from = null;
                         too = null;
                         thumbpath = null;
@@ -241,13 +241,11 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                         if (!selectedFileList.contains(mAlbumFiles.get(j).getPath())) {
                             if (mAlbumFiles.get(j).getMediaType() == AlbumFile.TYPE_VIDEO) {
                                 strMediaType = "video";
-                               // Random r = new Random();
-                                //int i1 = r.nextInt(80 - 65) + 65;
-                                //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
                                 Calendar calendar = Calendar.getInstance();
                                 //Returns current time in millis
                                 long timeStamp = calendar.getTimeInMillis();
-                                videofile = "video_" /*+ i1 */+ timeStamp + "_";
+                                videofile = "video_" *//*+ i1 *//*+ timeStamp + "_";
                                 from = new File(mAlbumFiles.get(j).getPath());
 
                                 String root = Environment.getExternalStorageDirectory().toString();
@@ -269,14 +267,10 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                 }
                             } else {
                                 strMediaType = "image";
-                              /*  Random r = new Random();
-                                int i1 = r.nextInt(80 - 65) + 65;*/
-                               // String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
                                 Calendar calendar = Calendar.getInstance();
                                 //Returns current time in millis
                                 long timeStamp = calendar.getTimeInMillis();
-                                imagefile = "image_" /*+ i1*/ + timeStamp + "_";
+                                imagefile = "image_" *//*+ i1*//* + timeStamp + "_";
                                 from = new File(mAlbumFiles.get(j).getPath());
 
                                 String root = Environment.getExternalStorageDirectory().toString();
@@ -308,20 +302,23 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                 videoPositionArray.add(j);
                             }
                         }
-                    }
+                    }*/
 
                     try {
-                        /*if (resultList.size() > 0) {
-                            btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-                            btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
-                            ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-                        } else {
-                            btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
-                            btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-                            ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
-                        }*/
-
-
+                        for (int j = 0; j < mAlbumFiles.size(); j++) {
+                            if (!selectedFileList.contains(mAlbumFiles.get(j).getPath())) {
+                                if (mAlbumFiles.get(j).getMediaType() == AlbumFile.TYPE_VIDEO) {
+                                    strMediaType = "video";
+                                } else {
+                                    strMediaType = "image";
+                                }
+                                resultList.add(new SelectedImages(mAlbumFiles.get(j).getPath(),
+                                        mAlbumFiles.get(j).getPath(), mAlbumFiles.get(j).getThumbPath(), false, strMediaType, mAlbumFiles.get(j).getMimeType()));
+                                if (mAlbumFiles.get(j).getMediaType() == AlbumFile.TYPE_VIDEO) {
+                                    videoPositionArray.add(j);
+                                }
+                            }
+                        }
                         setPagerAdapter(resultList);
                     } catch (Exception e) {
                         e.printStackTrace();
