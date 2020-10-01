@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -75,7 +76,8 @@ public class LoginActivity extends AppCompatActivity {
         activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this, activityLoginBinding));
         activityLoginBinding.executePendingBindings();
 
-
+        CommonFirebase.crashlytics("Login Screen", "");
+        CommonFirebase.firbaseAnalytics(this, "Login Screen", "");
     }
 
     @BindingAdapter({"toastMessage"})
@@ -196,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
                             eventListViewModel.getupdateUserdatq().removeObservers((LifecycleOwner) context);
                         }
                         EventAppDB eventAppDB = EventAppDB.getDatabase(context);
-                        List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId);
+                        List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
                         if (profileDataUpdated.size() > 0) {
                             isClickable = true;
                             eventListViewModel.openMainPage((Activity) context);

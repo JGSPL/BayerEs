@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.procialize.eventapp"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.0(1)"
@@ -133,7 +133,11 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.0'
 
     //Library to compress video
-    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+     //implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+    implementation 'com.arthenica:mobile-ffmpeg-full-gpl:4.4'
+    // implementation 'com.github.AbedElazizShe:LightCompressor:0.7.4'
+    //  implementation 'com.yovenny.VideoCompress:videocompress:1.0.0'
+
     // Room components
     implementation "androidx.room:room-runtime:2.2.0"
     annotationProcessor "androidx.room:room-compiler:2.2.0"
@@ -169,14 +173,16 @@ dependencies {
     compile 'com.google.firebase:firebase-database:11.8.0'
     implementation 'com.google.firebase:firebase-auth:11.8.0'
     implementation 'com.google.android.gms:play-services:11.8.0'
-
+    implementation 'com.google.firebase:firebase-crash:11.8.0'
     //-----FIREBASE DATABASE---
     //  implementation 'com.google.firebase:firebase-database:11.8.0'
 
     //-----FIREBASE STORAGE----
     implementation 'com.google.firebase:firebase-storage:11.8.0'
 
-
+    // Firebase Crashlytics dependency.
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.google.android.gms:play-services-analytics:11.8.0'
 
     //-----DATA IS FETCHED FROM DATABASE AND ADDED TO RECYCLER VIEW----
     implementation 'com.firebaseui:firebase-ui-database:1.0.1'
@@ -211,8 +217,9 @@ dependencies {
     implementation project(':mentions-release')
     implementation project(':tools-release')
     implementation 'com.percolate:caffeine:0.3.3'
-
+    implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'org.jsoup:jsoup:1.10.1'
 
+    //implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0-RC1'
 }
 apply plugin: 'com.google.gms.google-services'

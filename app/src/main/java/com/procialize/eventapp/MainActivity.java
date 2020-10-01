@@ -26,10 +26,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -52,11 +50,13 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
+import com.procialize.eventapp.ui.AgendaDetails.view.AgendaDetailsFragment;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
@@ -64,6 +64,7 @@ import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
+import com.procialize.eventapp.ui.eventinfo.view.EventInfoFragment;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
@@ -71,7 +72,6 @@ import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
-import com.procialize.eventapp.ui.quiz.view.QuizFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 import java.io.File;
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event, tr_home, tr_profile,tr_logout;
+    TableRow tr_switch_event, tr_home, tr_profile, tr_logout,tr_event_info;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -148,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
 
+        CommonFirebase.crashlytics("MainActivity", api_token);
+        CommonFirebase.firbaseAnalytics(this, "MainActivity", api_token);
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
@@ -214,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_switch_event = findViewById(R.id.tr_switch_event);
         tr_home = findViewById(R.id.tr_home);
         tr_profile = findViewById(R.id.tr_profile);
+        tr_event_info = findViewById(R.id.tr_event_info);
         tr_logout = findViewById(R.id.tr_logout);
         txt_version = findViewById(R.id.txt_version);
 
@@ -221,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_switch_event.setOnClickListener(this);
         tr_home.setOnClickListener(this);
         tr_profile.setOnClickListener(this);
+        tr_event_info.setOnClickListener(this);
         tr_logout.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
@@ -252,15 +256,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
 
 
-                    case R.id.navigation_quiz:
 
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_frame, QuizFragment.newInstance(), "")
-                                .commit();
-                        navView.setVisibility(View.GONE);
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
-                        return true;
 
                     default:
                         return true;
@@ -453,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 SessionManager.clearCurrentEvent(MainActivity.this);
                 SessionManager.logoutUser(MainActivity.this);
-                EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
                 EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
                 EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                 startActivity(new Intent(MainActivity.this, EventListActivity.class));
@@ -467,6 +463,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                break;
+            case R.id.tr_event_info:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_frame, EventInfoFragment.newInstance(), "")
+                        .commit();
                 break;
             case R.id.tr_logout:
                 JzvdStd.releaseAllVideos();
@@ -653,23 +657,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-    private void getAttendeeAndInsertIntoDB()
-    {
-        try{
-        if(ConnectionDetector.getInstance(MainActivity.this).isConnectingToInternet()) {
-            AttendeeViewModel attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
+    private void getAttendeeAndInsertIntoDB() {
+        try {
             final AttendeeDatabaseViewModel attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
-            attendeeViewModel.getAttendee(api_token, eventid, "", "1", "5000");
-            attendeeViewModel.getAttendeeList().observe(this, new Observer<FetchAttendee>() {
-                @Override
-                public void onChanged(FetchAttendee event) {
-                    List<Attendee> attendeeList = event.getAttandeeList();
-                        try{
+
+            if (ConnectionDetector.getInstance(MainActivity.this).isConnectingToInternet()) {
+                final AttendeeViewModel attendeeViewModel = ViewModelProviders.of(this).get(AttendeeViewModel.class);
+
+                attendeeViewModel.getAttendee(api_token, eventid, "", "1", "10000");
+                attendeeViewModel.getAttendeeList().observe(this, new Observer<FetchAttendee>() {
+                    @Override
+                    public void onChanged(FetchAttendee event) {
+                        if(event != null) {
+                            List<Attendee> attendeeList = event.getAttandeeList();
+
                             //Delete All attendee from local db and insert attendee
                             attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
                             attendeeDatabaseViewModel.insertIntoDb(MainActivity.this, attendeeList);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        }
+
+                        if (attendeeViewModel != null && attendeeViewModel.getAttendeeList().hasObservers()) {
+                            attendeeViewModel.getAttendeeList().removeObservers(MainActivity.this);
                         }
                     }
                 });

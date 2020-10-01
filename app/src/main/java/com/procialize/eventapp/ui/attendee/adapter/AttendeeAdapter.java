@@ -42,6 +42,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyViewHolder> implements Filterable {
 

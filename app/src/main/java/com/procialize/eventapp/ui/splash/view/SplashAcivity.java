@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.databinding.ActivitySplashAcivityBinding;
@@ -18,12 +19,14 @@ import com.procialize.eventapp.ui.splash.viewmodel.SplashViewModel;
 
 public class SplashAcivity extends AppCompatActivity implements Splash {
     public static SessionManager sessionManager;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionManager = new SessionManager(this);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         ActivitySplashAcivityBinding activitysplashBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash_acivity);
         activitysplashBinding.setViewModel(new SplashViewModel(SplashAcivity.this));
         activitysplashBinding.executePendingBindings();

@@ -32,8 +32,8 @@ public class EventRepository {
         eventApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<Event> getEventList(String token,String organizer_id, String search_text) {//, String pageSize, String pageNumber) {
-        eventApi.getEventList(token, organizer_id,search_text)
+    public MutableLiveData<Event> getEventList(String token, String organizer_id, String search_text) {//, String pageSize, String pageNumber) {
+        eventApi.getEventList(token, organizer_id, search_text)
                 .enqueue(new Callback<Event>() {
                     @Override
                     public void onResponse(Call<Event> call, Response<Event> response) {
@@ -59,7 +59,11 @@ public class EventRepository {
                     @Override
                     public void onResponse(Call<UpdateDeviceInfo> call, Response<UpdateDeviceInfo> response) {
                         if (response.isSuccessful()) {
-                            updateLoginUserList.setValue(response.body());
+                            try {
+                                updateLoginUserList.setValue(response.body());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
                             /*List<LoginUserInfo> userData = response.body().getLoginUserInfoList();
                             String fname = userData.get(0).getFirst_name();

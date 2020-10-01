@@ -1,11 +1,8 @@
 package com.procialize.eventapp.ui.newsFeedPost.service;
 
-import android.app.Application;
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -14,51 +11,43 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+/*import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
+import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
+import com.abedelazizshe.lightcompressorlibrary.VideoQuality;*/
+import com.arthenica.mobileffmpeg.Config;
+import com.arthenica.mobileffmpeg.ExecuteCallback;
+import com.arthenica.mobileffmpeg.FFmpeg;
+/*import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
-
-
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;*/
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
-import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.DatagramSocket;
-import java.net.Socket;
-import java.nio.channels.FileChannel;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_CONTACTS;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.VIBRATE;
-import static android.Manifest.permission.WRITE_CONTACTS;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+/*import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;*/
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+import static com.google.android.gms.internal.zzahn.runOnUiThread;
 
 public class BackgroundServiceToCompressMedia extends IntentService {
     String TAG = "BackgroundServiceToCompressMedia";
     private List<UploadMultimedia> mediaList;
-    private FFmpeg ffmpeg;
+   // private FFmpeg ffmpeg;
 
     public BackgroundServiceToCompressMedia() {
         super("");
@@ -106,7 +95,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
      * Load FFmpeg binary
      */
     private void loadFFMpegBinary() {
-        try {
+       /* try {
             if (ffmpeg == null) {
                 Log.d(TAG, "ffmpeg : era nulo");
                 ffmpeg = FFmpeg.getInstance(this);
@@ -126,19 +115,19 @@ public class BackgroundServiceToCompressMedia extends IntentService {
             //showUnsupportedExceptionDialog();
         } catch (Exception e) {
             Log.d(TAG, "EXception no controlada : " + e);
-        }
+        }*/
     }
 
     /**
      * Executing ffmpeg binary
      */
-    private String execFFmpegBinary(final String[] command, final String outputPath, final int mediaListposition) {
+    private String execFFmpegBinary(final String[] command, final String inputPath, final String outputPath, final int mediaListposition) {
         /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q){
             String originalPath = mediaList.get(mediaListposition).getMedia_file();
             EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(outputPath, originalPath);
             compressMedia(mediaListposition);
         } else{*/
-        try {
+        /*try {
 
             ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                 @Override
@@ -178,7 +167,63 @@ public class BackgroundServiceToCompressMedia extends IntentService {
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
             e.printStackTrace();
-        }
+        }*/
+        FFmpeg.executeAsync(command, new ExecuteCallback() {
+
+
+
+            @Override
+            public void apply(final long executionId, final int returnCode) {
+                if (returnCode == RETURN_CODE_SUCCESS) {
+                    Log.i(Config.TAG, "Async command execution completed successfully.");
+                    String thumbPath = mediaList.get(mediaListposition).getMedia_file_thumb();
+                    String originalPath = mediaList.get(mediaListposition).getMedia_file();
+                    EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(outputPath, originalPath);
+                    compressMedia(mediaListposition);
+                } else if (returnCode == RETURN_CODE_CANCEL) {
+                    Log.i(Config.TAG, "Async command execution cancelled by user.");
+                } else {
+                    Log.i(Config.TAG, String.format("Async command execution failed with rc=%d.", returnCode));
+                }
+            }
+        });
+       /* VideoCompressor.start(inputPath,outputPath, new CompressionListener() {
+            @Override
+            public void onStart() {
+                // Compression start
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.i(TAG, "Async command execution completed successfully.");
+                String thumbPath = mediaList.get(mediaListposition).getMedia_file_thumb();
+                String originalPath = mediaList.get(mediaListposition).getMedia_file();
+                EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(outputPath, originalPath);
+                compressMedia(mediaListposition);
+            }
+
+            @Override
+            public void onFailure(String failureMessage) {
+                // On Failure
+            }
+
+            @Override
+            public void onProgress(final float v) {
+                // Update UI with progress value
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Log.d("InProgress",v + "%");
+                       *//* progress.setText(progressPercent + "%");
+                        progressBar.setProgress((int) progressPercent);*//*
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled() {
+                // On Cancelled
+            }
+        }, VideoQuality.MEDIUM, false, false);*/
         //}
 
         return outputPath;
@@ -202,59 +247,28 @@ public class BackgroundServiceToCompressMedia extends IntentService {
         }
         String fileExtn = ".mp4";
         String filePrefix = path.replace(".mp4", "");
-        File dest = new File(moviesDir, filePrefix + fileExtn);
+        Calendar calendar = Calendar.getInstance();
+        long timeStamp = calendar.getTimeInMillis();
+        //File dest = new File(moviesDir, filePrefix + fileExtn);
+        File dest = new File(moviesDir, timeStamp + fileExtn);
 
 
         int fileNo = 0;
         while (dest.exists()) {
             fileNo++;
-            dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
+            //dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
+            dest = new File(moviesDir, timeStamp  + fileNo + fileExtn);
         }
         String filePath = dest.getAbsolutePath();
 
-        try {
-            AssetFileDescriptor afd = getAssets().openFd(selectedVideoUri.toString());
-            MediaPlayer mp = new MediaPlayer();
-            mp.setDataSource(selectedVideoUri.toString());//afd.getFileDescriptor());
-            mp.prepare();
-            int width = mp.getVideoWidth();
 
-            int height = mp.getVideoHeight();
-            Log.d("Width", width + "");
-            Log.d("height", height + "");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-/*        String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
-                //"-vcodec",
-                "-c:v",
-                "libx264", "-b:v", "1000k", "-b:a", "48000","-preset", "ultrafast",  "-ac", "2", "-ar", "22050", filePath }; */
-
-String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
+        String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
                 //"-vcodec",
                 "-c:v",
                 "libx264",  "-maxrate", "1984k",
-        "-bufsize", "3968k","-b:v", "3000k", "-b:a", "48000",
-        "-movflags", "+faststart", "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "ultrafast",  "-ac", "2", "-ar", "22050", filePath };
-
-       /* String[] complexCommand = new String[]{
-                ffmpeg
-                        -i
-                        /storage/emulated/0/Movies/Instagram/VID_219920217_214928_732.mp4
-                        -vf scale=-1:480.0
-                -threads 16
-            -c:v libx264
-        -maxrate 1984k
-            -bufsize 3968k
-            -ac 2
-            -vf format=yuv420p
-            -g 60
-            -c:a aac
-        -b:a 128k -ar 44100 -movflags +faststart -profile:v baseline -level 3.1 -crf 28 -preset ultrafast -strict -2 /storage/emulated/0/Android/data/com.staze/cache/1514433292621.mp4 };
-
- */       execFFmpegBinary(complexCommand, filePath, mediaListposition);
+                "-bufsize", "3968k","-b:v", "3000k", "-b:a", "48000",
+                "-movflags", "+faststart", "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "ultrafast",  "-ac", "2", "-ar", "22050", filePath };
+        execFFmpegBinary(complexCommand,selectedVideoUri.toString(), filePath, mediaListposition);
 
         return filePath;
     }
@@ -355,7 +369,13 @@ String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), 
         String originalPath = mediaList.get(mediaListposition).getMedia_file();
         EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(originalPath, originalPath);
         if (mediaList.size() > mediaListposition + 1) {
+            /*if(mediaList.get(mediaListposition).getMedia_type().contains("video")) {
+                executeCutVideoCommand(Uri.parse(mediaList.get(mediaListposition + 1).getMedia_file()), mediaListposition + 1);
+            }else
+            { */
             compressMedia(mediaListposition + 1);
+
+            /* }*/
         } else {
             Intent broadcastIntent = new Intent(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);

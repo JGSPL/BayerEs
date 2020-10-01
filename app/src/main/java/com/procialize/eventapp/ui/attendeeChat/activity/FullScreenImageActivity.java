@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.costumTools.TouchImageView;
 
 import cn.jzvd.Jzvd;
@@ -42,6 +43,8 @@ public class FullScreenImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_screen_image);
         bindViews();
+        CommonFirebase.crashlytics("FullScreenImage", "");
+        CommonFirebase.firbaseAnalytics(this, "FullScreenImage", "");
     }
 
     @Override

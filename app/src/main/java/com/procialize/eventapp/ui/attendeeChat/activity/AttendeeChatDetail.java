@@ -33,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -106,7 +107,8 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         bgView = findViewById(R.id.bgView);
         CommonFunction.showBackgroundImage(this, ll_main);
 
-
+        CommonFirebase.crashlytics("AttendeeChatDetail", "");
+        CommonFirebase.firbaseAnalytics(this, "AttendeeChatDetail", "");
         iv_back.setOnClickListener(this);
 
         CommonFunction.showBackgroundImage(AttendeeChatDetail.this, ll_main);

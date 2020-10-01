@@ -1,6 +1,7 @@
 package com.procialize.eventapp.ui.newsFeedPost.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -42,6 +43,7 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
@@ -60,6 +62,7 @@ import com.yanzhenjie.album.AlbumFile;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -106,6 +109,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
+        CommonFirebase.crashlytics("PostActivity", api_token);
+        CommonFirebase.firbaseAnalytics(this, "PostActivity", api_token);
         Log.d("tot_count", String.valueOf(eventAppDB.uploadMultimediaDao().getRowCount()));
         postNewsFeedViewModel = ViewModelProviders.of(this).get(PostNewsFeedViewModel.class);
         attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
@@ -224,7 +229,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
                     String strMediaType;
 
-                    for (int j = 0; j < mAlbumFiles.size(); j++) {
+                    /*for (int j = 0; j < mAlbumFiles.size(); j++) {
                         from = null;
                         too = null;
                         thumbpath = null;
@@ -232,13 +237,15 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                         tothumb = null;
                         tovideo = null;
                         //To check selected image/video is already present in previous arraylist
+                        Log.d("org_path->",(mAlbumFiles.get(j).getPath()));
                         if (!selectedFileList.contains(mAlbumFiles.get(j).getPath())) {
                             if (mAlbumFiles.get(j).getMediaType() == AlbumFile.TYPE_VIDEO) {
                                 strMediaType = "video";
-                                Random r = new Random();
-                                int i1 = r.nextInt(80 - 65) + 65;
-                                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                videofile = "video_" + i1 + timeStamp + "_";
+
+                                Calendar calendar = Calendar.getInstance();
+                                //Returns current time in millis
+                                long timeStamp = calendar.getTimeInMillis();
+                                videofile = "video_" *//*+ i1 *//*+ timeStamp + "_";
                                 from = new File(mAlbumFiles.get(j).getPath());
 
                                 String root = Environment.getExternalStorageDirectory().toString();
@@ -260,14 +267,15 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                 }
                             } else {
                                 strMediaType = "image";
-                                Random r = new Random();
-                                int i1 = r.nextInt(80 - 65) + 65;
-                                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                imagefile = "image_" + i1 + timeStamp + "_";
+                                Calendar calendar = Calendar.getInstance();
+                                //Returns current time in millis
+                                long timeStamp = calendar.getTimeInMillis();
+                                imagefile = "image_" *//*+ i1*//* + timeStamp + "_";
                                 from = new File(mAlbumFiles.get(j).getPath());
 
                                 String root = Environment.getExternalStorageDirectory().toString();
-                                File moviesDir = new File(root + Constant.FOLDER_DIRECTORY + Constant.VIDEO_DIRECTORY);
+                                File moviesDir = new File(root + Constant.FOLDER_DIRECTORY + Constant.IMAGE_DIRECTORY);
+                                Log.d("dest_path",moviesDir.getPath()+"/"+from.getName());
                                 if (from != null) {
                                     postNewsFeedViewModel.copyFile(mAlbumFiles.get(j).getPath(), from.getName(), moviesDir.toString());
                                 }
@@ -294,18 +302,23 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                 videoPositionArray.add(j);
                             }
                         }
-                    }
+                    }*/
 
                     try {
-                        /*if (resultList.size() > 0) {
-                            btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-                            btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
-                            ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-                        } else {
-                            btn_post.setTextColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
-                            btn_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_1)));
-                            ll_post.setBackgroundColor(Color.parseColor(SharedPreference.getPref(PostNewActivity.this, EVENT_COLOR_4)));
-                        }*/
+                        for (int j = 0; j < mAlbumFiles.size(); j++) {
+                            if (!selectedFileList.contains(mAlbumFiles.get(j).getPath())) {
+                                if (mAlbumFiles.get(j).getMediaType() == AlbumFile.TYPE_VIDEO) {
+                                    strMediaType = "video";
+                                } else {
+                                    strMediaType = "image";
+                                }
+                                resultList.add(new SelectedImages(mAlbumFiles.get(j).getPath(),
+                                        mAlbumFiles.get(j).getPath(), mAlbumFiles.get(j).getThumbPath(), false, strMediaType, mAlbumFiles.get(j).getMimeType()));
+                                if (mAlbumFiles.get(j).getMediaType() == AlbumFile.TYPE_VIDEO) {
+                                    videoPositionArray.add(j);
+                                }
+                            }
+                        }
                         setPagerAdapter(resultList);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -413,7 +426,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
     private void setPagerAdapter(List<SelectedImages> resultList) {
         for (int j = 0; j < resultList.size(); j++) {
-            Log.d("path", resultList.get(j).getmPath());
+            Log.d("mpath", resultList.get(j).getmPath());
         }
         viewPagerAdapter = new ViewPagerMultimediaAdapter(PostNewActivity.this, resultList);
         viewPagerAdapter.notifyDataSetChanged();
@@ -594,4 +607,17 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         return commentTextView.getText().toString();
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        finish();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 }

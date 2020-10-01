@@ -1,6 +1,8 @@
 package com.procialize.eventapp.ui.newsFeedPost.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +10,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 
@@ -56,17 +65,33 @@ public class ViewPagerMultimediaAdapter extends PagerAdapter {
         String albumFile = imagePathList.get(position).getmPath();
 
 
-        if (albumFile.contains("png") || albumFile.contains("jpg") || albumFile.contains("jpeg") || albumFile.contains("gif")) {
+        if (albumFile.contains("png") || albumFile.contains("jpg") || albumFile.contains("jpeg") || albumFile.contains("gif")
+                || albumFile.contains("JPG")  || albumFile.contains("JPEG") || albumFile.contains("PNG") || albumFile.contains("GIF")) {
             imageView.setVisibility(View.VISIBLE);
             videoview.setVisibility(View.GONE);
 
             progressBar.setVisibility(View.GONE);
             JzvdStd.goOnPlayOnPause();
             //imageView.setImageURI(Uri.parse(images.get(position)));
-            Glide.with(videoview).load(imagePathList.get(position).getmPath()).into(imageView);
+            //Glide.with(videoview).load(imagePathList.get(position).getmPath()).into(imageView);
+            Glide.with(imageView).load( imagePathList.get(position).getmPath().trim())
+                    .apply(RequestOptions.skipMemoryCacheOf(false))
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            Log.e("loadfailed","loadfailed");
+                            return true;
+                        }
 
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            Log.e("ready","ready");
+                            return false;
+                        }
+                    }).into(imageView);
 
-        } else if (albumFile.contains("mp4")) {
+        } else /*if (albumFile.contains("mp4"))*/ {
             imageView.setVisibility(View.GONE);
             videoview.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);

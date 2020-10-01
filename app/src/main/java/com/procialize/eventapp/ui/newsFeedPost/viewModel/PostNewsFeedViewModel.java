@@ -9,6 +9,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -23,6 +24,7 @@ import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.MediaLoader;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
+import com.procialize.eventapp.ui.login.model.Login;
 import com.procialize.eventapp.ui.newsFeedComment.networking.GifRepository;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
 import com.procialize.eventapp.ui.newsFeedPost.networking.PostNewsFeedRepository;
@@ -130,10 +132,12 @@ public class PostNewsFeedViewModel extends ViewModel {
             out.flush();
             out.close();
 
+
         } catch (FileNotFoundException fnfe1) {
-            Log.e("tag", fnfe1.getMessage());
+            Log.e("tag123", fnfe1.getMessage());
+
         } catch (Exception e) {
-            Log.e("tag", e.getMessage());
+            Log.e("tag123", e.getMessage());
         }
     }
 

@@ -1,11 +1,5 @@
 package com.procialize.eventapp.ui.newsFeedLike.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -15,22 +9,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
-import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
-import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
-import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
-import com.procialize.eventapp.ui.newsFeedComment.viewModel.CommentViewModel;
 import com.procialize.eventapp.ui.newsFeedLike.adapter.LikeAdapter;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
 import com.procialize.eventapp.ui.newsFeedLike.viewModel.LikeViewModel;
-import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
 import java.util.List;
@@ -58,8 +52,8 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_like);
 
-        api_token = SharedPreference.getPref(this,AUTHERISATION_KEY);
-        event_id = SharedPreference.getPref(this,EVENT_ID);
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(this, EVENT_ID);
         likeViewModel = ViewModelProviders.of(this).get(LikeViewModel.class);
         connectionDetector = ConnectionDetector.getInstance(this);
         ll_main = findViewById(R.id.ll_main);
@@ -74,22 +68,25 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        CommonFirebase.crashlytics("Like", api_token);
+        CommonFirebase.firbaseAnalytics(this, "Like", api_token);
         setDynamicColor();
-        CommonFunction.showBackgroundImage(this,ll_main);
+        CommonFunction.showBackgroundImage(this, ll_main);
         geLikes();
     }
 
     public void geLikes() {
         if (connectionDetector.isConnectingToInternet()) {
-            likeViewModel.getLike(api_token,event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
+            likeViewModel.getLike(api_token, event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
             likeViewModel.getLikeList().observe(this, new Observer<Like>() {
                 @Override
                 public void onChanged(Like like) {
                     if (like != null) {
                         likeList = like.getLikeDetails();
-                        setupLikeAdapter(likeList);
-                        //showLikeCount(likeList);
+                        if (likeList != null) {
+                            setupLikeAdapter(likeList);
+                            //showLikeCount(likeList);
+                        }
                     }
                 }
             });
@@ -118,9 +115,9 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
 
     public void setDynamicColor() {
 
-        int color4 = Color.parseColor(SharedPreference.getPref(LikeActivity.this,EVENT_COLOR_4));
+        int color4 = Color.parseColor(SharedPreference.getPref(LikeActivity.this, EVENT_COLOR_4));
         iv_back.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
-        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(LikeActivity.this,EVENT_COLOR_4)));
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(LikeActivity.this, EVENT_COLOR_4)));
     }
 
 }

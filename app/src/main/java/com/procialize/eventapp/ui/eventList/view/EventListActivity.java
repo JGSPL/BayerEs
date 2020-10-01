@@ -28,6 +28,7 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
@@ -105,6 +106,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
+        CommonFirebase.crashlytics("EventListing", api_token);
+        CommonFirebase.firbaseAnalytics(this, "EventListing", api_token);
         iv_logout = findViewById(R.id.iv_logout);
         ll_main = findViewById(R.id.ll_main);
         et_search = findViewById(R.id.et_search);
@@ -263,10 +266,8 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     }
                     if( userData.get(0).getFirebase_username()==null){
                         map.put(FIREBASEUSER_NAME, "");
-
                     }else{
                         map.put(FIREBASEUSER_NAME, userData.get(0).getFirebase_username());
-
                     }
                   //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
 
@@ -280,7 +281,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                         eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
                     }
                     EventAppDB eventAppDB = EventAppDB.getDatabase(EventListActivity.this);
-                    List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId);
+                    List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
                     if (profileDataUpdated.size() > 0) {
                         isClickable = true;
                         eventListViewModel.openMainPage(EventListActivity.this);

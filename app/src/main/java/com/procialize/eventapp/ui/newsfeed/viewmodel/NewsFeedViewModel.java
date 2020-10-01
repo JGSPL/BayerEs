@@ -8,15 +8,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +27,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
@@ -40,7 +41,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
-import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
@@ -60,44 +60,36 @@ import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.Jsoup;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
-import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
-import static java.security.AccessController.getContext;
 
 
 public class NewsFeedViewModel extends ViewModel {
-    Dialog dialog, myDialog, dialogShare;
+    Dialog dialog, myDialog;
+    ProgressDialog dialogShare;
     private String ATTENDEE_STATUS = "0";
-    private String ATTENDEE_ID="";
+    private String ATTENDEE_ID = "";
     private Activity activityVar;
     ConnectionDetector connectionDetector;
     private MutableLiveData<FetchNewsfeedMultiple> mutableLiveData = new MutableLiveData<>();
@@ -110,13 +102,13 @@ public class NewsFeedViewModel extends ViewModel {
     private MutableLiveData<Boolean> mIsUpdating = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsfeedReport = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> newsfeedHide = new MutableLiveData<>();
-    MutableLiveData<LikePost> newsfeedLike= new MutableLiveData<>();
+    MutableLiveData<LikePost> newsfeedLike = new MutableLiveData<>();
 
     //private MutableLiveData<Boolean> mIsUploading = new MutableLiveData<>();
     MutableLiveData<Boolean> isValid = new MutableLiveData<>();
     String noOfLikes = "0";
-    String likeStatus="";
-    String strPath="", mediaPath="";
+    String likeStatus = "";
+    String strPath = "", mediaPath = "";
     NewsFeedAdapter adapter;
     MutableLiveData<LikePost> liketPostUpdate = new MutableLiveData<>();
 
@@ -124,25 +116,21 @@ public class NewsFeedViewModel extends ViewModel {
     private APIService newsfeedApi;
 
 
-
-
-    public void init(Activity activity,String token,String eventId,String pagesize, String pagenumber) {
-         activityVar = activity;
+    public void init(Activity activity, String token, String eventId, String pagesize, String pagenumber) {
+        activityVar = activity;
       /* if (mutableLiveData != null) {
             mutableLiveData.setValue(null);
         }*/
 
 
         newsRepository = NewsfeedRepository.getInstance();
-        mutableLiveData = newsRepository.getNewsFeed(token,eventId, pagesize, pagenumber);
+        mutableLiveData = newsRepository.getNewsFeed(token, eventId, pagesize, pagenumber);
 
     }
 
     public LiveData<FetchNewsfeedMultiple> getNewsRepository() {
         return mutableLiveData;
     }
-
-
 
 
     //---------------View News feed details--------------------------------
@@ -160,11 +148,11 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //---------------View Comment details--------------------------------
-    public void openCommentPage(Activity activity, Newsfeed_detail feed, int position,int swipeablePosition) {
+    public void openCommentPage(Activity activity, Newsfeed_detail feed, int position, int swipeablePosition) {
         activity.startActivity(new Intent(activity, CommentActivity.class)
                 .putExtra("Newsfeed_detail", (Serializable) feed)
-                .putExtra("newsfeedId",feed.getNews_feed_id())
-                .putExtra("positionOfList",position)
+                .putExtra("newsfeedId", feed.getNews_feed_id())
+                .putExtra("positionOfList", position+"")
                 .putExtra("position", "" + swipeablePosition));
     }
 
@@ -217,13 +205,13 @@ public class NewsFeedViewModel extends ViewModel {
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog,
                                                             int which) {
-                                            new DownloadFile().execute( mediaPath+newsFeedMedia.get(finalPosition).getMedia_file());
+                                            new DownloadFile().execute(mediaPath + newsFeedMedia.get(finalPosition).getMedia_file());
                                         }
                                     });
                             builder.show();
 
                         } else if (isPresentFile) {
-                            String folder = Environment.getExternalStorageDirectory().toString() +  Constant.FOLDER_DIRECTORY + "/";
+                            String folder = Environment.getExternalStorageDirectory().toString() + Constant.FOLDER_DIRECTORY + "/";
                             //Create androiddeft folder if it does not exist
                             File directory = new File(folder);
                             if (!directory.exists()) {
@@ -242,15 +230,14 @@ public class NewsFeedViewModel extends ViewModel {
                             activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
                         }
                     } else {
-                        dialogShare = new Dialog(activity);
-                        dialogShare.show();
-                        shareImage(/*feed.getPost_date() + "\n" +*/ feed.getPost_status(),    mediaPath+newsFeedMedia.get(position).getMedia_file().trim(), activityVar);
+
+                        shareImage(/*feed.getPost_date() + "\n" +*/ feed.getPost_status(), mediaPath + newsFeedMedia.get(position).getMedia_file().trim(), activityVar);
                     }
                 } else {
+
                     shareTextUrl(/*feed.getPost_date() + "\n" +*/ feed.getPost_status(), StringEscapeUtils.unescapeJava(feed.getPost_status()));
                 }
-            }
-            else {
+            } else {
                 //Toast.makeText(activity, "No Internet Connection.", Toast.LENGTH_SHORT).show();
                 Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection.", Snackbar.LENGTH_SHORT).show();
 
@@ -262,17 +249,17 @@ public class NewsFeedViewModel extends ViewModel {
     //---------------View Like Action mechanism--------------------------------
     public void openLikeimg(Activity activity, String token, String event_id, String newsfeedid, View v,
                             Newsfeed_detail feed, int position, final ImageView likeimage, final TextView liketext) {
-         activityVar = activity;
+        activityVar = activity;
         newsRepository = NewsfeedRepository.getInstance();
         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-            newsfeedLike = newsRepository.PostLike(token,event_id, newsfeedid);
+            newsfeedLike = newsRepository.PostLike(token, event_id, newsfeedid);
 
-         newsRepository.getLikeActivity().observe((LifecycleOwner) activityVar, new Observer<LikePost>() {
-              @Override
-              public void onChanged(LikePost loginOrganizer) {
-                if (loginOrganizer != null) {
+            newsRepository.getLikeActivity().observe((LifecycleOwner) activityVar, new Observer<LikePost>() {
+                @Override
+                public void onChanged(LikePost loginOrganizer) {
+                    if (loginOrganizer != null) {
 
-                    List<Header> heaserList = loginOrganizer.getHeader();
+                        List<Header> heaserList = loginOrganizer.getHeader();
                         String status = heaserList.get(0).getType();
                         if (status.equalsIgnoreCase("success")) {
                             likeStatus = loginOrganizer.getLike_status();
@@ -310,16 +297,16 @@ public class NewsFeedViewModel extends ViewModel {
                     }
 
                     Snackbar.make(NewsFeedFragment.cl_main, loginOrganizer.getHeader().get(0).getMsg(), Snackbar.LENGTH_SHORT).show();
-                  if (newsRepository.getLikeActivity().hasActiveObservers()) {
+                    if (newsRepository.getLikeActivity().hasActiveObservers()) {
 
-                      newsRepository.getLikeActivity().removeObservers((LifecycleOwner) activityVar);
-                  }
+                        newsRepository.getLikeActivity().removeObservers((LifecycleOwner) activityVar);
+                    }
 
-                  }
+                }
 
-          });
+            });
         } else {
-        Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(NewsFeedFragment.cl_main, "No Internet Connection", Snackbar.LENGTH_SHORT).show();
         }
 
     }
@@ -328,8 +315,8 @@ public class NewsFeedViewModel extends ViewModel {
     public void openMoreDetails(final Activity activity, final Newsfeed_detail feed, final int position,
                                 final String token, final String eventId, NewsFeedAdapter newsadapter) {
 
-        ATTENDEE_STATUS = SharedPreference.getPref(activity,IS_GOD);
-        ATTENDEE_ID = SharedPreference.getPref(activity,KEY_ATTENDEE_ID);
+        ATTENDEE_STATUS = SharedPreference.getPref(activity, IS_GOD);
+        ATTENDEE_ID = SharedPreference.getPref(activity, KEY_ATTENDEE_ID);
         activityVar = activity;
         adapter = newsadapter;
         dialog = new BottomSheetDialog(activity);
@@ -354,33 +341,30 @@ public class NewsFeedViewModel extends ViewModel {
             cancelTv.setVisibility(View.VISIBLE);
             //editIV.setVisibility(View.VISIBLE);
         } else {
-           if(ATTENDEE_ID.equalsIgnoreCase(feed.getAttendee_id()))
-           {
-               reportTv.setVisibility(View.GONE);
-               hideTv.setVisibility(View.GONE);
-               reportuserTv.setVisibility(View.GONE);
-               //blockuserTv.setVisibility(View.GONE);
+            if (ATTENDEE_ID.equalsIgnoreCase(feed.getAttendee_id())) {
+                reportTv.setVisibility(View.GONE);
+                hideTv.setVisibility(View.GONE);
+                reportuserTv.setVisibility(View.GONE);
+                //blockuserTv.setVisibility(View.GONE);
 
-               deleteTv.setVisibility(View.VISIBLE);
-               cancelTv.setVisibility(View.VISIBLE);
-               //editIV.setVisibility(View.VISIBLE);
-           }
-           else
-           {
-               reportTv.setVisibility(View.VISIBLE);
-               hideTv.setVisibility(View.VISIBLE);
-               reportuserTv.setVisibility(View.VISIBLE);
-               //blockuserTv.setVisibility(View.VISIBLE);
+                deleteTv.setVisibility(View.VISIBLE);
+                cancelTv.setVisibility(View.VISIBLE);
+                //editIV.setVisibility(View.VISIBLE);
+            } else {
+                reportTv.setVisibility(View.VISIBLE);
+                hideTv.setVisibility(View.VISIBLE);
+                reportuserTv.setVisibility(View.VISIBLE);
+                //blockuserTv.setVisibility(View.VISIBLE);
 
-               deleteTv.setVisibility(View.GONE);
-               cancelTv.setVisibility(View.VISIBLE);
-           }
+                deleteTv.setVisibility(View.GONE);
+                cancelTv.setVisibility(View.VISIBLE);
+            }
         }
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-                    newsfeedHide = newsRepository.DeletePost(token,eventId, feed.getNews_feed_id());
+                    newsfeedHide = newsRepository.DeletePost(token, eventId, feed.getNews_feed_id());
 
                     newsRepository.getPostActivity().observe((LifecycleOwner) activity, new Observer<LoginOrganizer>() {
                         @Override
@@ -399,7 +383,7 @@ public class NewsFeedViewModel extends ViewModel {
                     });
                 } else {
                     dialog.cancel();
-                    Utility.createShortSnackBar(NewsFeedFragment.cl_main,"No Internet Connection");
+                    Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                 }
             }
 
@@ -412,7 +396,7 @@ public class NewsFeedViewModel extends ViewModel {
                 newsRepository = NewsfeedRepository.getInstance();
 
                 if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-                    newsfeedHide = newsRepository.PostHide(token,eventId, feed.getNews_feed_id());
+                    newsfeedHide = newsRepository.PostHide(token, eventId, feed.getNews_feed_id());
 
                     newsRepository.getPostActivity().observe((LifecycleOwner) activity, new Observer<LoginOrganizer>() {
                         @Override
@@ -423,14 +407,14 @@ public class NewsFeedViewModel extends ViewModel {
                                 // feedAdapter.removeItem(viewHolder.getAdapterPosition());
                                 adapter.notifyItemRemoved(position);
                                 List<Header> heaserList = loginOrganizer.getHeader();
-                                Utility.createShortSnackBar(NewsFeedFragment.cl_main,heaserList.get(0).getMsg());
+                                Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
                             }
                         }
                     });
                 } else {
                     dialog.cancel();
-                    Utility.createShortSnackBar(NewsFeedFragment.cl_main,"No Internet Connection");
+                    Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                 }
             }
         });
@@ -438,21 +422,21 @@ public class NewsFeedViewModel extends ViewModel {
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge(v.getContext(),token,"reportPost", feed.getNews_feed_id(),feed.getAttendee_id(),eventId);
+                showratedialouge(v.getContext(), token, "reportPost", feed.getNews_feed_id(), feed.getAttendee_id(), eventId);
             }
         });
 
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge(v.getContext(),token,"reportUser",feed.getNews_feed_id(), feed.getAttendee_id(),eventId);
+                showratedialouge(v.getContext(), token, "reportUser", feed.getNews_feed_id(), feed.getAttendee_id(), eventId);
             }
         });
 
         blockuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // ReportUserHide(eventid, feed.getAttendeeId(), token);
+                // ReportUserHide(eventid, feed.getAttendeeId(), token);
 
             }
         });
@@ -470,25 +454,26 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //--------------Start Background service to compress media------------------------
-    public void startBackgroundService(Activity activity){//, List<UploadMultimedia> uploadMultimedia) {
+    public void startBackgroundService(Activity activity) {//, List<UploadMultimedia> uploadMultimedia) {
         try {
             Log.d("Bg Service", "Start Service");
             mIsUpdating.setValue(true);
             Intent intent = new Intent(activity, BackgroundServiceToCompressMedia.class);
             //intent.putExtra("MediaList", (Serializable) uploadMultimedia);
             activity.startService(intent);
-        }catch (Exception e)
-        {mIsUpdating.setValue(false);}
+        } catch (Exception e) {
+            mIsUpdating.setValue(false);
+        }
     }
 
-    public void stopBackgroundService(Activity activity){//, List<UploadMultimedia> uploadMultimedia) {
-        Log.d("Bg Service","Stop Service");
+    public void stopBackgroundService(Activity activity) {//, List<UploadMultimedia> uploadMultimedia) {
+        Log.d("Bg Service", "Stop Service");
         mIsUpdating.setValue(false);
     }
 
     //----------------Multimedia to compress------------------------
     public void getNonCompressesMultimedia(Activity activity) {
-       // mIsUploading.setValue(false);
+        // mIsUploading.setValue(false);
         EventAppDB eventAppDB = EventAppDB.getDatabase(activity);
         nonCompressedMultimediaMutableLiveData = eventAppDB.uploadMultimediaDao().getNonCompressesMultimedia();
     }
@@ -508,7 +493,7 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //----------------Multimedia to compress------------------------
-    public void getNewsFeedDataAccrodingToFolderUniqueId(Activity activity,String folderUniqueId) {
+    public void getNewsFeedDataAccrodingToFolderUniqueId(Activity activity, String folderUniqueId) {
         EventAppDB eventAppDB = EventAppDB.getDatabase(activity);
         newsFeedDataToUpload = eventAppDB.uploadMultimediaDao().getMultimediaToUpload(folderUniqueId);
     }
@@ -519,21 +504,22 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //-------------call to upload newsfeed---------------------
-    public void sendPost(String token,String event_id, String status, List<UploadMultimedia> resultList) {
-       // mIsUploading.setValue(true);
+    public void sendPost(String token, String event_id, String status, List<UploadMultimedia> resultList) {
+        // mIsUploading.setValue(true);
         NewsfeedRepository postNewsFeedRepository = NewsfeedRepository.getInstance();
-        multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(token,event_id, status, resultList);//,mediaFile,mediaFileThumb);
+        multimediaUploadLiveData = postNewsFeedRepository.postNewsFeed(token, event_id, status, resultList);//,mediaFile,mediaFileThumb);
     }
+
     public MutableLiveData<LoginOrganizer> getPostStatus() {
-       // mIsUploading.setValue(false);
+        // mIsUploading.setValue(false);
         mIsUpdating.setValue(false);
         return multimediaUploadLiveData;
     }
 
     //---------------Upldate uploaded flag to 1------------
-    public void updateisUplodedIntoDB(Context context,String folderUniqueId) {
+    public void updateisUplodedIntoDB(Context context, String folderUniqueId) {
         NewsfeedRepository newsfeedRepository = NewsfeedRepository.getInstance();
-        isUpdatedIntoDB = newsfeedRepository.updateIsUplodedIntoDb(context,folderUniqueId);
+        isUpdatedIntoDB = newsfeedRepository.updateIsUplodedIntoDb(context, folderUniqueId);
     }
 
     public MutableLiveData<Boolean> getIsUplodedStatus() {
@@ -541,11 +527,11 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //----------------------------------------------------------------
-    public LiveData<Boolean> getIsUpdating(){
+    public LiveData<Boolean> getIsUpdating() {
         return mIsUpdating;
     }
 
-    private void showratedialouge(Context context,final String api_token, final String from, final String id, final String attnId, final String eventId) {
+    private void showratedialouge(Context context, final String api_token, final String from, final String id, final String attnId, final String eventId) {
 
         myDialog = new Dialog(activityVar);
         myDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -560,16 +546,16 @@ public class NewsFeedViewModel extends ViewModel {
         final TextView counttv = myDialog.findViewById(R.id.counttv);
         final EditText etmsg = myDialog.findViewById(R.id.etmsg);
 
-        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
         title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
         counttv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
         etmsg.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
         etmsg.setHintTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
-        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
-        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
+        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
 
-        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
-        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
 
 
         final TextView nametv = myDialog.findViewById(R.id.nametv);
@@ -616,7 +602,7 @@ public class NewsFeedViewModel extends ViewModel {
                     if (from.equalsIgnoreCase("reportPost")) {
 
                         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-                            newsfeedHide = newsRepository.ReportPost(api_token,eventId, id, msg);
+                            newsfeedHide = newsRepository.ReportPost(api_token, eventId, id, msg);
 
                             newsRepository.getPostActivity().observe((LifecycleOwner) activityVar, new Observer<LoginOrganizer>() {
                                 @Override
@@ -635,12 +621,12 @@ public class NewsFeedViewModel extends ViewModel {
                             myDialog.cancel();
                             Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                         }
-                    }else if (from.equalsIgnoreCase("reportUser")) {
+                    } else if (from.equalsIgnoreCase("reportUser")) {
                         /*newsfeedHide = newsRepository.ReportUser("1", attnId,id, msg);
                         myDialog.cancel();*/
                         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
                             Utility.hideKeyboard(v);
-                            newsfeedHide = newsRepository.ReportUser(api_token,eventId, attnId,id, msg);
+                            newsfeedHide = newsRepository.ReportUser(api_token, eventId, attnId, id, msg);
                             newsRepository.getPostActivity().observe((LifecycleOwner) activityVar, new Observer<LoginOrganizer>() {
                                 @Override
                                 public void onChanged(LoginOrganizer loginOrganizer) {
@@ -658,14 +644,13 @@ public class NewsFeedViewModel extends ViewModel {
                             Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                         }
                     }
-                }
-
-                else {
+                } else {
                     Utility.createShortSnackBar(NewsFeedFragment.cl_main, "Enter Something");
                 }
             }
         });
     }
+
     private class DownloadFile extends AsyncTask<String, String, String> {
 
         private ProgressDialog progressDialog;
@@ -779,49 +764,165 @@ public class NewsFeedViewModel extends ViewModel {
 
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("video/*");
-            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Video Share");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared Via Event App");
             sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             activityVar.startActivity(Intent.createChooser(sharingIntent, "Share Video"));
 
         }
     }
-    public void shareImage(final String data, String url, final Context context) {
-        Picasso.with(context).load(url).into(new Target() {
+
+    public void shareImage(final String data, final String url, final Context context) {
+
+        dialogShare = new ProgressDialog(context);
+        dialogShare.setMessage("Please wait while loading...");
+        dialogShare.show();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                        Bitmap bitmap = getBitmapFromURL(url);
+                        Uri uri = getLocalBitmapUri(bitmap, context);
+                        if(uri!=null) {
+                            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                            sharingIntent.setType("image/*");
+                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, data);
+                            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                            context.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+                            dialogShare.dismiss();
+                        }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
+
+
+      /*  Picasso.with(context).load(url).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 dialogShare.dismiss();
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("image/*");
-                i.putExtra(Intent.EXTRA_SUBJECT, data);
-
-
-                i.putExtra(Intent.EXTRA_STREAM, getLocalBitmapUri(bitmap, context));
-
-                context.startActivity(Intent.createChooser(i, "Share Image"));
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("image/*");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, data + " Shared via Event app");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, data);
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, getLocalBitmapUri(bitmap, context));
+                context.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
             }
 
             @Override
             public void onBitmapFailed(Drawable errorDrawable) {
+                Log.d("error","error");
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
+                Log.d("placeHolderDrawable","placeHolderDrawable");
             }
-        });
+        });*/
     }
+
     private void shareTextUrl(String data, String url) {
+        String postStatus = "";
+        String spannedString;
+        CharSequence spannedString1;
+        if (data.contains("\n")) {
+            postStatus = data.trim().replace("\n", "<br/>");
+        } else {
+            postStatus = data.trim();
+        }
+        spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            spannedString1 = Utility.trimTrailingWhitespace(strPost);
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            spannedString1 = Utility.trimTrailingWhitespace(strPost);
+        }
+
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
         share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
         // Add data to the intent, the receiving app will decide
         // what to do with it.
-        share.putExtra(Intent.EXTRA_SUBJECT, data);
-        share.putExtra(Intent.EXTRA_TEXT, url);
+        share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+        share.putExtra(Intent.EXTRA_TEXT, spannedString1 /* + url*/);
 
-        activityVar.startActivity(Intent.createChooser(share, "Share link!"));
+        activityVar.startActivity(Intent.createChooser(share, " Shared via Event app"));
     }
 
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
+    public Uri getLocalBitmapUri(Bitmap bmp, Context context) {
+        Uri bmpUri = null;
+        try {
+            File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "share_image_" + System.currentTimeMillis() + ".png");
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+//            bmpUri = Uri.fromFile(file);
+            bmpUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".android.fileprovider", file);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bmpUri;
+    }
+
+    private class BitmapAsyncTask extends AsyncTask<String, String, String> {
+        private ProgressDialog dialog1;
+        Context activity;
+
+        public BitmapAsyncTask(Context _activity) {
+            activity = _activity;
+            dialog1 = new ProgressDialog(_activity);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog1.setMessage("Doing something, please wait.");
+            dialog1.show();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+            Bitmap bitmap = getBitmapFromURL(args[1]);
+            Uri uri = getLocalBitmapUri(bitmap, activity);
+
+            return uri.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // do UI work here
+            if (dialog1.isShowing()) {
+                dialog1.dismiss();
+                //String[] str = result.split("#");
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("image/*");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+                //sharingIntent.putExtra(Intent.EXTRA_TEXT, str[0]);
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, result);
+                activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+            }
+        }
+    }
 }
