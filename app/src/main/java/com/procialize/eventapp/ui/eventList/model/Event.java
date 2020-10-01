@@ -3,7 +3,6 @@ package com.procialize.eventapp.ui.eventList.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.procialize.eventapp.GetterSetter.Header;
-import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
 import java.util.List;
 
@@ -13,11 +12,23 @@ public class Event {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
-    @Expose
-    List<EventList> eventLists;
+//    @SerializedName("detailpreencrypt")
+//    @Expose
+//    List<EventList> eventLists;
 
-    @SerializedName("file_pathpreencrypt")
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    @SerializedName("detail")
+    @Expose
+    String detail;
+
+    @SerializedName("file_path")
     @Expose
     String file_path;
 
@@ -26,9 +37,9 @@ public class Event {
     }
 
 
-    public List<EventList> getEventLists() {
-        return eventLists;
-    }
+//    public List<EventList> getEventLists() {
+//        return eventLists;
+//    }
 
     public String getFile_path() {
         return file_path;

@@ -32,7 +32,7 @@ public class EventRepository {
         eventApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<Event> getEventList(String token,String organizer_id, String search_text) {//, String pageSize, String pageNumber) {
+    public MutableLiveData<Event> getEventList(String token,String organizer_id, String search_text) {
         eventApi.getEventList(token, organizer_id,search_text)
                 .enqueue(new Callback<Event>() {
                     @Override

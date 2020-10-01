@@ -23,6 +23,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.RefreashToken;
@@ -42,6 +44,7 @@ import com.procialize.eventapp.ui.eventList.viewModel.EventListViewModel;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,7 +70,6 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASS
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.ui.eventList.adapter.EventAdapter.isClickable;
-import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class EventListActivity extends AppCompatActivity implements EventAdapter.EventAdapterListner , View.OnClickListener {
 
@@ -123,12 +125,16 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             eventListViewModel.getEventList().observe(this, new Observer<Event>() {
                 @Override
                 public void onChanged(Event event) {
-                    List<EventList> eventLists = event.getEventLists();
-                    String strFilePath = event.getFile_path();
+                    RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                    String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                    String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getFile_path()));
+                    Gson gson = new Gson();
+                    List<EventList> gsonevent = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<EventList>>() {
+                    }.getType());
                     HashMap<String, String> map = new HashMap<>();
-                    map.put(EVENT_LIST_MEDIA_PATH, strFilePath);
+                    map.put(EVENT_LIST_MEDIA_PATH, strFilePath.replace("\\/","/"));
                     SharedPreference.putPref(EventListActivity.this, map);
-                    setupEventAdapter(eventLists);
+                    setupEventAdapter(gsonevent);
                 }
             });
         } else {
@@ -147,17 +153,20 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                     eventListViewModel.getEventList().observe(EventListActivity.this, new Observer<Event>() {
                         @Override
                         public void onChanged(Event event) {
-                            List<EventList> eventLists = event.getEventLists();
-                            String strFilePath = event.getFile_path();
+                            RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                            String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                            String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getFile_path()));
+
+                            Gson gson = new Gson();
+                            List<EventList> eventLists = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<EventList>>() {
+                            }.getType());
                             HashMap<String, String> map = new HashMap<>();
-                            map.put(EVENT_LIST_MEDIA_PATH, strFilePath);
+                            map.put(EVENT_LIST_MEDIA_PATH, strFilePath.replace("\\/","/"));
                             SharedPreference.putPref(EventListActivity.this, map);
                             setupEventAdapter(eventLists);
                         }
                     });
-                }
-                else
-                {
+                } else {
                     Utility.createShortSnackBar(ll_main, "No Internet Connection");
                 }
             }
