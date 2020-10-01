@@ -15,18 +15,24 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
+import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedLike.adapter.LikeAdapter;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
 import com.procialize.eventapp.ui.newsFeedLike.viewModel.LikeViewModel;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
@@ -82,7 +88,12 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onChanged(Like like) {
                     if (like != null) {
-                        likeList = like.getLikeDetails();
+                        String strCommentList =like.getDetail();
+                        RefreashToken refreashToken = new RefreashToken(LikeActivity.this);
+                        String data = refreashToken.decryptedData(strCommentList);
+                        Gson gson = new Gson();
+                        likeList = gson.fromJson(data, new TypeToken<ArrayList<LikeDetail>>() {}.getType());
+                       // likeList = like.getLikeDetails();
                         if (likeList != null) {
                             setupLikeAdapter(likeList);
                             //showLikeCount(likeList);

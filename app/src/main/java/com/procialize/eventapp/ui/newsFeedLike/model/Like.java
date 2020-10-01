@@ -12,13 +12,17 @@ public class Like {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
+/*    @SerializedName("detailpreencrypt")
     @Expose
-    List<LikeDetail> likeDetails;
+    List<LikeDetail> likeDetails;*/
 
     @SerializedName("total_records")
     @Expose
     String total_records;
+
+    @SerializedName("detail")
+    @Expose
+    String detail;
 
     public List<Header> getHeader() {
         return header;
@@ -28,13 +32,13 @@ public class Like {
         this.header = header;
     }
 
-    public List<LikeDetail> getLikeDetails() {
+/*    public List<LikeDetail> getLikeDetails() {
         return likeDetails;
     }
 
     public void setLikeDetails(List<LikeDetail> likeDetails) {
         this.likeDetails = likeDetails;
-    }
+    }*/
 
     public String getTotal_records() {
         return total_records;
@@ -42,5 +46,9 @@ public class Like {
 
     public void setTotal_records(String total_records) {
         this.total_records = total_records;
+    }
+
+    public String getDetail() {
+        return detail;
     }
 }

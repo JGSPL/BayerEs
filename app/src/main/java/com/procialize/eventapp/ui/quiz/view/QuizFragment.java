@@ -24,7 +24,7 @@ public class QuizFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = ViewModelProviders.of(this).get(QuizViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_quiz, container, false);
+        View root = inflater.inflate(R.layout.activity_quiz_listing, container, false);
 
         return root;
     }

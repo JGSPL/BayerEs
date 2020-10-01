@@ -6,6 +6,7 @@ import android.util.Log;
 import com.auth0.android.jwt.JWT;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.GetterSetter.validateOTP;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
@@ -59,9 +60,9 @@ public class RefreashToken {
     }
 
     public void decodeRefreashToken(String data) {
-       String token = data.substring(1, data.length() - 1);
+        String authorizationtoken= CommonFunction.stripquotes(data);
         HashMap<String, String> map_token = new HashMap<>();
-        map_token.put(AUTHERISATION_KEY, token);
+        map_token.put(AUTHERISATION_KEY, authorizationtoken);
         SharedPreference.putPref(context, map_token);
 
         JWT jwt = new JWT(data);

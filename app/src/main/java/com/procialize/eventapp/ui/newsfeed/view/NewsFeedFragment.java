@@ -38,8 +38,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
@@ -50,9 +48,11 @@ import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.eventList.model.EventList;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
@@ -125,7 +125,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     private APIService newsfeedApi;
     String noOfLikes = "0";
     String likeStatus = "";
-    String strPath = "", mediaPath = "";
+    String strPath = "";
     private List<UploadMultimedia> mediaList;
     public boolean isFromUploading = false;
 
@@ -355,12 +355,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         String strEventList = response.body().getDetail();
                         RefreashToken refreashToken = new RefreashToken(getActivity());
                         String data = refreashToken.decryptedData(strEventList);
-                        JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                        final ArrayList<Newsfeed_detail> feedList = new Gson().fromJson(jsonArray, new TypeToken<List<Newsfeed_detail>>(){}.getType());
-                        String mediaPath = response.body().getMedia_path();
-                        String mediaPath1 = refreashToken.decryptedData(mediaPath);
-                        mediaPath1 = mediaPath1.replace("\\","");
-                        mediaPath1 = mediaPath1.substring(1, mediaPath1.length() - 1);
+                        Gson gson = new Gson();
+                        List<Newsfeed_detail> feedList = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {}.getType());
+
+                        String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(response.body().getMedia_path()));
+                        String mediaPath1 = strFilePath.replace("\\","");
                         //List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
                         newsfeedAdapter.addAll(feedList);
 
@@ -441,12 +440,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         String strEventList = response.body().getDetail();
                         RefreashToken refreashToken = new RefreashToken(getActivity());
                         String data = refreashToken.decryptedData(strEventList);
-                        JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                        final ArrayList<Newsfeed_detail> feedList = new Gson().fromJson(jsonArray, new TypeToken<List<Newsfeed_detail>>(){}.getType());
-                        String mediaPath = response.body().getMedia_path();
-                        String mediaPath1 = refreashToken.decryptedData(mediaPath);
-                        mediaPath1 = mediaPath1.replace("\\","");
-                        mediaPath1 = mediaPath1.substring(1, mediaPath1.length() - 1);
+                        Gson gson = new Gson();
+                        List<Newsfeed_detail> feedList = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {
+                        }.getType());
+
+
                        // List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
                         if (feedList.size() > 0) {
                             newsfeedAdapter.addAll(feedList);
