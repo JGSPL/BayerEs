@@ -274,8 +274,29 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     String name = et_first_name.getText().toString().trim();
                     String[] separated = name.split(" ");
-                    first_name = separated[0];
-                    last_name = separated[1];
+                    try {
+                        first_name = separated[0];
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        first_name = "";
+                    }
+
+                    if (separated[1].trim().isEmpty()) {
+                        try {
+                            last_name = separated[2];
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            last_name = " ";
+                        }
+                    } else {
+                        try {
+                            last_name = separated[1];
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            last_name = " ";
+                        }
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

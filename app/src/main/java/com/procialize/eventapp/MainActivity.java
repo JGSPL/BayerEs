@@ -28,7 +28,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -73,7 +72,6 @@ import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
-import com.procialize.eventapp.ui.quiz.view.QuizFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 import java.io.File;
@@ -258,15 +256,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
 
 
-                    case R.id.navigation_quiz:
 
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_frame, QuizFragment.newInstance(), "")
-                                .commit();
-                        navView.setVisibility(View.GONE);
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
-                        return true;
 
                     default:
                         return true;
