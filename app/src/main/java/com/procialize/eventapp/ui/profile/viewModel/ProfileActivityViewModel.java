@@ -15,6 +15,7 @@ import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.MainActivity;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.networking.ProfileRepository;
 import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
@@ -25,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.procialize.eventapp.Constants.Constant.SELECT_FILE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 
 public class ProfileActivityViewModel extends ViewModel {
     ProfileRepository profileRepository;
@@ -137,11 +139,12 @@ public class ProfileActivityViewModel extends ViewModel {
         activity.finish();
     }
 
-    public void updateProfileFlag(Activity activity, String eventId) {
+    public void updateProfileFlag(Activity activity, String eventId, String attendee_id) {
         eventAppDB = EventAppDB.getDatabase(activity);
         ProfileEventId profileEventId = new ProfileEventId();
         profileEventId.setFld_event_id(eventId);
         profileEventId.setFld_is_profile_update("1");
+        profileEventId.setFld_attendee_id(attendee_id);
         eventAppDB.profileUpdateDao().insertProfileWithEventId(profileEventId);
     }
 

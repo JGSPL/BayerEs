@@ -101,13 +101,14 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
 
         final ProgressBar progressBar = myImageLayout.findViewById(R.id.progressbar);
 
-        if ((firstLevelFilter.contains(".png") || firstLevelFilter.contains(".jpg") || firstLevelFilter.contains(".jpeg") || firstLevelFilter.contains(".gif"))) {
+        if ((firstLevelFilter.contains(".png") || firstLevelFilter.contains(".jpg") || firstLevelFilter.contains(".jpeg") || firstLevelFilter.contains(".gif")
+        || firstLevelFilter.contains(".PNG") || firstLevelFilter.contains(".JPG") || firstLevelFilter.contains(".JPEG") || firstLevelFilter.contains(".GIF"))) {
             myImage.setVisibility(View.VISIBLE);
             videoview.setVisibility(View.GONE);
             farme.setVisibility(View.GONE);
             JzvdStd.goOnPlayOnPause();
 
-            if (firstLevelFilter.contains("gif")) {
+            if (firstLevelFilter.contains("gif")||firstLevelFilter.contains("GIF")) {
                 progressBar.setVisibility(View.GONE);
                 Glide.with(videoview).load(firstLevelFilter.trim()).into(myImage);
             } else {

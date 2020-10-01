@@ -32,6 +32,7 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -54,6 +55,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERIS
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 
@@ -84,7 +86,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     public static Activity activity;
     int totalPages = 20000;
     int attendeePageNumber = 1;
-    int attendeePageSize = 10;
+    int attendeePageSize = 100;
     AttendeeViewModel attendeeViewModel;
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
 
@@ -349,12 +351,23 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 progressBar.setVisibility(View.GONE);
 
                 setupEventAdapter(eventLists);
+
+                if (attendeeViewModel != null && attendeeViewModel.getAttendeeList().hasObservers()) {
+                    attendeeViewModel.getAttendeeList().removeObservers(getActivity());
+                }
             }
         });
     }
 
     public void setupEventAdapter(List<Attendee> commentList) {
-        attendeeAdapter = new AttendeeAdapter(getContext(), commentList, AttendeeFragment.this);
+        List<Attendee> attendeeList = new ArrayList<>();
+        for(int i=0;i<commentList.size();i++){
+            if(!commentList.get(i).getAttendee_id().equalsIgnoreCase(SharedPreference.getPref(getActivity(),KEY_ATTENDEE_ID)))
+            {
+                attendeeList.add(commentList.get(i));
+            }
+        }
+        attendeeAdapter = new AttendeeAdapter(getContext(), attendeeList, AttendeeFragment.this);
         attendeerecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         attendeerecycler.setAdapter(attendeeAdapter);
         attendeeAdapter.notifyDataSetChanged();

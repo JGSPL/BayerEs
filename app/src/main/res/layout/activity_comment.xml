@@ -136,7 +136,7 @@
                             android:baselineAligned="false"
                             android:orientation="vertical">
 
-                            <TextView
+                            <com.procialize.eventapp.fonts.RobotoTextViewHeader
                                 android:id="@+id/tv_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -431,8 +431,8 @@
                 android:hint="Message"
                 android:imeOptions="actionSend|flagNoEnterAction"
                 android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
-                android:maxLines="20"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:textColor="@color/black"/>
 
 
             <!--            <TextView

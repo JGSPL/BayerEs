@@ -11,10 +11,15 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.ui.eventinfo.viewmodel.EventInfoViewModel;
+import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 
 public class EventInfoFragment extends Fragment {
 
     EventInfoViewModel eventInfoViewModel;
+
+    public static EventInfoFragment newInstance() {
+        return new EventInfoFragment();
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

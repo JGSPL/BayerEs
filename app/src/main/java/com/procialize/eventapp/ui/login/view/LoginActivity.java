@@ -208,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
                             eventListViewModel.getupdateUserdatq().removeObservers((LifecycleOwner) context);
                         }
                         EventAppDB eventAppDB = EventAppDB.getDatabase(context);
-                        List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId);
+                        List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
                         if (profileDataUpdated.size() > 0) {
                             isClickable = true;
                             eventListViewModel.openMainPage((Activity) context);

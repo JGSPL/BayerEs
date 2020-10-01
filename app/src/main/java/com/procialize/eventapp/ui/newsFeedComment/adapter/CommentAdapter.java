@@ -2,7 +2,6 @@ package com.procialize.eventapp.ui.newsFeedComment.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -31,14 +30,11 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
@@ -46,20 +42,12 @@ import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
-import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.CommentDetail;
-import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
-import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
-import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -72,12 +60,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
     Context context;
     List<CommentDetail> commentDetails;
-    String name1 = "",substring;
+    String name1 = "", substring;
     CommentAdapterListner listener;
     String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
     String spannedString;
-    String postStatus ;
+    String postStatus;
 
     public CommentAdapter(Context context, List<CommentDetail> commentDetails, CommentAdapterListner listener) {
         this.context = context;
@@ -104,17 +92,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         //Newsfeed_detail feedData = feed_detail.get(position);
         CommentDetail comments = commentDetails.get(position);
 
-        if(position+1==commentDetails.size())
-        {
+        if (position + 1 == commentDetails.size()) {
             holder.v_divider.setVisibility(View.INVISIBLE);
-        }
-        else
-            {
+        } else {
             holder.v_divider.setVisibility(View.VISIBLE);
         }
 
-        if(comments.getProfile_picture().trim()!=null)
-        {
+        if (comments.getProfile_picture().trim() != null) {
 
             Glide.with(context)
                     .load(comments.getProfile_picture().trim())
@@ -136,7 +120,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
         if (comments.getComment().contains("gif")) {
             //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
-            name1 = "<font color='"+eventColor1+"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
+            name1 = "<font color='" + eventColor4 + "'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
                 holder.tv_name.setText(Html.fromHtml(name1));
             } else {
@@ -166,6 +150,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
             try {
 
+                name1 = "<font color='" + eventColor1 + "'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
+                    holder.tv_name.setText(Html.fromHtml(name1));
+                } else {
+                    holder.tv_name.setText(Html.fromHtml(name1, Html.FROM_HTML_MODE_LEGACY));
+                }
+
                 /**
                  * Code for HTML text + Tagging
                  */
@@ -185,15 +176,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                     holder.testdata.setText(Utility.trimTrailingWhitespace(strPost));
                 }
 
-
-                //holder.testdata.setText(StringEscapeUtils.unescapeJava(comments.getComment()));
+                holder.testdata.setText(comments.getComment());//.replace("\n",System.getProperty("line.separator")));
 
                 final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
                 if (comments.getComment() != null) {
 
-                    holder.tv_name.setVisibility(View.VISIBLE);
-                    //  holder.commentTv.setVisibility(View.VISIBLE);
-//                    holder.wallNotificationText.setText(getEmojiFromString(notificationImageStatus));
+                    holder.tv_comment.setVisibility(View.VISIBLE);
                     int flag = 0;
                     for (int i = 0; i < stringBuilder.length(); i++) {
                         String sample = stringBuilder.toString();
@@ -232,22 +220,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                             stringBuilder.setSpan(new ClickableSpan() {
                                                 @Override
                                                 public void onClick(View widget) {
-                                                    newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context,attendeeid);
-                                                    newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context,new Observer<List<TableAttendee>>() {
+                                                    newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context, attendeeid);
+                                                    newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context, new Observer<List<TableAttendee>>() {
                                                         @Override
                                                         public void onChanged(List<TableAttendee> tableAttendees) {
-                                                            if(tableAttendees!=null) {
-                                                                Intent intent = new Intent(context, AttendeeDetailActivity.class);
-                                                                intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
-                                                                intent.putExtra("lname", tableAttendees.get(0).getLast_name());
-                                                                intent.putExtra("company", tableAttendees.get(0).getCompany_name());
-                                                                intent.putExtra("city", tableAttendees.get(0).getCity());
-                                                                intent.putExtra("designation", tableAttendees.get(0).getDesignation());
-                                                                intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
-                                                                intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
-                                                                intent.putExtra("mobile", tableAttendees.get(0).getMobile());
-                                                                intent.putExtra("email", tableAttendees.get(0).getEmail());
-                                                                context.startActivity(intent);
+                                                            if (tableAttendees != null) {
+                                                                if (tableAttendees.size() > 0) {
+                                                                    Intent intent = new Intent(context, AttendeeDetailActivity.class);
+                                                                    intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
+                                                                    intent.putExtra("lname", tableAttendees.get(0).getLast_name());
+                                                                    intent.putExtra("company", tableAttendees.get(0).getCompany_name());
+                                                                    intent.putExtra("city", tableAttendees.get(0).getCity());
+                                                                    intent.putExtra("designation", tableAttendees.get(0).getDesignation());
+                                                                    intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
+                                                                    intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
+                                                                    intent.putExtra("mobile", tableAttendees.get(0).getMobile());
+                                                                    intent.putExtra("email", tableAttendees.get(0).getEmail());
+                                                                    context.startActivity(intent);
+                                                                }
                                                             }
                                                         }
                                                     });
@@ -255,11 +245,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                             }, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                             stringBuilder.replace(start, end + 1, substring);
                                             holder.testdata.setText(stringBuilder, TextView.BufferType.SPANNABLE);
-                                            holder.tv_name.setMovementMethod(LinkMovementMethod.getInstance());
-                                            //holder.tv_name.setText(stringBuilder);
-                                            SpannableStringBuilder stringBuilder1 = SpannableStringBuilder.valueOf("<font color='"+eventColor3 +"'>"
-                                                    + stringBuilder + "</font>");
-                                            holder.tv_name.setText(stringBuilder1);
+                                            holder.tv_comment.setMovementMethod(LinkMovementMethod.getInstance());
+                                            holder.tv_comment.setText(stringBuilder);
                                             flag = 1;
                                         }
                                     }
@@ -291,22 +278,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                             stringBuilder.setSpan(new ClickableSpan() {
                                                 @Override
                                                 public void onClick(View widget) {
-                                                    newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context,attendeeid);
-                                                    newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context,new Observer<List<TableAttendee>>() {
+                                                    newsFeedDatabaseViewModel.getAttendeeDetailsFromId(context, attendeeid);
+                                                    newsFeedDatabaseViewModel.getAttendeeDetails().observe((LifecycleOwner) context, new Observer<List<TableAttendee>>() {
                                                         @Override
                                                         public void onChanged(List<TableAttendee> tableAttendees) {
-                                                            if(tableAttendees!=null) {
-                                                                Intent intent = new Intent(context, AttendeeDetailActivity.class);
-                                                                intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
-                                                                intent.putExtra("lname", tableAttendees.get(0).getLast_name());
-                                                                intent.putExtra("company", tableAttendees.get(0).getCompany_name());
-                                                                intent.putExtra("city", tableAttendees.get(0).getCity());
-                                                                intent.putExtra("designation", tableAttendees.get(0).getDesignation());
-                                                                intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
-                                                                intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
-                                                                intent.putExtra("mobile", tableAttendees.get(0).getMobile());
-                                                                intent.putExtra("email", tableAttendees.get(0).getEmail());
-                                                                context.startActivity(intent);
+                                                            if (tableAttendees != null) {
+                                                                if (tableAttendees.size() > 0) {
+                                                                    Intent intent = new Intent(context, AttendeeDetailActivity.class);
+                                                                    intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
+                                                                    intent.putExtra("lname", tableAttendees.get(0).getLast_name());
+                                                                    intent.putExtra("company", tableAttendees.get(0).getCompany_name());
+                                                                    intent.putExtra("city", tableAttendees.get(0).getCity());
+                                                                    intent.putExtra("designation", tableAttendees.get(0).getDesignation());
+                                                                    intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
+                                                                    intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
+                                                                    intent.putExtra("mobile", tableAttendees.get(0).getMobile());
+                                                                    intent.putExtra("email", tableAttendees.get(0).getEmail());
+                                                                    context.startActivity(intent);
+                                                                }
                                                             }
                                                         }
                                                     });
@@ -315,10 +304,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
                                             stringBuilder.replace(start, end + 1, substring);
                                             holder.testdata.setText(stringBuilder, TextView.BufferType.SPANNABLE);
-                                            holder.tv_name.setMovementMethod(LinkMovementMethod.getInstance());
-                                            SpannableStringBuilder stringBuilder1 = SpannableStringBuilder.valueOf("<font color='"+eventColor3 +"'>" +
-                                                    stringBuilder + "</font>");
-                                            holder.tv_name.setText(stringBuilder1);
+                                            holder.tv_comment.setMovementMethod(LinkMovementMethod.getInstance());
+                                            holder.tv_comment.setText(stringBuilder);
 
                                         }
                                     }
@@ -329,39 +316,27 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                         }
                     }
 
-                    // holder.commentTv.setText(stringBuilder);
-                    String name1 = "<font color='"+eventColor1+"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>"; //set Black color of name
 
-                    /*name1 = "<font color='"+eventColor1 +"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + " " +
-                            "<font color='"+eventColor3 +"'>" + stringBuilder + "</font>" ;*/
                     String eventColor4Opacity40 = eventColor3.replace("#", "");
-                    holder.tv_name.setMovementMethod(LinkMovementMethod.getInstance());
-                    if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
-                        holder.tv_name.setText(Html.fromHtml(name1));
-                        String name2 = "<font color='"+Color.parseColor("#66" + eventColor4Opacity40)+"'>" + stringBuilder + " " + "</font>";
-                        holder.tv_name.append(Html.fromHtml(name2));
-                    } else {
-                        holder.tv_name.setText(Html.fromHtml(name1, Html.FROM_HTML_MODE_LEGACY));   //set text
-                        String name2 = "<font color='"+Color.parseColor("#66" + eventColor4Opacity40)+"'>" + stringBuilder + " " + "</font>";
-                        holder.tv_name.append(Html.fromHtml(name2));   //append text into textView
-                    }
+                    holder.tv_comment.setMovementMethod(LinkMovementMethod.getInstance());
+                    holder.tv_comment.setText(stringBuilder);
+                    holder.tv_comment.setTextColor(Color.parseColor(eventColor3));
                 } else {
-                    //holder.tv_name.setVisibility(View.GONE);
+                    holder.tv_comment.setVisibility(View.GONE);
                 }
-            }catch (IllegalArgumentException e)
-            {e.printStackTrace();}
-
-
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
         }
 
         holder.tv_date_time.setText(CommonFunction.convertDate(comments.getDateTime()));
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
         holder.tv_date_time.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
-        int color = Color.parseColor( eventColor3);
+        int color = Color.parseColor(eventColor3);
         holder.iv_options.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.iv_options.setAlpha(150);
-       // holder.tv_name.setAlpha(0.5f);
+        // holder.tv_name.setAlpha(0.5f);
         holder.ll_root.setBackgroundColor(Color.parseColor(eventColor2));
         holder.v_divider.setBackgroundColor(Color.parseColor("#66" + eventColor3Opacity40));
     }
@@ -377,10 +352,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
     public class NewsViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_name, tv_date_time,testdata;
+        TextView tv_name, tv_date_time, testdata, tv_comment;
         FrameLayout fl_gif;
-        ImageView iv_gif, iv_options,iv_profile;
-        ProgressBar pb_gif,progressView;
+        ImageView iv_gif, iv_options, iv_profile;
+        ProgressBar pb_gif, progressView;
         LinearLayout ll_root;
         View v_divider;
 
@@ -397,6 +372,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
             progressView = itemView.findViewById(R.id.progressView);
             ll_root = itemView.findViewById(R.id.ll_root);
             v_divider = itemView.findViewById(R.id.v_divider);
+            tv_comment = itemView.findViewById(R.id.tv_comment);
 
             iv_options.setOnClickListener(new View.OnClickListener() {
                 @Override

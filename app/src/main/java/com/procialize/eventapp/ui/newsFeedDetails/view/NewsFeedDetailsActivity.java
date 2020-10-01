@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -60,6 +61,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -561,10 +563,8 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
         }
     }
 
-    static public void shareImage(String url, final Context context) {
+    /*static public void shareImage(String url, final Context context) {
         final Dialog dialog = new Dialog(context);
-
-
         Picasso.with(context).load(url).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -591,11 +591,52 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             }
         });
         // }
+    }*/static public void shareImage(final String url, final Context context) {
+        final ProgressDialog dialogShare = new ProgressDialog(context);
+        dialogShare.setMessage("Please wait while loading...");
+        dialogShare.show();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Bitmap bitmap = getBitmapFromURL(url);
+                    Uri uri = getLocalBitmapUri(bitmap, context);
+                    if(uri!=null) {
+                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                        sharingIntent.setType("image/*");
+                        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+                        sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+                        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                        context.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+                        dialogShare.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         JzvdStd.goOnPlayOnPause();
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

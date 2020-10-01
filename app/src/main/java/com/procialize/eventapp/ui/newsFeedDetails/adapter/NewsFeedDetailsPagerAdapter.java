@@ -203,12 +203,14 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheLi
 
         videoview.setUp(proxyUrl.trim(), ""
                 , JzvdStd.SCREEN_NORMAL);
-        JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
+        JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
 
-        Glide.with(videoview)
+        Glide.with(videoview).load(thumbImage.trim()).into(videoview.thumbImageView);
+
+/*        Glide.with(videoview)
                 .load(thumbImage.trim())
                 //.placeholder(R.mipmap.placeholder)
-                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)).centerCrop()
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE))//.centerCrop()
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -221,7 +223,7 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheLi
 //                        progressBar.setVisibility(View.GONE);
                         return false;
                     }
-                }).into(videoview.thumbImageView);
+                }).into(videoview.thumbImageView);*/
 
 //        ImageLoader.getInstance().displayImage(thumbImage.trim(), videoview.thumbImageView, options, new SimpleImageLoadingListener() {
 //            @Override

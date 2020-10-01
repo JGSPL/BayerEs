@@ -290,7 +290,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                         eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
                     }
                     EventAppDB eventAppDB = EventAppDB.getDatabase(EventListActivity.this);
-                    List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId);
+                    List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
                     if (profileDataUpdated.size() > 0) {
                         isClickable = true;
                         eventListViewModel.openMainPage(EventListActivity.this);

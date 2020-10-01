@@ -44,7 +44,6 @@ import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
-import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,8 +59,8 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
 public class AttendeeDetailActivity extends AppCompatActivity implements View.OnClickListener {
-    String fname, lname, company, city, designation, prof_pic, attendee_type,mobile,email;
-    TextView tv_header,tv_contact,tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,tv_mobile,tv_email,tv_sendmess;
+    String fname, lname, company, city, designation, prof_pic, attendee_type, mobile, email;
+    TextView tv_header, tv_contact, tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city, tv_mobile, tv_email, tv_sendmess;
     EditText et_message;
     LinearLayout ll_send_message, ll_save_contact, ll_main, ll_save_contact_inner;
     ImageView iv_profile, iv_back, ic_email, iv_contact;
@@ -75,7 +74,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     String mCurrent_user_id, attendeeid, firebase_id;
     APIService updateApi;
     MutableLiveData<LoginOrganizer> chatUpdate = new MutableLiveData<>();
-    String api_token,eventid;
+    String api_token, eventid;
     LinearLayout bgLinear;
     View bgView;
 
@@ -86,8 +85,8 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
         try {
             Intent intent = getIntent();
-            CommonFunction.saveBackgroundImage(AttendeeDetailActivity.this,intent.getStringExtra("eventBg"));
-        }catch (Exception e) {
+            CommonFunction.saveBackgroundImage(AttendeeDetailActivity.this, intent.getStringExtra("eventBg"));
+        } catch (Exception e) {
 
         }
         getIntentData();
@@ -149,8 +148,8 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         iv_contact.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
         tv_contact.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
 
-        bgLinear.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
-        bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        bgLinear.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
+        bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
 
         String eventColor3 = SharedPreference.getPref(this, EVENT_COLOR_3);
         et_message.setHintTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
@@ -183,19 +182,23 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         }
 
         //--GETTING CURRENT USER ID---
-        mAuth = FirebaseAuth.getInstance();
-        mCurrent_user_id = mAuth.getCurrentUser().getUid();
+        try {
+            mAuth = FirebaseAuth.getInstance();
+            mCurrent_user_id = mAuth.getCurrentUser().getUid();
 
-        //---REFERENCE TO CHATS CHILD IN FIREBASE DATABASE-----
-        mConvDatabase = FirebaseDatabase.getInstance().getReference().child("chats").child(mCurrent_user_id);
+            //---REFERENCE TO CHATS CHILD IN FIREBASE DATABASE-----
+            mConvDatabase = FirebaseDatabase.getInstance().getReference().child("chats").child(mCurrent_user_id);
 
-        //---OFFLINE FEATURE---
-        mConvDatabase.keepSynced(true);
+            //---OFFLINE FEATURE---
+            mConvDatabase.keepSynced(true);
 
-        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-        mUsersDatabase.keepSynced(true);
+            mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+            mUsersDatabase.keepSynced(true);
 
-        mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("messages").child(mCurrent_user_id);
+            mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("messages").child(mCurrent_user_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void getIntentData() {
@@ -251,7 +254,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                     // convViewHolder.setUserImage(userThumb,this);
 
                                     //--OPENING CHAT ACTIVITY FOR CLICKED USER----
-                                    getChatUpdate(api_token,eventid,attendeeid);
+                                    getChatUpdate(api_token, eventid, attendeeid);
 
                                     Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
@@ -304,7 +307,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                             mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    getChatUpdate(api_token,eventid,attendeeid);
+                                    getChatUpdate(api_token, eventid, attendeeid);
 
                                     Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                     chatIntent.putExtra("user_id", firebase_id);
@@ -406,6 +409,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                 break;
         }
     }
+
     //Update Api
     public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String receiver_id) {
         updateApi = ApiUtils.getAPIService();
@@ -429,7 +433,6 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         });
         return chatUpdate;
     }
-
 
 
 }

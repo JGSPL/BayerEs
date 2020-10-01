@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -103,8 +104,10 @@ import org.jsoup.Jsoup;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -128,6 +131,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment.newsfeedAdapter;
 
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner,
@@ -156,7 +160,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     List<CommentDetail> commentList = new ArrayList<>();
     String noOfLikes = "0", likeStatus = "", api_token, substring;
     private String strPath, eventColor1, eventColor2, eventColor3, eventColor4, eventColor5, ATTENDEE_STATUS, ATTENDEE_ID;
-    public Dialog dialogShare;
+    public ProgressDialog dialogShare;
     View v_divider;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
     PostNewsFeedViewModel postNewsFeedViewModel;
@@ -199,8 +203,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
             newsfeedId = intent.getStringExtra("newsfeedId");
             mediaPosition = intent.getStringExtra("position");
+            String strpositionOfList = intent.getStringExtra("positionOfList");
             swipableAdapterPosition = Integer.parseInt(mediaPosition);
-            positionOfList = Integer.parseInt("positionOfList");
+            positionOfList = Integer.parseInt(strpositionOfList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -511,36 +516,42 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     }).into(iv_profile);
         }
+        try {
+            if (newsfeed_detail != null) {
+                if (newsfeed_detail.getNews_feed_media() != null) {
+                    if (newsfeed_detail.getNews_feed_media().size() > 0) {
+                        vp_media.setVisibility(View.VISIBLE);
+                        ll_media_dots.setVisibility(View.VISIBLE);
+                        setupPagerAdapter();
+                    } else {
+                        vp_media.setVisibility(View.GONE);
+                        ll_media_dots.setVisibility(View.GONE);
+                    }
+                }
 
-        if (newsfeed_detail.getNews_feed_media().size() > 0) {
-            vp_media.setVisibility(View.VISIBLE);
-            ll_media_dots.setVisibility(View.VISIBLE);
-            setupPagerAdapter();
-        } else {
-            vp_media.setVisibility(View.GONE);
-            ll_media_dots.setVisibility(View.GONE);
-        }
+                if (newsfeed_detail.getTotal_comments().equalsIgnoreCase("1")) {
+                    tv_no_of_comments.setText(newsfeed_detail.getTotal_comments() + " Comment");
+                } else {
+                    tv_no_of_comments.setText(newsfeed_detail.getTotal_comments() + " Comments");
+                }
 
-        if (newsfeed_detail.getTotal_comments().equalsIgnoreCase("1")) {
-            tv_no_of_comments.setText(newsfeed_detail.getTotal_comments() + " Comment");
-        } else {
-            tv_no_of_comments.setText(newsfeed_detail.getTotal_comments() + " Comments");
-        }
+                if (newsfeed_detail.getTotal_likes().equalsIgnoreCase("1")) {
+                    tv_no_of_likes.setText(newsfeed_detail.getTotal_likes() + " Like");
+                } else {
+                    tv_no_of_likes.setText(newsfeed_detail.getTotal_likes() + " Likes");
+                }
 
-        if (newsfeed_detail.getTotal_likes().equalsIgnoreCase("1")) {
-            tv_no_of_likes.setText(newsfeed_detail.getTotal_likes() + " Like");
-        } else {
-            tv_no_of_likes.setText(newsfeed_detail.getTotal_likes() + " Likes");
-        }
-
-        if (newsfeed_detail.getLike_flag().equalsIgnoreCase("0")) {
-            iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
-        } else {
-            iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
+                if (newsfeed_detail.getLike_flag().equalsIgnoreCase("0")) {
+                    iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_like));
+                } else {
+                    iv_likes.setImageDrawable(getResources().getDrawable(R.drawable.ic_active_like));
            /* int color = Color.parseColor(colorActive);
             iv_likes.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*/
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         /*iv_comments.setImageDrawable(getResources().getDrawable(R.drawable.ic_comment));
         iv_share.setImageDrawable(getResources().getDrawable(R.drawable.ic_share));*/
         getComments();
@@ -566,32 +577,30 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void getComments() {
         if (connectionDetector.isConnectingToInternet()) {
             String newsFeedId = newsfeed_detail.getNews_feed_id();
-            /*commentViewModel.getComment(api_token, event_id, newsFeedId, "100", "1");
-            commentViewModel.getCommentList().observe(this,new Observer<Comment>() {
-                @Override
-                public void onChanged(Comment comment) {
-                    if (comment != null) {
-                        //rv_comments.setVisibility(View.VISIBLE);
-                        commentList = comment.getCommentDetails();
-                        setupCommentAdapter(commentList);
-                        showCommentCount(commentList);
-                    } *//*else {
-                        setupCommentAdapter(commentList);
-                    }*//*
-                }
-
-            });*/
-            ApiUtils.getAPIService().getComment(api_token,event_id,
-                    newsFeedId/*,
-                pageSize,
-                pageNumber*/)
+            ApiUtils.getAPIService().getComment(api_token, event_id,
+                    newsFeedId)
                     .enqueue(new Callback<Comment>() {
                         @Override
                         public void onResponse(Call<Comment> call, Response<Comment> response) {
                             if (response.isSuccessful()) {
                                 commentList = response.body().getCommentDetails();
-                                setupCommentAdapter(commentList);
-                                showCommentCount(commentList);
+                                if (commentList != null) {
+                                    setupCommentAdapter(commentList);
+                                    showCommentCount(commentList);
+
+                                    List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                    newsfeed_details.get(positionOfList).setTotal_comments(commentList.size()+"");
+                                    newsfeedAdapter.notifyDataSetChanged();
+
+                                } else {
+                                    commentList = new ArrayList<>();
+                                    setupCommentAdapter(commentList);
+                                    showCommentCount(commentList);
+
+                                    List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                    newsfeed_details.get(positionOfList).setTotal_comments(commentList.size()+"");
+                                    newsfeedAdapter.notifyDataSetChanged();
+                                }
                             }
                         }
 
@@ -600,7 +609,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             //commentList.setValue(null);
                         }
                     });
-
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
@@ -617,14 +625,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             imagesSelectednew1.add(mediaPath + newsfeed_detail.getNews_feed_media().get(i).getThumb_image());
         }
 
-        Utility.setupPagerIndidcatorDots(this,0, ll_media_dots, imagesSelectednew.size());
+        Utility.setupPagerIndidcatorDots(this, 0, ll_media_dots, imagesSelectednew.size());
         SwipeMultimediaAdapter swipepagerAdapter = new SwipeMultimediaAdapter(CommentActivity.this, imagesSelectednew, imagesSelectednew1, newsfeed_detail.getNews_feed_media());
         vp_media.setAdapter(swipepagerAdapter);
         swipepagerAdapter.notifyDataSetChanged();
         vp_media.setCurrentItem(Integer.parseInt(mediaPosition));
 
         if (imagesSelectednew.size() > 1) {
-            Utility.setupPagerIndidcatorDots(this,0, ll_media_dots, imagesSelectednew.size());
+            Utility.setupPagerIndidcatorDots(this, 0, ll_media_dots, imagesSelectednew.size());
             vp_media.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -635,7 +643,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 public void onPageSelected(int position1) {
                     JzvdStd.goOnPlayOnPause();
                     swipableAdapterPosition = position1;
-                    Utility.setupPagerIndidcatorDots(CommentActivity.this,position1, ll_media_dots, imagesSelectednew.size());
+                    Utility.setupPagerIndidcatorDots(CommentActivity.this, position1, ll_media_dots, imagesSelectednew.size());
                 }
 
                 @Override
@@ -757,9 +765,54 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.iv_likes:
                 if (connectionDetector.isConnectingToInternet()) {
-                    noOfLikes = "0";
+
                     commentViewModel.likePost(api_token, event_id, newsfeed_detail.getNews_feed_id());
-                    commentViewModel.likePostData().observe(CommentActivity.this, new Observer<LikePost>() {
+
+                    ApiUtils.getAPIService().PostLikeFromComment(api_token,event_id, newsfeed_detail.getNews_feed_id()).enqueue(new Callback<LikePost>() {
+                        @Override
+                        public void onResponse(Call<LikePost> call, Response<LikePost> response) {
+                            if (response.isSuccessful()) {
+                                String status = response.body().getHeader().get(0).getType();
+
+                                if (status.equalsIgnoreCase("success")) {
+                                    likeStatus = response.body().getLike_status();
+                                    noOfLikes = tv_no_of_likes.getText().toString().split(" ")[0];
+                                    if (likeStatus.equalsIgnoreCase("1")) {
+                                        showLikeCount(Integer.parseInt(noOfLikes) + 1);
+                                        iv_likes.setImageDrawable(getDrawable(R.drawable.ic_active_like));
+
+                                        int totLikes = Integer.parseInt(noOfLikes) + 1;
+                                        newsfeed_detail.setLike_flag("1");
+                                        newsfeed_detail.setTotal_likes(totLikes + "");
+
+                                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                        newsfeed_details.get(positionOfList).setLike_flag("1");
+                                        newsfeed_details.get(positionOfList).setTotal_likes(totLikes + "");
+                                        newsfeed_detail.setTotal_likes(totLikes + "");
+                                        newsfeedAdapter.notifyDataSetChanged();
+                                    } else {
+                                        if (Integer.parseInt(noOfLikes) > 0) {
+                                            showLikeCount(Integer.parseInt(noOfLikes) - 1);
+                                            iv_likes.setImageDrawable(getDrawable(R.drawable.ic_like));
+                                        }
+                                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                        newsfeed_details.get(positionOfList).setLike_flag("0");
+                                        newsfeed_details.get(positionOfList).setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) - 1 + "");
+                                        newsfeed_detail.setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) - 1 + "");
+                                        newsfeedAdapter.notifyDataSetChanged();
+                                    }
+                                    Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LikePost> call, Throwable t) {
+                            Utility.createShortSnackBar(ll_main, "Please try after some time");
+
+                        }
+                    });
+                   /* commentViewModel.likePostData().observe(CommentActivity.this, new Observer<LikePost>() {
                         @Override
                         public void onChanged(LikePost likePost) {
                             if (likePost != null) {
@@ -774,8 +827,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         newsfeed_detail.setLike_flag("1");
                                         newsfeed_detail.setTotal_likes(Integer.parseInt(noOfLikes) + 1 + "");
 
-                                        noOfLikes = "0";
-                                        likeStatus = "";
+                                      *//*  noOfLikes = "0";
+                                        likeStatus = "";*//*
+                                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                        newsfeed_details.get(positionOfList).setLike_flag("1");
+                                        newsfeed_details.get(positionOfList).setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) + 1 + "");
+                                        newsfeed_detail.setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) + 1 + "");
+                                        newsfeedAdapter.notifyDataSetChanged();
                                     } else {
                                         if (Integer.parseInt(noOfLikes) > 0) {
                                             showLikeCount(Integer.parseInt(noOfLikes) - 1);
@@ -783,8 +841,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                             noOfLikes = "0";
 
                                         }
-                                        noOfLikes = "0";
-                                        likeStatus = "";
+                                       *//* noOfLikes = "0";
+                                        likeStatus = "";*//*
+
+                                        List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                        newsfeed_details.get(positionOfList).setLike_flag("0");
+                                        newsfeed_details.get(positionOfList).setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) - 1 + "");
+                                        newsfeed_detail.setTotal_likes(Integer.parseInt(newsfeed_detail.getTotal_likes()) - 1 + "");
+                                        newsfeedAdapter.notifyDataSetChanged();
                                     }
                                     Utility.createShortSnackBar(ll_main, likePost.getHeader().get(0).getMsg());
                                 }
@@ -795,7 +859,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 Utility.createShortSnackBar(ll_main, "Failure..");
                             }
                         }
-                    });
+                    });*/
                 } else {
                     Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
                 }
@@ -864,16 +928,16 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                                 sharingIntent.setType("video/*");
-                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via MRGE app");
+                                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
                                 sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
                                 sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                                startActivity(Intent.createChooser(sharingIntent, "Shared via MRGE app"));
+                                startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
                                 iv_share.setEnabled(true);
                             }
                         } else {
                             iv_share.setEnabled(true);
-                            dialogShare = new Dialog(this);
-                            dialogShare.show();
+                            /*dialogShare = new Dialog(this);
+                            dialogShare.show();*/
                             String newsFeedPath = SharedPreference.getPref(CommentActivity.this, NEWS_FEED_MEDIA_PATH);
                             shareImage(/*newsfeed_detail.getPost_date() + "\n" +*/ newsfeed_detail.getPost_status(), newsFeedPath + newsfeed_detail.getNews_feed_media().get(swipableAdapterPosition).getMedia_file(), this);
                         }
@@ -998,7 +1062,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                commentViewModel.deleteComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), commentDetail.getComment_id(), position);
+/*                commentViewModel.deleteComment(api_token, event_id, newsfeed_detail.getNews_feed_id(), commentDetail.getComment_id(), position);
                 commentViewModel.commentDelete().observe(CommentActivity.this, new Observer<LoginOrganizer>() {
                     @Override
                     public void onChanged(LoginOrganizer loginOrganizer) {
@@ -1011,6 +1075,25 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             dialog.dismiss();
                             Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
                         }
+                        if (commentViewModel != null && commentViewModel.commentDelete().hasObservers()) {
+                            commentViewModel.commentDelete().removeObservers(CommentActivity.this);
+                        }
+                    }
+                });*/
+                ApiUtils.getAPIService().DeleteComment(api_token, event_id, commentDetail.getComment_id()).enqueue(new Callback<LoginOrganizer>() {
+                    @Override
+                    public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
+                        if (response.isSuccessful()) {
+                            commentList.clear();
+                            dialog.dismiss();
+                            Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+                            getComments();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                        //deleteCommentData.setValue(null);
                     }
                 });
             }
@@ -1173,17 +1256,62 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    public void shareImage(final String data, String url, final Context context) {
-        Picasso.with(context).load(url).into(new com.squareup.picasso.Target() {
+    public void shareImage(final String data, final String url, final Context context) {
+        dialogShare = new ProgressDialog(context);
+        dialogShare.setMessage("Please wait while loading...");
+        dialogShare.show();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Bitmap bitmap = getBitmapFromURL(url);
+                    Uri uri = getLocalBitmapUri(bitmap, context);
+                    if(uri!=null) {
+                        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                        sharingIntent.setType("image/*");
+                        sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+                        sharingIntent.putExtra(Intent.EXTRA_TEXT, data);
+                        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                        context.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+                        dialogShare.dismiss();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        thread.start();
+      /*  Picasso.with(context).load(url).into(new com.squareup.picasso.Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 dialogShare.dismiss();
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("image/*");
-                i.putExtra(Intent.EXTRA_SUBJECT, data);
-                i.putExtra(Intent.EXTRA_STREAM, getLocalBitmapUri(bitmap, context));
+                String postStatus = "";
+                String spannedString;
+                CharSequence spannedString1;
+                if (data.contains("\n")) {
+                    postStatus = data.trim().replace("\n", "<br/>");
+                } else {
+                    postStatus = data.trim();
+                }
+                spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
 
-                context.startActivity(Intent.createChooser(i, "Share Image"));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+                    spannedString1 = Utility.trimTrailingWhitespace(strPost);
+                } else {
+                    Spanned strPost = Html.fromHtml(spannedString);
+                    spannedString1 =Utility.trimTrailingWhitespace(strPost);
+                }
+
+
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("image/*");
+                //sharingIntent.putExtra(Intent.EXTRA_SUBJECT, data);
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, *//*data +*//* " Shared via Event app");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, spannedString1);
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, getLocalBitmapUri(bitmap, context));
+                context.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
             }
 
             @Override
@@ -1193,20 +1321,34 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
             }
-        });
+        });*/
     }
 
     private void shareTextUrl(String data, String url) {
+        String postStatus = "";
+        String spannedString;
+        CharSequence spannedString1;
+        if (data.contains("\n")) {
+            postStatus = data.trim().replace("\n", "<br/>");
+        } else {
+            postStatus = data.trim();
+        }
+        spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            spannedString1 = Utility.trimTrailingWhitespace(strPost);
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            spannedString1 =Utility.trimTrailingWhitespace(strPost);
+        }
+
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
         share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-        // Add data to the intent, the receiving app will decide
-        // what to do with it.
-        share.putExtra(Intent.EXTRA_SUBJECT, data);
-        share.putExtra(Intent.EXTRA_TEXT, url);
-
-        startActivity(Intent.createChooser(share, "Share link!"));
+        share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+        share.putExtra(Intent.EXTRA_TEXT, spannedString1 /* + url*/);
+        startActivity(Intent.createChooser(share,  " Shared via Event app"));
     }
 
     private class DownloadFile extends AsyncTask<String, String, String> {
@@ -1522,8 +1664,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         public void onChanged(LoginOrganizer loginOrganizer) {
                             if (loginOrganizer != null) {
 
-                                NewsFeedFragment.newsfeedAdapter.getNewsFeedList().remove(positionOfList);
-                                NewsFeedFragment.newsfeedAdapter.notifyItemRemoved(positionOfList);
+                                newsfeedAdapter.getNewsFeedList().remove(positionOfList);
+                                newsfeedAdapter.notifyItemRemoved(positionOfList);
 
                                 List<Header> heaserList = loginOrganizer.getHeader();
                                 Utility.createShortSnackBar(ll_main, heaserList.get(0).getMsg());
@@ -1549,9 +1691,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         public void onChanged(LoginOrganizer loginOrganizer) {
                             if (loginOrganizer != null) {
                                 List<Header> heaserList = loginOrganizer.getHeader();
-                                NewsFeedFragment.newsfeedAdapter.getNewsFeedList().remove(positionOfList);
-                                NewsFeedFragment.newsfeedAdapter.notifyItemRemoved(positionOfList);
-                                NewsFeedFragment.newsfeedAdapter.notifyItemRangeChanged(positionOfList, NewsFeedFragment.newsfeedAdapter.getItemCount());
+                                newsfeedAdapter.getNewsFeedList().remove(positionOfList);
+                                newsfeedAdapter.notifyItemRemoved(positionOfList);
+                                newsfeedAdapter.notifyItemRangeChanged(positionOfList, newsfeedAdapter.getItemCount());
                                 Utility.createShortSnackBar(ll_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
                                 //startActivity(new Intent(CommentActivity.this, MainActivity.class));
@@ -1681,5 +1823,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
+    }
+
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

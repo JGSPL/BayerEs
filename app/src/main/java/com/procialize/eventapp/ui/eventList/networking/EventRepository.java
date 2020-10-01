@@ -59,7 +59,11 @@ public class EventRepository {
                     @Override
                     public void onResponse(Call<UpdateDeviceInfo> call, Response<UpdateDeviceInfo> response) {
                         if (response.isSuccessful()) {
-                            updateLoginUserList.setValue(response.body());
+                            try {
+                                updateLoginUserList.setValue(response.body());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
                             /*List<LoginUserInfo> userData = response.body().getLoginUserInfoList();
                             String fname = userData.get(0).getFirst_name();
