@@ -35,7 +35,7 @@ public class FetchNewsfeedMultiple {
     @Expose
     List<Zoom_info> zoom_info;
 
-    @SerializedName("media_pathpreencrypt")
+    @SerializedName("media_path")
     @Expose
     private String media_path;
 

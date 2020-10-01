@@ -19,9 +19,9 @@ public class validateOTP {
     @Expose
     private String token;
 
-    @SerializedName("tokenpreenrypt")
+/*    @SerializedName("tokenpreenrypt")
     @Expose
-    private String tokenpreenrypt;
+    private String tokenpreenrypt;*/
     public List<Header> getHeader() {
         return header;
     }
@@ -39,11 +39,11 @@ public class validateOTP {
         this.token = token;
     }
 
-    public String getTokenpreenrypt() {
+    /*public String getTokenpreenrypt() {
         return tokenpreenrypt;
     }
 
     public void setTokenpreenrypt(String tokenpreenrypt) {
         this.tokenpreenrypt = tokenpreenrypt;
-    }
+    }*/
 }

@@ -11,9 +11,9 @@ public class UpdateDeviceInfo {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
+/*    @SerializedName("detailpreencrypt")
     @Expose
-    List<LoginUserInfo> LoginUserInfoList;
+    List<LoginUserInfo> LoginUserInfoList;*/
 
     @SerializedName("detail")
     @Expose
@@ -27,13 +27,13 @@ public class UpdateDeviceInfo {
         this.header = header;
     }
 
-    public List<LoginUserInfo> getLoginUserInfoList() {
+   /* public List<LoginUserInfo> getLoginUserInfoList() {
         return LoginUserInfoList;
     }
 
     public void setLoginUserInfoList(List<LoginUserInfo> loginUserInfoList) {
         LoginUserInfoList = loginUserInfoList;
-    }
+    }*/
 
     public String getDetail() {
         return detail;

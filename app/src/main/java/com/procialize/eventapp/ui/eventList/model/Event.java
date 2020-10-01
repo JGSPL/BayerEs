@@ -13,9 +13,13 @@ public class Event {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
+/*    @SerializedName("detailpreencrypt")
     @Expose
-    List<EventList> eventLists;
+    List<EventList> eventLists;*/
+
+    @SerializedName("detail")
+    @Expose
+    String eventListEncrypted;
 
     @SerializedName("file_pathpreencrypt")
     @Expose
@@ -26,11 +30,19 @@ public class Event {
     }
 
 
-    public List<EventList> getEventLists() {
+   /* public List<EventList> getEventLists() {
         return eventLists;
-    }
+    }*/
 
     public String getFile_path() {
         return file_path;
+    }
+
+    public String getEventListEncrypted() {
+        return eventListEncrypted;
+    }
+
+    public void setEventListEncrypted(String eventListEncrypted) {
+        this.eventListEncrypted = eventListEncrypted;
     }
 }

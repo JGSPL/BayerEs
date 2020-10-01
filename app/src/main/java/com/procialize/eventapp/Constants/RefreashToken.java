@@ -59,11 +59,10 @@ public class RefreashToken {
     }
 
     public void decodeRefreashToken(String data) {
-
+       String token = data.substring(1, data.length() - 1);
         HashMap<String, String> map_token = new HashMap<>();
-        map_token.put(AUTHERISATION_KEY, data);
+        map_token.put(AUTHERISATION_KEY, token);
         SharedPreference.putPref(context, map_token);
-
 
         JWT jwt = new JWT(data);
 

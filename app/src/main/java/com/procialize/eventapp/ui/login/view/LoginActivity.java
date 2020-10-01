@@ -18,7 +18,12 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.BuildConfig;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
@@ -37,6 +42,7 @@ import com.procialize.eventapp.ui.eventList.viewModel.EventListViewModel;
 import com.procialize.eventapp.ui.login.viewmodel.LoginViewModel;
 import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -136,7 +142,13 @@ public class LoginActivity extends AppCompatActivity {
         eventListViewModel.getEventList().observeForever( new Observer<Event>() {
             @Override
             public void onChanged(Event event) {
-                List<EventList> eventLists = event.getEventLists();
+                String strEventList = event.getEventListEncrypted();
+                RefreashToken refreashToken = new RefreashToken((Activity) context);
+                String data = refreashToken.decryptedData(strEventList);
+                JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                ArrayList<EventList> eventLists = new Gson().fromJson(jsonArray, new TypeToken<List<EventList>>(){}.getType());
+
+               // List<EventList> eventLists = event.getEventLists();
                 String strFilePath = event.getFile_path();
                 HashMap<String,String> map1 = new HashMap<>();
                 map1.put(EVENT_LIST_MEDIA_PATH, strFilePath);
@@ -150,7 +162,13 @@ public class LoginActivity extends AppCompatActivity {
                 eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
                     @Override
                     public void onChanged(UpdateDeviceInfo updateDeviceInfo) {
-                        final List<LoginUserInfo> userData = updateDeviceInfo.getLoginUserInfoList();
+                        String strEventList = updateDeviceInfo.getDetail();
+                        RefreashToken refreashToken = new RefreashToken((Activity) context);
+                        String data = refreashToken.decryptedData(strEventList);
+                        JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                        ArrayList<LoginUserInfo> userData = new Gson().fromJson(jsonArray, new TypeToken<List<LoginUserInfo>>(){}.getType());
+
+                       // final List<LoginUserInfo> userData = updateDeviceInfo.getLoginUserInfoList();
                         HashMap<String, String> map = new HashMap<>();
                         map.put(KEY_FNAME, userData.get(0).getFirst_name());
                         map.put(KEY_LNAME, userData.get(0).getLast_name());

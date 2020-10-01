@@ -14,7 +14,7 @@ import java.util.List;
 public interface UploadMultimediaDao {
 
     @Query("SELECT * from tbl_upload_multimedia WHERE fld_is_uploaded='0' and fld_folderUniqueId=:folderUniqueId")
-    LiveData<List<UploadMultimedia>> getMultimediaToUpload(String folderUniqueId);
+    List<UploadMultimedia> getMultimediaToUpload(String folderUniqueId);
 
     @Query("SELECT * from tbl_upload_multimedia WHERE fld_compressedPath='' and fld_post_status=='' and fld_mime_type!='image/gif'")
     LiveData<List<UploadMultimedia>> getNonCompressesMultimedia();
@@ -34,8 +34,11 @@ public interface UploadMultimediaDao {
     @Query("SELECT COUNT(fld_multimedia_id) FROM tbl_upload_multimedia")
     Integer getRowCount();
 
-    @Query("UPDATE tbl_upload_multimedia SET fld_compressedPath=:compressedPath WHERE fld_media_file = :OldPath")
-    void updateCompressedPath(String compressedPath, String OldPath);
+/*    @Query("UPDATE tbl_upload_multimedia SET fld_compressedPath=:compressedPath WHERE fld_media_file = :OldPath")
+    void updateCompressedPath(String compressedPath, String OldPath);*/
+
+    @Query("UPDATE tbl_upload_multimedia SET fld_compressedPath=:compressedPath WHERE fld_multimedia_id = :media_id")
+    void updateCompressedPath(String compressedPath, String media_id);
 
     @Query("UPDATE tbl_upload_multimedia SET fld_is_uploaded='1' WHERE fld_folderUniqueId = :folderUniqueId")
     void updateIsUploded(String folderUniqueId);

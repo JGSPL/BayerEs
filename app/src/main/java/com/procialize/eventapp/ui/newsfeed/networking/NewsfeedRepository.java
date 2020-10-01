@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
-import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
@@ -92,16 +91,13 @@ public class NewsfeedRepository {
                 }
             }
 
-            if(MediaType.parse(resultList.get(i).getMimeType())==null)
-            {
-                if(resultList.get(i).getMedia_type().equalsIgnoreCase("image")) {
+            if (MediaType.parse(resultList.get(i).getMimeType()) == null) {
+                if (resultList.get(i).getMedia_type().equalsIgnoreCase("image")) {
                     filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse("image/png"), file));
-                }
-                else
-                {
+                } else {
                     filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse("video/mp4"), file));
                 }
-            }else {
+            } else {
                 filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse(resultList.get(i).getMimeType()), file));
             }
             parts.add(filePart);
@@ -229,9 +225,12 @@ public class NewsfeedRepository {
             public void onResponse(Call<LoginOrganizer> call,
                                    Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
-                    reportPostUpdate.setValue(response.body());
-                    newsRepository.getNewsFeed(token, event_id, "30", "1");
-
+                    try {
+                        reportPostUpdate.setValue(response.body());
+                        newsRepository.getNewsFeed(token, event_id, "30", "1");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -254,7 +253,7 @@ public class NewsfeedRepository {
                                    Response<LikePost> response) {
                 if (response.isSuccessful()) {
                     liketPostUpdate.setValue(response.body());
-                    newsRepository.getNewsFeed(token,event_id, "30", "1");
+                    newsRepository.getNewsFeed(token, event_id, "30", "1");
 
                 }
             }

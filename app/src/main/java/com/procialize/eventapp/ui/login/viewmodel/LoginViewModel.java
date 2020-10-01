@@ -237,9 +237,11 @@ public class LoginViewModel extends BaseObservable {
                     RefreashToken refreashToken = new RefreashToken(context);
                     String data = refreashToken.decryptedData(response.body().getToken().toString().trim());
                     refreashToken.decodeRefreashToken(data);
+
                     HashMap<String,String> map = new HashMap<>();
                     map.put(SharedPreferencesConstant.OTP, otp);
-                    map.put(AUTHERISATION_KEY,response.body().getTokenpreenrypt());
+                    String token = data.substring(1, data.length() - 1);
+                    map.put(AUTHERISATION_KEY,token);
                     SharedPreference.putPref(context,map);
                 } else {
                     activityLoginBinding.btnOTPSubmit.setClickable(true);
@@ -249,7 +251,6 @@ public class LoginViewModel extends BaseObservable {
                         } else {
                             setToastMessage(response.body().getHeader().get(0).getMsg());
                         }
-
                     } else {
                         setToastMessage("Invalid OTP");
                     }
