@@ -175,6 +175,7 @@ public class ChatActivity extends AppCompatActivity {
     String  lname, company, city, designation,  attendee_type,mobile,email,attendeeid,firebase_id,firstMessage, page;
     LinearLayout lineaeSend;
     public static String videoflag = "0";
+    ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +187,7 @@ public class ChatActivity extends AppCompatActivity {
         lineaeSend = findViewById(R.id.lineaeSend);
         mMessageView = (EditText)findViewById(R.id.chatMessageView);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        cd = ConnectionDetector.getInstance(this);
 
         getWindow().setBackgroundDrawable(getDrawable(R.drawable.chat_bg));
 
@@ -195,6 +197,8 @@ public class ChatActivity extends AppCompatActivity {
         String loginUser_name = getIntent().getStringExtra("loginUser_name");
         String sProfilepic = getIntent().getStringExtra("sProfilepic");
         final String prof_pic = getIntent().getStringExtra("rProfilepic");
+
+        final LinearLayout linMain = findViewById(R.id.linMain);
 
         Intent intent = getIntent();
         lname = intent.getStringExtra("lname");
@@ -290,8 +294,13 @@ public class ChatActivity extends AppCompatActivity {
         if(messagesList.size()==0){
             progressBar.setVisibility(View.GONE);
         }
+        if(cd.isConnectingToInternet() ){
 
-        loadMessages();
+            loadMessages();
+        }else{
+            Utility.createShortSnackBar(linMain, "No internet connection");
+
+        }
 
         //----ADDING LAST SEEN-----
 
@@ -523,9 +532,18 @@ public class ChatActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                itemPos = 0;
-                mCurrentPage++;
-                loadMoreMessages();
+                if(cd.isConnectingToInternet() ){
+
+                    itemPos = 0;
+                    mCurrentPage++;
+                    loadMoreMessages();
+                }else{
+                    Utility.createShortSnackBar(linMain, "No internet connection");
+                    mSwipeRefreshLayout.setRefreshing(false);
+
+                }
+
+
                /*if(mSwipeRefreshLayout.isRefreshing()==true){
                    mSwipeRefreshLayout.setRefreshing(false);
                }*/
