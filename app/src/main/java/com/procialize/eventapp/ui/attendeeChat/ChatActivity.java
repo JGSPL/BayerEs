@@ -448,6 +448,9 @@ public class ChatActivity extends AppCompatActivity {
                     // Check for new messages
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
+                   // FirebaseDatabase.getInstance().getReference().child("message/" + chatID).push().setValue(messageMap);
+
+
                     if (currentUser != null){
                         String UID = currentUser.getUid();
                         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
