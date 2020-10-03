@@ -23,9 +23,9 @@ public class FetchNewsfeedMultiple {
     @Expose
     private String detail;
 
-    @SerializedName("detailpreencrypt")
+/*    @SerializedName("detailpreencrypt")
     @Expose
-    List<Newsfeed_detail> newsfeed_detail;
+    List<Newsfeed_detail> newsfeed_detail;*/
 
     @SerializedName("live_stream_info")
     @Expose
@@ -35,7 +35,7 @@ public class FetchNewsfeedMultiple {
     @Expose
     List<Zoom_info> zoom_info;
 
-    @SerializedName("media_pathpreencrypt")
+    @SerializedName("media_path")
     @Expose
     private String media_path;
 
@@ -66,6 +66,7 @@ public class FetchNewsfeedMultiple {
     public void setHeader(List<Header> header) {
         this.header = header;
     }
+/*
 
     public List<Newsfeed_detail> getNewsfeed_detail() {
         return newsfeed_detail;
@@ -74,6 +75,7 @@ public class FetchNewsfeedMultiple {
     public void setNewsfeed_detail(List<Newsfeed_detail> newsfeed_detail) {
         this.newsfeed_detail = newsfeed_detail;
     }
+*/
 
 
     public String getMedia_path() {

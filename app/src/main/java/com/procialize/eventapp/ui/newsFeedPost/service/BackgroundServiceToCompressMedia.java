@@ -178,7 +178,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
                     Log.i(Config.TAG, "Async command execution completed successfully.");
                     String thumbPath = mediaList.get(mediaListposition).getMedia_file_thumb();
                     String originalPath = mediaList.get(mediaListposition).getMedia_file();
-                    EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(outputPath, originalPath);
+                    EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(outputPath, String.valueOf(mediaList.get(mediaListposition).getMultimedia_id()));
                     compressMedia(mediaListposition);
                 } else if (returnCode == RETURN_CODE_CANCEL) {
                     Log.i(Config.TAG, "Async command execution cancelled by user.");
@@ -262,12 +262,18 @@ public class BackgroundServiceToCompressMedia extends IntentService {
         String filePath = dest.getAbsolutePath();
 
 
-        String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
+   /*     String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
                 //"-vcodec",
                 "-c:v",
                 "libx264",  "-maxrate", "1984k",
                 "-bufsize", "3968k","-b:v", "3000k", "-b:a", "48000",
-                "-movflags", "+faststart", "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "ultrafast",  "-ac", "2", "-ar", "22050", filePath };
+                "-movflags", "+faststart", "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "ultrafast",  "-ac", "2", "-ar", "22050", filePath };*/
+
+        String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
+                //"-vcodec",
+                "-c:v",
+                "libx264", "-minrate", "4000k", "-maxrate", "4000k","-b:v", "250k", "-b:a", "48000",
+                "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "veryfast",  "-ac", "2", "-ar", "22050", filePath };
         execFFmpegBinary(complexCommand,selectedVideoUri.toString(), filePath, mediaListposition);
 
         return filePath;
@@ -335,7 +341,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
                 FileOutputStream fo = new FileOutputStream(auxFile);
                 fo.write(bytes.toByteArray());
                 fo.close();
-                EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(f1.getPath(), media_file);
+                EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(f1.getPath(), String.valueOf(mediaList.get(mediaListposition).getMultimedia_id()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -367,7 +373,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
 
     public void compressGif(int mediaListposition) {
         String originalPath = mediaList.get(mediaListposition).getMedia_file();
-        EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(originalPath, originalPath);
+        EventAppDB.getDatabase(getApplicationContext()).uploadMultimediaDao().updateCompressedPath(originalPath, String.valueOf(mediaList.get(mediaListposition).getMultimedia_id()));//originalPath);
         if (mediaList.size() > mediaListposition + 1) {
             /*if(mediaList.get(mediaListposition).getMedia_type().contains("video")) {
                 executeCutVideoCommand(Uri.parse(mediaList.get(mediaListposition + 1).getMedia_file()), mediaListposition + 1);

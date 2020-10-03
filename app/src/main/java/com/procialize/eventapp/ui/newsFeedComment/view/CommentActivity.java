@@ -56,6 +56,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.percolate.mentions.Mentionable;
 import com.percolate.mentions.Mentions;
 import com.percolate.mentions.QueryListener;
@@ -262,7 +264,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 commentViewModel.newsFeedDeatils().observe(this, new Observer<FetchNewsfeedMultiple>() {
                     @Override
                     public void onChanged(FetchNewsfeedMultiple fetchNewsfeedMultiple) {
-                        newsfeed_detail = fetchNewsfeedMultiple.getNewsfeed_detail().get(0);
+                        String strEventList = fetchNewsfeedMultiple.getDetail();
+                        RefreashToken refreashToken = new RefreashToken(CommentActivity.this);
+                        String data = refreashToken.decryptedData(strEventList);
+                        Gson gson = new Gson();
+                        newsfeed_detail = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {}.getType());
+                        //newsfeed_detail = fetchNewsfeedMultiple.getNewsfeed_detail().get(0);
                     }
                 });
             }
@@ -583,7 +590,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void onResponse(Call<Comment> call, Response<Comment> response) {
                             if (response.isSuccessful()) {
-                                commentList = response.body().getCommentDetails();
+
+                                String strCommentList = response.body().getDetail();
+                                RefreashToken refreashToken = new RefreashToken(CommentActivity.this);
+                                String data = refreashToken.decryptedData(strCommentList);
+                                Gson gson = new Gson();
+                                commentList = gson.fromJson(data, new TypeToken<ArrayList<CommentDetail>>() {}.getType());
+
+                               // commentList = response.body().getCommentDetails();
                                 if (commentList != null) {
                                     setupCommentAdapter(commentList);
                                     showCommentCount(commentList);

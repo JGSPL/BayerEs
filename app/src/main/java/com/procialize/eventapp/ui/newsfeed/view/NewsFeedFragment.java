@@ -24,7 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -38,6 +37,8 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
@@ -47,9 +48,11 @@ import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.eventList.model.EventList;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
@@ -62,6 +65,8 @@ import com.procialize.eventapp.ui.newsfeed.roomDB.TableNewsFeed;
 import com.procialize.eventapp.ui.newsfeed.roomDB.TableNewsFeedMedia;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
+import com.procialize.eventapp.ui.profile.model.ProfileDetails;
+import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -93,7 +98,7 @@ import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAG
 
 public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAdapterListner, View.OnClickListener {
     ArrayList<Newsfeed_detail> newsfeedArrayList = new ArrayList<>();
-   public static NewsFeedAdapter newsfeedAdapter;
+    public static NewsFeedAdapter newsfeedAdapter;
     RecyclerView recycler_feed;
     NewsFeedViewModel newsfeedViewModel;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
@@ -120,7 +125,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     private APIService newsfeedApi;
     String noOfLikes = "0";
     String likeStatus = "";
-    String strPath = "", mediaPath = "";
+    String strPath = "";
     private List<UploadMultimedia> mediaList;
     public boolean isFromUploading = false;
 
@@ -188,9 +193,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 if (connectionDetector.isConnectingToInternet()) {
                     newsfeedAdapter.getNewsFeedList().clear();
                     newsfeedAdapter.notifyDataSetChanged();
-                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                    /*if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                         newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-                    }
+                    }*/
                     currentPage = PAGE_START;
                     init();
                 } else {
@@ -337,7 +342,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 }
             });*/
 
-            ApiUtils.getAPIService().NewsFeedFetchMultiple(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage)).enqueue(new Callback<FetchNewsfeedMultiple>() {
+            ApiUtils.getAPIService().NewsFeedFetchMultiple(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage))
+                    .enqueue(new Callback<FetchNewsfeedMultiple>() {
                 @Override
                 public void onResponse(Call<FetchNewsfeedMultiple> call,
                                        Response<FetchNewsfeedMultiple> response) {
@@ -346,19 +352,36 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         newsfeedAdapter.getNewsFeedList().clear();
                         newsfeedAdapter.notifyDataSetChanged();
 
-                        List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
+                        String strEventList = response.body().getDetail();
+                        RefreashToken refreashToken = new RefreashToken(getActivity());
+                        String data = refreashToken.decryptedData(strEventList);
+                        Gson gson = new Gson();
+                        List<Newsfeed_detail> feedList = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {}.getType());
+
+                        String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(response.body().getMedia_path()));
+                        String mediaPath1 = strFilePath.replace("\\","");
+                        //List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
                         newsfeedAdapter.addAll(feedList);
 
                         newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
                         insertIntoDb(feedList);
 
 
-                        String mediaPath = response.body().getMedia_path();
-                        totalPages = Integer.parseInt(response.body().getTotalRecords());
+                        //totalPages = Integer.parseInt(response.body().getTotalRecords());
+                        Long longTotalRecords = Long.parseLong(response.body().getTotalRecords());
 
+                        if (longTotalRecords < newsFeedPageSize) {
+                            totalPages = 1;
+                        } else {
+                            if ((int) (longTotalRecords % newsFeedPageSize) == 0) {
+                                totalPages = (int) (longTotalRecords / newsFeedPageSize);
+                            } else {
+                                totalPages = (int) (longTotalRecords / newsFeedPageSize) + 1;
+                            }
+                        }
                         try {
                             HashMap<String, String> map = new HashMap<>();
-                            map.put(NEWS_FEED_MEDIA_PATH, mediaPath);
+                            map.put(NEWS_FEED_MEDIA_PATH,mediaPath1 );
                             SharedPreference.putPref(getActivity(), map);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -372,6 +395,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             e.printStackTrace();
                         }
                     }
+
+                    setupRecyclerView();
                 }
 
                 @Override
@@ -397,46 +422,52 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     private void loadNextPage() {
-        Log.d("loadNextPage", "loadNextPage: " + currentPage);
-        if (newsfeedViewModel != null /*&& newsfeedViewModel.getNewsRepository().hasObservers()*/) {
-            newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-        }
-        newsfeedApi = ApiUtils.getAPIService();
+        if (totalPages > currentPage) {
+            Log.d("loadNextPage", "loadNextPage: " + currentPage);
+            if (newsfeedViewModel != null /*&& newsfeedViewModel.getNewsRepository().hasObservers()*/) {
+                newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+            }
+            newsfeedApi = ApiUtils.getAPIService();
 
-        // newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
-        newsfeedApi.NewsFeedFetchMultiple(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage)).enqueue(new Callback<FetchNewsfeedMultiple>() {
-            @Override
-            public void onResponse(Call<FetchNewsfeedMultiple> call,
-                                   Response<FetchNewsfeedMultiple> response) {
-                if (response.isSuccessful()) {
-                    newsfeedAdapter.removeLoadingFooter();
-                    isLoading = false;
+            // newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+            newsfeedApi.NewsFeedFetchMultiple(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage)).enqueue(new Callback<FetchNewsfeedMultiple>() {
+                @Override
+                public void onResponse(Call<FetchNewsfeedMultiple> call,
+                                       Response<FetchNewsfeedMultiple> response) {
+                    if (response.isSuccessful()) {
+                        newsfeedAdapter.removeLoadingFooter();
+                        isLoading = false;
+                        String strEventList = response.body().getDetail();
+                        RefreashToken refreashToken = new RefreashToken(getActivity());
+                        String data = refreashToken.decryptedData(strEventList);
+                        Gson gson = new Gson();
+                        List<Newsfeed_detail> feedList = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {
+                        }.getType());
 
-                    List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
-                    if (feedList.size() > 0) {
-                        newsfeedAdapter.addAll(feedList);
-                        insertIntoDb(feedList);
+
+                       // List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
+                        if (feedList.size() > 0) {
+                            newsfeedAdapter.addAll(feedList);
+                            insertIntoDb(feedList);
+                        }
+
+
+                        if (currentPage != totalPages) {
+                            newsfeedAdapter.addLoadingFooter();
+                            // newsfeedAdapter.notifyDataSetChanged();
+                        } else
+                            isLastPage = true;
+
+
                     }
+                }
 
-                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
-                        newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-                    }
-                    if (currentPage != totalPages) {
-                        newsfeedAdapter.addLoadingFooter();
-                        // newsfeedAdapter.notifyDataSetChanged();
-                    } else
-                        isLastPage = true;
-
+                @Override
+                public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
 
                 }
-            }
-
-            @Override
-            public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
-
-            }
-        });
-
+            });
+        }
 /*
         newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
             @Override
@@ -474,7 +505,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
     public void getDataFromDb() {
         newsFeedDatabaseViewModel.getNewsFeed(getActivity());
-        newsFeedDatabaseViewModel.getNewsFeedList().observe(getActivity(),new Observer<List<TableNewsFeed>>() {
+        newsFeedDatabaseViewModel.getNewsFeedList().observe(getActivity(), new Observer<List<TableNewsFeed>>() {
             @Override
             public void onChanged(List<TableNewsFeed> tableNewsFeeds) {
                 try {
@@ -697,18 +728,17 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 public void onChanged(List<String> folderUniqueIdList) {
                     for (int i = 0; i < folderUniqueIdList.size(); i++) {
                         final String folderUniqueId = folderUniqueIdList.get(i);
-                        newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueId);
-                        newsfeedViewModel.getNewsFeedToUpload().observeForever(new Observer<List<UploadMultimedia>>() {
-                            @Override
-                            public void onChanged(List<UploadMultimedia> uploadMultimedia) {
-                                if (uploadMultimedia != null) {
-                                    String postText = "";
-                                    if (uploadMultimedia.size() > 0) {
-                                        postText = uploadMultimedia.get(0).getPost_status();
-                                        if (!postText.isEmpty()) {
-                                            uploadMultimedia.remove(0);
-                                        }
-                                        postNewsFeed(folderUniqueId,api_token, eventid, postText, uploadMultimedia);
+                        //newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueId);
+                        EventAppDB eventAppDB = EventAppDB.getDatabase(getActivity());
+                       List<UploadMultimedia> uploadMultimedia = eventAppDB.uploadMultimediaDao().getMultimediaToUpload(folderUniqueId);
+                        if (uploadMultimedia != null) {
+                            String postText = "";
+                            if (uploadMultimedia.size() > 0) {
+                                postText = uploadMultimedia.get(0).getPost_status();
+                                if (!postText.isEmpty()) {
+                                    uploadMultimedia.remove(0);
+                                }
+                                postNewsFeed(folderUniqueId, api_token, eventid, postText, uploadMultimedia);
                                         /*newsfeedViewModel.sendPost(api_token, eventid, postText, uploadMultimedia);
                                         newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
                                             @Override
@@ -740,10 +770,31 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                                 }
                                             }
                                         });*/
+                            } else {
+                                hideProgressBar();
+                            }
+                        }
+                        /*newsfeedViewModel.getNewsFeedToUpload().observeForever(new Observer<List<UploadMultimedia>>() {
+                            @Override
+                            public void onChanged(List<UploadMultimedia> uploadMultimedia) {
+                                if (uploadMultimedia != null) {
+                                    String postText = "";
+                                    if (uploadMultimedia.size() > 0) {
+                                        postText = uploadMultimedia.get(0).getPost_status();
+                                        if (!postText.isEmpty()) {
+                                            uploadMultimedia.remove(0);
+                                        }
+                                        postNewsFeed(folderUniqueId, api_token, eventid, postText, uploadMultimedia);
+
+                                    } else {
+                                        hideProgressBar();
                                     }
                                 }
                             }
-                        });
+                        });*/
+                    }
+                    if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
+                        newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
                     }
                 }
             });
@@ -828,16 +879,13 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 }
             }
 
-            if(MediaType.parse(resultList.get(i).getMimeType())==null)
-            {
-                if(resultList.get(i).getMedia_type().equalsIgnoreCase("image")) {
+            if (MediaType.parse(resultList.get(i).getMimeType()) == null) {
+                if (resultList.get(i).getMedia_type().equalsIgnoreCase("image")) {
                     filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse("image/png"), file));
-                }
-                else
-                {
+                } else {
                     filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse("video/mp4"), file));
                 }
-            }else {
+            } else {
                 filePart = MultipartBody.Part.createFormData("media_file[]", file.getName(), RequestBody.create(MediaType.parse(resultList.get(i).getMimeType()), file));
             }
             parts.add(filePart);
@@ -864,19 +912,32 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 /*new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {*/
-                                        String status = response.body().getHeader().get(0).getType();
-                                        String message = response.body().getHeader().get(0).getMsg();
-                                        Utility.createLongSnackBar(cl_main, message);
+                                String status = response.body().getHeader().get(0).getType();
 
-                                        if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
-                                            newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
+                                Log.d("In Success",status);
+                                String message = response.body().getHeader().get(0).getMsg();
+                                Utility.createLongSnackBar(cl_main, message);
+                                hideProgressBar();
+                                /*final Handler handler1 = new Handler();
+                                handler1.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        EventAppDB eventAppDB = EventAppDB.getDatabase(getActivity());
+                                        List<UploadMultimedia> mediaList = eventAppDB.uploadMultimediaDao().getNonUploadMultimedia();
+                                        if (mediaList.size() > 0) {
+                                            Log.d("In Success upload","Upload next media");
+                                            //uploadData();
+                                            showProgressBar();
+                                        }else
+                                        {
+                                            hideProgressBar();
                                         }
-                                        currentPage = PAGE_START;
-                                        init();
-                                        //isFromUploading = true;
-                                        hideProgressBar();
-                                    //}
-                                //}, 1500);
+                                    }
+                                }, 3000);
+*/
+                                currentPage = PAGE_START;
+                                init();
+                                //isFromUploading = true;
                             } else {
                                 Utility.createLongSnackBar(cl_main, "failure");
                             }
@@ -887,7 +948,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                     public void onFailure(Call<LoginOrganizer> call, Throwable t) {
                         Log.d("PostResponse", t.getMessage() + "==>Failure");
                         Utility.createLongSnackBar(cl_main, "failure");
-                       // newsDataUploaded.setValue(null);
+                        // newsDataUploaded.setValue(null);
                     }
                 });
         //return newsDataUploaded;

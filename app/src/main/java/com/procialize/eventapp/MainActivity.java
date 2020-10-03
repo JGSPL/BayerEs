@@ -47,8 +47,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.Utility.CommonFirebase;
@@ -76,6 +81,7 @@ import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -695,22 +701,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             profileActivityViewModel.getProfileDetails().observeForever(new Observer<Profile>() {
                 @Override
                 public void onChanged(Profile profile) {
-                    List<ProfileDetails> profileDetails = profile.getProfileDetails();
+                    String strEventList = profile.getProfileDetailsEncrypted();
+                    RefreashToken refreashToken = new RefreashToken(MainActivity.this);
+                    String data = refreashToken.decryptedData(strEventList);
+                    JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                    ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+
+                    //List<ProfileDetails> profileDetails = profile.getProfileDetails();
                     if (profileDetails.size() > 0) {
                         HashMap<String, String> map = new HashMap<>();
-                        map.put(KEY_FNAME, profile.getProfileDetails().get(0).getFirst_name());
-                        map.put(KEY_LNAME, profile.getProfileDetails().get(0).getLast_name());
-                        map.put(KEY_EMAIL, profile.getProfileDetails().get(0).getEmail());
+                        map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
+                        map.put(KEY_LNAME, profileDetails.get(0).getLast_name());
+                        map.put(KEY_EMAIL, profileDetails.get(0).getEmail());
                         map.put(KEY_PASSWORD, "");
-                        map.put(KEY_DESIGNATION, profile.getProfileDetails().get(0).getDesignation());
-                        map.put(KEY_COMPANY, profile.getProfileDetails().get(0).getCompany_name());
-                        map.put(KEY_MOBILE, profile.getProfileDetails().get(0).getMobile());
+                        map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
+                        map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
+                        map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
                         map.put(KEY_TOKEN, "");
-                        map.put(KEY_CITY, profile.getProfileDetails().get(0).getCity());
+                        map.put(KEY_CITY, profileDetails.get(0).getCity());
                         map.put(KEY_GCM_ID, "");
-                        map.put(KEY_PROFILE_PIC, profile.getProfileDetails().get(0).getProfile_picture());
-                        map.put(KEY_ATTENDEE_ID, profile.getProfileDetails().get(0).getAttendee_id());
-                        map.put(ATTENDEE_STATUS, profile.getProfileDetails().get(0).getIs_god());
+                        map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                        map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
+                        map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                         map.put(IS_LOGIN, "true");
                         SharedPreference.putPref(MainActivity.this, map);
                     }
@@ -741,7 +753,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onFailure(Call<LoginOrganizer> call, Throwable t) {
                     chatUpdate.setValue(null);
-
                 }
             });
             return chatUpdate;

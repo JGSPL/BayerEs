@@ -18,6 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     static ConnectionPool pool = new ConnectionPool(15, 5, TimeUnit.MINUTES);
+
+
     static OkHttpClient client = new OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
 

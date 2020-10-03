@@ -13,15 +13,22 @@ public class Profile {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
+    @SerializedName("detail")
     @Expose
-    List<ProfileDetails> profileDetails;
+    String profileDetailsEncrypted;
+
+/*    @SerializedName("detailpreencrypt")
+    @Expose
+    List<ProfileDetails> profileDetails;*/
 
     public List<Header> getHeader() {
         return header;
     }
 
-    public List<ProfileDetails> getProfileDetails() {
-        return profileDetails;
+    public String getProfileDetailsEncrypted() {
+        return profileDetailsEncrypted;
     }
+    /*public List<ProfileDetails> getProfileDetails() {
+        return profileDetails;
+    }*/
 }

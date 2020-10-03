@@ -29,6 +29,7 @@ public class EventListViewModel extends ViewModel {
 
 
     public void getEvent(String token, String organizer_id, String search_text) {
+
         eventRepository = EventRepository.getInstance();
         eventData = eventRepository.getEventList(token, organizer_id, search_text);
     }

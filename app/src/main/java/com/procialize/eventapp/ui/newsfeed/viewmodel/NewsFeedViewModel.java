@@ -364,6 +364,7 @@ public class NewsFeedViewModel extends ViewModel {
             @Override
             public void onClick(View v) {
                 if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
+                    newsRepository = NewsfeedRepository.getInstance();
                     newsfeedHide = newsRepository.DeletePost(token, eventId, feed.getNews_feed_id());
 
                     newsRepository.getPostActivity().observe((LifecycleOwner) activity, new Observer<LoginOrganizer>() {
@@ -493,11 +494,11 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //----------------Multimedia to compress------------------------
-    public void getNewsFeedDataAccrodingToFolderUniqueId(Activity activity, String folderUniqueId) {
+    /*public void getNewsFeedDataAccrodingToFolderUniqueId(Activity activity, String folderUniqueId) {
         EventAppDB eventAppDB = EventAppDB.getDatabase(activity);
         newsFeedDataToUpload = eventAppDB.uploadMultimediaDao().getMultimediaToUpload(folderUniqueId);
     }
-
+*/
     public LiveData<List<UploadMultimedia>> getNewsFeedToUpload() {
 
         return newsFeedDataToUpload;

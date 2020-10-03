@@ -13,13 +13,25 @@ public class Comment {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
+/*    @SerializedName("detailpreencrypt")
     @Expose
-    List<CommentDetail> commentDetails;
+    List<CommentDetail> commentDetails;*/
 
     @SerializedName("total_records")
     @Expose
     String total_records;
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    @SerializedName("detail")
+    @Expose
+    String detail;
 
     public List<Header> getHeader() {
         return header;
@@ -29,14 +41,14 @@ public class Comment {
         this.header = header;
     }
 
-    public List<CommentDetail> getCommentDetails() {
+   /* public List<CommentDetail> getCommentDetails() {
         return commentDetails;
     }
 
     public void setCommentDetails(List<CommentDetail> commentDetails) {
         this.commentDetails = commentDetails;
     }
-
+*/
     public String getTotal_records() {
         return total_records;
     }

@@ -42,6 +42,10 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.MainActivity;
@@ -50,6 +54,8 @@ import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.eventList.model.LoginUserInfo;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
@@ -60,6 +66,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -185,7 +192,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             profileActivityViewModel.getProfileDetails().observeForever(new Observer<Profile>() {
                 @Override
                 public void onChanged(Profile profile) {
-                    List<ProfileDetails> profileDetails = profile.getProfileDetails();
+
+                    String strEventList = profile.getProfileDetailsEncrypted();
+                    RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
+                    String data = refreashToken.decryptedData(strEventList);
+                    JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                    ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+
+                   // List<ProfileDetails> profileDetails = profile.getProfileDetails();
                     if (profileDetails.size() > 0) {
                         first_name = profileDetails.get(0).getFirst_name();
                         last_name = profileDetails.get(0).getLast_name();
@@ -687,20 +701,26 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                                     Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
 
+                                    String strEventList = profile.getProfileDetailsEncrypted();
+                                    RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
+                                    String data = refreashToken.decryptedData(strEventList);
+                                    JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                                    final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+
                                     HashMap<String, String> map = new HashMap<>();
-                                    map.put(KEY_FNAME, profile.getProfileDetails().get(0).getFirst_name());
-                                    map.put(KEY_LNAME, profile.getProfileDetails().get(0).getLast_name());
-                                    map.put(KEY_EMAIL, profile.getProfileDetails().get(0).getEmail());
+                                    map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
+                                    map.put(KEY_LNAME, profileDetails.get(0).getLast_name());
+                                    map.put(KEY_EMAIL, profileDetails.get(0).getEmail());
                                     map.put(KEY_PASSWORD, "");
-                                    map.put(KEY_DESIGNATION, profile.getProfileDetails().get(0).getDesignation());
-                                    map.put(KEY_COMPANY, profile.getProfileDetails().get(0).getCompany_name());
-                                    map.put(KEY_MOBILE, profile.getProfileDetails().get(0).getMobile());
+                                    map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
+                                    map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
+                                    map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
                                     map.put(KEY_TOKEN, "");
-                                    map.put(KEY_CITY, profile.getProfileDetails().get(0).getCity());
+                                    map.put(KEY_CITY, profileDetails.get(0).getCity());
                                     map.put(KEY_GCM_ID, "");
-                                    map.put(KEY_PROFILE_PIC, profile.getProfileDetails().get(0).getProfile_picture());
-                                    map.put(KEY_ATTENDEE_ID, profile.getProfileDetails().get(0).getAttendee_id());
-                                    map.put(ATTENDEE_STATUS, profile.getProfileDetails().get(0).getIs_god());
+                                    map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                    map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
+                                    map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                     map.put(IS_LOGIN, "true");
                                     SharedPreference.putPref(ProfileActivity.this, map);
                                     final Handler handler = new Handler();
@@ -709,7 +729,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                         public void run() {
 
                                             profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                                            profileActivityViewModel.updateProfileFlag(ProfileActivity.this, event_id,profile.getProfileDetails().get(0).getAttendee_id());
+                                            profileActivityViewModel.updateProfileFlag(ProfileActivity.this, event_id, profileDetails.get(0).getAttendee_id());
                                         }
                                     }, 500);
 
