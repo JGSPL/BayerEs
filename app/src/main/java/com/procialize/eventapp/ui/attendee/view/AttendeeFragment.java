@@ -320,6 +320,9 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             //  Execute network request if cache is expired; otherwise do not update data.
             strAttendeeName = searchEt.getText().toString().trim();
             attendeeAdapter.getAttendeeListFiltered().clear();
+            attendeeDatabaseViewModel.deleteAllAttendee(getActivity());
+
+
             attendeeAdapter.notifyDataSetChanged();
             loadFirstPage("");
             attendeefeedrefresh.setRefreshing(false);
@@ -380,16 +383,17 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     public void setupEventAdapter(List<Attendee> commentList) {
         List<Attendee> attendeeList = new ArrayList<>();
-        for(int i=0;i<commentList.size();i++){
-            if(!commentList.get(i).getAttendee_id().equalsIgnoreCase(SharedPreference.getPref(getActivity(),KEY_ATTENDEE_ID)))
-            {
-                attendeeList.add(commentList.get(i));
+        if(commentList!=null) {
+            for (int i = 0; i < commentList.size(); i++) {
+                if (!commentList.get(i).getAttendee_id().equalsIgnoreCase(SharedPreference.getPref(getActivity(), KEY_ATTENDEE_ID))) {
+                    attendeeList.add(commentList.get(i));
+                }
             }
+            attendeeAdapter = new AttendeeAdapter(getContext(), attendeeList, AttendeeFragment.this);
+            attendeerecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+            attendeerecycler.setAdapter(attendeeAdapter);
+            attendeeAdapter.notifyDataSetChanged();
         }
-        attendeeAdapter = new AttendeeAdapter(getContext(), attendeeList, AttendeeFragment.this);
-        attendeerecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        attendeerecycler.setAdapter(attendeeAdapter);
-        attendeeAdapter.notifyDataSetChanged();
     }
 
 
@@ -487,7 +491,10 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             loadFirstPage("");
 
         } else {
-            getAttendeeFromDb();
+           // getAttendeeFromDb();
+            attendeefeedrefresh.setRefreshing(false);
+            progressBar.setVisibility(View.GONE);
+
         }
     }
 }
