@@ -178,6 +178,9 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         } else {
             getAttendeeFromDb();
+            progressBar.setVisibility(View.GONE);
+            attendeefeedrefresh.setRefreshing(false);
+
         }
         attendeerecycler.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
@@ -190,6 +193,9 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
                     loadNextPage();
                 } else {
+                    progressBar.setVisibility(View.GONE);
+                    attendeefeedrefresh.setRefreshing(false);
+
                     /*int totalPages_db = 0;
                     int totRecords = dbHelper.getAttendeeDetails().size();
                     if ((int) (totRecords % attendeePageSize) == 0) {
