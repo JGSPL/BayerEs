@@ -209,7 +209,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         email = profileDetails.get(0).getEmail();
                         mobile = profileDetails.get(0).getMobile();
 
-                        et_first_name.setText(first_name + " " + last_name);
+                        et_first_name.setText(first_name);
                         et_last_name.setText(last_name);
                         et_designation.setText(designation);
                         et_company_name.setText(company_name);
@@ -285,38 +285,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save:
-                try {
-                    String name = et_first_name.getText().toString().trim();
-                    String[] separated = name.split(" ");
-                    try {
-                        first_name = separated[0];
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        first_name = "";
-                    }
 
-                    if (separated[1].trim().isEmpty()) {
-                        try {
-                            last_name = separated[2];
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            last_name = " ";
-                        }
-                    } else {
-                        try {
-                            last_name = separated[1];
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            last_name = " ";
-                        }
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-//                last_name = et_last_name.getText().toString().trim();
+                first_name = et_first_name.getText().toString().trim();
+                last_name = et_last_name.getText().toString().trim();
                 designation = et_designation.getText().toString().trim();
                 company_name = et_company_name.getText().toString().trim();
                 city = et_city.getText().toString().trim();
