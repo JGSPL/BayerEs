@@ -58,6 +58,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
         super.onBackPressed();
         System.gc();
         finish();
+        JzvdStd.releaseAllVideos();
     }
 
     @Override

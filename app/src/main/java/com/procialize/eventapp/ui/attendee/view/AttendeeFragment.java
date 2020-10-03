@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
@@ -45,6 +47,8 @@ import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
+import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
+import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 
@@ -342,15 +346,24 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
         attendeeViewModel.getAttendeeList().observe(this, new Observer<FetchAttendee>() {
             @Override
             public void onChanged(FetchAttendee event) {
-                List<Attendee> eventLists = event.getAttandeeList();
+                //List<Attendee> eventLists = event.getAttandeeList();
+
+                String strCommentList =event.getDetail();
+                RefreashToken refreashToken = new RefreashToken(getContext());
+                String data = refreashToken.decryptedData(strCommentList);
+                Gson gson = new Gson();
+                List<Attendee> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Attendee>>() {}.getType());
+                if (eventLists != null) {
+                    attendeeDatabaseViewModel.deleteAllAttendee(getActivity());
+                    attendeeDatabaseViewModel.insertIntoDb(getActivity(), eventLists);
+
+                    progressBar.setVisibility(View.GONE);
+
+                    setupEventAdapter(eventLists);
+                }
 
                 //Delete All attendee from local db and insert attendee
-                attendeeDatabaseViewModel.deleteAllAttendee(getActivity());
-                attendeeDatabaseViewModel.insertIntoDb(getActivity(), eventLists);
 
-                progressBar.setVisibility(View.GONE);
-
-                setupEventAdapter(eventLists);
 
                 if (attendeeViewModel != null && attendeeViewModel.getAttendeeList().hasObservers()) {
                     attendeeViewModel.getAttendeeList().removeObservers(getActivity());
@@ -385,10 +398,21 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 attendeeAdapter.removeLoadingFooter();
                 isLoading = false;
 
-                List<Attendee> results = event.getAttandeeList();
+                /*List<Attendee> results = event.getAttandeeList();
                 attendeeAdapter.addAll(results);
                 //insert attendee in local db
-                attendeeDatabaseViewModel.insertIntoDb(getActivity(), results);
+                attendeeDatabaseViewModel.insertIntoDb(getActivity(), results);*/
+                String strCommentList =event.getDetail();
+                RefreashToken refreashToken = new RefreashToken(getContext());
+                String data = refreashToken.decryptedData(strCommentList);
+                Gson gson = new Gson();
+                List<Attendee> results = gson.fromJson(data, new TypeToken<ArrayList<Attendee>>() {}.getType());
+                if (results != null) {
+                    attendeeAdapter.addAll(results);
+                    //insert attendee in local db
+                    attendeeDatabaseViewModel.insertIntoDb(getActivity(), results);
+                }
+
 
                 if (currentPage != totalPages)
                     attendeeAdapter.addLoadingFooter();
@@ -397,33 +421,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 //  setupEventAdapter(eventLists);
             }
         });
-/*
-        mAPIService.AttendeeFetchPost(api_token, eventid, "" + attendeePageSize, "" + currentPage, strAttendeeName).enqueue(new Callback<FetchAttendee>() {
-            @Override
-            public void onResponse(Call<FetchAttendee> call, Response<FetchAttendee> response) {
-//                Log.i(TAG, "onResponse: " + currentPage
-//                        + (response.raw().cacheResponse() != null ? "Cache" : "Network"));
-
-                attendeeAdapter.removeLoadingFooter();
-                isLoading = false;
-
-                List<Attendee> results = fetchResults(response);
-                attendeeAdapter.addAll(results);
-                insertIntoDb(results, currentPage);
-                if (currentPage != totalPages)
-                    attendeeAdapter.addLoadingFooter();
-                else
-                    isLastPage = true;
-            }
-
-            @Override
-            
-            public void onFailure(Call<FetchAttendee> call, Throwable t) {
-                t.printStackTrace();
-                // attendeeAdapter.showRetry(true, fetchErrorMessage(t));
-            }
-        });
-*/
     }
 
     @Override
