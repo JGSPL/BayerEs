@@ -95,7 +95,8 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheLi
         videoview = myImageLayout.findViewById(R.id.videoview);
         final ProgressBar progressBar = myImageLayout.findViewById(R.id.progressbar);
 
-        if ((firstLevelFilter.contains(".png") || firstLevelFilter.contains(".jpg") || firstLevelFilter.contains(".jpeg") || firstLevelFilter.contains("gif"))) {
+        if ((firstLevelFilter.contains(".png") || firstLevelFilter.contains(".jpg") || firstLevelFilter.contains(".jpeg") || firstLevelFilter.contains(".gif")
+                || firstLevelFilter.contains(".PNG") || firstLevelFilter.contains(".JPG") || firstLevelFilter.contains(".JPEG") || firstLevelFilter.contains(".GIF"))) {
             myImage.setVisibility(View.VISIBLE);
             videoview.setVisibility(View.GONE);
             JzvdStd.goOnPlayOnPause();

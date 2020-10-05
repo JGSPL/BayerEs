@@ -717,9 +717,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
                         map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
                         map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
-                        map.put(KEY_TOKEN, "");
+                        //map.put(KEY_TOKEN, "");
                         map.put(KEY_CITY, profileDetails.get(0).getCity());
-                        map.put(KEY_GCM_ID, "");
+                        //map.put(KEY_GCM_ID, "");
                         map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
                         map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                         map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
