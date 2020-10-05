@@ -144,7 +144,7 @@ public class CommentViewModel extends ViewModel {
      */
     public void getComment(String token,String event_id, String news_feed_id, String pageSize, String pageNumber) {
         commentRepository = CommentRepository.getInstance();
-        commentData = commentRepository.getCommentList(token,event_id, news_feed_id);//, pageSize,pageNumber);
+        commentData = commentRepository.getCommentList(token,event_id, news_feed_id, pageSize,pageNumber);
     }
 
     public LiveData<Comment> getCommentList() {

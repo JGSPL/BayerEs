@@ -54,7 +54,6 @@ public interface APIService{
                                   @Field("username") String username,
                                   @Field("otp") String otp);
 
-
     //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/NewsFeedFetch")
     @FormUrlEncoded
@@ -106,9 +105,9 @@ public interface APIService{
     @POST("NewsFeed_api/CommentFetch")
     @FormUrlEncoded
     Call<Comment> getComment(@Header("authorization") String authorization,@Field("event_id") String event_id,
-                             @Field("news_feed_id") String news_feed_id/*,
+                             @Field("news_feed_id") String news_feed_id,
                                     @Field("pageSize") String pageSize,
-                                    @Field("pageNumber") String pageNumber*/);
+                                    @Field("pageNumber") String pageNumber);
 
     //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/PostHide")
@@ -275,5 +274,9 @@ public interface APIService{
                                 @Field("search_text") String search_text);
 
 
+ @POST("event_api_call/eventInfoFetch")
+ @FormUrlEncoded
+ Call<validateOTP> eventInfoFetch(@Header("authorization") String auth,
+                               @Field("event_id") String event_id);
 
 }

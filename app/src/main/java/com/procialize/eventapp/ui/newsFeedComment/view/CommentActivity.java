@@ -585,7 +585,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         if (connectionDetector.isConnectingToInternet()) {
             String newsFeedId = newsfeed_detail.getNews_feed_id();
             ApiUtils.getAPIService().getComment(api_token, event_id,
-                    newsFeedId)
+                    newsFeedId,"100","1")
                     .enqueue(new Callback<Comment>() {
                         @Override
                         public void onResponse(Call<Comment> call, Response<Comment> response) {

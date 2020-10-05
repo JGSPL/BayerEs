@@ -271,16 +271,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putString("isFrom","MainActivity");
+        newsFeedFragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
+                .replace(R.id.fragment_frame, newsFeedFragment, "")
                 .commit();
-
-        /*
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_frame, HomeFragment.newInstance(), "")
-                .commit();*/
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

@@ -123,7 +123,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     String likeStatus = "";
     String strPath = "";
     private List<UploadMultimedia> mediaList;
-    public boolean isFromUploading = false;
+    String isFrom="";
+    public boolean isUploadingStarted = false;
 
     public static NewsFeedFragment newInstance() {
         return new NewsFeedFragment();
@@ -136,6 +137,13 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         root = inflater.inflate(R.layout.fragment_home, container, false);
         //Call Refresh token
         new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
+        try {
+            Bundle bundle = getArguments();
+            isFrom = bundle.getString("isFrom");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
         newsFeedDatabaseViewModel = ViewModelProviders.of(this).get(NewsFeedDatabaseViewModel.class);
 
@@ -195,7 +203,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                     currentPage = PAGE_START;
                     init();
                 } else {
-                    Utility.createShortSnackBar(cl_main, "No Internet Connection");
+                    try {
+                        Utility.createShortSnackBar(cl_main, "No Internet Connection");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -275,16 +287,19 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                 }
             });
         } else {
-            if(connectionDetector.isConnectingToInternet()) {
-                List<UploadMultimedia> nonUploadedMultimedia = eventAppDB.uploadMultimediaDao().getNonUploadMultimedia();
-                if (nonUploadedMultimedia.size() > 0) {
-                    showProgressBar();
-                    uploadData();
+            //if(isFrom.equalsIgnoreCase("MainActivity")) {
+                if (connectionDetector.isConnectingToInternet()) {
+                    if (!isUploadingStarted) {
+                        List<UploadMultimedia> nonUploadedMultimedia = eventAppDB.uploadMultimediaDao().getNonUploadMultimedia();
+                        if (nonUploadedMultimedia.size() > 0) {
+                            showProgressBar();
+                            uploadData();
+                        }
+                    }
+                } else {
+                    Utility.createShortSnackBar(cl_main, "No Internet Connection");
                 }
-            }else
-            {
-                Utility.createShortSnackBar(cl_main, "No Internet COnnection");
-            }
+            //}
         }
         mReceiver = new UploadMultimediaBackgroundReceiver();
         mFilter = new IntentFilter(Constant.BROADCAST_UPLOAD_MULTIMEDIA_ACTION);
@@ -717,12 +732,14 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
         @Override
         public void onReceive(Context context, Intent intent) {
             // progressbarForSubmit.setVisibility(View.GONE);
-            Log.d("service end", "service end");
-            try {
-                newsfeedViewModel.stopBackgroundService(getActivity());
-                uploadData();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!isUploadingStarted) {
+                Log.d("service end", "service end");
+                try {
+                    newsfeedViewModel.stopBackgroundService(getActivity());
+                    uploadData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -869,6 +886,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     public void postNewsFeed(final String folderUniqueId, String token, String event_id, String Post_content, List<UploadMultimedia> resultList) {
+        isUploadingStarted = true;
         newsfeedApi = ApiUtils.getAPIService();
         RequestBody mevent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
         RequestBody mPost_content = RequestBody.create(MediaType.parse("text/plain"), Post_content);
@@ -916,7 +934,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                             Log.d("PostResponse", response.body().getHeader().get(0).getMsg());
                             if (response != null) {
                                 newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
-
+                                isUploadingStarted = false;
                                 /*new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {*/
@@ -924,7 +942,11 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
                                 Log.d("In Success", status);
                                 String message = response.body().getHeader().get(0).getMsg();
-                                Utility.createLongSnackBar(cl_main, message);
+                                try {
+                                    Utility.createLongSnackBar(cl_main, message);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 hideProgressBar();
                                 /*final Handler handler1 = new Handler();
                                 handler1.postDelayed(new Runnable() {
@@ -947,6 +969,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 init();
                                 //isFromUploading = true;
                             } else {
+                                isUploadingStarted = false;
                                 Utility.createLongSnackBar(cl_main, "failure");
                                 hideProgressBar();
                             }
@@ -955,6 +978,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
                     @Override
                     public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                        isUploadingStarted = false;
                         Log.d("PostResponse", t.getMessage() + "==>Failure");
                         Utility.createLongSnackBar(cl_main, "failure");
                         hideProgressBar();

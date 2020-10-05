@@ -273,7 +273,7 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
 
         videoview.setUp(proxyUrl.trim(), ""
                 , JzvdStd.SCREEN_NORMAL);
-        JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
+        JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_PARENT);
 
 //        ImageLoader.getInstance().displayImage(thumbImage.trim(), videoview.thumbImageView, options, new SimpleImageLoadingListener() {
 //            @Override

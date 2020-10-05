@@ -151,12 +151,12 @@ public class CommentRepository {
      * @param news_feed_id
      * @return
      */
-    public MutableLiveData<Comment> getCommentList(String token,String event_id, String news_feed_id) {//, String pageSize, String pageNumber) {
+    public MutableLiveData<Comment> getCommentList(String token,String event_id, String news_feed_id , String pageSize, String pageNumber) {
         //commentList.setValue(null);
         commentApi.getComment(token,event_id,
-                news_feed_id/*,
+                news_feed_id,
                 pageSize,
-                pageNumber*/)
+                pageNumber)
                 .enqueue(new Callback<Comment>() {
                     @Override
                     public void onResponse(Call<Comment> call, Response<Comment> response) {

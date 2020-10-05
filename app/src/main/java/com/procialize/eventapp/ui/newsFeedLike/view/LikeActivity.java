@@ -83,7 +83,7 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
 
     public void geLikes() {
         if (connectionDetector.isConnectingToInternet()) {
-            likeViewModel.getLike(api_token, event_id, newsfeed_detail.getNews_feed_id(), "20", "1");
+            likeViewModel.getLike(api_token, event_id, newsfeed_detail.getNews_feed_id(), "500", "1");
             likeViewModel.getLikeList().observe(this, new Observer<Like>() {
                 @Override
                 public void onChanged(Like like) {
