@@ -48,6 +48,8 @@ public class BackgroundServiceToCompressMedia extends IntentService {
     String TAG = "BackgroundServiceToCompressMedia";
     private List<UploadMultimedia> mediaList;
    // private FFmpeg ffmpeg;
+   int startMsForVideoCutting = 0;//Start time for cutting video
+    int endMsForVideoCutting = 120000;//End TIme for cutting video
 
     public BackgroundServiceToCompressMedia() {
         super("");
@@ -269,11 +271,18 @@ public class BackgroundServiceToCompressMedia extends IntentService {
                 "-bufsize", "3968k","-b:v", "3000k", "-b:a", "48000",
                 "-movflags", "+faststart", "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "ultrafast",  "-ac", "2", "-ar", "22050", filePath };*/
 
-        String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
+/*        String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(), "-s", "640x480", "-r", "25",
                 //"-vcodec",
                 "-c:v",
                 "libx264", "-minrate", "4000k", "-maxrate", "4000k","-b:v", "250k", "-b:a", "48000",
-                "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "veryfast",  "-ac", "2", "-ar", "22050", filePath };
+                "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "veryfast",  "-ac", "2", "-ar", "22050", filePath };*/
+        String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(),  "-ss", "" + startMsForVideoCutting / 1000,
+                "-t", "" + (endMsForVideoCutting - startMsForVideoCutting) / 1000,"-s", "640x480", "-r", "25",
+                //"-vcodec",
+                "-c:v",
+                "libx264", "-minrate", "4000k", "-maxrate", "4000k","-b:v", "250k", "-b:a", "48000",
+                "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "veryfast",
+                "-ac", "2", "-ar", "22050", filePath };
         execFFmpegBinary(complexCommand,selectedVideoUri.toString(), filePath, mediaListposition);
 
         return filePath;
