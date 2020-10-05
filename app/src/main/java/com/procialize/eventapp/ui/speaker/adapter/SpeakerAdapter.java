@@ -86,7 +86,7 @@ public class SpeakerAdapter extends RecyclerView.Adapter<SpeakerAdapter.MyViewHo
             holder.ic_rightarrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
             holder.linMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
 
-            try {
+           /* try {
                 if (attendee_location.equalsIgnoreCase("0")) {
                     holder.locationTv.setVisibility(View.INVISIBLE);
                 } else {
@@ -106,7 +106,7 @@ public class SpeakerAdapter extends RecyclerView.Adapter<SpeakerAdapter.MyViewHo
             } catch (Exception e) {
                 e.printStackTrace();
                 holder.locationTv.setVisibility(View.INVISIBLE);
-            }
+            }*/
 
 
             try {
@@ -115,15 +115,15 @@ public class SpeakerAdapter extends RecyclerView.Adapter<SpeakerAdapter.MyViewHo
                 } else {
                     if (Speaker.getDesignation().equalsIgnoreCase("N A")) {
                         holder.designationTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
+                        holder.tv_concat.setVisibility(View.GONE);
                     }
                     if (Speaker.getDesignation().equalsIgnoreCase("")) {
                         holder.designationTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
+                        holder.tv_concat.setVisibility(View.GONE);
                     }
                     if (Speaker.getDesignation().equalsIgnoreCase(" ")) {
                         holder.designationTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
+                        holder.tv_concat.setVisibility(View.GONE);
                     } else {
                         holder.designationTv.setVisibility(View.VISIBLE);
                         holder.designationTv.setText(Speaker.getDesignation());
@@ -134,6 +134,7 @@ public class SpeakerAdapter extends RecyclerView.Adapter<SpeakerAdapter.MyViewHo
                 holder.designationTv.setVisibility(View.INVISIBLE);
             }
 
+/*
             try {
                 if (attendee_company.equalsIgnoreCase("0")) {
                     holder.companyTv.setVisibility(View.INVISIBLE);
@@ -158,20 +159,21 @@ public class SpeakerAdapter extends RecyclerView.Adapter<SpeakerAdapter.MyViewHo
                 e.printStackTrace();
                 holder.designationTv.setVisibility(View.INVISIBLE);
             }
+*/
 
-            if (Speaker.getCompany_name().equalsIgnoreCase("") &&
+           /* if (Speaker.getCompany_name().equalsIgnoreCase("") &&
                     Speaker.getDesignation().equalsIgnoreCase("")) {
                 holder.tv_concat.setVisibility(View.INVISIBLE);
             } else {
                 holder.tv_concat.setVisibility(View.VISIBLE);
-            }
+            }*/
 
-            if (attendee_design.equalsIgnoreCase("0") &&
+            /*if (attendee_design.equalsIgnoreCase("0") &&
                     attendee_company.equalsIgnoreCase("0")) {
                 holder.tv_concat.setVisibility(View.INVISIBLE);
             } else {
                 holder.tv_concat.setVisibility(View.VISIBLE);
-            }
+            }*/
 
 
 

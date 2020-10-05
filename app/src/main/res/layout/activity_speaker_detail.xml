@@ -142,17 +142,21 @@
 
                 </RelativeLayout>
             </FrameLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="250dp"
+                android:id="@+id/bgLinear"
+                android:background="@color/white"
+                android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingLeft="15dp"
-                android:paddingBottom="250dp"
                 android:paddingRight="15dp"
                 android:paddingTop="15dp"
-                android:id="@+id/bgLinear"
-                android:layout_weight="1"
-                android:background="@color/white"
+
                 android:orientation="vertical">
 
                 <com.procialize.eventapp.fonts.RobotoTextview
@@ -195,12 +199,15 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:text=""
                     android:textSize="15dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:visibility="gone"
+
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
@@ -211,12 +218,16 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
+                    android:visibility="gone"
+
                     android:text="Mumbai"
                     android:textSize="15dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:visibility="gone"
+
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
@@ -227,11 +238,15 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
+                    android:visibility="gone"
+
                     android:text="Mobile"
                     android:textSize="15dp" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:visibility="gone"
+
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
@@ -241,23 +256,149 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
+                    android:visibility="gone"
+
                     android:gravity="center"
                     android:text="Email"
                     android:textSize="15dp" />
 
 
+            </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/ratinglayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerInParent="true">
+
+                    <LinearLayout
+                        android:id="@+id/linear_bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:gravity="center|left"
+                        android:orientation="horizontal"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginLeft="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:padding="10dp"
+                                android:id="@+id/tvRateHeader"
+                                android:text="Rate this speaker"
+                                android:textColor="@color/black" />
+
+
+                            <RatingBar
+                                android:id="@+id/ratingbar"
+                                style="@style/customRatingBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_margin="2dp"
+                                android:numStars="5"
+                                android:stepSize="0.5" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
+                            <LinearLayout
+                                android:layout_width="80dp"
+                                android:layout_height="35dp"
+                                android:layout_gravity="center"
+                                android:id="@+id/rate2"
+                                android:layout_margin="10dp"
+                                android:background="@color/activetab"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <Button
+                                    android:id="@+id/ratebtn"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_margin="1dp"
+                                    android:background="@android:color/transparent"
+                                    android:gravity="center"
+                                    android:stateListAnimator="@null"
+                                    android:text="@string/rate"
+
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/activetab"
+                                    android:textSize="@dimen/textsizesmall" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linear_bottom"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="*Rating can be done only when the session starts"
+                        android:textColor="@color/inactivetab"
+                        android:visibility="gone" />
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/vwRateLine"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/linecolor" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rv_pdf_list"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+
+                    android:layout_marginTop="10dp"
+                    android:background="@color/linecolor" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="bottom"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_margin="10dp"
+                    android:id="@+id/linDescription"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/tvdesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin"
+                        android:layout_marginTop="@dimen/margin"
+                        android:layout_marginRight="@dimen/margin"
+                        android:layout_marginBottom="5dp"
+                        android:fadeScrollbars="false"
+                        android:maxLines="9"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textsizesmall" />
 
                 </LinearLayout>
+
             </LinearLayout>
+
+
+
+
 
         </LinearLayout>
     </ScrollView>

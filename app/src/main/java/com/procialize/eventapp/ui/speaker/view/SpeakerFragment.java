@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
@@ -37,6 +39,7 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
 
+import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
@@ -291,7 +294,12 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
         speakerViewModel.getSpeakerList().observe(this, new Observer<FetchSpeaker>() {
             @Override
             public void onChanged(FetchSpeaker event) {
-                List<Speaker> eventLists = event.getSpeakerList();
+                //List<Speaker> eventLists = event.getSpeakerList();
+                String strCommentList =event.getDetail();
+                RefreashToken refreashToken = new RefreashToken(getContext());
+                String data = refreashToken.decryptedData(strCommentList);
+                Gson gson = new Gson();
+                List<Speaker> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Speaker>>() {}.getType());
 
                 //Delete All Speaker from local db and insert Speaker
                 if(eventLists!=null) {
@@ -328,7 +336,13 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
                 SpeakerAdapter.removeLoadingFooter();
                 isLoading = false;
 
-                List<Speaker> results = event.getSpeakerList();
+               // List<Speaker> results = event.getSpeakerList();
+                String strCommentList =event.getDetail();
+                RefreashToken refreashToken = new RefreashToken(getContext());
+                String data = refreashToken.decryptedData(strCommentList);
+                Gson gson = new Gson();
+                List<Speaker> results = gson.fromJson(data, new TypeToken<ArrayList<Speaker>>() {}.getType());
+
                 SpeakerAdapter.addAll(results);
                 //insert Speaker in local db
                 SpeakerDtabaseViewModel.insertIntoDb(getActivity(), results);

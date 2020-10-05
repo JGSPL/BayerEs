@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Speaker implements Serializable {
     @SerializedName("mobile")
@@ -15,7 +16,7 @@ public class Speaker implements Serializable {
     private String email;
 
 
-    @SerializedName("attendee_id")
+    @SerializedName("user_id")
     @Expose
     private String attendee_id;
 
@@ -39,7 +40,7 @@ public class Speaker implements Serializable {
     @SerializedName("company_name")
     @Expose
     private String company_name;
-    @SerializedName("attendee_type")
+    @SerializedName("user_type")
     @Expose
     private String attendee_type;
     @SerializedName("total_sms")
@@ -56,9 +57,34 @@ public class Speaker implements Serializable {
     @Expose
     private String firebase_username;
 
-    @SerializedName("chat_status")
+    @SerializedName("description")
     @Expose
     private String firebase_status;
+
+    @SerializedName("speaker_document")
+    @Expose
+    List<Speaker_Doc> speakerDocList;
+
+
+    @SerializedName("speaker_document_path")
+    @Expose
+    private String speaker_document_path;
+
+    public List<Speaker_Doc> getSpeakerDocList() {
+        return speakerDocList;
+    }
+
+    public void setSpeakerDocList(List<Speaker_Doc> speakerDocList) {
+        this.speakerDocList = speakerDocList;
+    }
+
+    public String getSpeaker_document_path() {
+        return speaker_document_path;
+    }
+
+    public void setSpeaker_document_path(String speaker_document_path) {
+        this.speaker_document_path = speaker_document_path;
+    }
 
     public String getMobile() {
         return mobile;
