@@ -15,6 +15,7 @@ public class FetchSpeaker {
     @Expose
     List<Speaker> speakerList;
 
+
     @SerializedName("detail")
     @Expose
     private String detail;

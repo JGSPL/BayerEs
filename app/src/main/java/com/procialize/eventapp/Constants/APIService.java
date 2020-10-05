@@ -274,6 +274,17 @@ public interface APIService{
                                 @Field("event_id") String organizer_id,
                                 @Field("search_text") String search_text);
 
+ @POST("Speaker_api/SpeakerDetailFetch")
+ @FormUrlEncoded
+ Call<FetchSpeaker> SpeakerDetailFetch(@Header("authorization") String auth,
+                                @Field("event_id") String organizer_id,
+                                @Field("speaker_id") String speaker_id);
 
+ @POST("Speaker_api/RateSpeaker")
+ @FormUrlEncoded
+ Call<LoginOrganizer> RateSpeaker(@Header("authorization") String auth,
+                                @Field("event_id") String organizer_id,
+                                @Field("target_id") String target_id,
+                                  @Field("rating") String rating);
 
 }

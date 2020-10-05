@@ -7,10 +7,13 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +21,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -29,25 +35,44 @@ import com.google.firebase.auth.FirebaseAuth;
 ;
 import com.google.firebase.database.DatabaseReference;
 
+import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.Constants.RefreashToken;
+import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
+import com.procialize.eventapp.ui.speaker.adapter.DownloadPdfActivity;
+import com.procialize.eventapp.ui.speaker.adapter.PdfAdapter;
+import com.procialize.eventapp.ui.speaker.model.FetchSpeaker;
 import com.procialize.eventapp.ui.speaker.model.Speaker;
+import com.procialize.eventapp.ui.speaker.model.Speaker_Doc;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static android.Manifest.permission.WRITE_CONTACTS;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
-public class SpeakerDetailActivity extends AppCompatActivity implements View.OnClickListener {
-    String fname, lname, company, city, designation, prof_pic, attendee_type, mobile, email;
+
+public class SpeakerDetailActivity extends AppCompatActivity implements View.OnClickListener, PdfAdapter.PdfListAdapterListner {
+    String fname, lname, company, city, designation, prof_pic, attendee_type, mobile, email,description;
     TextView tv_attendee_name, tv_attendee_designation, tv_attendee_company_name, tv_attendee_city,
-            tv_mobile, tv_email, tv_header, tv_contact;
+            tv_mobile, tv_email, tv_header, tv_contact,tvdesc, tvRateHeader;
     EditText et_message;
     LinearLayout  ll_main;
     ImageView iv_profile, iv_back, ic_email, iv_contact;
@@ -62,13 +87,31 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
     LinearLayout bgLinear;
     View bgView;
     private Speaker speaker;
+    RelativeLayout ratinglayout, layoutTop;
+    RatingBar ratingbar;
+    RecyclerView rv_pdf_list;
+    Button ratebtn;
+    float ratingval;
+    APIService updateApi;
+    MutableLiveData<FetchSpeaker> speakerDetail = new MutableLiveData<>();
+    MutableLiveData<LoginOrganizer> speakerRate = new MutableLiveData<>();
+    List<Speaker_Doc> pdf_list;
+    private ConnectionDetector cd;
+    String api_token, eventid;
+     View vwRateLine;
+     LinearLayout llMAin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaker_detail);
+        cd = ConnectionDetector.getInstance(this);
+        new RefreashToken(this).callGetRefreashToken(this);
+
 
         getIntentData();
+
+
         attendeeDetailsViewModel = ViewModelProviders.of(this).get(AttendeeDetailsViewModel.class);
         progressView = findViewById(R.id.progressView);
         iv_profile = findViewById(R.id.iv_profile);
@@ -82,9 +125,16 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
         tv_header = findViewById(R.id.tv_header);
         iv_contact = findViewById(R.id.iv_contact);
         tv_contact = findViewById(R.id.tv_contact);
-
-
+        tvdesc = findViewById(R.id.tvdesc);
+        tvRateHeader = findViewById(R.id.tvRateHeader);
+        ratinglayout = findViewById(R.id.ratinglayout);
+        ratingbar = findViewById(R.id.ratingbar);
+        layoutTop = findViewById(R.id.layoutTop);
+        rv_pdf_list = findViewById(R.id.rv_pdf_list);
+        ratebtn = findViewById(R.id.ratebtn);
         ll_main = findViewById(R.id.ll_main);
+        vwRateLine = findViewById(R.id.vwRateLine);
+        llMAin = findViewById(R.id.ll_main);
 
         tv_attendee_name.setText(fname + " " + lname);
         tv_attendee_designation.setText(designation);
@@ -94,6 +144,14 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
         tv_email.setText(email);
         bgLinear = findViewById(R.id.bgLinear);
         bgView = findViewById(R.id.bgView);
+        tvdesc.setText(description);
+
+        api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(this, EVENT_ID);
+
+        if(cd.isConnectingToInternet()){
+            getSpeakerDetail(api_token,eventid,attendeeid);
+        }
 
 
         iv_back.setOnClickListener(this);
@@ -112,8 +170,14 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
         tv_attendee_designation.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         tv_attendee_company_name.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         tv_attendee_city.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
-        tv_mobile.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
-        tv_email.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tvRateHeader.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        tvdesc.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        LinearLayout rate2 = findViewById(R.id.rate2);
+        rate2.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+
         if (prof_pic.trim() != null) {
             Glide.with(SpeakerDetailActivity.this)
                     .load(prof_pic.trim())
@@ -131,6 +195,26 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
                         }
                     }).into(iv_profile);
         }
+
+        ratingbar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                ratingval = rating;
+            }
+        });
+
+
+        ratebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ratingval > 0) {
+                    setSpeakerRate(api_token,eventid,attendeeid,String.valueOf(ratingval));
+                } else {
+                    Utility.createShortSnackBar(llMAin, "Please rate on a scale of 1-5 stars");
+
+                }
+            }
+        });
 
         //--GETTING CURRENT USER ID---
       /*  mAuth = FirebaseAuth.getInstance();
@@ -163,19 +247,13 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
         email = speaker.getEmail();
         attendeeid = speaker.getAttendee_id();
         firebase_id = speaker.getFirebase_id();
+        description = speaker.getFirebase_status();
     }
 
     @Override
     public void onClick(View v) {
-        final String SprofilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
-        final String SUserNmae = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
-        final String SlName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_LNAME);
 
-        final String message = et_message.getText().toString().trim();
         switch (v.getId()) {
-            case R.id.ll_send_message:
-
-                break;
 
             case R.id.iv_back:
                 onBackPressed();
@@ -183,52 +261,81 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    public boolean CheckingPermissionIsEnabledOrNot() {
 
-        int FirstPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_CONTACTS);
-        int ForthPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), READ_CONTACTS);
 
-        return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
-                ForthPermissionResult == PackageManager.PERMISSION_GRANTED;
+
+
+    //Update Api
+    public MutableLiveData<FetchSpeaker> getSpeakerDetail(final String token, final String event_id, String speaker_id) {
+        updateApi = ApiUtils.getAPIService();
+
+        updateApi.SpeakerDetailFetch(token, event_id, speaker_id).enqueue(new Callback<FetchSpeaker>() {
+            @Override
+            public void onResponse(Call<FetchSpeaker> call,
+                                   Response<FetchSpeaker> response) {
+                if (response.isSuccessful()) {
+                    speakerDetail.setValue(response.body());
+                    pdf_list = response.body().getSpeakerList().get(0).getSpeakerDocList();
+
+                    if(pdf_list!=null) {
+                        vwRateLine.setVisibility(View.VISIBLE);
+
+                        String pdfurl = response.body().getSpeakerList().get(0).getSpeaker_document_path();
+
+                        PdfAdapter pdfListAdapter = new PdfAdapter(SpeakerDetailActivity.this, pdf_list, SpeakerDetailActivity.this, pdfurl);
+                        rv_pdf_list.setLayoutManager(new GridLayoutManager(SpeakerDetailActivity.this, 2));
+                        rv_pdf_list.setAdapter(pdfListAdapter);
+                    }else{
+                        vwRateLine.setVisibility(View.GONE);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FetchSpeaker> call, Throwable t) {
+                speakerDetail.setValue(null);
+            }
+        });
+        return speakerDetail;
     }
 
-    private void RequestMultiplePermission() {
-        // Creating String Array with Permissions.
-        ActivityCompat.requestPermissions(SpeakerDetailActivity.this, new String[]
-                {
-                        WRITE_CONTACTS,
-                        READ_CONTACTS
-                }, RequestPermissionCode);
+
+
+    //Update Api
+    public MutableLiveData<LoginOrganizer> setSpeakerRate(final String token, final String event_id, String speaker_id, String rate) {
+        updateApi = ApiUtils.getAPIService();
+
+        updateApi.RateSpeaker(token, event_id, speaker_id,rate).enqueue(new Callback<LoginOrganizer>() {
+            @Override
+            public void onResponse(Call<LoginOrganizer> call,
+                                   Response<LoginOrganizer> response) {
+                if (response.isSuccessful()) {
+                    speakerRate.setValue(response.body());
+                    Utility.createShortSnackBar(llMAin, response.body().getHeader().get(0).getMsg());
+
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                speakerRate.setValue(null);
+            }
+        });
+        return speakerRate;
     }
+
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[],
-                                           int[] grantResults) {
-        switch (requestCode) {
-
-            case RequestPermissionCode:
-
-                if (grantResults.length > 0) {
-                    boolean readContactPermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean writeContactpermjission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                    if (readContactPermission && writeContactpermjission) {
-//                        Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_LONG).show();
-                        try {
-                            attendeeDetailsViewModel.saveContact(this, fname + " " + lname, company, mobile, designation, email);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-
-                        Toast.makeText(SpeakerDetailActivity.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
-                        RequestMultiplePermission();
-
-                    }
-                }
-
-                break;
-        }
+    public void onContactSelected(Speaker_Doc Speaker_Doc, String path) {
+        Intent pdfview = new Intent(SpeakerDetailActivity.this, DownloadPdfActivity.class);
+        pdfview.putExtra("url", "https://docs.google.com/gview?embedded=true&url=" + path + Speaker_Doc.getPdf_file());
+        pdfview.putExtra("url1", path + Speaker_Doc.getPdf_file());
+        pdfview.putExtra("doc_name",  Speaker_Doc.getPdf_name());
+        pdfview.putExtra("page_id",  "0");
+        pdfview.putExtra("file_id",  Speaker_Doc.getId());
+        startActivity(pdfview);
     }
-
-
 }
