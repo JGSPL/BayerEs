@@ -1,7 +1,6 @@
 package com.procialize.eventapp.ui.speaker.view;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -15,12 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,6 +31,8 @@ import com.google.firebase.auth.FirebaseAuth;
 ;
 import com.google.firebase.database.DatabaseReference;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
@@ -43,24 +41,20 @@ import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
-import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
-import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
-import com.procialize.eventapp.ui.speaker.adapter.DownloadPdfActivity;
 import com.procialize.eventapp.ui.speaker.adapter.PdfAdapter;
 import com.procialize.eventapp.ui.speaker.model.FetchSpeaker;
 import com.procialize.eventapp.ui.speaker.model.Speaker;
 import com.procialize.eventapp.ui.speaker.model.Speaker_Doc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.Manifest.permission.READ_CONTACTS;
-import static android.Manifest.permission.WRITE_CONTACTS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -275,12 +269,19 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
                                    Response<FetchSpeaker> response) {
                 if (response.isSuccessful()) {
                     speakerDetail.setValue(response.body());
-                    pdf_list = response.body().getSpeakerList().get(0).getSpeakerDocList();
+                    String strCommentList =response.body().getDetail();
+                    RefreashToken refreashToken = new RefreashToken(SpeakerDetailActivity.this);
+                    String data = refreashToken.decryptedData(strCommentList);
+                    Gson gson = new Gson();
+                    List<Speaker> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Speaker>>() {}.getType());
+                    if(eventLists!=null) {
+                        pdf_list = eventLists.get(0).getSpeakerDocList();
+                    }
 
                     if(pdf_list!=null) {
                         vwRateLine.setVisibility(View.VISIBLE);
 
-                        String pdfurl = response.body().getSpeakerList().get(0).getSpeaker_document_path();
+                        String pdfurl = eventLists.get(0).getSpeaker_document_path();
 
                         PdfAdapter pdfListAdapter = new PdfAdapter(SpeakerDetailActivity.this, pdf_list, SpeakerDetailActivity.this, pdfurl);
                         rv_pdf_list.setLayoutManager(new GridLayoutManager(SpeakerDetailActivity.this, 2));
