@@ -26,7 +26,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,7 +61,6 @@ import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
-import com.procialize.eventapp.ui.AgendaDetails.view.AgendaDetailsFragment;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
@@ -70,7 +68,7 @@ import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
-import com.procialize.eventapp.ui.eventinfo.view.EventInfoFragment;
+import com.procialize.eventapp.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
@@ -105,12 +103,10 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_COMP
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_DESIGNATION;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_EMAIL;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_FNAME;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_GCM_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_LNAME;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBILE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -472,10 +468,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_event_info:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                getSupportFragmentManager()
+                startActivity(new Intent(MainActivity.this, EventInfoActivity.class));
+                /*getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_frame, EventInfoFragment.newInstance(), "")
-                        .commit();
+                        .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")
+                        .commit();*/
                 break;
             case R.id.tr_logout:
                 JzvdStd.releaseAllVideos();

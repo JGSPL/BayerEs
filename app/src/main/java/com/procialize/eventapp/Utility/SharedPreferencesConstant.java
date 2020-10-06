@@ -9,6 +9,7 @@ public final class SharedPreferencesConstant {
 
     public static final String NEWS_FEED_MEDIA_PATH = "newsFeedMediaPath";
     public static final String EVENT_LIST_MEDIA_PATH = "eventListMediaPath";
+    public static final String EVENT_INFO_MEDIA_PATH = "eventInfoMediaPath";
 
     public static final String KEY_FNAME = "name";
     public static final String KEY_LNAME = "lname";

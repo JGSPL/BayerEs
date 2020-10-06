@@ -763,6 +763,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 if (!postText.isEmpty()) {
                                     uploadMultimedia.remove(0);
                                 }
+
+
                                 postNewsFeed(folderUniqueId, api_token, eventid, postText, uploadMultimedia);
                                         /*newsfeedViewModel.sendPost(api_token, eventid, postText, uploadMultimedia);
                                         newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
@@ -926,6 +928,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("media_file_thumb[]", fileName + ".png", RequestBody.create(MediaType.parse("image/png"), file));
             thumbParts.add(filePart);
         }
+        if ( newsfeedApi.postNewsFeed(token, mevent_id, mPost_content, parts, thumbParts).isExecuted())
+            newsfeedApi.postNewsFeed(token, mevent_id, mPost_content, parts, thumbParts).cancel();
+
         newsfeedApi.postNewsFeed(token, mevent_id, mPost_content, parts, thumbParts)//,Media_file,Media_file_thumb)
                 .enqueue(new Callback<LoginOrganizer>() {
                     @Override

@@ -51,6 +51,11 @@
             android:name=".ui.profile.view.ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+
+        <activity
+            android:name=".ui.eventinfo.view.EventInfoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity
             android:name=".ui.eventList.view.EventListActivity"
             android:screenOrientation="portrait"
