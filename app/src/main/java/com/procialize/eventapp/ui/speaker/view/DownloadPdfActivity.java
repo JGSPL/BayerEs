@@ -1,15 +1,12 @@
-package com.procialize.eventapp.ui.speaker.adapter;
+package com.procialize.eventapp.ui.speaker.view;
 
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -23,7 +20,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +34,7 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
-import com.procialize.eventapp.ui.speaker.view.SpeakerDetailActivity;
+import com.procialize.eventapp.Utility.SharedPreference;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -50,11 +46,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 
 public class DownloadPdfActivity extends AppCompatActivity {
@@ -107,6 +100,7 @@ public class DownloadPdfActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.title);
         title.setText(doc_name);
        // title.setTextColor(Color.parseColor(colorActive));
+        title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
 
 
@@ -114,6 +108,7 @@ public class DownloadPdfActivity extends AppCompatActivity {
         webview = findViewById(R.id.webView);
         progressBar = findViewById(R.id.progressBar);
         backIv = findViewById(R.id.backIv);
+        backIv.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
 
         backIv.setOnClickListener(new View.OnClickListener() {
             @Override
