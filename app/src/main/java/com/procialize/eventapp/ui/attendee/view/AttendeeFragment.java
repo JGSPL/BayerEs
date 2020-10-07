@@ -51,7 +51,9 @@ import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
 import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
+import com.procialize.eventapp.ui.speaker.view.SpeakerDetailActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -302,6 +304,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                     attendee.setAttendee_type(tableAttendees.get(i).getAttendee_type());
                     attendee.setTotal_sms(tableAttendees.get(i).getTotal_sms());
                     attendee.setProfile_picture(tableAttendees.get(i).getProfile_picture());
+                    attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
                     attendeesDBList.add(attendee);
                 }
                 setupEventAdapter(attendeesDBList);
@@ -461,7 +464,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
             startActivity(chatIntent);
         } else {
-            Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
+           /* Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
             intent.putExtra("attendeeid", attendee.getAttendee_id());
             intent.putExtra("firebase_id", attendee.getFirebase_id());
 
@@ -474,7 +477,9 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             intent.putExtra("attendee_type", attendee.getAttendee_type());
             intent.putExtra("mobile", attendee.getMobile());
             intent.putExtra("email", attendee.getEmail());
-            startActivity(intent);
+            startActivity(intent);*/
+            getActivity().startActivity(new Intent(getContext(), AttendeeDetailActivity.class)
+                    .putExtra("Attendee", (Serializable) attendee));
         }
         // getActivity().finish();
     }

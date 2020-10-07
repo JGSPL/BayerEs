@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:clipToPadding="false"
-        android:paddingBottom="80dp"
+        android:paddingBottom="40dp"
         android:nestedScrollingEnabled="true"
         android:id="@+id/recycleViewMessageList"
         android:layout_alignParentTop="true" />
