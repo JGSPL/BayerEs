@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
-import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 
 import retrofit2.Call;
@@ -28,7 +27,7 @@ public class AttendeeRepository {
         eventApi = ApiUtils.getAPIService();
     }
 
-    public MutableLiveData<FetchAttendee> getAttendeeList(String token ,String organizer_id, String search_text, String pagenumber, String pageSizr) {//, String pageSize, String pageNumber) {
+    public MutableLiveData<FetchAttendee> getAttendeeList(String token , String organizer_id, String search_text, String pagenumber, String pageSizr) {//, String pageSize, String pageNumber) {
         eventApi.AttendeeList(token,organizer_id,
                 search_text, pagenumber, pageSizr)
                 .enqueue(new Callback<FetchAttendee>() {

@@ -1,10 +1,10 @@
 package com.procialize.eventapp.Constants;
 
 
-import com.google.gson.JsonObject;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.GetterSetter.resendOTP;
 import com.procialize.eventapp.GetterSetter.validateOTP;
+import com.procialize.eventapp.ui.agenda.model.FetchAgenda;
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.eventList.model.Event;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
@@ -15,11 +15,8 @@ import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.speaker.model.FetchSpeaker;
-import com.procialize.eventapp.ui.splash.view.SplashAcivity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -27,8 +24,6 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
-import retrofit2.http.HeaderMap;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -291,5 +286,10 @@ public interface APIService{
  @FormUrlEncoded
  Call<EventInfo> eventInfoFetch(@Header("authorization") String auth,
                                 @Field("event_id") String event_id);
+
+ @POST("Agenda_api/AgendaSeprateFetch")
+ @FormUrlEncoded
+ Call<FetchAgenda> agendaFetch(@Header("authorization") String auth,
+                               @Field("event_id") String event_id);
 
 }

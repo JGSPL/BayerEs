@@ -35,11 +35,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@color/activetab"
                     android:orientation="horizontal"
-                    android:padding="40dp">
+                    android:paddingTop="35dp"
+                    android:paddingBottom="35dp"
+
+                    >
 
                     <TextView
                         android:id="@+id/textView2"
@@ -48,7 +52,7 @@
                         android:gravity="center"
                         android:text="08.00"
                         android:textColor="@color/white"
-                        android:textSize="22dp" />
+                        android:textSize="20dp" />
 
                     <TextView
                         android:id="@+id/textView2"
@@ -72,11 +76,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@color/activetab"
                     android:orientation="horizontal"
-                    android:padding="40dp">
+                    android:paddingTop="35dp"
+                    android:paddingBottom="35dp">
 
                     <TextView
                         android:id="@+id/textView2"
@@ -85,7 +90,7 @@
                         android:gravity="center"
                         android:text="08.00"
                         android:textColor="@color/white"
-                        android:textSize="22dp" />
+                        android:textSize="20dp" />
 
                     <TextView
                         android:id="@+id/textView2"
@@ -115,8 +120,8 @@
                 android:background="@color/colorAccent">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     app:srcCompat="@drawable/ic_newsfeed"
                     android:tint="@color/white"/>
 

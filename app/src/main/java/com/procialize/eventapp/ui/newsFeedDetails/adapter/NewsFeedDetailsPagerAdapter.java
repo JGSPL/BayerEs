@@ -1,17 +1,14 @@
 package com.procialize.eventapp.ui.newsFeedDetails.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
@@ -31,22 +28,19 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.procialize.eventapp.App;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.MyJzvdStd;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 
 import java.io.File;
-import java.util.LinkedHashMap;
 import java.util.List;
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdStd;
-import static android.content.Context.MODE_PRIVATE;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.procialize.eventapp.Utility.Utility;
 
 public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheListener {
 
     public PhotoView myImage;
-    public JzvdStd videoview;
+    public MyJzvdStd videoview;
     public TextView name;
     private List<String> images;
     private List<String> imagesThumb;
@@ -99,7 +93,7 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheLi
                 || firstLevelFilter.contains(".PNG") || firstLevelFilter.contains(".JPG") || firstLevelFilter.contains(".JPEG") || firstLevelFilter.contains(".GIF"))) {
             myImage.setVisibility(View.VISIBLE);
             videoview.setVisibility(View.GONE);
-            JzvdStd.goOnPlayOnPause();
+            MyJzvdStd.goOnPlayOnPause();
             if (firstLevelFilter.contains("gif")) {
                 progressBar.setVisibility(View.GONE);
                 Glide.with(videoview).load(firstLevelFilter.trim()).into(myImage);
@@ -141,21 +135,21 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheLi
                         progressBar.setVisibility(View.GONE);
                     }
                 });
-//                Glide.with(context).load(firstLevelFilter.trim())
-//                        .placeholder(R.mipmap.placeholder)
-//                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).listener(new RequestListener<Drawable>() {
-//                    @Override
-//                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                        progressBar.setVisibility(View.GONE);
-//                        return false;
-//                    }
-//
-//                    @Override
-//                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                        progressBar.setVisibility(View.GONE);
-//                        return false;
-//                    }
-//                }).into(myImage);
+               /* Glide.with(context).load(firstLevelFilter.trim())
+                        .placeholder(R.mipmap.placeholder)
+                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).into(myImage);*/
             }
         } else if (firstLevelFilter.contains(".mp4")) {
             myImage.setVisibility(View.GONE);
@@ -203,8 +197,8 @@ public class NewsFeedDetailsPagerAdapter extends PagerAdapter implements CacheLi
         Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + url);
 
         videoview.setUp(proxyUrl.trim(), ""
-                , JzvdStd.SCREEN_NORMAL);
-        JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
+                , MyJzvdStd.SCREEN_NORMAL);
+        MyJzvdStd.setVideoImageDisplayType(MyJzvdStd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
 
         Glide.with(videoview).load(thumbImage.trim()).into(videoview.thumbImageView);
 
