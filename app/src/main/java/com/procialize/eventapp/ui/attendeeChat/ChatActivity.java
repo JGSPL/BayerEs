@@ -133,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
     TextView mUserLastSeen;
     CircleImageView mUserImage;
     private FirebaseAuth mAuth;
-    private BottomSheetDialog myDialog;
+    private Dialog myDialog;
     String mCurrentUserId;
 
     DatabaseReference mDatabaseReference;
@@ -417,7 +417,7 @@ public class ChatActivity extends AppCompatActivity {
         mChatSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String message = mMessageView.getText().toString();
+                String message = mMessageView.getText().toString().trim();
                 mMessageView.setText("");
                 if(!TextUtils.isEmpty(message)){
 
@@ -701,10 +701,10 @@ public class ChatActivity extends AppCompatActivity {
 
         }else if (resultCode == Activity.RESULT_OK && requestCode == SELECT_FILE) {
 
-            Uri Videouri = data.getData();
-          //  showMediaialouge(this, Videouri, "video",data);
+            uri = data.getData();
+            showMediaialouge(this, uri, "video",data);
 
-            ArrayList<String> supportedMedia = new ArrayList<String>();
+           /* ArrayList<String> supportedMedia = new ArrayList<String>();
 
             supportedMedia.add(".mp4");
             supportedMedia.add(".mov");
@@ -768,7 +768,7 @@ public class ChatActivity extends AppCompatActivity {
 
 // StorageReference
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                    final StorageReference photoRef = /*storageRef.child("message_video").child(".mp4");*/mImageStorage.child("message_videos").child(push_id + ".mp4");
+                    final StorageReference photoRef = *//*storageRef.child("message_video").child(".mp4");*//*mImageStorage.child("message_videos").child(push_id + ".mp4");
 // add File/URI
                     photoRef.putFile(Uri.fromFile(file))
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -845,7 +845,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 Toast.makeText(ChatActivity.this, "Only .mp4,.mov,.3gp File formats allowed ", Toast.LENGTH_SHORT).show();
 
-            }
+            }*/
         }
     }
 
@@ -1318,31 +1318,34 @@ public class ChatActivity extends AppCompatActivity {
 
     private void showMediaialouge(Context context, final Uri url, final String type, final Intent data) {
 
-        myDialog = new BottomSheetDialog(this);
+       // myDialog = new Dialog(this);
+        myDialog=new Dialog(this,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         myDialog.setContentView(R.layout.dialog_chat_item);
         myDialog.setCancelable(false);
-        myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
+       // myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
 
         myDialog.show();
 
         Button cancelbtn = myDialog.findViewById(R.id.canclebtn);
-        ImageView chatSendButton = myDialog.findViewById(R.id.chatSendButton);
+        final ImageView chatSendButton = myDialog.findViewById(R.id.chatSendButton);
         LinearLayout ll_main = myDialog.findViewById(R.id.ll_main);
         TextView title = myDialog.findViewById(R.id.title);
         TouchImageView imageView = myDialog.findViewById(R.id.imageView);
         JzvdStd videoplayer = myDialog.findViewById(R.id.videoplayer);
         ImageView imgCancel = myDialog.findViewById(R.id.imgCancel);
         final ProgressBar progessLoad = myDialog.findViewById(R.id.progessLoad);
+        final LinearLayout linSend = myDialog.findViewById(R.id.linSend);
 
         ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
-        title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
-       // chatSendButton.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
-        cancelbtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_3)));
+        //title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
 
-       // chatSendButton.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
         cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
 
-        imgCancel.setColorFilter(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+       // imgCancel.setColorFilter(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        linSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
+
+        chatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+
 
         imgCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1374,7 +1377,7 @@ public class ChatActivity extends AppCompatActivity {
             imageView.setVisibility(View.GONE);
             String uri_to_string;
             uri_to_string= url.toString();
-            videoplayer.setUp(uri_to_string, ""
+            videoplayer.setUp(ScalingUtilities.getPath(ChatActivity.this, data.getData()), ""
                     , JzvdStd.SCREEN_NORMAL);
             JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
 
@@ -1401,10 +1404,14 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        chatSendButton.setOnClickListener(new View.OnClickListener() {
+        linSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 progessLoad.setVisibility(View.VISIBLE);
+                chatSendButton.setEnabled(false);
+                chatSendButton.setClickable(false);
+                linSend.setEnabled(false);
+                linSend.setClickable(false);
 
                 if(type.equalsIgnoreCase("image")){
                     final String current_user_ref = "messages/"+mCurrentUserId+"/"+mChatUser;
@@ -1524,7 +1531,7 @@ public class ChatActivity extends AppCompatActivity {
                                 //
 // StorageReference
                                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                                final StorageReference photoRef = /*storageRef.child("message_video").child(".mp4");*/mImageStorage.child("message_videos").child(push_id + ".mp4");
+                                final StorageReference photoRef = mImageStorage.child("message_videos").child(push_id + ".mp4");
 // add File/URI
                                 photoRef.putFile(Uri.fromFile(file))
                                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
