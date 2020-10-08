@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,15 +37,19 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
+import com.procialize.eventapp.ui.speaker.model.Speaker;
 
+import cn.jzvd.JzvdStd;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,6 +82,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     String api_token, eventid;
     LinearLayout bgLinear;
     View bgView;
+    private Attendee attendee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +141,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
 
         iv_back.setOnClickListener(this);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         CommonFunction.showBackgroundImage(AttendeeDetailActivity.this, ll_main);
         tv_attendee_name.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
@@ -203,7 +215,19 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
     public void getIntentData() {
         Intent intent = getIntent();
-        fname = intent.getStringExtra("fname");
+        attendee = (Attendee) getIntent().getSerializableExtra("Attendee");
+        fname = attendee.getFirst_name();
+        lname = attendee.getLast_name();
+        company = attendee.getCompany_name();
+        city = attendee.getCity();
+        designation = attendee.getDesignation();
+        prof_pic = attendee.getProfile_picture();
+        attendee_type = attendee.getAttendee_type();
+        mobile = attendee.getMobile();
+        email = attendee.getEmail();
+        attendeeid = attendee.getAttendee_id();
+        firebase_id = attendee.getFirebase_id();
+       /* fname = intent.getStringExtra("fname");
         lname = intent.getStringExtra("lname");
         company = intent.getStringExtra("company");
         city = intent.getStringExtra("city");
@@ -213,7 +237,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         mobile = intent.getStringExtra("mobile");
         email = intent.getStringExtra("email");
         attendeeid = intent.getStringExtra("attendeeid");
-        firebase_id = intent.getStringExtra("firebase_id");
+        firebase_id = intent.getStringExtra("firebase_id");*/
     }
 
     @Override
@@ -366,7 +390,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                 }
                 break;
             case R.id.iv_back:
-                onBackPressed();
+                finish();
                 break;
         }
     }
@@ -441,6 +465,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         });
         return chatUpdate;
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
 
 
 }

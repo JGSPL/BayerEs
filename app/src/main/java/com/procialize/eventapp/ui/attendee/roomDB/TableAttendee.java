@@ -44,6 +44,16 @@ public class TableAttendee implements Serializable {
     String firebase_name;
     @ColumnInfo(name = "firebase_username")
     String firebase_username;
+    @ColumnInfo(name = "firebase_status")
+    String firebase_status;
+
+    public String getFirebase_status() {
+        return firebase_status;
+    }
+
+    public void setFirebase_status(String firebase_status) {
+        this.firebase_status = firebase_status;
+    }
 
     public int getId() {
         return id;

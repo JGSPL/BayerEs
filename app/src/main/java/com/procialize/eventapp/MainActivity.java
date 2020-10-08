@@ -651,8 +651,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             //---OPENING MAIN ACTIVITY---
                                             Log.e("Login : ","Logged in Successfully" );
                                           //   Utility.createShortSnackBar(ll_main,"Logged in Successfully");
-                                           // String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                           // getChatUpdate(api_token,eventid,currentuser,stoeUsername,storeFirename,"1");
+                                            String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                           // getChatUpdate(api_token,eventid,currentuser,"",storeFirename,"1");
 
                                         }
                                         else{

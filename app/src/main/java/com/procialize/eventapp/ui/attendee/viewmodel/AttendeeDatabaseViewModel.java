@@ -46,6 +46,7 @@ public class AttendeeDatabaseViewModel extends ViewModel {
             tableAttendee.setFirebase_id(attendees.get(i).getFirebase_id());
             tableAttendee.setFirebase_name(attendees.get(i).getFirebase_name());
             tableAttendee.setFirebase_username(attendees.get(i).getFirebase_username());
+            tableAttendee.setFirebase_status(attendees.get(i).getFirebase_status());
             eventAppDB.attendeeDao().insertAttendee(tableAttendee);
         }
     }
