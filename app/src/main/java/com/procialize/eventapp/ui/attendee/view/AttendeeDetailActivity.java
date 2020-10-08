@@ -45,6 +45,7 @@ import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.speaker.model.Speaker;
@@ -85,6 +86,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     LinearLayout bgLinear;
     View bgView;
     private Attendee attendee;
+    AttendeeDatabaseViewModel attendeeDatabaseViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,8 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         CommonFirebase.firbaseAnalytics(this, "AttendeeDetail", api_token);
 
         attendeeDetailsViewModel = ViewModelProviders.of(this).get(AttendeeDetailsViewModel.class);
+        attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+
         progressView = findViewById(R.id.progressView);
         iv_profile = findViewById(R.id.iv_profile);
         iv_back = findViewById(R.id.iv_back);
@@ -282,9 +286,13 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
                                         //--OPENING CHAT ACTIVITY FOR CLICKED USER----
                                         getChatUpdate(api_token, eventid, attendeeid);
+                                        attendee.setFirebase_status("1");
+                                        attendeeDatabaseViewModel.deleteAttendee(AttendeeDetailActivity.this,attendeeid);
+                                        attendeeDatabaseViewModel.insertIntoDbSingle(AttendeeDetailActivity.this,attendee);
                                         startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
                                                 .putExtra("page", "AttendeeDetail")
                                                 .putExtra("Attendee", (Serializable) attendee));
+
                                         /*Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                         chatIntent.putExtra("user_id", firebase_id);
                                         chatIntent.putExtra("user_name", fname + " " + lname);
@@ -341,6 +349,9 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         getChatUpdate(api_token, eventid, attendeeid);
+                                        attendee.setFirebase_status("1");
+                                        attendeeDatabaseViewModel.deleteAttendee(AttendeeDetailActivity.this,attendeeid);
+                                        attendeeDatabaseViewModel.insertIntoDbSingle(AttendeeDetailActivity.this,attendee);
                                         startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
                                                 .putExtra("page", "AttendeeDetail")
                                                 .putExtra("Attendee", (Serializable) attendee));

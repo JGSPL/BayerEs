@@ -195,58 +195,6 @@ public class AttendeeChatDetail extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.ll_send_message:
 
-                if (message.isEmpty()) {
-                    Utility.createShortSnackBar(ll_main, "Please enter message..");
-
-                } else {
-                    if (firebase_id.equalsIgnoreCase("0")) {
-                        et_message.setText("");
-                        Utility.createShortSnackBar(ll_main, "User not valid for chat...!");
-
-                    } else {
-                        if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
-                            mUsersDatabase.child(firebase_id).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                                    //--OPENING CHAT ACTIVITY FOR CLICKED USER----
-
-                                    Intent chatIntent = new Intent(AttendeeChatDetail.this, ChatActivity.class);
-                                    chatIntent.putExtra("user_id", firebase_id);
-                                    chatIntent.putExtra("user_name", fname + " " + lname);
-                                    chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
-                                    chatIntent.putExtra("sProfilePic", SprofilePic);
-                                    chatIntent.putExtra("rProfilepic", prof_pic);
-                                    chatIntent.putExtra("attendeeid", attendeeid);
-                                    chatIntent.putExtra("firebase_id", firebase_id);
-                                    chatIntent.putExtra("Message", message);
-                                    chatIntent.putExtra("page", "AttendeeDetail");
-
-                                    chatIntent.putExtra("lname", lname);
-                                    chatIntent.putExtra("company", company);
-                                    chatIntent.putExtra("city", city);
-                                    chatIntent.putExtra("designation", designation);
-                                    chatIntent.putExtra("attendee_type", attendee_type);
-                                    chatIntent.putExtra("mobile", mobile);
-                                    chatIntent.putExtra("email", email);
-
-                                    startActivity(chatIntent);
-                                    finish();
-
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-                        } else {
-                            Utility.createShortSnackBar(ll_main, "No internet connection..!");
-                        }
-                    }
-                }
                 break;
 
             case R.id.ll_save_contact:
