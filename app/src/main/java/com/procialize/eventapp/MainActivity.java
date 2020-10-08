@@ -77,6 +77,7 @@ import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
+import com.yanzhenjie.album.mvp.BaseFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -270,8 +272,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
 
 
-
-
                     default:
                         return true;
                 }
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putString("isFrom","MainActivity");
+        bundle.putString("isFrom", "MainActivity");
         newsFeedFragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -294,11 +294,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         // Switch to page one
-                        JzvdStd.releaseAllVideos();
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
-                                .commit();
+                        NewsFeedFragment myFragment = (NewsFeedFragment) getSupportFragmentManager().findFragmentByTag("NewsFeed");
+                        if (myFragment != null && myFragment.isVisible()) {
+                        } else {
+                            JzvdStd.releaseAllVideos();
+                            getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "NewsFeed")
+                                    .commit();
+                        }
                         break;
                     case R.id.navigation_agenda:
                         // Switch to page two
@@ -415,7 +419,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-
+        if (Jzvd.backPress()) {
+            return;
+        }
         JzvdStd.releaseAllVideos();
         if (doubleBackToExitPressedOnce) {
             ActivityCompat.finishAffinity(MainActivity.this);
@@ -764,5 +770,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return chatUpdate;
         }
 
+    public BaseFragment getActiveFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return null;
+        }
+        String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        return (BaseFragment) getSupportFragmentManager().findFragmentByTag(tag);
+    }
 
 }

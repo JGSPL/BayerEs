@@ -6,13 +6,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.attendee.networking.AttendeeRepository;
-import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 
 public class AttendeeViewModel extends ViewModel {
-
-
     
     private AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
+
     MutableLiveData<FetchAttendee> fetchAttendeeData = new MutableLiveData<>();
 
     public void getAttendee(String token, String organizer_id, String search_text, String pageNumber, String pageSize) {

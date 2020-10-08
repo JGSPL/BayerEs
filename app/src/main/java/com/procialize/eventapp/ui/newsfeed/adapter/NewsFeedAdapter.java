@@ -40,6 +40,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Database.EventAppDB;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -424,6 +425,9 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                             intent.putExtra("email", tableAttendees.get(0).getEmail());
                                                             context.startActivity(intent);*/
                                                         }
+                                                        if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                            newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
+                                                        }
                                                     }
                                                 });
                                             }
@@ -499,6 +503,10 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                             attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
                                                             context.startActivity(new Intent(context, AttendeeDetailActivity.class)
                                                                     .putExtra("Attendee", (Serializable) attendee));
+                                                        }
+
+                                                        if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                            newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
                                                         }
                                                     }
                                                 });

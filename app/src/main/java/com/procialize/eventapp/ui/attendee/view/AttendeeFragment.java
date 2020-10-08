@@ -34,7 +34,6 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -47,8 +46,6 @@ import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
-import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
-import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.speaker.view.SpeakerDetailActivity;
@@ -58,7 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
@@ -265,7 +261,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                     } catch (Exception e) {
 
                     }
-
                 }
             });
         } catch (Exception e) {

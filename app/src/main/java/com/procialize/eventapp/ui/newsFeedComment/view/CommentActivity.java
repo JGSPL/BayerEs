@@ -70,6 +70,7 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
@@ -155,7 +156,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     int positionOfList;
     private Newsfeed_detail newsfeed_detail;
     public static int swipableAdapterPosition = 0;
-    private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments, tv_no_of_likes, tv_header, testdataPost, textData;
+    private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments,tv_comment_count, tv_no_of_likes, tv_header, testdataPost, textData;
     String event_id;
     ConnectionDetector connectionDetector;
     String commentText = "";
@@ -247,6 +248,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_designation = findViewById(R.id.tv_designation);
         tv_date_time = findViewById(R.id.tv_date_time);
         tv_no_of_comments = findViewById(R.id.tv_no_of_comments);
+        tv_comment_count = findViewById(R.id.tv_comment_count);
         tv_no_of_likes = findViewById(R.id.tv_no_of_likes);
         testdataPost = findViewById(R.id.testdataPost);
         textData = findViewById(R.id.textData);
@@ -577,8 +579,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 if (newsfeed_detail.getTotal_comments().equalsIgnoreCase("1")) {
+                    tv_comment_count.setText(newsfeed_detail.getTotal_comments());
                     tv_no_of_comments.setText(newsfeed_detail.getTotal_comments() + " Comment");
                 } else {
+                    tv_comment_count.setText(newsfeed_detail.getTotal_comments());
                     tv_no_of_comments.setText(newsfeed_detail.getTotal_comments() + " Comments");
                 }
 
@@ -601,7 +605,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
         /*iv_comments.setImageDrawable(getResources().getDrawable(R.drawable.ic_comment));
         iv_share.setImageDrawable(getResources().getDrawable(R.drawable.ic_share));*/
-        getComments();
+        getComments(Integer.parseInt(tv_comment_count.getText().toString()));
         setDynamicColor();
 
         //Tagging Functionality
@@ -621,11 +625,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         setupMentionsList();
     }
 
-    public void getComments() {
+    public void getComments(final int commentCount) {
         if (connectionDetector.isConnectingToInternet()) {
             String newsFeedId = newsfeed_detail.getNews_feed_id();
             ApiUtils.getAPIService().getComment(api_token, event_id,
-                    newsFeedId,"100","1")
+                    newsFeedId,"1000","1")
                     .enqueue(new Callback<Comment>() {
                         @Override
                         public void onResponse(Call<Comment> call, Response<Comment> response) {
@@ -640,19 +644,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                // commentList = response.body().getCommentDetails();
                                 if (commentList != null) {
                                     setupCommentAdapter(commentList);
-                                    showCommentCount(commentList);
+                                    //showCommentCount(commentList);
+                                    showCommentCount(commentCount);
 
                                     List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
-                                    newsfeed_details.get(positionOfList).setTotal_comments(commentList.size()+"");
+                                    newsfeed_details.get(positionOfList).setTotal_comments(commentCount+"");
                                     newsfeedAdapter.notifyDataSetChanged();
 
                                 } else {
                                     commentList = new ArrayList<>();
                                     setupCommentAdapter(commentList);
-                                    showCommentCount(commentList);
+                                    //showCommentCount(commentList);
+                                    showCommentCount(commentCount);
 
                                     List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
-                                    newsfeed_details.get(positionOfList).setTotal_comments(commentList.size()+"");
+                                    newsfeed_details.get(positionOfList).setTotal_comments(commentCount+"");
                                     newsfeedAdapter.notifyDataSetChanged();
                                 }
                             }
@@ -804,7 +810,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         Utility.createShortSnackBar(ll_main, "Success");
                                         et_comment.setText("");
                                         commentText = et_comment.getText().toString();
-                                        getComments();
+                                        int commentCount = Integer.parseInt(tv_comment_count.getText().toString())+1;
+                                        tv_comment_count.setText(commentCount+"");
+                                        getComments(Integer.parseInt(tv_comment_count.getText().toString()));
+
+                                        if (commentViewModel != null && commentViewModel.postCommentResponse().hasObservers()) {
+                                            commentViewModel.postCommentResponse().removeObservers(CommentActivity.this);
+                                        }
                                     }
                                 });
                             } else {
@@ -1043,18 +1055,21 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             public void onChanged(LoginOrganizer loginOrganizer) {
                 Utility.createShortSnackBar(ll_main, "Success");
                 et_comment.setText("");
-                getComments();
+                getComments(Integer.parseInt(tv_comment_count.getText().toString())+1);
             }
         });
     }
 
 
-    public void showCommentCount(List<CommentDetail> commentList) {
+    //public void showCommentCount(List<CommentDetail> commentList) {
+    public void showCommentCount(int count) {
         try {
-            if (commentList.size() == 1) {
-                tv_no_of_comments.setText(commentList.size() + " Comment");
+            if (count == 1) {
+                tv_no_of_comments.setText(count + " Comment");
+                tv_comment_count.setText(count);
             } else {
-                tv_no_of_comments.setText(commentList.size() + " Comments");
+                tv_no_of_comments.setText(count + " Comments");
+                tv_comment_count.setText(count);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1141,7 +1156,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             commentList.clear();
                             dialog.dismiss();
                             Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
-                            getComments();
+                            int commentCount = Integer.parseInt(tv_comment_count.getText().toString())-1;
+                            tv_comment_count.setText(commentCount+"");
+                            getComments(Integer.parseInt(tv_comment_count.getText().toString()));
                         }
                     }
 
@@ -1163,7 +1180,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                             dialog.dismiss();
                             Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
-                            getComments();
+
+                            int commentCount = Integer.parseInt(tv_comment_count.getText().toString())-1;
+                            tv_comment_count.setText(commentCount+"");
+                            getComments(Integer.parseInt(tv_comment_count.getText().toString()));
                         } else {
                             dialog.dismiss();
                             Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
@@ -1280,7 +1300,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                                     contentDialog.dismiss();
                                     Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
-                                    getComments();
+                                    getComments(Integer.parseInt(tv_comment_count.getText().toString()));
                                 } else {
                                     contentDialog.dismiss();
                                     Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
@@ -1295,7 +1315,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
                                     contentDialog.dismiss();
                                     Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
-                                    getComments();
+                                    getComments(Integer.parseInt(tv_comment_count.getText().toString()));
                                 } else {
                                     contentDialog.dismiss();
                                     Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());

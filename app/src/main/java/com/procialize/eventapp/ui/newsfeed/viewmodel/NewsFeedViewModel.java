@@ -41,6 +41,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
+import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
@@ -78,6 +79,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
@@ -108,7 +113,7 @@ public class NewsFeedViewModel extends ViewModel {
     MutableLiveData<Boolean> isValid = new MutableLiveData<>();
     String noOfLikes = "0";
     String likeStatus = "";
-    String strPath = "", mediaPath = "";
+    String strPath = "", mediaPath = "",dataToShare="";
     NewsFeedAdapter adapter;
     MutableLiveData<LikePost> liketPostUpdate = new MutableLiveData<>();
 
@@ -164,7 +169,7 @@ public class NewsFeedViewModel extends ViewModel {
     }
 
     //---------------View Share details--------------------------------
-    public void openShareTask(Activity activity, Newsfeed_detail feed, int position) {
+    public void openShareTask(Activity activity, final Newsfeed_detail feed, int position) {
         activityVar = activity;
         final List<News_feed_media> newsFeedMedia = feed.getNews_feed_media();
         mediaPath = SharedPreference.getPref(activity, NEWS_FEED_MEDIA_PATH);
@@ -205,7 +210,10 @@ public class NewsFeedViewModel extends ViewModel {
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog,
                                                             int which) {
-                                            new DownloadFile().execute(mediaPath + newsFeedMedia.get(finalPosition).getMedia_file());
+                                            String[] dataTOShare = new String[2];
+                                            dataTOShare[0]=mediaPath + newsFeedMedia.get(finalPosition).getMedia_file();
+                                            dataTOShare[1]=feed.getPost_status();
+                                            new DownloadFile().execute(dataTOShare/*mediaPath + newsFeedMedia.get(finalPosition).getMedia_file()*/);
                                         }
                                     });
                             builder.show();
@@ -225,9 +233,11 @@ public class NewsFeedViewModel extends ViewModel {
                             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                             sharingIntent.setType("video/*");
                             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
-                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Shared via Event app");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                             activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+
+
                         }
                     } else {
 
@@ -380,6 +390,10 @@ public class NewsFeedViewModel extends ViewModel {
                                 Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
                             }
+
+                            if (newsRepository != null && newsRepository.getPostActivity().hasObservers()) {
+                                newsRepository.getPostActivity().removeObservers((LifecycleOwner) activity);
+                            }
                         }
                     });
                 } else {
@@ -387,7 +401,6 @@ public class NewsFeedViewModel extends ViewModel {
                     Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
                 }
             }
-
         });
 
 
@@ -397,8 +410,8 @@ public class NewsFeedViewModel extends ViewModel {
                 newsRepository = NewsfeedRepository.getInstance();
 
                 if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
-                    newsfeedHide = newsRepository.PostHide(token, eventId, feed.getNews_feed_id());
 
+                    newsfeedHide = newsRepository.PostHide(token, eventId, feed.getNews_feed_id());
                     newsRepository.getPostActivity().observe((LifecycleOwner) activity, new Observer<LoginOrganizer>() {
                         @Override
                         public void onChanged(LoginOrganizer loginOrganizer) {
@@ -411,8 +424,36 @@ public class NewsFeedViewModel extends ViewModel {
                                 Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
                             }
+
+                            if (newsRepository != null && newsRepository.getPostActivity().hasObservers()) {
+                                newsRepository.getPostActivity().removeObservers((LifecycleOwner) activity);
+                            }
                         }
                     });
+
+                    /*newsfeedApi = ApiUtils.getAPIService();
+
+                    newsfeedApi.PostHide(token, eventId, feed.getNews_feed_id()).enqueue(new Callback<LoginOrganizer>() {
+                        @Override
+                        public void onResponse(Call<LoginOrganizer> call,
+                                               Response<LoginOrganizer> response) {
+                            if (response.isSuccessful()) {
+                                adapter.getNewsFeedList().remove(position);
+                                // remove the item from recycler view
+                                // feedAdapter.removeItem(viewHolder.getAdapterPosition());
+                                adapter.notifyItemRemoved(position);
+                                List<Header> heaserList = response.body().getHeader();
+                                Utility.createShortSnackBar(NewsFeedFragment.cl_main, heaserList.get(0).getMsg());
+                                dialog.cancel();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                            dialog.cancel();
+                            Utility.createShortSnackBar(NewsFeedFragment.cl_main, "Failure");
+                        }
+                    });*/
                 } else {
                     dialog.cancel();
                     Utility.createShortSnackBar(NewsFeedFragment.cl_main, "No Internet Connection");
@@ -678,6 +719,7 @@ public class NewsFeedViewModel extends ViewModel {
             int count;
             try {
                 URL url = new URL(f_url[0]);
+                dataToShare = f_url[1];
                 URLConnection connection = url.openConnection();
                 connection.connect();
                 // getting file length
@@ -751,6 +793,24 @@ public class NewsFeedViewModel extends ViewModel {
             this.progressDialog.dismiss();
 
             // Display File path after downloading
+            String postStatus = "";
+            String spannedString;
+            CharSequence spannedString1;
+            if (dataToShare.contains("\n")) {
+                postStatus = dataToShare.trim().replace("\n", "<br/>");
+            } else {
+                postStatus = dataToShare.trim();
+            }
+            spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+                spannedString1 = Utility.trimTrailingWhitespace(strPost);
+            } else {
+                Spanned strPost = Html.fromHtml(spannedString);
+                spannedString1 = Utility.trimTrailingWhitespace(strPost);
+            }
+
 
             Uri contentUri = FileProvider.getUriForFile(activityVar, BuildConfig.APPLICATION_ID + ".android.fileprovider", new File(strPath));
 
@@ -766,7 +826,7 @@ public class NewsFeedViewModel extends ViewModel {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("video/*");
             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared Via Event App");
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, "");
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Shared Via Event App - "+spannedString1.toString());
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             activityVar.startActivity(Intent.createChooser(sharingIntent, "Share Video"));
 
@@ -852,7 +912,7 @@ public class NewsFeedViewModel extends ViewModel {
         // Add data to the intent, the receiving app will decide
         // what to do with it.
         share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
-        share.putExtra(Intent.EXTRA_TEXT, spannedString1 /* + url*/);
+        share.putExtra(Intent.EXTRA_TEXT, spannedString1.toString() /* + url*/);
 
         activityVar.startActivity(Intent.createChooser(share, " Shared via Event app"));
     }

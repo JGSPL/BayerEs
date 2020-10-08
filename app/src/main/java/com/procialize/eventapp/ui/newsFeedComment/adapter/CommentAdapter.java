@@ -176,11 +176,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                     holder.testdata.setText(Utility.trimTrailingWhitespace(strPost));
                 }
 
-                holder.testdata.setText(comments.getComment());//.replace("\n",System.getProperty("line.separator")));
+                //holder.testdata.setText(comments.getComment());//.replace("\n",System.getProperty("line.separator")));
 
                 final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
                 if (comments.getComment() != null) {
-
                     holder.tv_comment.setVisibility(View.VISIBLE);
                     int flag = 0;
                     for (int i = 0; i < stringBuilder.length(); i++) {
@@ -237,6 +236,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                                                     intent.putExtra("mobile", tableAttendees.get(0).getMobile());
                                                                     intent.putExtra("email", tableAttendees.get(0).getEmail());
                                                                     context.startActivity(intent);
+                                                                }
+
+                                                                if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                                    newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
                                                                 }
                                                             }
                                                         }
@@ -296,6 +299,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                                                     intent.putExtra("email", tableAttendees.get(0).getEmail());
                                                                     context.startActivity(intent);
                                                                 }
+                                                            }
+
+                                                            if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                                newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
                                                             }
                                                         }
                                                     });
