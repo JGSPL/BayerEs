@@ -21,6 +21,7 @@ import com.procialize.eventapp.ui.agenda.model.AgendaList;
 import com.procialize.eventapp.ui.agenda.model.FetchAgenda;
 import com.procialize.eventapp.ui.agenda.viewmodel.AgendaViewModel;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.speaker.model.Speaker;
 
 import org.json.JSONObject;
 
@@ -49,18 +50,17 @@ public class AgendaFragment extends Fragment {
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
-        agendaViewModel.getAgenda(api_token, "29"/*eventid*/);
+        agendaViewModel.getAgenda(api_token, eventid);
         agendaViewModel.getAgendaList().observe(this, new Observer<FetchAgenda>() {
             @Override
             public void onChanged(FetchAgenda event) {
                 String strCommentList = event.getDetail();
                 RefreashToken refreashToken = new RefreashToken(getContext());
                 String data = refreashToken.decryptedData(strCommentList);
-                Gson gson = new Gson();
                 try {
-                    JSONObject jsonObject = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {
-                    }.getType());
-                    JSONObject jsonObject1 = jsonObject;
+                    Gson gson = new Gson();
+                    List<AgendaList> eventLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {}.getType());
+                    List<AgendaList> eventLists1 =eventLists;
                     /*List<AgendaList> eventLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {
                     }.getType());
                     if (eventLists != null) {

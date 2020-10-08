@@ -237,6 +237,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                                                     intent.putExtra("email", tableAttendees.get(0).getEmail());
                                                                     context.startActivity(intent);
                                                                 }
+
+                                                                if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                                    newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
+                                                                }
                                                             }
                                                         }
                                                     });
@@ -295,6 +299,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                                                     intent.putExtra("email", tableAttendees.get(0).getEmail());
                                                                     context.startActivity(intent);
                                                                 }
+                                                            }
+
+                                                            if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                                newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
                                                             }
                                                         }
                                                     });

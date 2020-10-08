@@ -331,7 +331,7 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
         speakerViewModel.getSpeakerList().observe(this, new Observer<FetchSpeaker>() {
             @Override
             public void onChanged(FetchSpeaker event) {
-                List<Speaker> eventLists = event.getSpeakerList();
+                //List<Speaker> eventLists = event.getSpeakerList();
                 progressBar.setVisibility(View.GONE);
                 SpeakerAdapter.removeLoadingFooter();
                 isLoading = false;

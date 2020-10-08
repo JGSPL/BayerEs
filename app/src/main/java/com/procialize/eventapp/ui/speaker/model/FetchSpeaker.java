@@ -11,9 +11,9 @@ public class FetchSpeaker {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
+    /*@SerializedName("detailpreencrypt")
     @Expose
-    List<Speaker> speakerList;
+    List<Speaker> speakerList;*/
 
 
     @SerializedName("detail")
@@ -28,13 +28,13 @@ public class FetchSpeaker {
         this.header = header;
     }
 
-    public List<Speaker> getSpeakerList() {
+ /*   public List<Speaker> getSpeakerList() {
         return speakerList;
     }
 
     public void setSpeakerList(List<Speaker> speakerList) {
         this.speakerList = speakerList;
-    }
+    }*/
 
     public String getDetail() {
         return detail;
