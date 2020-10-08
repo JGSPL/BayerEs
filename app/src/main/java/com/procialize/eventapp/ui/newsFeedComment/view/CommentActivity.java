@@ -344,10 +344,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         final String attendeeid = substring.substring(0, index);
                                         substring = substring.substring(index + 1, substring.length());
 
-
                                         stringBuilder.setSpan(stringBuilder, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 
                                         stringBuilder.setSpan(new ClickableSpan() {
                                             @Override
@@ -369,6 +367,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                             intent.putExtra("mobile", tableAttendees.get(0).getMobile());
                                                             intent.putExtra("email", tableAttendees.get(0).getEmail());
                                                             startActivity(intent);
+                                                        }
+
+                                                        if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                            newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers(CommentActivity.this);
                                                         }
                                                     }
                                                 });
@@ -398,7 +400,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         substring = substring.replace("<", "");
                                         substring = substring.replace(">", "");
                                         int index = substring.indexOf("^");
-//                                    substring = substring.replace("^", "");
+//                                      substring = substring.replace("^", "");
                                         final String attendeeid = substring.substring(0, index);
                                         substring = substring.substring(index + 1, substring.length());
 
@@ -428,6 +430,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                         }
                                                     }
                                                 });
+
+                                                if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                    newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers(CommentActivity.this);
+                                                }
                                             }
                                         }, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 

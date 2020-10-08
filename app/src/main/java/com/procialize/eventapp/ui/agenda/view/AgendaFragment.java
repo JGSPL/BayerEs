@@ -59,13 +59,10 @@ public class AgendaFragment extends Fragment {
                 String data = refreashToken.decryptedData(strCommentList);
                 try {
                     Gson gson = new Gson();
-                    List<AgendaList> eventLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {}.getType());
-                    List<AgendaList> eventLists1 =eventLists;
-                    /*List<AgendaList> eventLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {
-                    }.getType());
-                    if (eventLists != null) {
-                        //setupAgendaAdapter(eventLists);
-                    }*/
+                    List<AgendaList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {}.getType());
+                    if (agendaLists != null) {
+                        setupAgendaAdapter(agendaLists);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -77,9 +74,8 @@ public class AgendaFragment extends Fragment {
         return root;
     }
 
-    public void setupAgendaAdapter(List<Agenda> commentList) {
-        List<Attendee> attendeeList = new ArrayList<>();
-        if (commentList != null) {
+    public void setupAgendaAdapter(List<AgendaList> agendaLists) {
+        if (agendaLists != null) {
             /*attendeeAdapter = new AttendeeAdapter(getContext(), attendeeList, AgendaFragment.this);
             attendeerecycler.setLayoutManager(new LinearLayoutManager(getContext()));
             attendeerecycler.setAdapter(attendeeAdapter);
