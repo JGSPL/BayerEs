@@ -75,11 +75,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 ;
     String uName, uImage;
     //-----GETTING LIST OF ALL MESSAGES FROM CHAT ACTIVITY ----
-    public MessageAdapter(List<Messages> mMessagesList, String receiverUser, String sName, String sprofilpic,String rprofilPic) {
+    public MessageAdapter(List<Messages> mMessagesList, String receiverUser, /*String sName, String sprofilpic,*/String rprofilPic) {
         this.mMessagesList = mMessagesList;
         this.receiverUser = receiverUser;
-        this.sName = sName;
-        this.sprofilpic = sprofilpic;
+       // this.sName = sName;
+       // this.sprofilpic = sprofilpic;
         this.rprofilPic = rprofilPic;
 
     }
@@ -270,7 +270,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 }
             });
 */
-                holder.displayName2.setText(sName);
+                /*holder.displayName2.setText(sName);
 
                 Glide.with(context).load((sprofilpic))
                         .placeholder(R.drawable.profilepic_placeholder)
@@ -286,7 +286,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                                 return false;
                             }
-                        }).into(holder.profileImage2);
+                        }).into(holder.profileImage2);*/
 
                 // holder.messageText.setText(mes.getMessage());
                 if (message_type.equals("text")) {

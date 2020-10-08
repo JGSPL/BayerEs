@@ -91,6 +91,7 @@ import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
 import com.procialize.eventapp.costumTools.TouchImageView;
+import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
@@ -177,6 +178,7 @@ public class ChatActivity extends AppCompatActivity {
     LinearLayout lineaeSend;
     public static String videoflag = "0";
     ConnectionDetector cd;
+    Attendee attendee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,15 +195,15 @@ public class ChatActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawable(getDrawable(R.drawable.chat_bg));
 
         //-----GETING FROM INTENT----
-        mChatUser = getIntent().getStringExtra("user_id");
-        final String userName = getIntent().getStringExtra("user_name");
-        String loginUser_name = getIntent().getStringExtra("loginUser_name");
-        String sProfilepic = getIntent().getStringExtra("sProfilepic");
-        final String prof_pic = getIntent().getStringExtra("rProfilepic");
+       // mChatUser = getIntent().getStringExtra("user_id");
+        //final String userName = getIntent().getStringExtra("user_name");
+        //String loginUser_name = getIntent().getStringExtra("loginUser_name");
+        //String sProfilepic = getIntent().getStringExtra("sProfilepic");
+       // final String prof_pic = getIntent().getStringExtra("rProfilepic");
 
         final LinearLayout linMain = findViewById(R.id.linMain);
 
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         lname = intent.getStringExtra("lname");
         company = intent.getStringExtra("company");
         city = intent.getStringExtra("city");
@@ -212,7 +214,22 @@ public class ChatActivity extends AppCompatActivity {
         attendeeid = intent.getStringExtra("attendeeid");
         firebase_id = intent.getStringExtra("firebase_id");
         firstMessage = intent.getStringExtra("Message");
+        page = intent.getStringExtra("page");*/
+        Intent intent = getIntent();
         page = intent.getStringExtra("page");
+        attendee = (Attendee) getIntent().getSerializableExtra("Attendee");
+        final String userName = attendee.getFirst_name();
+        lname = attendee.getLast_name();
+        company = attendee.getCompany_name();
+        city = attendee.getCity();
+        designation = attendee.getDesignation();
+        final String prof_pic = attendee.getProfile_picture();
+        attendee_type = attendee.getAttendee_type();
+        mobile = attendee.getMobile();
+        email = attendee.getEmail();
+        attendeeid = attendee.getAttendee_id();
+        firebase_id = attendee.getFirebase_id();
+        mChatUser = attendee.getFirebase_id();
 
         //---SETTING ONLINE------
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -278,7 +295,7 @@ public class ChatActivity extends AppCompatActivity {
 
         }
 
-        mMessageAdapter = new MessageAdapter(messagesList, userName,loginUser_name,sProfilepic,prof_pic);
+        mMessageAdapter = new MessageAdapter(messagesList, userName/*,loginUser_name,sProfilepic*/,prof_pic);
 
         mMessagesList = (RecyclerView)findViewById(R.id.recycleViewMessageList);
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.message_swipe_layout);
