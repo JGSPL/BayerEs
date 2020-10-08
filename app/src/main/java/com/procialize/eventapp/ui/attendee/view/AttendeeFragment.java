@@ -434,11 +434,10 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     @Override
     public void onContactSelected(Attendee attendee) {
         if (!(attendee.getFirebase_status().equalsIgnoreCase("0"))) {
-            final String SprofilePic = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_PROFILE_PIC);
-            final String SUserNmae = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_FNAME);
-            final String SlName = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_LNAME);
-
-            Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
+            getActivity().startActivity(new Intent(getContext(), ChatActivity.class)
+                    .putExtra("page", "ListPage")
+                    .putExtra("Attendee", (Serializable) attendee));
+            /*Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
             chatIntent.putExtra("user_id", attendee.getFirebase_id());
             chatIntent.putExtra("user_name", attendee.getFirst_name() + " " + attendee.getLast_name());
             chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
@@ -457,7 +456,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             chatIntent.putExtra("mobile", attendee.getMobile());
             chatIntent.putExtra("email", attendee.getEmail());
 
-            startActivity(chatIntent);
+            startActivity(chatIntent);*/
         } else {
            /* Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
             intent.putExtra("attendeeid", attendee.getAttendee_id());

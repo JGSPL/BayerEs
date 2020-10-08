@@ -78,9 +78,11 @@ import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.RecyclerItemClickListener;
+import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
+import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.adapter.GifEmojiAdapter;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
@@ -110,6 +112,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -356,7 +359,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                     @Override
                                                     public void onChanged(List<TableAttendee> tableAttendees) {
                                                         if (tableAttendees != null) {
-                                                            Intent intent = new Intent(CommentActivity.this, AttendeeDetailActivity.class);
+                                                            /*Intent intent = new Intent(CommentActivity.this, AttendeeDetailActivity.class);
                                                             intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
                                                             intent.putExtra("lname", tableAttendees.get(0).getLast_name());
                                                             intent.putExtra("company", tableAttendees.get(0).getCompany_name());
@@ -366,7 +369,39 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                             intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
                                                             intent.putExtra("mobile", tableAttendees.get(0).getMobile());
                                                             intent.putExtra("email", tableAttendees.get(0).getEmail());
-                                                            startActivity(intent);
+                                                            startActivity(intent);*/
+                                                            final Attendee attendee = new Attendee();
+                                                            attendee.setMobile(tableAttendees.get(0).getMobile());
+                                                            attendee.setEmail(tableAttendees.get(0).getEmail());
+                                                            attendee.setFirebase_id(tableAttendees.get(0).getFirebase_id());
+                                                            attendee.setFirebase_name(tableAttendees.get(0).getFirebase_name());
+                                                            attendee.setFirebase_username(tableAttendees.get(0).getFirebase_username());
+                                                            attendee.setAttendee_id(tableAttendees.get(0).getAttendee_id());
+                                                            attendee.setFirst_name(tableAttendees.get(0).getFirst_name());
+                                                            attendee.setLast_name(tableAttendees.get(0).getLast_name());
+                                                            attendee.setCity(tableAttendees.get(0).getCity());
+                                                            attendee.setDesignation(tableAttendees.get(0).getDesignation());
+                                                            attendee.setCompany_name(tableAttendees.get(0).getCompany_name());
+                                                            attendee.setAttendee_type(tableAttendees.get(0).getAttendee_type());
+                                                            attendee.setTotal_sms(tableAttendees.get(0).getTotal_sms());
+                                                            attendee.setProfile_picture(tableAttendees.get(0).getProfile_picture());
+                                                            attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
+
+                                                            if(tableAttendees.get(0).getFirebase_id()!=null) {
+                                                                if (tableAttendees.get(0).getFirebase_id().equalsIgnoreCase("0")) {
+                                                                    startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
+                                                                            .putExtra("Attendee", (Serializable) attendee));
+                                                                } else {
+                                                                    if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
+                                                                        startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    } else {
+                                                                       startActivity(new Intent(CommentActivity.this, ChatActivity.class)
+                                                                                .putExtra("page", "ListPage")
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    }
+                                                                }
+                                                            }
                                                         }
 
                                                         if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
@@ -416,7 +451,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                     @Override
                                                     public void onChanged(List<TableAttendee> tableAttendees) {
                                                         if (tableAttendees != null) {
-                                                            Intent intent = new Intent(CommentActivity.this, AttendeeDetailActivity.class);
+                                                            /*Intent intent = new Intent(CommentActivity.this, AttendeeDetailActivity.class);
                                                             intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
                                                             intent.putExtra("lname", tableAttendees.get(0).getLast_name());
                                                             intent.putExtra("company", tableAttendees.get(0).getCompany_name());
@@ -426,7 +461,40 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                             intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
                                                             intent.putExtra("mobile", tableAttendees.get(0).getMobile());
                                                             intent.putExtra("email", tableAttendees.get(0).getEmail());
-                                                            startActivity(intent);
+                                                            startActivity(intent);*/
+                                                            final Attendee attendee = new Attendee();
+                                                            attendee.setMobile(tableAttendees.get(0).getMobile());
+                                                            attendee.setEmail(tableAttendees.get(0).getEmail());
+                                                            attendee.setFirebase_id(tableAttendees.get(0).getFirebase_id());
+                                                            attendee.setFirebase_name(tableAttendees.get(0).getFirebase_name());
+                                                            attendee.setFirebase_username(tableAttendees.get(0).getFirebase_username());
+                                                            attendee.setAttendee_id(tableAttendees.get(0).getAttendee_id());
+                                                            attendee.setFirst_name(tableAttendees.get(0).getFirst_name());
+                                                            attendee.setLast_name(tableAttendees.get(0).getLast_name());
+                                                            attendee.setCity(tableAttendees.get(0).getCity());
+                                                            attendee.setDesignation(tableAttendees.get(0).getDesignation());
+                                                            attendee.setCompany_name(tableAttendees.get(0).getCompany_name());
+                                                            attendee.setAttendee_type(tableAttendees.get(0).getAttendee_type());
+                                                            attendee.setTotal_sms(tableAttendees.get(0).getTotal_sms());
+                                                            attendee.setProfile_picture(tableAttendees.get(0).getProfile_picture());
+                                                            attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
+
+                                                            if(tableAttendees.get(0).getFirebase_id()!=null) {
+                                                                if (tableAttendees.get(0).getFirebase_id().equalsIgnoreCase("0")) {
+                                                                    startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
+                                                                            .putExtra("Attendee", (Serializable) attendee));
+                                                                } else {
+                                                                    if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
+                                                                        startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    } else {
+                                                                        startActivity(new Intent(CommentActivity.this, ChatActivity.class)
+                                                                                .putExtra("page", "ListPage")
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    }
+                                                                }
+                                                            }
+
                                                         }
                                                     }
                                                 });

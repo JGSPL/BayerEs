@@ -49,6 +49,8 @@ import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDetailsViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.speaker.model.Speaker;
 
+import java.io.Serializable;
+
 import cn.jzvd.JzvdStd;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -280,8 +282,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
 
                                         //--OPENING CHAT ACTIVITY FOR CLICKED USER----
                                         getChatUpdate(api_token, eventid, attendeeid);
-
-                                        Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
+                                        startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
+                                                .putExtra("page", "AttendeeDetail")
+                                                .putExtra("Attendee", (Serializable) attendee));
+                                        /*Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                         chatIntent.putExtra("user_id", firebase_id);
                                         chatIntent.putExtra("user_name", fname + " " + lname);
                                         chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
@@ -300,7 +304,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                         chatIntent.putExtra("mobile", mobile);
                                         chatIntent.putExtra("email", email);
 
-                                        startActivity(chatIntent);
+                                        startActivity(chatIntent);*/
                                         finish();
 
                                     }
@@ -337,28 +341,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         getChatUpdate(api_token, eventid, attendeeid);
+                                        startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
+                                                .putExtra("page", "AttendeeDetail")
+                                                .putExtra("Attendee", (Serializable) attendee));
 
-                                        Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
-                                        chatIntent.putExtra("user_id", firebase_id);
-                                        chatIntent.putExtra("user_name", fname + " " + lname);
-                                        chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
-                                        chatIntent.putExtra("sProfilePic", SprofilePic);
-                                        chatIntent.putExtra("rProfilepic", prof_pic);
-                                        chatIntent.putExtra("attendeeid", attendeeid);
-                                        chatIntent.putExtra("firebase_id", firebase_id);
-                                        chatIntent.putExtra("Message", message);
-                                        chatIntent.putExtra("page", "AttendeeDetail");
-
-                                        chatIntent.putExtra("lname", lname);
-                                        chatIntent.putExtra("company", company);
-                                        chatIntent.putExtra("city", city);
-                                        chatIntent.putExtra("designation", designation);
-                                        chatIntent.putExtra("attendee_type", attendee_type);
-                                        chatIntent.putExtra("mobile", mobile);
-                                        chatIntent.putExtra("email", email);
-                                        //  getChatUpdate(api_token,eventid,attendeeid);
-
-                                        startActivity(chatIntent);
                                         finish();
 
                                     }

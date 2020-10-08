@@ -48,6 +48,7 @@ import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
+import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
@@ -411,19 +412,23 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                             attendee.setTotal_sms(tableAttendees.get(0).getTotal_sms());
                                                             attendee.setProfile_picture(tableAttendees.get(0).getProfile_picture());
                                                             attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
+                                                            if(tableAttendees.get(0).getFirebase_id()!=null) {
+                                                                if (tableAttendees.get(0).getFirebase_id().equalsIgnoreCase("0")) {
+                                                                    context.startActivity(new Intent(context, AttendeeDetailActivity.class)
+                                                                            .putExtra("Attendee", (Serializable) attendee));
+                                                                } else {
+                                                                    if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
+                                                                        context.startActivity(new Intent(context, AttendeeDetailActivity.class)
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    } else {
+                                                                        context.startActivity(new Intent(context, ChatActivity.class)
+                                                                                .putExtra("page", "ListPage")
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    }
+                                                                }
+                                                            }
 
-                                                            context.startActivity(new Intent(context, AttendeeDetailActivity.class)
-                                                                    .putExtra("Attendee", (Serializable) attendee));
-                                                           /* intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
-                                                            intent.putExtra("lname", tableAttendees.get(0).getLast_name());
-                                                            intent.putExtra("company", tableAttendees.get(0).getCompany_name());
-                                                            intent.putExtra("city", tableAttendees.get(0).getCity());
-                                                            intent.putExtra("designation", tableAttendees.get(0).getDesignation());
-                                                            intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
-                                                            intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
-                                                            intent.putExtra("mobile", tableAttendees.get(0).getMobile());
-                                                            intent.putExtra("email", tableAttendees.get(0).getEmail());
-                                                            context.startActivity(intent);*/
+
                                                         }
                                                         if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
                                                             newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
@@ -472,19 +477,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                     @Override
                                                     public void onChanged(List<TableAttendee> tableAttendees) {
                                                         if (tableAttendees != null) {
-                                                            /*Intent intent = new Intent(context, AttendeeDetailActivity.class);
-                                                            intent.putExtra("attendeeid", tableAttendees.get(0).getAttendee_id());
-                                                            intent.putExtra("firebase_id", tableAttendees.get(0).getFirebase_id());
-                                                            intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
-                                                            intent.putExtra("lname", tableAttendees.get(0).getLast_name());
-                                                            intent.putExtra("company", tableAttendees.get(0).getCompany_name());
-                                                            intent.putExtra("city", tableAttendees.get(0).getCity());
-                                                            intent.putExtra("designation", tableAttendees.get(0).getDesignation());
-                                                            intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
-                                                            intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
-                                                            intent.putExtra("mobile", tableAttendees.get(0).getMobile());
-                                                            intent.putExtra("email", tableAttendees.get(0).getEmail());
-                                                            context.startActivity(intent);*/
                                                             final Attendee attendee = new Attendee();
                                                             attendee.setMobile(tableAttendees.get(0).getMobile());
                                                             attendee.setEmail(tableAttendees.get(0).getEmail());
@@ -501,8 +493,22 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                             attendee.setTotal_sms(tableAttendees.get(0).getTotal_sms());
                                                             attendee.setProfile_picture(tableAttendees.get(0).getProfile_picture());
                                                             attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
-                                                            context.startActivity(new Intent(context, AttendeeDetailActivity.class)
-                                                                    .putExtra("Attendee", (Serializable) attendee));
+                                                            if(tableAttendees.get(0).getFirebase_id()!=null) {
+                                                                if (tableAttendees.get(0).getFirebase_id().equalsIgnoreCase("0")) {
+                                                                    context.startActivity(new Intent(context, AttendeeDetailActivity.class)
+                                                                            .putExtra("Attendee", (Serializable) attendee));
+                                                                } else {
+                                                                    if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
+                                                                        context.startActivity(new Intent(context, AttendeeDetailActivity.class)
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    } else {
+                                                                        context.startActivity(new Intent(context, ChatActivity.class)
+                                                                                .putExtra("page", "ListPage")
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    }
+                                                                }
+                                                            }
+
                                                         }
 
                                                         if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
