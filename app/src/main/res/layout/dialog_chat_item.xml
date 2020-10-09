@@ -24,13 +24,22 @@
             android:background="@color/white"
             android:orientation="horizontal"
             android:padding="5dp">
-
+            <ImageView
+                android:id="@+id/imgback"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center"
+                android:tint="@color/black"
+                android:layout_marginLeft="10dp"
+                android:contentDescription="TODO"
+                android:src="@mipmap/ic_back"
+                android:visibility="visible"/>
             <com.procialize.eventapp.fonts.RobotoTextview
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="8.5"
-                android:paddingLeft="10dp"
+                android:paddingLeft="5dp"
                 android:text="Preview"
                 android:textColor="@color/black"
                 android:textSize="@dimen/textsizenormal"

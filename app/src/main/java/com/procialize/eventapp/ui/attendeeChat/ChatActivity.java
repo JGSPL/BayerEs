@@ -1352,6 +1352,8 @@ public class ChatActivity extends AppCompatActivity {
         final ProgressBar progessLoad = myDialog.findViewById(R.id.progessLoad);
         final LinearLayout linSend = myDialog.findViewById(R.id.linSend);
 
+        ImageView imgback = myDialog.findViewById(R.id.imgback);
+
         ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
         //title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
 
@@ -1362,6 +1364,14 @@ public class ChatActivity extends AppCompatActivity {
 
         chatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
 
+
+        imgback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utility.hideKeyboard(v);
+                myDialog.dismiss();
+            }
+        });
 
         imgCancel.setOnClickListener(new View.OnClickListener() {
             @Override
