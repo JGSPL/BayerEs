@@ -56,7 +56,7 @@ public class AgendaDetailsActivity extends Activity {
         String rated = agendaDetails.getRated();
 
 
-        try {
+        /*try {
             SimpleDateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.UK);
             SimpleDateFormat targetFormat = new SimpleDateFormat("HH:mm aa");
             Date startTime = originalFormat.parse(sessionStartTime);
@@ -71,7 +71,7 @@ public class AgendaDetailsActivity extends Activity {
             e.printStackTrace();
         }
 
-        tv_date.setText(CommonFunction.convertEventDate(sessionDate));
+        tv_date.setText(CommonFunction.convertEventDate(sessionDate));*/
         tv_session_name.setText(sessionName);
         tv_short_session_description.setText(sessionShortDescription);
         tv_session_description.setText(sessionDescription);
