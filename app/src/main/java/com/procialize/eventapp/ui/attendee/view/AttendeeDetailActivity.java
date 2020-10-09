@@ -428,9 +428,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                         }
 
                     } else {
+                        Utility.createShortSnackBar(ll_main, "We need your permission so you can enjoy full features of app");
 
-                        Toast.makeText(AttendeeDetailActivity.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
-                        RequestMultiplePermission();
+                       // Toast.makeText(AttendeeDetailActivity.this, "We need your permission so you can enjoy full features of app", Toast.LENGTH_LONG).show();
+                     //   RequestMultiplePermission();
 
                     }
                 }
