@@ -9,6 +9,7 @@ import com.procialize.eventapp.ui.attendee.model.FetchAttendee;
 import com.procialize.eventapp.ui.eventList.model.Event;
 import com.procialize.eventapp.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.eventapp.ui.eventinfo.model.EventInfo;
+import com.procialize.eventapp.ui.livepoll.model.FetchLivePoll;
 import com.procialize.eventapp.ui.newsFeedComment.model.Comment;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedLike.model.Like;
@@ -291,5 +292,10 @@ public interface APIService{
  @FormUrlEncoded
  Call<FetchAgenda> agendaFetch(@Header("authorization") String auth,
                                @Field("event_id") String event_id);
+
+ @POST("Livepoll_api/LivePollFetch")
+ @FormUrlEncoded
+ Call<FetchLivePoll> LivePollFetch(@Header("authorization") String auth,
+                                   @Field("event_id") String event_id);
 
 }
