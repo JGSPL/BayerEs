@@ -70,7 +70,6 @@ import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
-import com.procialize.eventapp.ui.livepoll.view.LivePollActivity;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.model.Profile;
@@ -79,7 +78,6 @@ import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -236,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_event_info = findViewById(R.id.tr_event_info);
         tr_logout = findViewById(R.id.tr_logout);
         txt_version = findViewById(R.id.txt_version);
-        tr_live_poll = findViewById(R.id.tr_live_poll);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -244,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_profile.setOnClickListener(this);
         tr_event_info.setOnClickListener(this);
         tr_logout.setOnClickListener(this);
-        tr_live_poll.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -275,6 +271,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
 
 
+
+
                     default:
                         return true;
                 }
@@ -283,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putString("isFrom", "MainActivity");
+        bundle.putString("isFrom","MainActivity");
         newsFeedFragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -297,15 +295,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         // Switch to page one
-                        NewsFeedFragment myFragment = (NewsFeedFragment) getSupportFragmentManager().findFragmentByTag("NewsFeed");
-                        if (myFragment != null && myFragment.isVisible()) {
-                        } else {
-                            JzvdStd.releaseAllVideos();
-                            getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "NewsFeed")
-                                    .commit();
-                        }
+                        JzvdStd.releaseAllVideos();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
+                                .commit();
                         break;
                     case R.id.navigation_agenda:
                         // Switch to page two
@@ -422,9 +416,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if (Jzvd.backPress()) {
-            return;
-        }
+
         JzvdStd.releaseAllVideos();
         if (doubleBackToExitPressedOnce) {
             ActivityCompat.finishAffinity(MainActivity.this);
@@ -493,11 +485,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .beginTransaction()
                         .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")
                         .commit();*/
-                break;
-            case R.id.tr_live_poll:
-                /*JzvdStd.releaseAllVideos();
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, LivePollActivity.class));*/
                 break;
             case R.id.tr_logout:
                 JzvdStd.releaseAllVideos();
@@ -659,8 +646,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             //---OPENING MAIN ACTIVITY---
                                             Log.e("Login : ","Logged in Successfully" );
                                           //   Utility.createShortSnackBar(ll_main,"Logged in Successfully");
-                                            String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                           // getChatUpdate(api_token,eventid,currentuser,"",storeFirename,"1");
+                                           // String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                           // getChatUpdate(api_token,eventid,currentuser,stoeUsername,storeFirename,"1");
 
                                         }
                                         else{

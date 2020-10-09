@@ -32,7 +32,7 @@ public class LoginViewModel extends BaseObservable {
     Context context;
     ActivityLoginBinding activityLoginBinding;
     private String successMessage = "Login was successful";
-    private String errorMessage = "Email or Mobile No. not valid";
+    private String errorMessage = "Please enter valid Email ID/Mobile no";
     private String errorMessage1 = "Please enter valid Email ID/Mobile no.";
     private String errorMessage2 = "Please enter valid OTP";
     private String termsandconditions = "Please Agreed to the terms and conditions";
@@ -213,7 +213,7 @@ public class LoginViewModel extends BaseObservable {
                         setToastMessage(response.body().getHeader().get(0).getMsg());
                     } else {
                         activityLoginBinding.btnSubmit.setClickable(true);
-                        setToastMessage("Please enter valid mobile/email");
+                        setToastMessage("Please enter valid Email ID/Mobile no");
                     }
                 }
             }

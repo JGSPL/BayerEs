@@ -44,6 +44,6 @@
     <string name="speakerdetail">Speaker Detail</string>
     <string name="quizlistingtitle">Quiz</string>
 
-    <string name="designandeveloped"><u>Design  Developed by Procialize</u></string>
     <string name="maps_api_key">AIzaSyCmc8lu_Yp2dWhpm3TLtGVTcZXJJHjHg5k</string>
+    <string name="designandeveloped"><u>Design &amp; Developed by Procialize</u></string>
 </resources>
