@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.lifecycle.MutableLiveData;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -76,6 +77,7 @@ import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
+import com.procialize.eventapp.ui.quiz.view.QuizListingActivity;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 import java.io.File;
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event, tr_home, tr_profile, tr_logout,tr_event_info;
+    TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_quiz, tr_event_info;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -231,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_home = findViewById(R.id.tr_home);
         tr_profile = findViewById(R.id.tr_profile);
         tr_event_info = findViewById(R.id.tr_event_info);
+        tr_quiz = findViewById(R.id.tr_quiz);
         tr_logout = findViewById(R.id.tr_logout);
         txt_version = findViewById(R.id.txt_version);
 
@@ -240,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_profile.setOnClickListener(this);
         tr_event_info.setOnClickListener(this);
         tr_logout.setOnClickListener(this);
+        tr_quiz.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -480,6 +484,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, EventInfoActivity.class));
+                /*getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")
+                        .commit();*/
+                break;
+
+            case R.id.tr_quiz:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, QuizListingActivity.class));
                 /*getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")
