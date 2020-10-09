@@ -6,6 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.procialize.eventapp.ui.agenda.roomDB.AgendaDao;
+import com.procialize.eventapp.ui.agenda.roomDB.TableAgenda;
 import com.procialize.eventapp.ui.attendee.roomDB.AttendeeDao;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
@@ -19,7 +21,7 @@ import com.procialize.eventapp.ui.speaker.roomDB.SpeakerDao;
 import com.procialize.eventapp.ui.speaker.roomDB.TableSpeaker;
 
 @Database(entities = {UploadMultimedia.class, TableNewsFeed.class, TableNewsFeedMedia.class,
-        ProfileEventId.class, TableAttendee.class, TableSpeaker.class},
+        ProfileEventId.class, TableAttendee.class, TableSpeaker.class, TableAgenda.class},
         version = 1, exportSchema = false)
 public abstract class EventAppDB extends RoomDatabase {
 
@@ -29,6 +31,7 @@ public abstract class EventAppDB extends RoomDatabase {
     public abstract ProfileUpdateDao profileUpdateDao();
     public abstract AttendeeDao attendeeDao();
     public abstract SpeakerDao speakerDao();
+    public abstract AgendaDao agendaDao();
 
     public static EventAppDB getDatabase(final Context context) {
         if (eventAppDB == null) {

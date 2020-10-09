@@ -112,7 +112,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 10;
+    int newsFeedPageSize = 100;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -446,7 +446,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     private void loadNextPage() {
-        if (totalPages > currentPage) {
+        if (totalPages >= currentPage) {
             Log.d("loadNextPage", "loadNextPage: " + currentPage);
             if (newsfeedViewModel != null /*&& newsfeedViewModel.getNewsRepository().hasObservers()*/) {
                 newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);

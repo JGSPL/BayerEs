@@ -688,8 +688,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onChanged(FetchAttendee event) {
                         if(event != null) {
-                            List<Attendee> attendeeList = event.getAttandeeList();
-
+                            //List<Attendee> attendeeList = event.getAttandeeList();
+                            String strCommentList =event.getDetail();
+                            RefreashToken refreashToken = new RefreashToken(MainActivity.this);
+                            String data = refreashToken.decryptedData(strCommentList);
+                            Gson gson = new Gson();
+                            List<Attendee> attendeeList = gson.fromJson(data, new TypeToken<ArrayList<Attendee>>() {}.getType());
                             //Delete All attendee from local db and insert attendee
                             attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
                             attendeeDatabaseViewModel.insertIntoDb(MainActivity.this, attendeeList);

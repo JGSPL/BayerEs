@@ -3,7 +3,9 @@ package com.procialize.eventapp.ui.agenda.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Agenda {
+import java.io.Serializable;
+
+public class Agenda implements Serializable {
 
     @SerializedName("session_id")
     @Expose
@@ -95,5 +97,57 @@ public class Agenda {
 
     public String getRated() {
         return rated;
+    }
+
+    public void setSession_id(String session_id) {
+        this.session_id = session_id;
+    }
+
+    public void setSession_name(String session_name) {
+        this.session_name = session_name;
+    }
+
+    public void setSession_short_description(String session_short_description) {
+        this.session_short_description = session_short_description;
+    }
+
+    public void setSession_description(String session_description) {
+        this.session_description = session_description;
+    }
+
+    public void setSession_start_time(String session_start_time) {
+        this.session_start_time = session_start_time;
+    }
+
+    public void setSession_end_time(String session_end_time) {
+        this.session_end_time = session_end_time;
+    }
+
+    public void setSession_date(String session_date) {
+        this.session_date = session_date;
+    }
+
+    public void setEvent_id(String event_id) {
+        this.event_id = event_id;
+    }
+
+    public void setLivestream_link(String livestream_link) {
+        this.livestream_link = livestream_link;
+    }
+
+    public void setStar(String star) {
+        this.star = star;
+    }
+
+    public void setTotal_feedback(String total_feedback) {
+        this.total_feedback = total_feedback;
+    }
+
+    public void setFeedback_comment(String feedback_comment) {
+        this.feedback_comment = feedback_comment;
+    }
+
+    public void setRated(String rated) {
+        this.rated = rated;
     }
 }

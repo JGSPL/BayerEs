@@ -465,7 +465,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                         final String attendeeid = substring.substring(0, index);
                                         substring = substring.substring(index + 1, substring.length());
 
-
                                         stringBuilder.setSpan(stringBuilder, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -508,7 +507,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                                     }
                                                                 }
                                                             }
-
                                                         }
 
                                                         if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
@@ -544,7 +542,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

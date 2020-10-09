@@ -70,7 +70,6 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
@@ -101,7 +100,6 @@ import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
 import com.procialize.eventapp.ui.tagging.adapter.UsersAdapter;
 import com.procialize.eventapp.ui.tagging.model.TaggingComment;
-import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
@@ -157,7 +155,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     int positionOfList;
     private Newsfeed_detail newsfeed_detail;
     public static int swipableAdapterPosition = 0;
-    private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments,tv_comment_count, tv_no_of_likes, tv_header, testdataPost, textData;
+    private TextView tv_status, tv_name, tv_designation, tv_date_time, tv_no_of_comments, tv_comment_count, tv_no_of_likes, tv_header, testdataPost, textData;
     String event_id;
     ConnectionDetector connectionDetector;
     String commentText = "";
@@ -273,7 +271,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                         RefreashToken refreashToken = new RefreashToken(CommentActivity.this);
                         String data = refreashToken.decryptedData(strEventList);
                         Gson gson = new Gson();
-                        newsfeed_detail = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {}.getType());
+                        newsfeed_detail = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {
+                        }.getType());
                         //newsfeed_detail = fetchNewsfeedMultiple.getNewsfeed_detail().get(0);
                     }
                 });
@@ -387,7 +386,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                             attendee.setProfile_picture(tableAttendees.get(0).getProfile_picture());
                                                             attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
 
-                                                            if(tableAttendees.get(0).getFirebase_id()!=null) {
+                                                            if (tableAttendees.get(0).getFirebase_id() != null) {
                                                                 if (tableAttendees.get(0).getFirebase_id().equalsIgnoreCase("0")) {
                                                                     startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
                                                                             .putExtra("Attendee", (Serializable) attendee));
@@ -396,7 +395,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                                         startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
                                                                                 .putExtra("Attendee", (Serializable) attendee));
                                                                     } else {
-                                                                       startActivity(new Intent(CommentActivity.this, ChatActivity.class)
+                                                                        startActivity(new Intent(CommentActivity.this, ChatActivity.class)
                                                                                 .putExtra("page", "ListPage")
                                                                                 .putExtra("Attendee", (Serializable) attendee));
                                                                     }
@@ -479,7 +478,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                             attendee.setProfile_picture(tableAttendees.get(0).getProfile_picture());
                                                             attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
 
-                                                            if(tableAttendees.get(0).getFirebase_id()!=null) {
+                                                            if (tableAttendees.get(0).getFirebase_id() != null) {
                                                                 if (tableAttendees.get(0).getFirebase_id().equalsIgnoreCase("0")) {
                                                                     startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
                                                                             .putExtra("Attendee", (Serializable) attendee));
@@ -663,7 +662,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         if (connectionDetector.isConnectingToInternet()) {
             String newsFeedId = newsfeed_detail.getNews_feed_id();
             ApiUtils.getAPIService().getComment(api_token, event_id,
-                    newsFeedId,"1000","1")
+                    newsFeedId, "1000", "1")
                     .enqueue(new Callback<Comment>() {
                         @Override
                         public void onResponse(Call<Comment> call, Response<Comment> response) {
@@ -673,16 +672,17 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 RefreashToken refreashToken = new RefreashToken(CommentActivity.this);
                                 String data = refreashToken.decryptedData(strCommentList);
                                 Gson gson = new Gson();
-                                commentList = gson.fromJson(data, new TypeToken<ArrayList<CommentDetail>>() {}.getType());
+                                commentList = gson.fromJson(data, new TypeToken<ArrayList<CommentDetail>>() {
+                                }.getType());
 
-                               // commentList = response.body().getCommentDetails();
+                                // commentList = response.body().getCommentDetails();
                                 if (commentList != null) {
                                     setupCommentAdapter(commentList);
                                     //showCommentCount(commentList);
                                     showCommentCount(commentCount);
 
                                     List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
-                                    newsfeed_details.get(positionOfList).setTotal_comments(commentCount+"");
+                                    newsfeed_details.get(positionOfList).setTotal_comments(commentCount + "");
                                     newsfeedAdapter.notifyDataSetChanged();
 
                                 } else {
@@ -692,7 +692,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                     showCommentCount(commentCount);
 
                                     List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
-                                    newsfeed_details.get(positionOfList).setTotal_comments(commentCount+"");
+                                    newsfeed_details.get(positionOfList).setTotal_comments(commentCount + "");
                                     newsfeedAdapter.notifyDataSetChanged();
                                 }
                             }
@@ -844,8 +844,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                         Utility.createShortSnackBar(ll_main, "Success");
                                         et_comment.setText("");
                                         commentText = et_comment.getText().toString();
-                                        int commentCount = Integer.parseInt(tv_comment_count.getText().toString())+1;
-                                        tv_comment_count.setText(commentCount+"");
+                                        int commentCount = Integer.parseInt(tv_comment_count.getText().toString()) + 1;
+                                        tv_comment_count.setText(commentCount + "");
                                         getComments(Integer.parseInt(tv_comment_count.getText().toString()));
 
                                         if (commentViewModel != null && commentViewModel.postCommentResponse().hasObservers()) {
@@ -856,6 +856,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             } else {
                                 fl_post_comment.setEnabled(true);
                                 Utility.createShortSnackBar(ll_main, "Please Enter Comment");
+                            }
+
+                            if (commentViewModel != null && commentViewModel.getIsValid().hasObservers()) {
+                                commentViewModel.getIsValid().removeObservers(CommentActivity.this);
                             }
                         }
                     });
@@ -868,7 +872,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                     commentViewModel.likePost(api_token, event_id, newsfeed_detail.getNews_feed_id());
 
-                    ApiUtils.getAPIService().PostLikeFromComment(api_token,event_id, newsfeed_detail.getNews_feed_id()).enqueue(new Callback<LikePost>() {
+                    ApiUtils.getAPIService().PostLikeFromComment(api_token, event_id, newsfeed_detail.getNews_feed_id()).enqueue(new Callback<LikePost>() {
                         @Override
                         public void onResponse(Call<LikePost> call, Response<LikePost> response) {
                             if (response.isSuccessful()) {
@@ -1089,7 +1093,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             public void onChanged(LoginOrganizer loginOrganizer) {
                 Utility.createShortSnackBar(ll_main, "Success");
                 et_comment.setText("");
-                getComments(Integer.parseInt(tv_comment_count.getText().toString())+1);
+                getComments(Integer.parseInt(tv_comment_count.getText().toString()) + 1);
             }
         });
     }
@@ -1190,8 +1194,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             commentList.clear();
                             dialog.dismiss();
                             Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
-                            int commentCount = Integer.parseInt(tv_comment_count.getText().toString())-1;
-                            tv_comment_count.setText(commentCount+"");
+                            int commentCount = Integer.parseInt(tv_comment_count.getText().toString()) - 1;
+                            tv_comment_count.setText(commentCount + "");
                             getComments(Integer.parseInt(tv_comment_count.getText().toString()));
                         }
                     }
@@ -1215,8 +1219,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             dialog.dismiss();
                             Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
 
-                            int commentCount = Integer.parseInt(tv_comment_count.getText().toString())-1;
-                            tv_comment_count.setText(commentCount+"");
+                            int commentCount = Integer.parseInt(tv_comment_count.getText().toString()) - 1;
+                            tv_comment_count.setText(commentCount + "");
                             getComments(Integer.parseInt(tv_comment_count.getText().toString()));
                         } else {
                             dialog.dismiss();
@@ -1374,7 +1378,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 try {
                     Bitmap bitmap = getBitmapFromURL(url);
                     Uri uri = getLocalBitmapUri(bitmap, context);
-                    if(uri!=null) {
+                    if (uri != null) {
                         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                         sharingIntent.setType("image/*");
                         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
@@ -1448,7 +1452,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             spannedString1 = Utility.trimTrailingWhitespace(strPost);
         } else {
             Spanned strPost = Html.fromHtml(spannedString);
-            spannedString1 =Utility.trimTrailingWhitespace(strPost);
+            spannedString1 = Utility.trimTrailingWhitespace(strPost);
         }
 
         Intent share = new Intent(Intent.ACTION_SEND);
@@ -1456,7 +1460,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
         share.putExtra(Intent.EXTRA_TEXT, spannedString1 /* + url*/);
-        startActivity(Intent.createChooser(share,  " Shared via Event app"));
+        startActivity(Intent.createChooser(share, " Shared via Event app"));
     }
 
     private class DownloadFile extends AsyncTask<String, String, String> {

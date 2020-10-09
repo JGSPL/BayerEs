@@ -33,9 +33,12 @@ public class AttendeeRepository {
                 .enqueue(new Callback<FetchAttendee>() {
                     @Override
                     public void onResponse(Call<FetchAttendee> call, Response<FetchAttendee> response) {
-                        if (response.isSuccessful()) {
-                            fetchattendeeList.setValue(response.body());
-                        }
+                        try {
+                            if (response.isSuccessful()) {
+                                fetchattendeeList.setValue(response.body());
+                            }
+                        }catch (Exception e)
+                        {e.printStackTrace();}
                     }
 
                     @Override

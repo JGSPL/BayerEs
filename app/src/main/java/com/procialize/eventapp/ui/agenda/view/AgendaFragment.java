@@ -10,20 +10,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.ui.agenda.adapter.AgendaAdapter;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
 import com.procialize.eventapp.ui.agenda.model.AgendaList;
 import com.procialize.eventapp.ui.agenda.model.FetchAgenda;
 import com.procialize.eventapp.ui.agenda.viewmodel.AgendaViewModel;
-import com.procialize.eventapp.ui.attendee.model.Attendee;
-import com.procialize.eventapp.ui.speaker.model.Speaker;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +30,12 @@ import java.util.List;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
-public class AgendaFragment extends Fragment {
+public class AgendaFragment extends Fragment implements AgendaAdapter.AgendaAdapterListner {
 
     private AgendaViewModel agendaViewModel;
     String api_token, eventid;
+    AgendaAdapter agendaAdapter;
+    RecyclerView recycler_agenda;
 
     public static AgendaFragment newInstance() {
 
@@ -49,7 +50,7 @@ public class AgendaFragment extends Fragment {
         new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
-
+        recycler_agenda = root.findViewById(R.id.recycler_agenda);
         agendaViewModel.getAgenda(api_token, eventid);
         agendaViewModel.getAgendaList().observe(this, new Observer<FetchAgenda>() {
             @Override
@@ -59,7 +60,8 @@ public class AgendaFragment extends Fragment {
                 String data = refreashToken.decryptedData(strCommentList);
                 try {
                     Gson gson = new Gson();
-                    List<AgendaList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {}.getType());
+                    List<AgendaList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {
+                    }.getType());
                     if (agendaLists != null) {
                         setupAgendaAdapter(agendaLists);
                     }
@@ -75,11 +77,17 @@ public class AgendaFragment extends Fragment {
     }
 
     public void setupAgendaAdapter(List<AgendaList> agendaLists) {
-        if (agendaLists != null) {
-            /*attendeeAdapter = new AttendeeAdapter(getContext(), attendeeList, AgendaFragment.this);
-            attendeerecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-            attendeerecycler.setAdapter(attendeeAdapter);
-            attendeeAdapter.notifyDataSetChanged();*/
+        if (agendaLists.size() > 0) {
+            List<Agenda> agenda = agendaLists.get(0).getAgenda_list();
+            agendaAdapter = new AgendaAdapter(getContext(), agenda, AgendaFragment.this);
+            recycler_agenda.setLayoutManager(new LinearLayoutManager(getContext()));
+            recycler_agenda.setAdapter(agendaAdapter);
+            agendaAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onContactSelected(Agenda attendee) {
+
     }
 }
