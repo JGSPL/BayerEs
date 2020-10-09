@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.CommonFunction;
@@ -34,6 +36,10 @@ import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
@@ -83,7 +89,32 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
 
     public void geLikes() {
         if (connectionDetector.isConnectingToInternet()) {
-            likeViewModel.getLike(api_token, event_id, newsfeed_detail.getNews_feed_id(), "500", "1");
+            ApiUtils.getAPIService().getLikes(api_token, event_id, newsfeed_detail.getNews_feed_id(), "500", "1")
+                    .enqueue(new Callback<Like>() {
+                        @Override
+                        public void onResponse(Call<Like> call, Response<Like> response) {
+                            if (response.isSuccessful()) {
+                                String strCommentList =response.body().getDetail();
+                                RefreashToken refreashToken = new RefreashToken(LikeActivity.this);
+                                String data = refreashToken.decryptedData(strCommentList);
+                                Gson gson = new Gson();
+                                likeList = gson.fromJson(data, new TypeToken<ArrayList<LikeDetail>>() {}.getType());
+                                // likeList = like.getLikeDetails();
+                                if (likeList != null) {
+                                    setupLikeAdapter(likeList);
+                                    //showLikeCount(likeList);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Like> call, Throwable t) {
+                            Utility.createShortSnackBar(ll_main, "Please try after some time");
+                        }
+                    });
+
+
+            /*likeViewModel.getLike(api_token, event_id, newsfeed_detail.getNews_feed_id(), "500", "1");
             likeViewModel.getLikeList().observe(this, new Observer<Like>() {
                 @Override
                 public void onChanged(Like like) {
@@ -99,8 +130,12 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
                             //showLikeCount(likeList);
                         }
                     }
+
+                    if (likeViewModel != null && likeViewModel.getLikeList().hasObservers()) {
+                        likeViewModel.getLikeList().removeObservers(LikeActivity.this);
+                    }
                 }
-            });
+            });*/
         } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection");
         }
