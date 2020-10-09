@@ -37,7 +37,7 @@ public class EventInfoRepository {
                     public void onResponse(Call<EventInfo> call, Response<EventInfo> response) {
                         if (response.isSuccessful()) {
                             try {
-                                likeList.setValue(response.body());
+                                likeList.postValue(response.body());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -46,7 +46,7 @@ public class EventInfoRepository {
 
                     @Override
                     public void onFailure(Call<EventInfo> call, Throwable t) {
-                        likeList.setValue(null);
+                        likeList.postValue(null);
                     }
                 });
 

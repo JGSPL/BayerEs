@@ -1,6 +1,5 @@
 package com.procialize.eventapp.ui.newsFeedDetails.view;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -22,7 +21,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,7 +50,6 @@ import com.procialize.eventapp.ui.newsFeedDetails.viewModel.NewsFeedDetailsViewM
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -70,6 +67,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Utility.CommonFunction.getLocalBitmapUri;
@@ -79,6 +77,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment.newsfeedAdapter;
 
 public class NewsFeedDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -183,7 +182,11 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             if (1 == news_feed_media.size()) {
                 iv_right.setVisibility(View.GONE);
             } else {
-                iv_right.setVisibility(View.VISIBLE);
+                if (news_feed_media.size() == mediaPosition+1) {
+                    iv_right.setVisibility(View.GONE);
+                } else {
+                    iv_right.setVisibility(View.VISIBLE);
+                }
             }
             if (vp_media.getCurrentItem() == 0) {
                 iv_left.setVisibility(View.GONE);
@@ -368,7 +371,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
                         if (type.equalsIgnoreCase("Video")) {
                             boolean isPresentFile = false;
-                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY );
+                            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/" + Constant.FOLDER_DIRECTORY);
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
                                 for (int i = 0; i < children.length; i++) {
@@ -402,7 +405,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                                 builder.show();
 
                             } else if (isPresentFile) {
-                                String folder = Environment.getExternalStorageDirectory().toString() +  Constant.FOLDER_DIRECTORY + "/";
+                                String folder = Environment.getExternalStorageDirectory().toString() + Constant.FOLDER_DIRECTORY + "/";
                                 //Create androiddeft folder if it does not exist
                                 File directory = new File(folder);
                                 if (!directory.exists()) {
@@ -591,7 +594,8 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             }
         });
         // }
-    }*/static public void shareImage(final String url, final Context context) {
+    }*/
+    static public void shareImage(final String url, final Context context) {
         final ProgressDialog dialogShare = new ProgressDialog(context);
         dialogShare.setMessage("Please wait while loading...");
         dialogShare.show();
@@ -601,7 +605,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 try {
                     Bitmap bitmap = getBitmapFromURL(url);
                     Uri uri = getLocalBitmapUri(bitmap, context);
-                    if(uri!=null) {
+                    if (uri != null) {
                         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                         sharingIntent.setType("image/*");
                         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
@@ -621,7 +625,12 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
+        if (Jzvd.backPress()) {
+            return;
+        }
+        finish();
+        newsfeedAdapter.notifyDataSetChanged();
         JzvdStd.goOnPlayOnPause();
     }
 

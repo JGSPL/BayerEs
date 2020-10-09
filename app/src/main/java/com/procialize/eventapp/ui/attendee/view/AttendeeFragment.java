@@ -34,7 +34,6 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
-import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
@@ -47,16 +46,15 @@ import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
-import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
-import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
+import com.procialize.eventapp.ui.speaker.view.SpeakerDetailActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
@@ -263,7 +261,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                     } catch (Exception e) {
 
                     }
-
                 }
             });
         } catch (Exception e) {
@@ -302,6 +299,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                     attendee.setAttendee_type(tableAttendees.get(i).getAttendee_type());
                     attendee.setTotal_sms(tableAttendees.get(i).getTotal_sms());
                     attendee.setProfile_picture(tableAttendees.get(i).getProfile_picture());
+                    attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
                     attendeesDBList.add(attendee);
                 }
                 setupEventAdapter(attendeesDBList);
@@ -436,11 +434,10 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     @Override
     public void onContactSelected(Attendee attendee) {
         if (!(attendee.getFirebase_status().equalsIgnoreCase("0"))) {
-            final String SprofilePic = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_PROFILE_PIC);
-            final String SUserNmae = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_FNAME);
-            final String SlName = SharedPreference.getPref(getContext(), SharedPreferencesConstant.KEY_LNAME);
-
-            Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
+            getActivity().startActivity(new Intent(getContext(), ChatActivity.class)
+                    .putExtra("page", "ListPage")
+                    .putExtra("Attendee", (Serializable) attendee));
+            /*Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
             chatIntent.putExtra("user_id", attendee.getFirebase_id());
             chatIntent.putExtra("user_name", attendee.getFirst_name() + " " + attendee.getLast_name());
             chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
@@ -459,9 +456,9 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             chatIntent.putExtra("mobile", attendee.getMobile());
             chatIntent.putExtra("email", attendee.getEmail());
 
-            startActivity(chatIntent);
+            startActivity(chatIntent);*/
         } else {
-            Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
+           /* Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
             intent.putExtra("attendeeid", attendee.getAttendee_id());
             intent.putExtra("firebase_id", attendee.getFirebase_id());
 
@@ -474,7 +471,9 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             intent.putExtra("attendee_type", attendee.getAttendee_type());
             intent.putExtra("mobile", attendee.getMobile());
             intent.putExtra("email", attendee.getEmail());
-            startActivity(intent);
+            startActivity(intent);*/
+            getActivity().startActivity(new Intent(getContext(), AttendeeDetailActivity.class)
+                    .putExtra("Attendee", (Serializable) attendee));
         }
         // getActivity().finish();
     }

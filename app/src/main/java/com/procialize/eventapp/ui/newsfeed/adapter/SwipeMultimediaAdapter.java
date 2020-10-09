@@ -1,16 +1,22 @@
 package com.procialize.eventapp.ui.newsfeed.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.PagerAdapter;
 import com.bumptech.glide.Glide;
@@ -32,8 +38,10 @@ import com.procialize.eventapp.App;
 import com.procialize.eventapp.Constants.AnimateFirstDisplayListener;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.attendeeChat.activity.FullScreenImageActivity;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
+import com.procialize.eventapp.ui.newsfeed.view.LandscapeVideoActivity;
 
 import java.io.File;
 import java.io.Serializable;
@@ -94,6 +102,8 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
         View myImageLayout = inflater.inflate(R.layout.slide_multiple, view, false);
         final String firstLevelFilter = images.get(position);
         final String thumbImage = thumbImages.get(position);
+
+
 
         myImage = myImageLayout.findViewById(R.id.image);
         videoview = myImageLayout.findViewById(R.id.videoview);
@@ -180,6 +190,14 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
             farme.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
 
+           /* videoview.fullscreenButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, LandscapeVideoActivity.class);
+                    intent.putExtra("url",firstLevelFilter.trim());
+                    context.startActivity(intent);
+                }
+            });*/
             checkCachedState(firstLevelFilter.trim());
             startVideo(firstLevelFilter.trim(), thumbImage);
 //            // progressBar.setVisibility(View.GONE);
@@ -273,8 +291,8 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
 
         videoview.setUp(proxyUrl.trim(), ""
                 , JzvdStd.SCREEN_NORMAL);
-        JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_PARENT);
-
+        //JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
+        Jzvd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
 //        ImageLoader.getInstance().displayImage(thumbImage.trim(), videoview.thumbImageView, options, new SimpleImageLoadingListener() {
 //            @Override
 //            public void onLoadingStarted(String imageUri, View view) {

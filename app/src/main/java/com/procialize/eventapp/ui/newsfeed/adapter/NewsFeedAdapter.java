@@ -40,12 +40,15 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Database.EventAppDB;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
+import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
+import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
@@ -54,6 +57,7 @@ import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -391,17 +395,43 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                     @Override
                                                     public void onChanged(List<TableAttendee> tableAttendees) {
                                                         if (tableAttendees != null) {
-                                                            Intent intent = new Intent(context, AttendeeDetailActivity.class);
-                                                            intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
-                                                            intent.putExtra("lname", tableAttendees.get(0).getLast_name());
-                                                            intent.putExtra("company", tableAttendees.get(0).getCompany_name());
-                                                            intent.putExtra("city", tableAttendees.get(0).getCity());
-                                                            intent.putExtra("designation", tableAttendees.get(0).getDesignation());
-                                                            intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
-                                                            intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
-                                                            intent.putExtra("mobile", tableAttendees.get(0).getMobile());
-                                                            intent.putExtra("email", tableAttendees.get(0).getEmail());
-                                                            context.startActivity(intent);
+                                                           // Intent intent = new Intent(context, AttendeeDetailActivity.class);
+                                                            final Attendee attendee = new Attendee();
+                                                            attendee.setMobile(tableAttendees.get(0).getMobile());
+                                                            attendee.setEmail(tableAttendees.get(0).getEmail());
+                                                            attendee.setFirebase_id(tableAttendees.get(0).getFirebase_id());
+                                                            attendee.setFirebase_name(tableAttendees.get(0).getFirebase_name());
+                                                            attendee.setFirebase_username(tableAttendees.get(0).getFirebase_username());
+                                                            attendee.setAttendee_id(tableAttendees.get(0).getAttendee_id());
+                                                            attendee.setFirst_name(tableAttendees.get(0).getFirst_name());
+                                                            attendee.setLast_name(tableAttendees.get(0).getLast_name());
+                                                            attendee.setCity(tableAttendees.get(0).getCity());
+                                                            attendee.setDesignation(tableAttendees.get(0).getDesignation());
+                                                            attendee.setCompany_name(tableAttendees.get(0).getCompany_name());
+                                                            attendee.setAttendee_type(tableAttendees.get(0).getAttendee_type());
+                                                            attendee.setTotal_sms(tableAttendees.get(0).getTotal_sms());
+                                                            attendee.setProfile_picture(tableAttendees.get(0).getProfile_picture());
+                                                            attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
+                                                            if(tableAttendees.get(0).getFirebase_id()!=null) {
+                                                                if (tableAttendees.get(0).getFirebase_id().equalsIgnoreCase("0")) {
+                                                                    context.startActivity(new Intent(context, AttendeeDetailActivity.class)
+                                                                            .putExtra("Attendee", (Serializable) attendee));
+                                                                } else {
+                                                                    if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
+                                                                        context.startActivity(new Intent(context, AttendeeDetailActivity.class)
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    } else {
+                                                                        context.startActivity(new Intent(context, ChatActivity.class)
+                                                                                .putExtra("page", "ListPage")
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    }
+                                                                }
+                                                            }
+
+
+                                                        }
+                                                        if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                            newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
                                                         }
                                                     }
                                                 });
@@ -435,7 +465,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                         final String attendeeid = substring.substring(0, index);
                                         substring = substring.substring(index + 1, substring.length());
 
-
                                         stringBuilder.setSpan(stringBuilder, start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), start, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -447,19 +476,41 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                     @Override
                                                     public void onChanged(List<TableAttendee> tableAttendees) {
                                                         if (tableAttendees != null) {
-                                                            Intent intent = new Intent(context, AttendeeDetailActivity.class);
-                                                            intent.putExtra("attendeeid", tableAttendees.get(0).getAttendee_id());
-                                                            intent.putExtra("firebase_id", tableAttendees.get(0).getFirebase_id());
-                                                            intent.putExtra("fname", tableAttendees.get(0).getFirst_name());
-                                                            intent.putExtra("lname", tableAttendees.get(0).getLast_name());
-                                                            intent.putExtra("company", tableAttendees.get(0).getCompany_name());
-                                                            intent.putExtra("city", tableAttendees.get(0).getCity());
-                                                            intent.putExtra("designation", tableAttendees.get(0).getDesignation());
-                                                            intent.putExtra("prof_pic", tableAttendees.get(0).getProfile_picture());
-                                                            intent.putExtra("attendee_type", tableAttendees.get(0).getAttendee_type());
-                                                            intent.putExtra("mobile", tableAttendees.get(0).getMobile());
-                                                            intent.putExtra("email", tableAttendees.get(0).getEmail());
-                                                            context.startActivity(intent);
+                                                            final Attendee attendee = new Attendee();
+                                                            attendee.setMobile(tableAttendees.get(0).getMobile());
+                                                            attendee.setEmail(tableAttendees.get(0).getEmail());
+                                                            attendee.setFirebase_id(tableAttendees.get(0).getFirebase_id());
+                                                            attendee.setFirebase_name(tableAttendees.get(0).getFirebase_name());
+                                                            attendee.setFirebase_username(tableAttendees.get(0).getFirebase_username());
+                                                            attendee.setAttendee_id(tableAttendees.get(0).getAttendee_id());
+                                                            attendee.setFirst_name(tableAttendees.get(0).getFirst_name());
+                                                            attendee.setLast_name(tableAttendees.get(0).getLast_name());
+                                                            attendee.setCity(tableAttendees.get(0).getCity());
+                                                            attendee.setDesignation(tableAttendees.get(0).getDesignation());
+                                                            attendee.setCompany_name(tableAttendees.get(0).getCompany_name());
+                                                            attendee.setAttendee_type(tableAttendees.get(0).getAttendee_type());
+                                                            attendee.setTotal_sms(tableAttendees.get(0).getTotal_sms());
+                                                            attendee.setProfile_picture(tableAttendees.get(0).getProfile_picture());
+                                                            attendee.setFirebase_status(tableAttendees.get(0).getFirebase_status());
+                                                            if(tableAttendees.get(0).getFirebase_id()!=null) {
+                                                                if (tableAttendees.get(0).getFirebase_id().equalsIgnoreCase("0")) {
+                                                                    context.startActivity(new Intent(context, AttendeeDetailActivity.class)
+                                                                            .putExtra("Attendee", (Serializable) attendee));
+                                                                } else {
+                                                                    if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
+                                                                        context.startActivity(new Intent(context, AttendeeDetailActivity.class)
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    } else {
+                                                                        context.startActivity(new Intent(context, ChatActivity.class)
+                                                                                .putExtra("page", "ListPage")
+                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        if (newsFeedDatabaseViewModel != null && newsFeedDatabaseViewModel.getAttendeeDetails().hasObservers()) {
+                                                            newsFeedDatabaseViewModel.getAttendeeDetails().removeObservers((LifecycleOwner) context);
                                                         }
                                                     }
                                                 });
@@ -491,7 +542,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

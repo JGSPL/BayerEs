@@ -1,6 +1,8 @@
 package com.procialize.eventapp.ui.attendeeChat.activity;
 
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,10 +26,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
+import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.costumTools.TouchImageView;
 
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
+
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 
 
 public class FullScreenImageActivity extends AppCompatActivity {
@@ -37,6 +44,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     String type;
     JzvdStd videoplayer;
+    RelativeLayout rlMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +89,10 @@ public class FullScreenImageActivity extends AppCompatActivity {
         ivUser = (ImageView) toolbar.findViewById(R.id.avatar);
         tvUser = (TextView) toolbar.findViewById(R.id.title);
         videoplayer = findViewById(R.id.videoplayer);
+        rlMain = findViewById(R.id.rlMain);
+        ivUser.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+        CommonFunction.showBackgroundImage(this, rlMain);
+
     }
 
     private void setValues() {
@@ -116,7 +128,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
             mImageView.setVisibility(View.GONE);
             videoplayer.setUp(urlPhotoClick, ""
                     , JzvdStd.SCREEN_NORMAL);
-            JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
+            JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
 
 
 

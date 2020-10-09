@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +26,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -77,15 +76,15 @@ import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
-import com.procialize.eventapp.ui.quiz.view.QuizListingActivity;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
-
+import com.yanzhenjie.album.mvp.BaseFragment;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_quiz, tr_event_info;
+    TableRow tr_switch_event, tr_home, tr_profile, tr_logout,tr_event_info, tr_live_poll;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -233,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_home = findViewById(R.id.tr_home);
         tr_profile = findViewById(R.id.tr_profile);
         tr_event_info = findViewById(R.id.tr_event_info);
-        tr_quiz = findViewById(R.id.tr_quiz);
         tr_logout = findViewById(R.id.tr_logout);
         txt_version = findViewById(R.id.txt_version);
 
@@ -243,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_profile.setOnClickListener(this);
         tr_event_info.setOnClickListener(this);
         tr_logout.setOnClickListener(this);
-        tr_quiz.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -489,16 +486,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")
                         .commit();*/
                 break;
-
-            case R.id.tr_quiz:
-                JzvdStd.releaseAllVideos();
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, QuizListingActivity.class));
-                /*getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")
-                        .commit();*/
-                break;
             case R.id.tr_logout:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -696,11 +683,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onChanged(FetchAttendee event) {
                         if(event != null) {
-                            List<Attendee> attendeeList = event.getAttandeeList();
-
+                            //List<Attendee> attendeeList = event.getAttandeeList();
+                            String strCommentList =event.getDetail();
+                            RefreashToken refreashToken = new RefreashToken(MainActivity.this);
+                            String data = refreashToken.decryptedData(strCommentList);
+                            Gson gson = new Gson();
+                            List<Attendee> attendeeList = gson.fromJson(data, new TypeToken<ArrayList<Attendee>>() {}.getType());
                             //Delete All attendee from local db and insert attendee
-                            attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
-                            attendeeDatabaseViewModel.insertIntoDb(MainActivity.this, attendeeList);
+                            if(attendeeList!=null) {
+                                attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
+                                attendeeDatabaseViewModel.insertIntoDb(MainActivity.this, attendeeList);
+                            }
                         }
 
                         if (attendeeViewModel != null && attendeeViewModel.getAttendeeList().hasObservers()) {
@@ -778,5 +771,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return chatUpdate;
         }
 
+    public BaseFragment getActiveFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return null;
+        }
+        String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        return (BaseFragment) getSupportFragmentManager().findFragmentByTag(tag);
+    }
 
 }

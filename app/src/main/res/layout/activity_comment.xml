@@ -272,6 +272,19 @@
                             android:text="0 Comments"
                             android:textColor="@color/black"
                             android:textSize="13dp" />
+
+                        <TextView
+                            android:id="@+id/tv_comment_count"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="1.5"
+                            android:gravity="right"
+                            android:paddingTop="4dp"
+                            android:text="0"
+                            android:visibility="gone"
+                            android:textColor="@color/black"
+                            android:textSize="13dp" />
                     </LinearLayout>
 
                     <View

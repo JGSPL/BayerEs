@@ -17,8 +17,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
-
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission
         android:name="android.permission.CAPTURE_VIDEO_OUTPUT"
         tools:ignore="ProtectedPermissions" /> <!-- android:name="android.hardware.camera" -->
@@ -35,31 +35,41 @@
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.newsfeed.view.LandscapeVideoActivity"
+            android:screenOrientation="landscape"></activity>
 
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <!--              The API key for Google Maps-based APIs. -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/maps_api_key" />
+
         <activity
             android:name=".ui.attendee.view.AttendeeDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".ui.profile.view.ProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
-
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".ui.eventinfo.view.EventInfoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".ui.eventList.view.EventListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".ui.splash.view.SplashAcivity"
             android:screenOrientation="portrait"
@@ -80,7 +90,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustNothing"/>
+            android:windowSoftInputMode="stateHidden|adjustNothing" />
         <activity
             android:name=".ui.newsFeedDetails.view.NewsFeedDetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -118,10 +128,7 @@
                 android:resource="@xml/file_paths"
                 tools:replace="android:resource" />
         </provider>
-
-<!--
-        //Firebase Services
--->
+        <!--         //Firebase Services -->
         <service
             android:name=".firebase.FirebaseMessagingService"
             android:permission="com.google.android.c2dm.permission.SEND">
@@ -130,7 +137,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
             android:name=".firebase.MyFirebaseInstanceIDService"
             android:permission="">
@@ -139,17 +145,21 @@
             </intent-filter>
         </service>
 
-
         <activity
             android:name=".ui.attendeeChat.ChatListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-
         <activity
             android:name=".ui.attendeeChat.ChatActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.livepoll.view.LivePollActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+
 
         <activity
             android:name=".ui.attendeeChat.activity.AttendeeChatDetail"
@@ -159,18 +169,18 @@
             android:name=".ui.speaker.view.SpeakerDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-
         <activity
             android:name=".ui.attendeeChat.activity.FullScreenImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-
         <activity
             android:name=".ui.speaker.view.DownloadPdfActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-
-
+        <activity
+            android:name=".ui.AgendaDetails.view.AgendaDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

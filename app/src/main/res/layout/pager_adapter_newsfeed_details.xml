@@ -14,7 +14,7 @@
         android:adjustViewBounds="true"
         android:visibility="gone" />
 
-    <cn.jzvd.JzvdStd
+    <com.procialize.eventapp.Utility.MyJzvdStd
         android:id="@+id/videoview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

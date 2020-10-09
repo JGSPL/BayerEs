@@ -6,6 +6,9 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.procialize.eventapp.ui.attendee.model.Attendee;
+
+import java.sql.SQLException;
 import java.util.List;
 
 @Dao
@@ -25,4 +28,10 @@ public interface AttendeeDao {
 
     @Query("SELECT * from tbl_attendee where fld_attendee_id=:attendeeId")
     public LiveData<List<TableAttendee>> getAttendeeDetailsFromId(String attendeeId);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    public void insertSingleAttendee(TableAttendee attendeeTable);
+
+    @Query("DELETE FROM tbl_attendee where fld_attendee_id=:attendeeId")
+    void deleteAttendee(String attendeeId);
 }
