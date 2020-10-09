@@ -91,12 +91,12 @@
                 android:textSize="18sp" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/quizrefresher"
+                android:id="@+id/livepollrefreash"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/quiz_list"
+                    android:id="@+id/livepoll_list"
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
