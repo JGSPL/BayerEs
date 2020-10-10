@@ -3,6 +3,7 @@ package com.procialize.eventapp.ui.agenda.viewmodel;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
@@ -12,10 +13,10 @@ import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 
 import java.util.List;
 
-public class AgendaDatabaseViewModel {
+public class AgendaDatabaseViewModel extends ViewModel {
 
     EventAppDB eventAppDB ;
-    private LiveData<List<TableAgenda>> attendeeList;// = new MutableLiveData<>();
+    private LiveData<List<TableAgenda>> agendaList;// = new MutableLiveData<>();
     public void insertIntoDb(Context context, List<Agenda> agenda) {
         eventAppDB = EventAppDB.getDatabase(context);
 
@@ -36,5 +37,22 @@ public class AgendaDatabaseViewModel {
             tableAgenda.setRated(agenda.get(i).getRated());
             eventAppDB.agendaDao().insertAgenda(tableAgenda);
         }
+    }
+
+    public void deleteAllAgenda(Context context)
+    {
+        eventAppDB = EventAppDB.getDatabase(context);
+        eventAppDB.agendaDao().deleteAllAgenda();
+    }
+
+    public void getAgendaList(Context context)
+    {
+        eventAppDB = EventAppDB.getDatabase(context);
+        agendaList = eventAppDB.agendaDao().getAllAgenda();
+    }
+
+    public LiveData<List<TableAgenda>> getAgenda()
+    {
+        return agendaList;
     }
 }

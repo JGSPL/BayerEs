@@ -13,6 +13,7 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -56,7 +57,7 @@ public class AgendaDetailsActivity extends Activity {
         String rated = agendaDetails.getRated();
 
 
-        /*try {
+        try {
             SimpleDateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.UK);
             SimpleDateFormat targetFormat = new SimpleDateFormat("HH:mm aa");
             Date startTime = originalFormat.parse(sessionStartTime);
@@ -71,7 +72,17 @@ public class AgendaDetailsActivity extends Activity {
             e.printStackTrace();
         }
 
-        tv_date.setText(CommonFunction.convertEventDate(sessionDate));*/
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date sourceDate = null;
+        try {
+            sourceDate = dateFormat.parse(sessionDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat targetFormat = new SimpleDateFormat("MMM dd, YYYY");
+        //SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
+        String targetdatevalue = targetFormat.format(sourceDate);
+        tv_date.setText(targetdatevalue);
         tv_session_name.setText(sessionName);
         tv_short_session_description.setText(sessionShortDescription);
         tv_session_description.setText(sessionDescription);
