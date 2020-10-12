@@ -74,14 +74,14 @@ public class AgendaDateWiseAdapter extends RecyclerView.Adapter<AgendaDateWiseAd
             e.printStackTrace();
         }
 
-       /* holder.ll_main.setOnClickListener(new View.OnClickListener() {
+        holder.ll_main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent agendaDetail = new Intent(context, AgendaDetailsActivity.class);
                 agendaDetail.putExtra("agendaDetails",(Serializable) agenda);
                 context.startActivity(agendaDetail);
             }
-        });*/
+        });
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

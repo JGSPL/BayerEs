@@ -65,7 +65,10 @@ public class Utility {
     }
 
     public static void createShortSnackBar(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        try {
+            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        }catch (Exception e)
+        {}
     }
 
     public static void createLongSnackBar(View view,String message) {
