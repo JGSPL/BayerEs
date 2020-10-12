@@ -24,7 +24,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
@@ -38,10 +42,16 @@ import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
+import com.procialize.eventapp.ui.eventinfo.viewmodel.EventInfoViewModel;
 import com.procialize.eventapp.ui.livepoll.adapter.LivePollAdapter;
 import com.procialize.eventapp.ui.livepoll.model.FetchLivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll_option;
+import com.procialize.eventapp.ui.livepoll.model.Logo;
+import com.procialize.eventapp.ui.livepoll.viewmodel.LivePollViewModel;
+import com.procialize.eventapp.ui.speaker.adapter.SpeakerAdapter;
+import com.procialize.eventapp.ui.speaker.model.Speaker;
+import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 
 import java.io.File;
@@ -62,7 +72,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 
 public class LivePollActivity extends AppCompatActivity implements LivePollAdapter.PollAdapterListner {
     SwipeRefreshLayout pollrefresh;
-    ListView pollRv;
+    RecyclerView pollRv;
     ProgressBar progressBar;
     List<LivePoll_option> optionLists;
     String eventid, colorActive;
@@ -72,7 +82,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
     TextView empty, pullrefresh;
     LinearLayout linear;
     APIService updateApi;
-    MutableLiveData<FetchLivePoll> livepollDetail = new MutableLiveData<>();
+    LivePollViewModel livePollViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +107,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                 finish();
             }
         });
+        livePollViewModel = ViewModelProviders.of(this).get(LivePollViewModel.class);
 
         cd = ConnectionDetector.getInstance(this);
 
@@ -134,7 +145,34 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         CommonFunction.showBackgroundImage(LivePollActivity.this, linear);
 
         if (cd.isConnectingToInternet()) {
-            getLivepoll(token, eventid);
+            livePollViewModel.getLivepoll(token, eventid);
+            livePollViewModel.getSpeakerList().observe(this, new Observer<FetchLivePoll>() {
+                @Override
+                public void onChanged(FetchLivePoll event) {
+                    //List<Speaker> eventLists = event.getSpeakerList();
+                    String strCommentList =event.getDetail();
+                    RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
+                    String data = refreashToken.decryptedData(strCommentList);
+                    Gson gson = new Gson();
+                    List<Logo> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Logo>>() {}.getType());
+
+                    //Delete All Speaker from local db and insert Speaker
+                    if(eventLists!=null) {
+
+                        progressBar.setVisibility(View.GONE);
+                        List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
+
+                        setupEventAdapter(PollLists);
+                    }else{
+                        progressBar.setVisibility(View.GONE);
+
+                    }
+
+                    if (livePollViewModel != null && livePollViewModel.getSpeakerList().hasObservers()) {
+                        livePollViewModel.getSpeakerList().removeObservers(LivePollActivity.this);
+                    }
+                }
+            });
         } else {
 
             Toast.makeText(LivePollActivity.this, "No internet connection",
@@ -143,11 +181,12 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         }
 
 
+
         pollrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (cd.isConnectingToInternet()) {
-                    getLivepoll(token, eventid);
+                    
                 } else {
                     if (pollrefresh.isRefreshing()) {
                         pollrefresh.setRefreshing(false);
@@ -160,60 +199,13 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         });
     }
 
-    //Update Api
-    public MutableLiveData<FetchLivePoll> getLivepoll(final String token, final String event_id) {
-        updateApi = ApiUtils.getAPIService();
-
-        updateApi.LivePollFetch(token, event_id).enqueue(new Callback<FetchLivePoll>() {
-            @Override
-            public void onResponse(Call<FetchLivePoll> call,
-                                   Response<FetchLivePoll> response) {
-                if (response.isSuccessful()) {
-                    livepollDetail.setValue(response.body());
-                    String strCommentList =response.body().getDetail();
-                    RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
-                    String data = refreashToken.decryptedData(strCommentList);
-                    Gson gson = new Gson();
-                    List<LivePoll> eventLists = gson.fromJson(data, new TypeToken<ArrayList<LivePoll>>() {}.getType());
-                    if(eventLists!=null) {
-                        optionLists = eventLists.get(0).getLive_poll_option_list();
-                    }
-
-                   // if(optionLists!=null) {
-
-                       // String pdfurl = eventLists.get(0).getSpeaker_document_path();
-                        empty.setVisibility(View.GONE);
-
-                        empty.setVisibility(View.GONE);
-                        LivePollAdapter pollAdapter = new LivePollAdapter(LivePollActivity.this, eventLists, LivePollActivity.this);
-                        pollAdapter.notifyDataSetChanged();
-                        pollRv.setAdapter(pollAdapter);
-                   /* }else{
-                        empty.setVisibility(View.VISIBLE);
-                    }*/
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FetchLivePoll> call, Throwable t) {
-                livepollDetail.setValue(null);
-            }
-        });
-        return livepollDetail;
+    public void setupEventAdapter(List<LivePoll> commentList) {
+        LivePollAdapter pollAdapter = new LivePollAdapter(this, commentList, LivePollActivity.this);
+        pollRv.setLayoutManager(new LinearLayoutManager(this));
+        pollRv.setAdapter(pollAdapter);
+        pollAdapter.notifyDataSetChanged();
     }
 
-    public void showProgress() {
-        if (progressBar.getVisibility() == View.GONE) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void dismissProgress() {
-        if (progressBar.getVisibility() == View.VISIBLE) {
-            progressBar.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     protected void onResume() {

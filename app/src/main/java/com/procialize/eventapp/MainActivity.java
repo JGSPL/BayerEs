@@ -70,6 +70,7 @@ import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.eventapp.ui.home.view.HomeFragment;
+import com.procialize.eventapp.ui.livepoll.view.LivePollActivity;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.model.Profile;
@@ -234,13 +235,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_event_info = findViewById(R.id.tr_event_info);
         tr_logout = findViewById(R.id.tr_logout);
         txt_version = findViewById(R.id.txt_version);
-
+        tr_live_poll = findViewById(R.id.tr_live_poll);
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
         tr_home.setOnClickListener(this);
         tr_profile.setOnClickListener(this);
         tr_event_info.setOnClickListener(this);
         tr_logout.setOnClickListener(this);
+        tr_live_poll.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -485,6 +487,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .beginTransaction()
                         .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")
                         .commit();*/
+                break;
+
+            case R.id.tr_live_poll:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, LivePollActivity.class));
                 break;
             case R.id.tr_logout:
                 JzvdStd.releaseAllVideos();

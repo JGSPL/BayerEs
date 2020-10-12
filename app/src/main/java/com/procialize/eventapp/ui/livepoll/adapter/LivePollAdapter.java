@@ -15,7 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -27,6 +29,7 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
+import com.procialize.eventapp.ui.eventList.model.EventList;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll_option;
 
@@ -37,7 +40,115 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 
-public class LivePollAdapter extends BaseAdapter {
+public class LivePollAdapter extends RecyclerView.Adapter<LivePollAdapter.NewsViewHolder> {
+
+    private List<LivePoll> pollLists;
+    private Context context;
+    private PollAdapterListner listener;
+    private LayoutInflater inflater;
+
+    public LivePollAdapter(Context context, List<LivePoll> pollLists, PollAdapterListner listener) {
+        this.pollLists = pollLists;
+        this.listener = listener;
+        this.context = context;
+
+
+    }
+
+    @NonNull
+    @Override
+    public LivePollAdapter.NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_event_list, parent, false);
+        return new LivePollAdapter.NewsViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final LivePollAdapter.NewsViewHolder holder, final int position) {
+//Newsfeed_detail feedData = feed_detail.get(position);
+        final LivePoll pollList = pollLists.get(position);
+
+        if(pollList.getStatus().equalsIgnoreCase("Tap To Participate")){
+            holder.statusTv.setVisibility(View.VISIBLE);
+            holder.statusTv.setText("Tap To Participate");
+
+            holder.ivewComplete.setVisibility(View.GONE);
+        }else{
+            holder.statusTv.setVisibility(View.VISIBLE);
+            holder.statusTv.setText("Participated");
+            holder.ivewComplete.setVisibility(View.VISIBLE);
+            holder.ivewComplete.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        }
+        try{
+            holder.nameTv.setText(StringEscapeUtils.unescapeJava(pollList.getQuestion()));
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+
+        }
+        holder.linMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onContactSelected(pollLists.get(position));
+            }
+        });
+
+        if(position==0){
+            holder.relative.setVisibility(View.VISIBLE);
+         /* SharedPreferences prefs1 = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+            String logoPath = prefs1.getString(KEY_LIVE_POLL_LOGO_PATH,"");
+            String strAppLivePollLogo =  prefs1.getString(KEY_LIVE_POLL_LOGO,"");
+
+            Glide.with(context).load(logoPath + strAppLivePollLogo)
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).listener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    //progressBar.setVisibility(View.GONE);
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    // progressBar.setVisibility(View.GONE);
+                    return false;
+                }
+            }).into(holder.profileIV);*/
+        }else{
+            holder.relative.setVisibility(View.GONE);
+
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return pollLists.size();
+    }
+
+
+    public interface PollAdapterListner {
+        void onContactSelected(LivePoll pollList);
+    }
+
+    public class NewsViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView nameTv,statusTv;
+        public ImageView profileIV;
+        public LinearLayout mainLL,linMain;
+        RelativeLayout relative;
+        View ivewComplete;
+
+        public NewsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            nameTv = itemView.findViewById(R.id.nameTv);
+            statusTv = itemView.findViewById(R.id.statusTv);
+            mainLL = itemView.findViewById(R.id.mainLL);
+            linMain = itemView.findViewById(R.id.linMain);
+            relative = itemView.findViewById(R.id.relative);
+            ivewComplete = itemView.findViewById(R.id.ivewComplete);
+            ivewComplete = itemView.findViewById(R.id.ivewComplete);
+
+        }
+    }
+}
+/*BaseAdapter {
     
     private List<LivePoll> pollLists;
     private Context context;
@@ -136,7 +247,7 @@ public class LivePollAdapter extends BaseAdapter {
 
         if(position==0){
             holder.relative.setVisibility(View.VISIBLE);
-           /* SharedPreferences prefs1 = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+           *//* SharedPreferences prefs1 = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
             String logoPath = prefs1.getString(KEY_LIVE_POLL_LOGO_PATH,"");
             String strAppLivePollLogo =  prefs1.getString(KEY_LIVE_POLL_LOGO,"");
 
@@ -153,7 +264,7 @@ public class LivePollAdapter extends BaseAdapter {
                     // progressBar.setVisibility(View.GONE);
                     return false;
                 }
-            }).into(holder.profileIV);*/
+            }).into(holder.profileIV);*//*
         }else{
             holder.relative.setVisibility(View.GONE);
 
@@ -176,4 +287,4 @@ public class LivePollAdapter extends BaseAdapter {
         RelativeLayout relative;
         View ivewComplete;
     }
-}
+}*/
