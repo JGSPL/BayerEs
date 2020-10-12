@@ -4,9 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.procialize.eventapp.ui.speaker.model.Speaker_Doc;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class LivePoll {
+public class LivePoll implements Serializable {
     @SerializedName("id")
     @Expose
     private String id;

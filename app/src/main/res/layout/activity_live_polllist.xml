@@ -188,6 +188,7 @@
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
+<!--
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/pollrefresh"
                 android:layout_width="match_parent"
@@ -201,10 +202,25 @@
                     android:dividerHeight="0px"
                     android:smoothScrollbar="true"
                     android:clipToPadding="false"
-                    android:paddingBottom="120dp">
+                    tools:listitem="@layout/live_poll_row"
+                    android:paddingBottom="0dp">
 
                 </ListView>
 
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+-->
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/pollrefresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/pollRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    tools:listitem="@layout/attendee_row"/>
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
