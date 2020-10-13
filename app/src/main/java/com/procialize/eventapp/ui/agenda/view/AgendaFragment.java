@@ -136,6 +136,7 @@ public class AgendaFragment extends Fragment implements AgendaAdapter.AgendaAdap
                     agenda.setTotal_feedback(tableAttendees.get(i).getTotal_feedback());
                     agenda.setFeedback_comment(tableAttendees.get(i).getFeedback_comment());
                     agenda.setRated(tableAttendees.get(i).getRated());
+                    agenda.setReminder_flag(tableAttendees.get(i).getReminder_flag());
                     agendaDBList.add(agenda);
                 }
                 setupAgendaAdapter(agendaDBList);
