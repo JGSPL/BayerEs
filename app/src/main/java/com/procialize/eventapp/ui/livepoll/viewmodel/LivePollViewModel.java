@@ -18,7 +18,7 @@ public class LivePollViewModel extends ViewModel {
     }
 
 
-    public LiveData<FetchLivePoll> getSpeakerList() {
+    public LiveData<FetchLivePoll> getLivePollList() {
         return livepollDetail;
     }
 }
