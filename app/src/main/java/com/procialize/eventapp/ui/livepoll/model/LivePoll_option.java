@@ -3,7 +3,9 @@ package com.procialize.eventapp.ui.livepoll.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LivePoll_option {
+import java.io.Serializable;
+
+public class LivePoll_option implements Serializable {
     @SerializedName("live_poll_id")
     @Expose
     private String live_poll_id;

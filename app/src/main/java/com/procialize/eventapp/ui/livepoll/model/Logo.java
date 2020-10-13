@@ -14,7 +14,7 @@ public class Logo {
     @Expose
     private LivePoll_logo live_poll_logo;
 
-    @SerializedName("LivePoll")
+    @SerializedName("live_poll_list")
     @Expose
     List<LivePoll> LivePoll_list;
 

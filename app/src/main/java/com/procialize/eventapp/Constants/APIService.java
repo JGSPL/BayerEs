@@ -302,7 +302,13 @@ public interface APIService{
 
  @POST("Livepoll_api/LivePollFetch")
  @FormUrlEncoded
- Call<FetchLivePoll> livePollFetch(@Header("authorization") String auth,
+ Call<FetchLivePoll> livePollFetch(@Header("authorization") String authkey,
                                    @Field("event_id") String event_id);
 
+ @POST("Livepoll_api/LivePollSubmit")
+ @FormUrlEncoded
+ Call<FetchLivePoll> LivePollSubmit(@Header("authorization") String authkey,
+                                   @Field("event_id") String event_id,
+                                     @Field("live_poll_id") String live_poll_id,
+                                     @Field("live_poll_options_id") String live_poll_options_id);
 }
