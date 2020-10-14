@@ -79,7 +79,7 @@
         android:textColor="@color/black" />
 
     <TextView
-        android:layout_width="match_parent"Ag
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="7dp"
         android:layout_marginBottom="3dp"
