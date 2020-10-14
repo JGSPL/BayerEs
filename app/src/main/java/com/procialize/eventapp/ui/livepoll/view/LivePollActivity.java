@@ -49,6 +49,7 @@ import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.eventinfo.viewmodel.EventInfoViewModel;
@@ -95,6 +96,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
     LinearLayout linear;
     LivePollViewModel livePollViewModel;
     ImageView iv_profile;
+     String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,65 +148,22 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
 
 
 
-        final String token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         crashlytics("Live Poll",token);
         firbaseAnalytics(this, "Live Poll", token);
 
 
 
         if (cd.isConnectingToInternet()) {
-            livePollViewModel.getLivepoll(token, eventid);
-            livePollViewModel.getLivePollList().observe(this, new Observer<FetchLivePoll>() {
-                @Override
-                public void onChanged(FetchLivePoll event) {
-                    //List<Speaker> eventLists = event.getSpeakerList();
-                    String strCommentList =event.getDetail();
-                    RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
-                    String data = refreashToken.decryptedData(strCommentList);
-                    Gson gson = new Gson();
-                    List<Logo> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Logo>>() {}.getType());
+            if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
+                livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
+            }
 
-                    //Fetch Livepoll list
-                    if(eventLists!=null) {
-
-                        progressBar.setVisibility(View.GONE);
-                        List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
-
-                        Glide.with(LivePollActivity.this)
-                                .load(eventLists.get(0).getLogo_url_path()+eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
-                                .listener(new RequestListener<Drawable>() {
-                                    @Override
-                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                        progressView.setVisibility(View.GONE);
-                                        return false;
-                                    }
-
-                                    @Override
-                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                        progressView.setVisibility(View.GONE);
-
-                                        return false;
-                                    }
-                                }).into(iv_profile);
-
-
-                        setupEventAdapter(PollLists);
-                    }else{
-
-                        progressBar.setVisibility(View.GONE);
-
-                    }
-
-                    if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
-                        livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
-                    }
-                }
-            });
-
+            getDataFromApi();
         } else {
 
-            Toast.makeText(LivePollActivity.this, "No internet connection",
-                    Toast.LENGTH_SHORT).show();
+            Utility.createShortSnackBar(linear, "No internet connection");
+
 
         }
 
@@ -214,14 +173,74 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
             @Override
             public void onRefresh() {
                 if (cd.isConnectingToInternet()) {
-                    
+                    if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
+                        livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
+                    }
+
+                    getDataFromApi();
+
                 } else {
                     if (pollrefresh.isRefreshing()) {
                         pollrefresh.setRefreshing(false);
                     }
-                    Toast.makeText(LivePollActivity.this, "No internet connection",
-                            Toast.LENGTH_SHORT).show();
+                    Utility.createShortSnackBar(linear, "No internet connection");
 
+
+                }
+            }
+        });
+    }
+
+    void getDataFromApi(){
+        livePollViewModel.getLivepoll(token, eventid);
+        if (pollrefresh.isRefreshing()) {
+            pollrefresh.setRefreshing(false);
+        }
+        livePollViewModel.getLivePollList().observe(LivePollActivity.this, new Observer<FetchLivePoll>() {
+            @Override
+            public void onChanged(FetchLivePoll event) {
+                //List<Speaker> eventLists = event.getSpeakerList();
+                String strCommentList =event.getDetail();
+                RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
+                String data = refreashToken.decryptedData(strCommentList);
+                Gson gson = new Gson();
+                List<Logo> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Logo>>() {}.getType());
+
+                //Fetch Livepoll list
+                if(eventLists!=null) {
+
+                    progressBar.setVisibility(View.GONE);
+                    List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
+
+                    Glide.with(LivePollActivity.this)
+                            .load(eventLists.get(0).getLogo_url_path()+eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    progressView.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    progressView.setVisibility(View.GONE);
+
+                                    return false;
+                                }
+                            }).into(iv_profile);
+
+
+                    setupEventAdapter(PollLists);
+
+
+                }else{
+
+                    progressBar.setVisibility(View.GONE);
+
+                }
+
+                if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
+                    livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
                 }
             }
         });
@@ -238,8 +257,20 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
     @Override
     protected void onResume() {
         super.onResume();
-        //  overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        if (cd.isConnectingToInternet()) {
+            if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
+                livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
+            }
 
+            getDataFromApi();
+        } else {
+            if (pollrefresh.isRefreshing()) {
+                pollrefresh.setRefreshing(false);
+            }
+            Utility.createShortSnackBar(linear, "No internet connection");
+
+
+        }
     }
 
 
