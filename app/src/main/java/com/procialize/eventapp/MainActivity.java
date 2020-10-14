@@ -767,7 +767,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if (response.isSuccessful()) {
                         chatUpdate.setValue(response.body());
                     //    Utility.createShortSnackBar(ll_main,"Chat info updated");
-
                     }
                 }
 
