@@ -105,24 +105,24 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_below="@+id/appBarLayout"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:background="@drawable/loader"
-        android:visibility="gone" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBar"
+        android:layout_below="@+id/appBarLayout"
         android:id="@+id/relMain"
         android:background="@color/colorwhite"
 
         android:orientation="vertical">
-    <androidx.core.widget.NestedScrollView
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/loader"
+            android:visibility="gone" />
+
+        <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
