@@ -40,6 +40,8 @@ public class TableAgenda {
     String feedback_comment;
     @ColumnInfo(name = "fld_rated")
     String rated;
+    @ColumnInfo(name = "fld_reminder_flag")
+    String reminder_flag;
 
     public int getId() {
         return id;
@@ -151,5 +153,9 @@ public class TableAgenda {
 
     public void setRated(String rated) {
         this.rated = rated;
+    }
+
+    public String getReminder_flag() {
+        return reminder_flag;
     }
 }
