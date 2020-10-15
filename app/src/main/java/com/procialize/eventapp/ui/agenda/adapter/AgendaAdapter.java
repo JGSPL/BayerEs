@@ -87,7 +87,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.MyViewHold
                 SimpleDateFormat targetFormat = new SimpleDateFormat(" dd MMM, yyyy");
                 Date date = originalFormat.parse(agenda.getSession_date());
 */
-                String sessiondate = CommonFunction.convertEventDate(agenda.getSession_date());
+                String sessiondate = CommonFunction.convertAgendaDate(agenda.getSession_date());
                 //String sessiondate = targetFormat.format(date);
                 holder.tv_date_time.setText(sessiondate);
             } catch (Exception e) {

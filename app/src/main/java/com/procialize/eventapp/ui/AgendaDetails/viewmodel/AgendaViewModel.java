@@ -45,8 +45,8 @@ public class AgendaViewModel extends ViewModel {
         return mText;
     }
 
-    public void openAgendaDetails(Activity activity) {
-        activity.startActivity(new Intent(activity, LiveStreamingActivity.class));
+    public void openAgendaDetails(Activity activity,String liveStreamLink) {
+        activity.startActivity(new Intent(activity, LiveStreamingActivity.class).putExtra("livestream_link",liveStreamLink));
     }
 
 

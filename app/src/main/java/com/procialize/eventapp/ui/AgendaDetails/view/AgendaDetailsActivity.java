@@ -31,6 +31,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
@@ -43,8 +44,10 @@ import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedViewModel;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -59,7 +62,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 public class AgendaDetailsActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tv_date, tv_start_time, tv_start_time_am, tv_end_time, tv_end_time_am, tv_session_name,
             tv_short_session_description, tv_session_description, tv_horizontal, tv_rate, tv_header,
-            tv_rate_this_session,tv_set_reminder;
+            tv_rate_this_session, tv_set_reminder;
     public static LinearLayout ll_live_stream, ll_rate, ll_main, ll_start_time, ll_end_time;
     SwitchCompat switch_reminder;
     RatingBar ratingbar;
@@ -71,7 +74,9 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
     ImageView iv_back;
     ImageView iv_reminder;
     ScrollView scrollView;
+    View view_short_desc;
     Agenda agendaDetails;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_agenda_details);
@@ -102,6 +107,7 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
         ll_start_time = findViewById(R.id.ll_start_time);
         ll_end_time = findViewById(R.id.ll_end_time);
         scrollView = findViewById(R.id.scrollView);
+        view_short_desc = findViewById(R.id.view_short_desc);
 
         ll_live_stream.setOnClickListener(this);
         ll_rate.setOnClickListener(this);
@@ -128,10 +134,18 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
         reminder_flag = agendaDetails.getReminder_flag();
         reminder_id = agendaDetails.getReminder_id();
 
+        if (sessionShortDescription == null || sessionShortDescription.isEmpty()) {
+            tv_short_session_description.setVisibility(View.GONE);
+            view_short_desc.setVisibility(View.GONE);
+        } else {
+            tv_short_session_description.setVisibility(View.VISIBLE);
+            view_short_desc.setVisibility(View.VISIBLE);
+        }
+
 
         try {
             SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
-            SimpleDateFormat targetFormat = new SimpleDateFormat("HH:mm aa");
+            SimpleDateFormat targetFormat = new SimpleDateFormat("hh:mm aa");
             Date startTime = originalFormat.parse(sessionStartTime);
             Date endTime = originalFormat.parse(sessionEndTime);
             String strStartTime = targetFormat.format(startTime);
@@ -144,6 +158,20 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
 
+        /*try {
+            Date currentTime = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String strCurrnetDate = dateFormat.format(currentTime);
+            if (CommonFunction.isTimeBetweenTwoTime(agendaDetails.getSession_start_time(), agendaDetails.getSession_end_time(), strCurrnetDate)) {
+                ll_live_stream.setVisibility(View.VISIBLE);
+            } else {
+                ll_live_stream.setVisibility(View.GONE);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+*/
         setDynamicColor();
 /*
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -184,47 +212,59 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
                                 ActivityCompat.requestPermissions(AgendaDetailsActivity.this,
                                         permissions, 0);
                             } else {
-                                agendaViewModel.saveToCalenderEx(AgendaDetailsActivity.this, sessionStartTime, sessionEndTime, sessionName,
-                                        sessionDescription, sessionId,agendaDetails);
+                                if (ConnectionDetector.getInstance(AgendaDetailsActivity.this).isConnectingToInternet()) {
+                                    agendaViewModel.saveToCalenderEx(AgendaDetailsActivity.this, sessionStartTime, sessionEndTime, sessionName,
+                                            sessionDescription, sessionId, agendaDetails);
+                                } else {
+                                    Utility.createShortSnackBar(ll_main, "No Internet Connection.!");
+                                }
                             }
                         } else {
-                            agendaViewModel.saveToCalender(AgendaDetailsActivity.this, sessionStartTime, sessionEndTime, sessionName,
-                                    sessionDescription, sessionId, agendaDetails);
+                            if (ConnectionDetector.getInstance(AgendaDetailsActivity.this).isConnectingToInternet()) {
+                                agendaViewModel.saveToCalender(AgendaDetailsActivity.this, sessionStartTime, sessionEndTime, sessionName,
+                                        sessionDescription, sessionId, agendaDetails);
+                            } else {
+                                Utility.createShortSnackBar(ll_main, "No Internet Connection.!");
+                            }
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 } else {
-                    statusSwitch1 = switch_reminder.getTextOff().toString();
-                    reminder_id = agendaDetails.getReminder_id();
-                    try {
-                        if (!reminder_id.equalsIgnoreCase("0")) {
-                            Uri deleteUri = null;
-                            deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.parseLong(reminder_id));
-                            int rows = getContentResolver().delete(deleteUri, null, null);
-                            Toast.makeText(AgendaDetailsActivity.this, "Event deleted", Toast.LENGTH_LONG).show();
+                    if (ConnectionDetector.getInstance(AgendaDetailsActivity.this).isConnectingToInternet()) {
+                        statusSwitch1 = switch_reminder.getTextOff().toString();
+                        reminder_id = agendaDetails.getReminder_id();
+                        try {
+                            if (!reminder_id.equalsIgnoreCase("0")) {
+                                Uri deleteUri = null;
+                                deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Long.parseLong(reminder_id));
+                                int rows = getContentResolver().delete(deleteUri, null, null);
+                                Toast.makeText(AgendaDetailsActivity.this, "Event deleted", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
 
 
-                    agendaViewModel.reminderAgenda(api_token, event_id, sessionId, "0", "0");
-                    agendaViewModel.reminderAgenda().observe(AgendaDetailsActivity.this, new Observer<LoginOrganizer>() {
-                        @Override
-                        public void onChanged(LoginOrganizer loginOrganizer) {
-                            if (loginOrganizer != null) {
-                                if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
-                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
-                                } else {
-                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
+                        agendaViewModel.reminderAgenda(api_token, event_id, sessionId, "0", "0");
+                        agendaViewModel.reminderAgenda().observe(AgendaDetailsActivity.this, new Observer<LoginOrganizer>() {
+                            @Override
+                            public void onChanged(LoginOrganizer loginOrganizer) {
+                                if (loginOrganizer != null) {
+                                    if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                                        Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
+                                    } else {
+                                        Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
+                                    }
+                                }
+                                if (agendaViewModel != null && agendaViewModel.reminderAgenda().hasObservers()) {
+                                    agendaViewModel.reminderAgenda().removeObservers(AgendaDetailsActivity.this);
                                 }
                             }
-                            if (agendaViewModel != null && agendaViewModel.reminderAgenda().hasObservers()) {
-                                agendaViewModel.reminderAgenda().removeObservers(AgendaDetailsActivity.this);
-                            }
-                        }
-                    });
+                        });
+                    } else {
+                        Utility.createShortSnackBar(ll_main, "No Internet Connection.!");
+                    }
                 }
             }
         });
@@ -242,8 +282,12 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
                                            String permissions[], int[] grantResults) {
         if (requestCode == 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                agendaViewModel.saveToCalenderEx(AgendaDetailsActivity.this, sessionStartTime, sessionEndTime, sessionName,
-                        sessionDescription, sessionId, agendaDetails);
+                if (ConnectionDetector.getInstance(AgendaDetailsActivity.this).isConnectingToInternet()) {
+                    agendaViewModel.saveToCalenderEx(AgendaDetailsActivity.this, sessionStartTime, sessionEndTime, sessionName,
+                            sessionDescription, sessionId, agendaDetails);
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection.!");
+                }
             } else {
                 Toast.makeText(this, "Permission denied to write your Calender",
                         Toast.LENGTH_SHORT).show();
@@ -256,29 +300,33 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_live_stream:
-                agendaViewModel.openAgendaDetails(this);
+                agendaViewModel.openAgendaDetails(this, agendaDetails.getLivestream_link());
                 break;
             case R.id.ll_rate:
-                agendaViewModel.rateTheAgenda(api_token, event_id,
-                        sessionId,
-                        ratingValue);
-                agendaViewModel.rateAgenda().observe(this, new Observer<LoginOrganizer>() {
-                    @Override
-                    public void onChanged(LoginOrganizer loginOrganizer) {
-                        if (loginOrganizer != null) {
-                            if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
-                                Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
-                                ratingbar.setRating(0);
-                            } else {
-                                Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
+                if (ConnectionDetector.getInstance(AgendaDetailsActivity.this).isConnectingToInternet()) {
+                    agendaViewModel.rateTheAgenda(api_token, event_id,
+                            sessionId,
+                            ratingValue);
+                    agendaViewModel.rateAgenda().observe(this, new Observer<LoginOrganizer>() {
+                        @Override
+                        public void onChanged(LoginOrganizer loginOrganizer) {
+                            if (loginOrganizer != null) {
+                                if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
+                                    ratingbar.setRating(0);
+                                } else {
+                                    Utility.createShortSnackBar(ll_main, loginOrganizer.getHeader().get(0).getMsg());
+                                }
+                            }
+
+                            if (agendaViewModel != null && agendaViewModel.rateAgenda().hasObservers()) {
+                                agendaViewModel.rateAgenda().removeObservers(AgendaDetailsActivity.this);
                             }
                         }
-
-                        if (agendaViewModel != null && agendaViewModel.rateAgenda().hasObservers()) {
-                            agendaViewModel.rateAgenda().removeObservers(AgendaDetailsActivity.this);
-                        }
-                    }
-                });
+                    });
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection.!");
+                }
                 break;
             case R.id.iv_back:
                 onBackPressed();

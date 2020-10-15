@@ -33,6 +33,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import static com.procialize.eventapp.Constants.Constant.FOLDER_DIRECTORY;
 import static com.procialize.eventapp.Constants.Constant.IMAGE_DIRECTORY;
@@ -44,7 +46,7 @@ public class CommonFunction {
     public static void saveBackgroundImage(Context context, String url) {
 
         boolean result = Utility.checkWritePermission(context);
-        if(result) {
+        if (result) {
 
 
             String mediaPath = SharedPreference.getPref(context, EVENT_LIST_MEDIA_PATH);
@@ -58,12 +60,12 @@ public class CommonFunction {
                     }
 
                     String name = "background.jpg";
-                    File fdelete = new File(Uri.parse(myDir+"/"+name).getPath());
+                    File fdelete = new File(Uri.parse(myDir + "/" + name).getPath());
                     if (fdelete.exists()) {
                         if (fdelete.delete()) {
-                            System.out.println("file Deleted :" + Uri.parse(myDir+"/"+name).getPath());
+                            System.out.println("file Deleted :" + Uri.parse(myDir + "/" + name).getPath());
                         } else {
-                            System.out.println("file not Deleted :" + Uri.parse(myDir+"/"+name).getPath());
+                            System.out.println("file not Deleted :" + Uri.parse(myDir + "/" + name).getPath());
                         }
                     }
                     myDir = new File(myDir, name);
@@ -97,11 +99,11 @@ public class CommonFunction {
 
     }
 
-    public static void showBackgroundImage(Context context, View view){
+    public static void showBackgroundImage(Context context, View view) {
         try {
 
             File mypath = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "/" + Constant.FOLDER_DIRECTORY + "/" + "background.jpg");
-            Resources res =context.getResources();
+            Resources res = context.getResources();
             Bitmap bitmap = BitmapFactory.decodeFile(String.valueOf(mypath));
             BitmapDrawable bd = new BitmapDrawable(res, bitmap);
             view.setBackgroundDrawable(bd);
@@ -275,4 +277,48 @@ public class CommonFunction {
         return token;
     }
 
+    public static Date StringToDate(String sDate1) {
+        Date date1 = null;
+        try {
+            date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(sDate1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date1;
+    }
+
+    public static boolean isTimeBetweenTwoTime(String startTime, String endTime, String currentTime) throws ParseException {
+        boolean valid = false;
+        //Start Time
+        //all times are from java.util.Date
+        Date inTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startTime);
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(inTime);
+
+        //Current Time
+        Date checkTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(currentTime);
+        Calendar calendar3 = Calendar.getInstance();
+        calendar3.setTime(checkTime);
+
+        //End Time
+        Date finTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endTime);
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(finTime);
+
+        if (endTime.compareTo(startTime) < 0) {
+            calendar2.add(Calendar.DATE, 1);
+            calendar3.add(Calendar.DATE, 1);
+        }
+
+        java.util.Date actualTime = calendar3.getTime();
+        if ((actualTime.after(calendar1.getTime()) ||
+                actualTime.compareTo(calendar1.getTime()) == 0) &&
+                actualTime.before(calendar2.getTime())) {
+            valid = true;
+            return valid;
+        } else {
+            valid = false;
+            return valid;
+        }
+    }
 }
