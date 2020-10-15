@@ -53,6 +53,7 @@ import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.eventinfo.viewmodel.EventInfoViewModel;
+import com.procialize.eventapp.ui.livepoll.LivePollRepository;
 import com.procialize.eventapp.ui.livepoll.adapter.LivePollAdapter;
 import com.procialize.eventapp.ui.livepoll.model.FetchLivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll;
@@ -97,7 +98,8 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
     LivePollViewModel livePollViewModel;
     ImageView iv_profile;
      String token;
-
+    MutableLiveData<FetchLivePoll> FetchLivePollList = new MutableLiveData<>();
+    private APIService eventApi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,7 +161,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                 livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
             }
 
-            getDataFromApi();
+            getLivepoll(token,eventid);
         } else {
 
             Utility.createShortSnackBar(linear, "No internet connection");
@@ -177,7 +179,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                         livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
                     }
 
-                    getDataFromApi();
+                    getLivepoll(token,eventid);
 
                 } else {
                     if (pollrefresh.isRefreshing()) {
@@ -191,60 +193,81 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         });
     }
 
-    void getDataFromApi(){
-        livePollViewModel.getLivepoll(token, eventid);
+    public MutableLiveData<FetchLivePoll> getLivepoll(String token, String eventid) {
         if (pollrefresh.isRefreshing()) {
             pollrefresh.setRefreshing(false);
         }
-        livePollViewModel.getLivePollList().observe(LivePollActivity.this, new Observer<FetchLivePoll>() {
-            @Override
-            public void onChanged(FetchLivePoll event) {
-                //List<Speaker> eventLists = event.getSpeakerList();
-                String strCommentList =event.getDetail();
-                RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
-                String data = refreashToken.decryptedData(strCommentList);
-                Gson gson = new Gson();
-                List<Logo> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Logo>>() {}.getType());
+        eventApi = ApiUtils.getAPIService();
 
-                //Fetch Livepoll list
-                if(eventLists!=null) {
+        eventApi.livePollFetch(token,eventid
+        )
+                .enqueue(new Callback<FetchLivePoll>() {
+                    @Override
+                    public void onResponse(Call<FetchLivePoll> call, Response<FetchLivePoll> response) {
+                        if (response.isSuccessful()) {
+                            FetchLivePollList.setValue(response.body());
+                            String strCommentList =response.body().getDetail();
+                            RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
+                            String data = refreashToken.decryptedData(strCommentList);
+                            Gson gson = new Gson();
+                            List<Logo> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Logo>>() {}.getType());
 
-                    progressBar.setVisibility(View.GONE);
-                    List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
+                            //Fetch Livepoll list
+                            if(eventLists!=null) {
 
-                    Glide.with(LivePollActivity.this)
-                            .load(eventLists.get(0).getLogo_url_path()+eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                progressBar.setVisibility(View.GONE);
+                                empty.setVisibility(View.GONE);
+
+                                List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
+
+                                if(PollLists.size()>0) {
+
+                                    Glide.with(LivePollActivity.this)
+                                            .load(eventLists.get(0).getLogo_url_path() + eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
+                                            .listener(new RequestListener<Drawable>() {
+                                                @Override
+                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                    progressView.setVisibility(View.GONE);
+                                                    return false;
+                                                }
+
+                                                @Override
+                                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                    progressView.setVisibility(View.GONE);
+
+                                                    return false;
+                                                }
+                                            }).into(iv_profile);
+
+
+                                    setupEventAdapter(PollLists);
+                                }else{
+                                    progressBar.setVisibility(View.GONE);
+                                    empty.setVisibility(View.VISIBLE);
                                     progressView.setVisibility(View.GONE);
-                                    return false;
+                                    empty.setTextColor(Color.parseColor(SharedPreference.getPref(LivePollActivity.this, EVENT_COLOR_4)));
+
                                 }
 
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    progressView.setVisibility(View.GONE);
 
-                                    return false;
-                                }
-                            }).into(iv_profile);
+                            }else{
 
+                                progressBar.setVisibility(View.GONE);
+                                empty.setVisibility(View.VISIBLE);
 
-                    setupEventAdapter(PollLists);
+                            }
+                        }
+                    }
 
+                    @Override
+                    public void onFailure(Call<FetchLivePoll> call, Throwable t) {
+                        FetchLivePollList.setValue(null);
+                    }
+                });
 
-                }else{
-
-                    progressBar.setVisibility(View.GONE);
-
-                }
-
-                if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
-                    livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
-                }
-            }
-        });
+        return FetchLivePollList;
     }
+
 
     public void setupEventAdapter(List<LivePoll> commentList) {
         LivePollAdapter pollAdapter = new LivePollAdapter(this, commentList, LivePollActivity.this);
@@ -262,7 +285,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                 livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
             }
 
-            getDataFromApi();
+            getLivepoll(token,eventid);
         } else {
             if (pollrefresh.isRefreshing()) {
                 pollrefresh.setRefreshing(false);

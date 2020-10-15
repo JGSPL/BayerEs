@@ -116,8 +116,6 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* Intent intent = new Intent(PollDetailActivity.this, LivePollActivity.class);
-                startActivity(intent);*/
                 finish();
             }
         });
@@ -318,8 +316,6 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
 
 
                     } else {
-                         /*Intent intent = new Intent(PollDetailActivity.this, LivePollActivity.class);
-                        startActivity(intent);*/
 
 
                     finish();
@@ -516,7 +512,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
                     LivePollSubmitFetch(token, eventid, questionId, quiz_options_id);
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please select something", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please select an option", Toast.LENGTH_SHORT).show();
 
                 }
             }
