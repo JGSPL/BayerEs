@@ -295,14 +295,36 @@ public interface APIService{
  Call<EventInfo> eventInfoFetch(@Header("authorization") String auth,
                                 @Field("event_id") String event_id);
 
- @POST("Agenda_api/AgendaSeprateFetch")
- @FormUrlEncoded
- Call<FetchAgenda> agendaFetch(@Header("authorization") String auth,
-                               @Field("event_id") String event_id);
+    @POST("Agenda_api/AgendaSeprateFetch")
+    @FormUrlEncoded
+    Call<FetchAgenda> agendaFetch(@Header("authorization") String auth,
+                                  @Field("event_id") String event_id);
 
- @POST("Livepoll_api/LivePollFetch")
+    @POST("Livepoll_api/LivePollFetch")
  @FormUrlEncoded
- Call<FetchLivePoll> LivePollFetch(@Header("authorization") String auth,
+ Call<FetchLivePoll> livePollFetch(@Header("authorization") String authkey,
                                    @Field("event_id") String event_id);
 
+    @POST("Agenda_api/RateSession")
+    @FormUrlEncoded
+    Call<LoginOrganizer> rateAgendaApi(@Header("authorization") String authorization,
+                                       @Field("event_id") String Event_id,
+                                       @Field("target_id") String target_id,
+                                       @Field("rating") String rating);
+
+    @POST("Agenda_api/ReminderSession")
+    @FormUrlEncoded
+    Call<LoginOrganizer> setReminderAgenda(@Header("authorization") String authorization,
+                                           @Field("event_id") String Event_id,
+                                           @Field("session_id") String session_id,
+                                           @Field("reminder_flag") String reminder_flag,
+                                           @Field("reminder_id") String reminder_id);
+
+
+ @POST("Livepoll_api/LivePollSubmit")
+ @FormUrlEncoded
+ Call<FetchLivePoll> LivePollSubmit(@Header("authorization") String authkey,
+                                   @Field("event_id") String event_id,
+                                     @Field("live_poll_id") String live_poll_id,
+                                     @Field("live_poll_options_id") String live_poll_options_id);
 }

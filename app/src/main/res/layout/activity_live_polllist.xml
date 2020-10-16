@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.procialize.mrgeApp20.InnerDrawerActivity.FeedBackActivity">
+    >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:background="@android:color/transparent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:elevation="0dp">
 
@@ -26,26 +27,34 @@
             android:contentInsetLeft="0dp"
             android:contentInsetEnd="0dp"
             android:contentInsetRight="0dp"
+            app:navigationIcon="@mipmap/ic_back"
             android:minHeight="?attr/actionBarSize"
             app:contentInsetEnd="0dp"
             app:contentInsetLeft="0dp"
             app:contentInsetRight="0dp"
             app:contentInsetStart="0dp">
+            <com.procialize.eventapp.fonts.RobotoTextview
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left|center"
+                android:padding="@dimen/padding"
+                android:visibility="visible"
+                android:text="@string/title_livepoll"
+                android:textColor="@color/black"
+                android:textSize="17dp" />
+
 
             <ImageView
                 android:id="@+id/headerlogoIv"
                 android:layout_width="150dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="-10dp"
                 android:contentDescription=" " />
 
         </androidx.appcompat.widget.Toolbar>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/linecolor" />
 
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -59,16 +68,6 @@
         android:textSize="@dimen/textsizesmall"
         android:visibility="gone" />
 
-    <com.procialize.eventapp.fonts.RobotoTextview
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/padding"
-        android:visibility="gone"
-        android:text="@string/title_livepoll"
-        android:textColor="@color/activetab"
-        android:textSize="17dp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -175,7 +174,6 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@color/colorwhite"
             android:layout_height="match_parent">
 
             <com.procialize.eventapp.fonts.RobotoTextview
@@ -185,26 +183,23 @@
                 android:layout_centerInParent="true"
                 android:gravity="center|center_horizontal"
                 android:text="No active Poll"
+                android:visibility="gone"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
+
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/pollrefresh"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
 
-                <ListView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/pollRv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@color/black"
-                    android:dividerHeight="0px"
-                    android:smoothScrollbar="true"
-                    android:clipToPadding="false"
-                    android:paddingBottom="120dp">
-
-                </ListView>
-
+                    android:layout_marginTop="5dp"
+                    tools:listitem="@layout/attendee_row"/>
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 

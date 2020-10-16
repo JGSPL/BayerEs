@@ -14,15 +14,27 @@ public class FetchLivePoll {
 
     @SerializedName("detailpreencrypt")
     @Expose
-    List<LivePoll> livePollList;
+    List<Logo> LivePollList;
+
 
 
     @SerializedName("detail")
     @Expose
     private String detail;
+
+    public List<Logo> getLivePollList() {
+        return LivePollList;
+    }
+
+    public void setLivePollList(List<Logo> livePollList) {
+        LivePollList = livePollList;
+    }
+
     @SerializedName("totalRecords")
     @Expose
     private String totalRecords;
+
+
 
     public List<Header> getHeader() {
         return header;
@@ -32,13 +44,7 @@ public class FetchLivePoll {
         this.header = header;
     }
 
-    public List<LivePoll> getLivePollList() {
-        return livePollList;
-    }
 
-    public void setLivePollList(List<LivePoll> livePollList) {
-        this.livePollList = livePollList;
-    }
 
     public String getDetail() {
         return detail;

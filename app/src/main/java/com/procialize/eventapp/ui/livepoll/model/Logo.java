@@ -3,6 +3,8 @@ package com.procialize.eventapp.ui.livepoll.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Logo {
     @SerializedName("logo_url_path")
     @Expose
@@ -11,6 +13,18 @@ public class Logo {
     @SerializedName("live_poll_logo")
     @Expose
     private LivePoll_logo live_poll_logo;
+
+    @SerializedName("live_poll_list")
+    @Expose
+    List<LivePoll> LivePoll_list;
+
+    public List<LivePoll> getLivePoll_list() {
+        return LivePoll_list;
+    }
+
+    public void setLivePoll_list(List<LivePoll> livePoll_list) {
+        LivePoll_list = livePoll_list;
+    }
 
     public String getLogo_url_path() {
         return logo_url_path;

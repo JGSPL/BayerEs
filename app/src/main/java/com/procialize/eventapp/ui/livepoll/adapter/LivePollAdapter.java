@@ -3,6 +3,7 @@ package com.procialize.eventapp.ui.livepoll.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -15,7 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -27,6 +30,7 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
+import com.procialize.eventapp.ui.eventList.model.EventList;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll_option;
 
@@ -35,10 +39,13 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
-public class LivePollAdapter extends BaseAdapter {
-    
+public class LivePollAdapter extends RecyclerView.Adapter<LivePollAdapter.NewsViewHolder> {
+
     private List<LivePoll> pollLists;
     private Context context;
     private PollAdapterListner listener;
@@ -48,67 +55,31 @@ public class LivePollAdapter extends BaseAdapter {
         this.pollLists = pollLists;
         this.listener = listener;
         this.context = context;
-        
+
 
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return pollLists.size();
+    public LivePollAdapter.NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.live_poll_row, parent, false);
+        return new LivePollAdapter.NewsViewHolder(view);
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        if (getCount() > 0) {
-            return getCount();
-        } else {
-            return super.getViewTypeCount();
-        }
-    }
-
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+    public void onBindViewHolder(@NonNull final LivePollAdapter.NewsViewHolder holder, final int position) {
+//Newsfeed_detail feedData = feed_detail.get(position);
         final LivePoll pollList = pollLists.get(position);
-        if (inflater == null)
-            inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.live_poll_row, null);
+        holder.linMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
-            holder = new ViewHolder();
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
 
-            Display dispDefault = ((WindowManager) context
-                    .getSystemService(Context.WINDOW_SERVICE))
-                    .getDefaultDisplay();
-            int totalwidth = dispDefault.getWidth();
-            holder.nameTv = convertView.findViewById(R.id.nameTv);
-            holder.profileIV = convertView.findViewById(R.id.profileIV);
-            holder.mainLL = convertView.findViewById(R.id.mainLL);
-            holder.linMain = convertView.findViewById(R.id.linMain);
-            holder.ivewComplete = convertView.findViewById(R.id.ivewComplete);
-            holder.statusTv = convertView.findViewById(R.id.statusTv);
+        holder.nameTv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
+        holder.statusTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
 
-
-            holder.relative = (RelativeLayout) convertView
-                    .findViewById(R.id.relative);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        //holder.mainLL.setBackgroundColor(Color.parseColor(colorActive));
+        holder.ic_rightarrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
 
         if(pollList.getStatus().equalsIgnoreCase("Tap To Participate")){
             holder.statusTv.setVisibility(View.VISIBLE);
@@ -119,7 +90,8 @@ public class LivePollAdapter extends BaseAdapter {
             holder.statusTv.setVisibility(View.VISIBLE);
             holder.statusTv.setText("Participated");
             holder.ivewComplete.setVisibility(View.VISIBLE);
-            holder.ivewComplete.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+
+            holder.ivewComplete.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
         }
         try{
             holder.nameTv.setText(StringEscapeUtils.unescapeJava(pollList.getQuestion()));
@@ -134,46 +106,36 @@ public class LivePollAdapter extends BaseAdapter {
             }
         });
 
-        if(position==0){
-            holder.relative.setVisibility(View.VISIBLE);
-           /* SharedPreferences prefs1 = context.getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-            String logoPath = prefs1.getString(KEY_LIVE_POLL_LOGO_PATH,"");
-            String strAppLivePollLogo =  prefs1.getString(KEY_LIVE_POLL_LOGO,"");
-
-            Glide.with(context).load(logoPath + strAppLivePollLogo)
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    //progressBar.setVisibility(View.GONE);
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    // progressBar.setVisibility(View.GONE);
-                    return false;
-                }
-            }).into(holder.profileIV);*/
-        }else{
-            holder.relative.setVisibility(View.GONE);
-
-        }
-
-
-
-
-        return convertView;
     }
+
+    @Override
+    public int getItemCount() {
+        return pollLists.size();
+    }
+
 
     public interface PollAdapterListner {
         void onContactSelected(LivePoll pollList);
     }
 
-    static class ViewHolder {
+    public class NewsViewHolder extends RecyclerView.ViewHolder {
+
         public TextView nameTv,statusTv;
-        public ImageView profileIV;
+        public ImageView ic_rightarrow;
         public LinearLayout mainLL,linMain;
         RelativeLayout relative;
         View ivewComplete;
+
+        public NewsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            nameTv = itemView.findViewById(R.id.nameTv);
+            statusTv = itemView.findViewById(R.id.statusTv);
+            mainLL = itemView.findViewById(R.id.mainLL);
+            linMain = itemView.findViewById(R.id.linMain);
+            ic_rightarrow = itemView.findViewById(R.id.ic_rightarrow);
+            ivewComplete = itemView.findViewById(R.id.ivewComplete);
+            ivewComplete = itemView.findViewById(R.id.ivewComplete);
+
+        }
     }
 }

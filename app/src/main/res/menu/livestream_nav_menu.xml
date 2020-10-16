@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:enabled="true"
+        android:icon="@drawable/newsfeed_selector"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/navigation_agenda"
+        android:enabled="true"
+        android:icon="@drawable/agenda_selector"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/navigation_attendee"
+        android:enabled="true"
+        android:icon="@drawable/attendee_selector"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/navigation_speaker"
+        android:enabled="true"
+        android:icon="@drawable/speaker_selector"
+        app:showAsAction="collapseActionView" />
+
+
+</menu>

@@ -6,7 +6,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -21,27 +23,46 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
+import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
+import com.procialize.eventapp.ui.eventinfo.viewmodel.EventInfoViewModel;
+import com.procialize.eventapp.ui.livepoll.LivePollRepository;
 import com.procialize.eventapp.ui.livepoll.adapter.LivePollAdapter;
 import com.procialize.eventapp.ui.livepoll.model.FetchLivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll_option;
+import com.procialize.eventapp.ui.livepoll.model.Logo;
+import com.procialize.eventapp.ui.livepoll.viewmodel.LivePollViewModel;
+import com.procialize.eventapp.ui.speaker.adapter.SpeakerAdapter;
+import com.procialize.eventapp.ui.speaker.model.Speaker;
+import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 
 
 import java.io.File;
@@ -58,31 +79,36 @@ import retrofit2.Response;
 import static com.procialize.eventapp.Utility.CommonFirebase.crashlytics;
 import static com.procialize.eventapp.Utility.CommonFirebase.firbaseAnalytics;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
 public class LivePollActivity extends AppCompatActivity implements LivePollAdapter.PollAdapterListner {
     SwipeRefreshLayout pollrefresh;
-    ListView pollRv;
-    ProgressBar progressBar;
+    RecyclerView pollRv;
+    ProgressBar progressBar,progressView;
     List<LivePoll_option> optionLists;
-    String eventid, colorActive;
+    String eventid;
     ImageView headerlogoIv;
-    private APIService mAPIService;
     private ConnectionDetector cd;
-    TextView empty, pullrefresh;
+    TextView empty, pullrefresh,title;
     LinearLayout linear;
-    APIService updateApi;
-    MutableLiveData<FetchLivePoll> livepollDetail = new MutableLiveData<>();
+    LivePollViewModel livePollViewModel;
+    ImageView iv_profile;
+     String token;
+    MutableLiveData<FetchLivePoll> FetchLivePollList = new MutableLiveData<>();
+    private APIService eventApi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_polllist);
         eventid = SharedPreference.getPref(this, EVENT_ID);
-        colorActive = "#ffffff";
 
-
-        // overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        headerlogoIv = findViewById(R.id.headerlogoIv);
+
         setSupportActionBar(toolbar);
 
 
@@ -93,14 +119,16 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
                 finish();
             }
         });
 
+        toolbar.getNavigationIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+
+        livePollViewModel = ViewModelProviders.of(this).get(LivePollViewModel.class);
+
         cd = ConnectionDetector.getInstance(this);
 
-        headerlogoIv = findViewById(R.id.headerlogoIv);
 
 
         pollRv = findViewById(R.id.pollRv);
@@ -108,148 +136,178 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         progressBar = findViewById(R.id.progressBar);
         linear = findViewById(R.id.linear);
         pullrefresh = findViewById(R.id.pullrefresh);
+        iv_profile = findViewById(R.id.iv_profile);
+        progressView = findViewById(R.id.progressView);
+        title = findViewById(R.id.title);
 
         empty = findViewById(R.id.empty);
-
-        TextView header = findViewById(R.id.title);
-        header.setTextColor(Color.parseColor(colorActive));
-        pullrefresh.setTextColor(Color.parseColor(colorActive));
-
-       /* RelativeLayout layoutTop = findViewById(R.id.layoutTop);
-        layoutTop.setBackgroundColor(Color.parseColor(colorActive));*/
 
 
         optionLists = new ArrayList<>();
 
-        mAPIService = ApiUtils.getAPIService();
+        CommonFunction.showBackgroundImage(LivePollActivity.this, linear);
+        title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
 
-        final String token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+
+         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         crashlytics("Live Poll",token);
         firbaseAnalytics(this, "Live Poll", token);
 
 
-        int resId = R.anim.layout_animation_slide_right;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
-        CommonFunction.showBackgroundImage(LivePollActivity.this, linear);
 
         if (cd.isConnectingToInternet()) {
-            getLivepoll(token, eventid);
+            if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
+                livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
+            }
+
+            getLivepoll(token,eventid);
         } else {
 
-            Toast.makeText(LivePollActivity.this, "No internet connection",
-                    Toast.LENGTH_SHORT).show();
+            Utility.createShortSnackBar(linear, "No internet connection");
+
 
         }
+
 
 
         pollrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (cd.isConnectingToInternet()) {
-                    getLivepoll(token, eventid);
+                    if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
+                        livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
+                    }
+
+                    getLivepoll(token,eventid);
+
                 } else {
                     if (pollrefresh.isRefreshing()) {
                         pollrefresh.setRefreshing(false);
                     }
-                    Toast.makeText(LivePollActivity.this, "No internet connection",
-                            Toast.LENGTH_SHORT).show();
+                    Utility.createShortSnackBar(linear, "No internet connection");
+
 
                 }
             }
         });
     }
 
-    //Update Api
-    public MutableLiveData<FetchLivePoll> getLivepoll(final String token, final String event_id) {
-        updateApi = ApiUtils.getAPIService();
+    public MutableLiveData<FetchLivePoll> getLivepoll(String token, String eventid) {
+        if (pollrefresh.isRefreshing()) {
+            pollrefresh.setRefreshing(false);
+        }
+        eventApi = ApiUtils.getAPIService();
 
-        updateApi.LivePollFetch(token, event_id).enqueue(new Callback<FetchLivePoll>() {
-            @Override
-            public void onResponse(Call<FetchLivePoll> call,
-                                   Response<FetchLivePoll> response) {
-                if (response.isSuccessful()) {
-                    livepollDetail.setValue(response.body());
-                    String strCommentList =response.body().getDetail();
-                    RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
-                    String data = refreashToken.decryptedData(strCommentList);
-                    Gson gson = new Gson();
-                    List<LivePoll> eventLists = gson.fromJson(data, new TypeToken<ArrayList<LivePoll>>() {}.getType());
-                    if(eventLists!=null) {
-                        optionLists = eventLists.get(0).getLive_poll_option_list();
+        eventApi.livePollFetch(token,eventid
+        )
+                .enqueue(new Callback<FetchLivePoll>() {
+                    @Override
+                    public void onResponse(Call<FetchLivePoll> call, Response<FetchLivePoll> response) {
+                        if (response.isSuccessful()) {
+                            FetchLivePollList.setValue(response.body());
+                            String strCommentList =response.body().getDetail();
+                            RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
+                            String data = refreashToken.decryptedData(strCommentList);
+                            Gson gson = new Gson();
+                            List<Logo> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Logo>>() {}.getType());
+
+                            //Fetch Livepoll list
+                            if(eventLists!=null) {
+
+                                progressBar.setVisibility(View.GONE);
+                                empty.setVisibility(View.GONE);
+
+                                List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
+
+                                if(PollLists.size()>0) {
+
+                                    Glide.with(LivePollActivity.this)
+                                            .load(eventLists.get(0).getLogo_url_path() + eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
+                                            .listener(new RequestListener<Drawable>() {
+                                                @Override
+                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                    progressView.setVisibility(View.GONE);
+                                                    return false;
+                                                }
+
+                                                @Override
+                                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                    progressView.setVisibility(View.GONE);
+
+                                                    return false;
+                                                }
+                                            }).into(iv_profile);
+
+
+                                    setupEventAdapter(PollLists);
+                                }else{
+                                    progressBar.setVisibility(View.GONE);
+                                    empty.setVisibility(View.VISIBLE);
+                                    progressView.setVisibility(View.GONE);
+                                    empty.setTextColor(Color.parseColor(SharedPreference.getPref(LivePollActivity.this, EVENT_COLOR_4)));
+
+                                }
+
+
+                            }else{
+
+                                progressBar.setVisibility(View.GONE);
+                                empty.setVisibility(View.VISIBLE);
+
+                            }
+                        }
                     }
 
-                   // if(optionLists!=null) {
+                    @Override
+                    public void onFailure(Call<FetchLivePoll> call, Throwable t) {
+                        FetchLivePollList.setValue(null);
+                    }
+                });
 
-                       // String pdfurl = eventLists.get(0).getSpeaker_document_path();
-                        empty.setVisibility(View.GONE);
-
-                        empty.setVisibility(View.GONE);
-                        LivePollAdapter pollAdapter = new LivePollAdapter(LivePollActivity.this, eventLists, LivePollActivity.this);
-                        pollAdapter.notifyDataSetChanged();
-                        pollRv.setAdapter(pollAdapter);
-                   /* }else{
-                        empty.setVisibility(View.VISIBLE);
-                    }*/
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FetchLivePoll> call, Throwable t) {
-                livepollDetail.setValue(null);
-            }
-        });
-        return livepollDetail;
+        return FetchLivePollList;
     }
 
-    public void showProgress() {
-        if (progressBar.getVisibility() == View.GONE) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
+
+    public void setupEventAdapter(List<LivePoll> commentList) {
+        LivePollAdapter pollAdapter = new LivePollAdapter(this, commentList, LivePollActivity.this);
+        pollRv.setLayoutManager(new LinearLayoutManager(this));
+        pollRv.setAdapter(pollAdapter);
+        pollAdapter.notifyDataSetChanged();
     }
 
-    public void dismissProgress() {
-        if (progressBar.getVisibility() == View.VISIBLE) {
-            progressBar.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //  overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        if (cd.isConnectingToInternet()) {
+            if (livePollViewModel != null && livePollViewModel.getLivePollList().hasObservers()) {
+                livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
+            }
 
+            getLivepoll(token,eventid);
+        } else {
+            if (pollrefresh.isRefreshing()) {
+                pollrefresh.setRefreshing(false);
+            }
+            Utility.createShortSnackBar(linear, "No internet connection");
+
+
+        }
     }
 
 
     @Override
     public void onContactSelected(LivePoll pollList) {
+        optionLists = pollList.getLive_poll_option_list();
 
-        if (pollList.getReplied().equalsIgnoreCase("1")) {
-            if (pollList.getStatus().equalsIgnoreCase("1")) {
-                Toast.makeText(LivePollActivity.this, "You are already submit quiz.", Toast.LENGTH_SHORT).show();
-            } else {
-               /* Intent polldetail = new Intent(getApplicationContext(), PollDetailActivity.class);
-                polldetail.putExtra("id", pollList.getId());
-                polldetail.putExtra("question", pollList.getQuestion());
-                polldetail.putExtra("replied", pollList.getReplied());
-                polldetail.putExtra("show_result", pollList.getStatus());
-                polldetail.putExtra("optionlist", (Serializable) optionLists);
-                startActivity(polldetail);
-                finish();*/
-            }
-
-        } else {
-            /*Intent polldetail = new Intent(getApplicationContext(), PollDetailActivity.class);
-            polldetail.putExtra("id", pollList.getId());
-            polldetail.putExtra("question", pollList.getQuestion());
-            polldetail.putExtra("replied", pollList.getReplied());
-            polldetail.putExtra("optionlist", (Serializable) optionLists);
-            polldetail.putExtra("show_result", pollList.getStatus());
-            startActivity(polldetail);
-            finish();*/
-        }
+        Intent polldetail = new Intent(getApplicationContext(), PollDetailActivity.class);
+        polldetail.putExtra("id", pollList.getId());
+        polldetail.putExtra("question", pollList.getQuestion());
+        polldetail.putExtra("replied", pollList.getReplied());
+        polldetail.putExtra("optionlist", (Serializable) optionLists);
+        polldetail.putExtra("show_result", pollList.getHide_result());
+        startActivity(polldetail);
 
     }
 

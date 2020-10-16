@@ -19,6 +19,8 @@
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission
         android:name="android.permission.CAPTURE_VIDEO_OUTPUT"
         tools:ignore="ProtectedPermissions" /> <!-- android:name="android.hardware.camera" -->
@@ -38,7 +40,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.quiz.view.QuizDetailActivity"></activity>
+        <activity
+            android:name=".ui.liveStreaming.view.LiveStreamingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -155,11 +160,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
-            android:name=".ui.quiz.view.QuizListingActivity"
+            android:name=".ui.livepoll.view.PollDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.attendeeChat.activity.AttendeeChatDetail"
             android:screenOrientation="portrait"

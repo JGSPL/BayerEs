@@ -870,7 +870,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.iv_likes:
                 if (connectionDetector.isConnectingToInternet()) {
 
-                    commentViewModel.likePost(api_token, event_id, newsfeed_detail.getNews_feed_id());
+                    //commentViewModel.likePost(api_token, event_id, newsfeed_detail.getNews_feed_id());
 
                     ApiUtils.getAPIService().PostLikeFromComment(api_token, event_id, newsfeed_detail.getNews_feed_id()).enqueue(new Callback<LikePost>() {
                         @Override

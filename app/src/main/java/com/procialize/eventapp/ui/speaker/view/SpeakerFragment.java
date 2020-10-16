@@ -40,6 +40,7 @@ import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
 
 import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
@@ -312,6 +313,10 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
                 }else{
                     progressBar.setVisibility(View.GONE);
 
+                }
+
+                if (speakerViewModel != null && speakerViewModel.getSpeakerList().hasObservers()) {
+                    speakerViewModel.getSpeakerList().removeObservers(SpeakerFragment.this);
                 }
             }
         });

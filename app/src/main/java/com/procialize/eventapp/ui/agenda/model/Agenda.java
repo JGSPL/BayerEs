@@ -46,6 +46,25 @@ public class Agenda implements Serializable {
     @SerializedName("rated")
     @Expose
     private String rated;
+    @SerializedName("reminder_flag")
+    @Expose
+    private String reminder_flag;
+
+    public String getReminder_id() {
+        return reminder_id;
+    }
+
+    public void setReminder_id(String reminder_id) {
+        this.reminder_id = reminder_id;
+    }
+
+    @SerializedName("reminder_id")
+    @Expose
+    private String reminder_id;
+
+    public String getReminder_flag() {
+        return reminder_flag;
+    }
 
     public String getSession_id() {
         return session_id;
@@ -149,5 +168,9 @@ public class Agenda implements Serializable {
 
     public void setRated(String rated) {
         this.rated = rated;
+    }
+
+    public void setReminder_flag(String reminder_flag) {
+        this.reminder_flag = reminder_flag;
     }
 }

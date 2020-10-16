@@ -101,7 +101,6 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:autoLink="web"
-                    android:maxLines="10"
                     android:singleLine="false"
                     android:text=""
                     android:textSize="14dp"

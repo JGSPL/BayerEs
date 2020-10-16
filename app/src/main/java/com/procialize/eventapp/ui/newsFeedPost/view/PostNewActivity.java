@@ -381,7 +381,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {
                                             if (result != null) {
-                                                btn_post.setEnabled(true);
+                                                //btn_post.setEnabled(true);
                                                 String status = result.getHeader().get(0).getType();
                                                 String message = result.getHeader().get(0).getMsg();
 
@@ -403,6 +403,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                         });
                     } else {
                         try {
+                            btn_post.setEnabled(false);
                             postNewsFeedViewModel.insertMultimediaIntoDB(this, postText, resultList);
                             postNewsFeedViewModel.getDBStatus().observe(this, new Observer<Boolean>() {
                                 @Override

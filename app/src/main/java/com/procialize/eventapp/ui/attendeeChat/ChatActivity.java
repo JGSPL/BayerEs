@@ -141,7 +141,7 @@ public class ChatActivity extends AppCompatActivity {
     DatabaseReference mDatabaseReference;
     private DatabaseReference mRootReference;
 
-    private ImageView mChatSendButton,mChatAddButton;
+    private ImageView mChatSendButton, mChatAddButton;
     private EditText mMessageView;
 
     private RecyclerView mMessagesList;
@@ -156,14 +156,14 @@ public class ChatActivity extends AppCompatActivity {
 
     //Solution for descending list on refresh
     private int itemPos = 0;
-    private String mLastKey="";
-    private String mPrevKey="";
+    private String mLastKey = "";
+    private String mPrevKey = "";
 
-    private static final int GALLERY_PICK=1;
+    private static final int GALLERY_PICK = 1;
     StorageReference mImageStorage;
 
     String userChoosenTask;
-    int SELECT_FILE = 3, REQUEST_TAKE_PHOTO = 2, REQUEST_VIDEO_CAPTURE = 4 ;
+    int SELECT_FILE = 3, REQUEST_TAKE_PHOTO = 2, REQUEST_VIDEO_CAPTURE = 4;
     File file = null;
     String mCurrentPhotoPath;
     private File filePathImageCamera;
@@ -174,7 +174,7 @@ public class ChatActivity extends AppCompatActivity {
     public static File videoFile;
     Uri video;
     private ProgressBar progressBar;
-    String  lname, company, city, designation,  attendee_type,mobile,email,attendeeid,firebase_id,firstMessage, page;
+    String lname, company, city, designation, attendee_type, mobile, email, attendeeid, firebase_id, firstMessage, page;
     LinearLayout lineaeSend;
     public static String videoflag = "0";
     ConnectionDetector cd;
@@ -185,21 +185,21 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
-        mChatAddButton = (ImageView)findViewById(R.id.chatAddButton);
-        mChatSendButton = (ImageView)findViewById(R.id.chatSendButton);
+        mChatAddButton = (ImageView) findViewById(R.id.chatAddButton);
+        mChatSendButton = (ImageView) findViewById(R.id.chatSendButton);
         lineaeSend = findViewById(R.id.lineaeSend);
-        mMessageView = (EditText)findViewById(R.id.chatMessageView);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        mMessageView = (EditText) findViewById(R.id.chatMessageView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         cd = ConnectionDetector.getInstance(this);
 
         getWindow().setBackgroundDrawable(getDrawable(R.drawable.chat_bg));
 
         //-----GETING FROM INTENT----
-       // mChatUser = getIntent().getStringExtra("user_id");
+        // mChatUser = getIntent().getStringExtra("user_id");
         //final String userName = getIntent().getStringExtra("user_name");
         //String loginUser_name = getIntent().getStringExtra("loginUser_name");
         //String sProfilepic = getIntent().getStringExtra("sProfilepic");
-       // final String prof_pic = getIntent().getStringExtra("rProfilepic");
+        // final String prof_pic = getIntent().getStringExtra("rProfilepic");
 
         final LinearLayout linMain = findViewById(R.id.linMain);
 
@@ -239,22 +239,22 @@ public class ChatActivity extends AppCompatActivity {
         //---INFLATING APP BAR LAYOUT INTO ACTION BAR----
 
 
-        View actionBarView = findViewById( R.id.headerlayout ); // root View id from that link
+        View actionBarView = findViewById(R.id.headerlayout); // root View id from that link
 
         //---ADDING DATA ON ACTION BAR----
-        mUserName=(TextView) actionBarView.findViewById(R.id.textView3);
+        mUserName = (TextView) actionBarView.findViewById(R.id.textView3);
         mUserLastSeen = (TextView) actionBarView.findViewById(R.id.textView5);
         mUserImage = (CircleImageView) actionBarView.findViewById(R.id.circleImageView);
         LinearLayout linBack = actionBarView.findViewById(R.id.linBack);
         ImageView ivattDetail = actionBarView.findViewById(R.id.ivattDetail);
         mUserName.setText(userName);
-        mUserLastSeen.setText(designation + " - "+ city);
+        mUserLastSeen.setText(designation + " - " + city);
 
-       // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         //lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1));
-       // mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-      //  mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+        // mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        //  mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
 
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
         linBack.setOnClickListener(new View.OnClickListener() {
@@ -268,7 +268,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChatActivity.this, AttendeeChatDetail.class);
-                intent.putExtra("attendeeid",attendeeid);
+                intent.putExtra("attendeeid", attendeeid);
                 intent.putExtra("firebase_id", firebase_id);
 
                 intent.putExtra("fname", userName);
@@ -291,17 +291,17 @@ public class ChatActivity extends AppCompatActivity {
 
             mAuth = FirebaseAuth.getInstance();
             mCurrentUserId = mAuth.getCurrentUser().getUid();
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
 
-        mMessageAdapter = new MessageAdapter(messagesList, userName/*,loginUser_name,sProfilepic*/,prof_pic);
+        mMessageAdapter = new MessageAdapter(messagesList, userName/*,loginUser_name,sProfilepic*/, prof_pic);
 
-        mMessagesList = (RecyclerView)findViewById(R.id.recycleViewMessageList);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.message_swipe_layout);
+        mMessagesList = (RecyclerView) findViewById(R.id.recycleViewMessageList);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
         mLinearLayoutManager = new LinearLayoutManager(ChatActivity.this);
 
-       // mMessagesList.setHasFixedSize(true);
+        // mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayoutManager);
         mMessagesList.setAdapter(mMessageAdapter);
 
@@ -314,13 +314,13 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-        if(messagesList.size()==0){
+        if (messagesList.size() == 0) {
             progressBar.setVisibility(View.GONE);
         }
-        if(cd.isConnectingToInternet() ){
+        if (cd.isConnectingToInternet()) {
 
             loadMessages();
-        }else{
+        } else {
             Utility.createShortSnackBar(linMain, "No internet connection");
 
         }
@@ -331,7 +331,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 //                String onlineValue=dataSnapshot.child("online").getValue().toString();
-              //  String imageValue = dataSnapshot.child("thumb_image").getValue().toString();
+                //  String imageValue = dataSnapshot.child("thumb_image").getValue().toString();
 
                /* if(onlineValue.equals("true")){
                     mUserLastSeen.setText("online");
@@ -356,24 +356,23 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if(!dataSnapshot.hasChild(mChatUser)){
+                if (!dataSnapshot.hasChild(mChatUser)) {
 
                     Map chatAddMap = new HashMap();
-                    chatAddMap.put("seen",false);
+                    chatAddMap.put("seen", false);
                     chatAddMap.put("time_stamp", ServerValue.TIMESTAMP);
 
                     Map chatUserMap = new HashMap();
-                    chatUserMap.put("chats/"+mChatUser+"/"+mCurrentUserId,chatAddMap);
-                    chatUserMap.put("chats/"+mCurrentUserId+"/"+mChatUser,chatAddMap);
+                    chatUserMap.put("chats/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
+                    chatUserMap.put("chats/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
 
                     mRootReference.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if(databaseError == null){
+                            if (databaseError == null) {
                                 //Toast.makeText(getApplicationContext(), "Successfully Added chats feature", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                               // Toast.makeText(getApplicationContext(), "Cannot Add chats feature", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Toast.makeText(getApplicationContext(), "Cannot Add chats feature", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -390,10 +389,10 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        if(page.equalsIgnoreCase("AttendeeDetail")){
-            if(firstMessage!=null){
-                String current_user_ref = "messages/"+mCurrentUserId+"/"+mChatUser;
-                String chat_user_ref = "messages/"+ mChatUser +"/"+mCurrentUserId;
+        if (page.equalsIgnoreCase("AttendeeDetail")) {
+            if (firstMessage != null) {
+                String current_user_ref = "messages/" + mCurrentUserId + "/" + mChatUser;
+                String chat_user_ref = "messages/" + mChatUser + "/" + mCurrentUserId;
 
                 DatabaseReference user_message_push = mRootReference.child("messages")
                         .child(mCurrentUserId).child(mChatUser).push();
@@ -401,24 +400,23 @@ public class ChatActivity extends AppCompatActivity {
                 String push_id = user_message_push.getKey();
 
                 Map messageMap = new HashMap();
-                messageMap.put("message",firstMessage);
-                messageMap.put("seen",false);
-                messageMap.put("type","text");
+                messageMap.put("message", firstMessage);
+                messageMap.put("seen", false);
+                messageMap.put("type", "text");
                 messageMap.put("time", ServerValue.TIMESTAMP);
-                messageMap.put("from",mCurrentUserId);
+                messageMap.put("from", mCurrentUserId);
 
                 Map messageUserMap = new HashMap();
-                messageUserMap.put(current_user_ref+"/"+push_id,messageMap);
-                messageUserMap.put(chat_user_ref+"/"+push_id,messageMap);
+                messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+                messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
 
-                mRootReference.updateChildren(messageUserMap, new DatabaseReference.CompletionListener(){
+                mRootReference.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
 
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if(databaseError != null){
-                            Log.e("CHAT_ACTIVITY","Cannot add message to database");
-                        }
-                        else{
+                        if (databaseError != null) {
+                            Log.e("CHAT_ACTIVITY", "Cannot add message to database");
+                        } else {
                             Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                             mMessageView.setText("");
                         }
@@ -437,10 +435,10 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String message = mMessageView.getText().toString().trim();
                 mMessageView.setText("");
-                if(!TextUtils.isEmpty(message)){
+                if (!TextUtils.isEmpty(message)) {
 
-                   String current_user_ref = "messages/"+mCurrentUserId+"/"+mChatUser;
-                    String chat_user_ref = "messages/"+ mChatUser +"/"+mCurrentUserId;
+                    String current_user_ref = "messages/" + mCurrentUserId + "/" + mChatUser;
+                    String chat_user_ref = "messages/" + mChatUser + "/" + mCurrentUserId;
 
                     DatabaseReference user_message_push = mRootReference.child("messages")
                             .child(mCurrentUserId).child(mChatUser).push();
@@ -448,24 +446,23 @@ public class ChatActivity extends AppCompatActivity {
                     String push_id = user_message_push.getKey();
 
                     Map messageMap = new HashMap();
-                    messageMap.put("message",message);
-                    messageMap.put("seen",false);
-                    messageMap.put("type","text");
+                    messageMap.put("message", message);
+                    messageMap.put("seen", false);
+                    messageMap.put("type", "text");
                     messageMap.put("time", ServerValue.TIMESTAMP);
-                    messageMap.put("from",mCurrentUserId);
+                    messageMap.put("from", mCurrentUserId);
 
                     Map messageUserMap = new HashMap();
-                    messageUserMap.put(current_user_ref+"/"+push_id,messageMap);
-                    messageUserMap.put(chat_user_ref+"/"+push_id,messageMap);
+                    messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+                    messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
 
-                    mRootReference.updateChildren(messageUserMap, new DatabaseReference.CompletionListener(){
+                    mRootReference.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
 
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if(databaseError != null){
-                                Log.e("CHAT_ACTIVITY","Cannot add message to database");
-                            }
-                            else{
+                            if (databaseError != null) {
+                                Log.e("CHAT_ACTIVITY", "Cannot add message to database");
+                            } else {
                                 Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                                 mMessageView.setText("");
                             }
@@ -480,10 +477,10 @@ public class ChatActivity extends AppCompatActivity {
                     // Check for new messages
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                   // FirebaseDatabase.getInstance().getReference().child("message/" + chatID).push().setValue(messageMap);
+                    // FirebaseDatabase.getInstance().getReference().child("message/" + chatID).push().setValue(messageMap);
 
 
-                    if (currentUser != null){
+                    if (currentUser != null) {
                         String UID = currentUser.getUid();
                         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                         Query query = rootRef.child("message_read_states").child(chatID).orderByChild(UID).equalTo(false);
@@ -525,10 +522,7 @@ public class ChatActivity extends AppCompatActivity {
                     }
 
 
-
-
-
-                }else{
+                } else {
                     Toast.makeText(ChatActivity.this, "Please enter any message", Toast.LENGTH_SHORT).show();
 
                 }
@@ -539,7 +533,7 @@ public class ChatActivity extends AppCompatActivity {
         //----THE WRAP CONTENT OF IMAGE VIEW IS GIVING ERROR--- SO REMOVING THIS FUNCTIONALITY-------
 
 
-       mChatAddButton.setOnClickListener(new View.OnClickListener() {
+        mChatAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -555,12 +549,12 @@ public class ChatActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(cd.isConnectingToInternet() ){
+                if (cd.isConnectingToInternet()) {
 
                     itemPos = 0;
                     mCurrentPage++;
                     loadMoreMessages();
-                }else{
+                } else {
                     Utility.createShortSnackBar(linMain, "No internet connection");
                     mSwipeRefreshLayout.setRefreshing(false);
 
@@ -581,56 +575,59 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-   //---FIRST 10 MESSAGES WILL LOAD ON START----
+    //---FIRST 10 MESSAGES WILL LOAD ON START----
     private void loadMessages() {
+        try {
+            DatabaseReference messageRef = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
+            Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
 
-        DatabaseReference messageRef = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
-        Query messageQuery = messageRef.limitToLast(mCurrentPage*TOTAL_ITEM_TO_LOAD);
+            messageQuery.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Messages messages = (Messages) dataSnapshot.getValue(Messages.class);
 
-        messageQuery.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Messages messages = (Messages) dataSnapshot.getValue(Messages.class);
+                    itemPos++;
 
-                itemPos++;
+                    if (itemPos == 1) {
+                        String mMessageKey = dataSnapshot.getKey();
 
-                if(itemPos == 1){
-                    String mMessageKey = dataSnapshot.getKey();
+                        mLastKey = mMessageKey;
+                        mPrevKey = mMessageKey;
+                    }
 
-                    mLastKey = mMessageKey;
-                    mPrevKey = mMessageKey;
+                    progressBar.setVisibility(View.GONE);
+
+                    messagesList.add(messages);
+                    mMessageAdapter.notifyDataSetChanged();
+
+                    mMessagesList.scrollToPosition(messagesList.size() - 1);
+
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
 
-                progressBar.setVisibility(View.GONE);
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                messagesList.add(messages);
-                mMessageAdapter.notifyDataSetChanged();
+                }
 
-                mMessagesList.scrollToPosition(messagesList.size()-1);
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
+                }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //---ON REFRESHING 10 MORE MESSAGES WILL LOAD----
@@ -646,15 +643,14 @@ public class ChatActivity extends AppCompatActivity {
                 String messageKey = dataSnapshot.getKey();
 
 
-                if(!mPrevKey.equals(messageKey)){
-                    messagesList.add(itemPos++,message);
+                if (!mPrevKey.equals(messageKey)) {
+                    messagesList.add(itemPos++, message);
 
-                }
-                else{
+                } else {
                     mPrevKey = mLastKey;
                 }
 
-                if(itemPos == 1){
+                if (itemPos == 1) {
                     String mMessageKey = dataSnapshot.getKey();
                     mLastKey = mMessageKey;
                 }
@@ -664,7 +660,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 mSwipeRefreshLayout.setRefreshing(false);
 
-                mLinearLayoutManager.scrollToPositionWithOffset(10,0);
+                mLinearLayoutManager.scrollToPositionWithOffset(10, 0);
             }
 
             @Override
@@ -695,32 +691,32 @@ public class ChatActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         //---FOR PICKING IMAGE FROM GALLERY ACTIVITY AND SENDING---
-        if(requestCode == GALLERY_PICK && resultCode == RESULT_OK){
+        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
 
             //---GETTING IMAGE DATA IN FORM OF URI--
             Uri imageUri = data.getData();
-            showMediaialouge(this,imageUri,"image",data);
+            showMediaialouge(this, imageUri, "image", data);
 
 
-        }else  if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-           // Uri imageUri /*= data.getData()*/;
+        } else if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            // Uri imageUri /*= data.getData()*/;
 
             //String compressedImagePath = compressImage(mCurrentPhotoPath);
-           // Uri imageUri = Uri.fromFile(new File(compressedImagePath));
+            // Uri imageUri = Uri.fromFile(new File(compressedImagePath));
 
-            showMediaialouge(this,imageUri,"image",data);
+            showMediaialouge(this, imageUri, "image", data);
 
 
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_VIDEO_CAPTURE) {
             uri = data.getData();
 
-           showMediaialouge(this, uri, "video",data);
+            showMediaialouge(this, uri, "video", data);
 
 
-        }else if (resultCode == Activity.RESULT_OK && requestCode == SELECT_FILE) {
+        } else if (resultCode == Activity.RESULT_OK && requestCode == SELECT_FILE) {
 
             uri = data.getData();
-            showMediaialouge(this, uri, "videofile",data);
+            showMediaialouge(this, uri, "videofile", data);
 
            /* ArrayList<String> supportedMedia = new ArrayList<String>();
 
@@ -877,13 +873,13 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-       // mDatabaseReference.child(mCurrentUserId).child("online").setValue(ServerValue.TIMESTAMP);
+        // mDatabaseReference.child(mCurrentUserId).child("online").setValue(ServerValue.TIMESTAMP);
 
     }
 
     //Choose Share option
     private void selectOption() {
-        final CharSequence[] items = {"Image From gallery", "Image From camera", "Video from gallery", "Video From camera" ,"Cancel"};
+        final CharSequence[] items = {"Image From gallery", "Image From camera", "Video from gallery", "Video From camera", "Cancel"};
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -894,11 +890,11 @@ public class ChatActivity extends AppCompatActivity {
                 boolean result = Utility.checkPermission(ChatActivity.this);
 
                 if (items[item].equals("Image From gallery")) {
-                        userChoosenTask = "Image From gallery";
-                        Intent galleryIntent=new Intent();
-                        galleryIntent.setType("image/*");
-                        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(galleryIntent,"Select Image"),GALLERY_PICK);
+                    userChoosenTask = "Image From gallery";
+                    Intent galleryIntent = new Intent();
+                    galleryIntent.setType("image/*");
+                    galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(galleryIntent, "Select Image"), GALLERY_PICK);
                         /*Intent videoCaptureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                         //  videoCaptureIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30);
 //                        videoCaptureIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1); //0 means low & 1 means high
@@ -906,7 +902,7 @@ public class ChatActivity extends AppCompatActivity {
                             startActivityForResult(videoCaptureIntent, REQUEST_VIDEO_CAPTURE);
                         }*/
 
-                }else  if (items[item].equals("Image From camera")) {
+                } else if (items[item].equals("Image From camera")) {
 
                     userChoosenTask = "Image From camera";
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -927,8 +923,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     }
 
-                }
-                else if (items[item].equals("Video from gallery")) {
+                } else if (items[item].equals("Video from gallery")) {
 
                     userChoosenTask = "Video from gallery";
                     if (result)
@@ -942,7 +937,7 @@ public class ChatActivity extends AppCompatActivity {
                             // Android M Permission check
                             if (ChatActivity.this.checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED
                                     && ChatActivity.this.checkSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
-                                final String[] permissions = new String[]{"android.permission.READ_EXTERNAL_STORAGE" };
+                                final String[] permissions = new String[]{"android.permission.READ_EXTERNAL_STORAGE"};
                                 final String[] permissionswrite = new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"};
                                 ActivityCompat.requestPermissions(ChatActivity.this, permissionswrite, 0);
                                 ActivityCompat.requestPermissions(ChatActivity.this, permissions, 0);
@@ -974,7 +969,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     }
 
-                }else if (items[item].equals("Cancel")) {
+                } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
             }
@@ -1037,7 +1032,8 @@ public class ChatActivity extends AppCompatActivity {
 
             // Continue only if the File was successfully created
             if (file != null) {
-                /*Uri photoURI*/imageUri = FileProvider.getUriForFile(this,
+                /*Uri photoURI*/
+                imageUri = FileProvider.getUriForFile(this,
                         "com.procialize.eventapp.android.fileprovider",
                         file);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -1053,6 +1049,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -1083,133 +1080,133 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-        public String compressImage(String imageUri) {
+    public String compressImage(String imageUri) {
 
-            String filePath = getRealPathFromURIImage(imageUri);
-            Bitmap scaledBitmap = null;
+        String filePath = getRealPathFromURIImage(imageUri);
+        Bitmap scaledBitmap = null;
 
-            BitmapFactory.Options options = new BitmapFactory.Options();
+        BitmapFactory.Options options = new BitmapFactory.Options();
 
-            // by setting this field as true, the actual bitmap pixels are not
-            // loaded in the memory. Just the bounds are loaded. If
-            // you try the use the bitmap here, you will get null.
-            options.inJustDecodeBounds = true;
-            Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
+        // by setting this field as true, the actual bitmap pixels are not
+        // loaded in the memory. Just the bounds are loaded. If
+        // you try the use the bitmap here, you will get null.
+        options.inJustDecodeBounds = true;
+        Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
 
-            int actualHeight = options.outHeight;
-            int actualWidth = options.outWidth;
+        int actualHeight = options.outHeight;
+        int actualWidth = options.outWidth;
 
-            // max Height and width values of the compressed image is taken as
-            // 816x612
+        // max Height and width values of the compressed image is taken as
+        // 816x612
 
-            float maxHeight = 816.0f;
-            float maxWidth = 612.0f;
-            float imgRatio = actualWidth / actualHeight;
-            float maxRatio = maxWidth / maxHeight;
+        float maxHeight = 816.0f;
+        float maxWidth = 612.0f;
+        float imgRatio = actualWidth / actualHeight;
+        float maxRatio = maxWidth / maxHeight;
 
-            // width and height values are set maintaining the aspect ratio of the
-            // image
+        // width and height values are set maintaining the aspect ratio of the
+        // image
 
-            if (actualHeight > maxHeight || actualWidth > maxWidth) {
-                if (imgRatio < maxRatio) {
-                    imgRatio = maxHeight / actualHeight;
-                    actualWidth = (int) (imgRatio * actualWidth);
-                    actualHeight = (int) maxHeight;
-                } else if (imgRatio > maxRatio) {
-                    imgRatio = maxWidth / actualWidth;
-                    actualHeight = (int) (imgRatio * actualHeight);
-                    actualWidth = (int) maxWidth;
-                } else {
-                    actualHeight = (int) maxHeight;
-                    actualWidth = (int) maxWidth;
-                }
+        if (actualHeight > maxHeight || actualWidth > maxWidth) {
+            if (imgRatio < maxRatio) {
+                imgRatio = maxHeight / actualHeight;
+                actualWidth = (int) (imgRatio * actualWidth);
+                actualHeight = (int) maxHeight;
+            } else if (imgRatio > maxRatio) {
+                imgRatio = maxWidth / actualWidth;
+                actualHeight = (int) (imgRatio * actualHeight);
+                actualWidth = (int) maxWidth;
+            } else {
+                actualHeight = (int) maxHeight;
+                actualWidth = (int) maxWidth;
             }
+        }
 
-            // setting inSampleSize value allows to load a scaled down version of
-            // the original image
+        // setting inSampleSize value allows to load a scaled down version of
+        // the original image
 
-            options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
+        options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
 
-            // inJustDecodeBounds set to false to load the actual bitmap
-            options.inJustDecodeBounds = false;
+        // inJustDecodeBounds set to false to load the actual bitmap
+        options.inJustDecodeBounds = false;
 
-            // this options allow android to claim the bitmap memory if it runs low
-            // on memory
-            options.inPurgeable = true;
-            options.inInputShareable = true;
-            options.inTempStorage = new byte[16 * 1024];
+        // this options allow android to claim the bitmap memory if it runs low
+        // on memory
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+        options.inTempStorage = new byte[16 * 1024];
 
-            try {
-                // load the bitmap from its path
-                bmp = BitmapFactory.decodeFile(filePath, options);
-            } catch (OutOfMemoryError exception) {
-                exception.printStackTrace();
-
-            }
-            try {
-                scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight,
-                        Bitmap.Config.ARGB_8888);
-            } catch (OutOfMemoryError exception) {
-                exception.printStackTrace();
-            }
-
-            float ratioX = actualWidth / (float) options.outWidth;
-            float ratioY = actualHeight / (float) options.outHeight;
-            float middleX = actualWidth / 2.0f;
-            float middleY = actualHeight / 2.0f;
-
-            Matrix scaleMatrix = new Matrix();
-            scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
-
-            Canvas canvas = new Canvas(scaledBitmap);
-            canvas.setMatrix(scaleMatrix);
-            canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2,
-                    middleY - bmp.getHeight() / 2, new Paint(
-                            Paint.FILTER_BITMAP_FLAG));
-
-            // check the rotation of the image and display it properly
-            ExifInterface exif;
-            try {
-                exif = new ExifInterface(filePath);
-
-                int orientation = exif.getAttributeInt(
-                        ExifInterface.TAG_ORIENTATION, 0);
-                Log.d("EXIF", "Exif: " + orientation);
-                Matrix matrix = new Matrix();
-                if (orientation == 6) {
-                    matrix.postRotate(90);
-                    Log.d("EXIF", "Exif: " + orientation);
-                } else if (orientation == 3) {
-                    matrix.postRotate(180);
-                    Log.d("EXIF", "Exif: " + orientation);
-                } else if (orientation == 8) {
-                    matrix.postRotate(270);
-                    Log.d("EXIF", "Exif: " + orientation);
-                }
-                scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
-                        scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,
-                        true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            FileOutputStream out = null;
-            String filename = getFilename();
-
-            try {
-                out = new FileOutputStream(filename);
-
-                // write the compressed bitmap at the destination specified by
-                // filename.
-                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            return filename;
+        try {
+            // load the bitmap from its path
+            bmp = BitmapFactory.decodeFile(filePath, options);
+        } catch (OutOfMemoryError exception) {
+            exception.printStackTrace();
 
         }
+        try {
+            scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight,
+                    Bitmap.Config.ARGB_8888);
+        } catch (OutOfMemoryError exception) {
+            exception.printStackTrace();
+        }
+
+        float ratioX = actualWidth / (float) options.outWidth;
+        float ratioY = actualHeight / (float) options.outHeight;
+        float middleX = actualWidth / 2.0f;
+        float middleY = actualHeight / 2.0f;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2,
+                middleY - bmp.getHeight() / 2, new Paint(
+                        Paint.FILTER_BITMAP_FLAG));
+
+        // check the rotation of the image and display it properly
+        ExifInterface exif;
+        try {
+            exif = new ExifInterface(filePath);
+
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, 0);
+            Log.d("EXIF", "Exif: " + orientation);
+            Matrix matrix = new Matrix();
+            if (orientation == 6) {
+                matrix.postRotate(90);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 3) {
+                matrix.postRotate(180);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 8) {
+                matrix.postRotate(270);
+                Log.d("EXIF", "Exif: " + orientation);
+            }
+            scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
+                    scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,
+                    true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileOutputStream out = null;
+        String filename = getFilename();
+
+        try {
+            out = new FileOutputStream(filename);
+
+            // write the compressed bitmap at the destination specified by
+            // filename.
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return filename;
+
+    }
 
     public String getFilename() {
         File file = new File(Environment.getExternalStorageDirectory()
@@ -1264,22 +1261,22 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    public String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] b=baos.toByteArray();
-        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
         return temp;
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
         JzvdStd.releaseAllVideos();
         Log.v("MyApp", "onDestroy");
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -1321,24 +1318,25 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
     }
+
     @Override
     public void onBackPressed() {
 
         JzvdStd.releaseAllVideos();
 
-            finish();
-            KeyboardUtility.hideSoftKeyboard(this);
+        finish();
+        KeyboardUtility.hideSoftKeyboard(this);
 
     }
 
 
     private void showMediaialouge(Context context, final Uri url, final String type, final Intent data) {
 
-       // myDialog = new Dialog(this);
-        myDialog=new Dialog(this,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        // myDialog = new Dialog(this);
+        myDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         myDialog.setContentView(R.layout.dialog_chat_item);
         myDialog.setCancelable(false);
-       // myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
+        // myDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme; //style id
 
         myDialog.show();
 
@@ -1354,15 +1352,15 @@ public class ChatActivity extends AppCompatActivity {
 
         ImageView imgback = myDialog.findViewById(R.id.imgback);
 
-        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
         //title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));
 
-        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
+        cancelbtn.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
 
-       // imgCancel.setColorFilter(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
-        linSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)));
+        // imgCancel.setColorFilter(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        linSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_4)));
 
-        chatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+        chatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
 
 
         imgback.setOnClickListener(new View.OnClickListener() {
@@ -1398,15 +1396,14 @@ public class ChatActivity extends AppCompatActivity {
                             return false;
                         }
                     }).into(imageView);
-        }else if(type.equalsIgnoreCase("video")){
+        } else if (type.equalsIgnoreCase("video")) {
             videoplayer.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
             String uri_to_string;
-            uri_to_string= url.toString();
+            uri_to_string = url.toString();
             videoplayer.setUp(ScalingUtilities.getPath(ChatActivity.this, data.getData()), ""
                     , JzvdStd.SCREEN_NORMAL);
             JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
-
 
 
             Glide.with(this)
@@ -1416,16 +1413,14 @@ public class ChatActivity extends AppCompatActivity {
                     .into(videoplayer.thumbImageView);
 
 
-
-        }else if(type.equalsIgnoreCase("videofile")){
+        } else if (type.equalsIgnoreCase("videofile")) {
             videoplayer.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
             String uri_to_string;
-            uri_to_string= url.toString();
+            uri_to_string = url.toString();
             videoplayer.setUp(ScalingUtilities.getPath(ChatActivity.this, data.getData()), ""
                     , JzvdStd.SCREEN_NORMAL);
             JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
-
 
 
             Glide.with(this)
@@ -1433,12 +1428,9 @@ public class ChatActivity extends AppCompatActivity {
                     .load(url)
                     .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .into(videoplayer.thumbImageView);
-
 
 
         }
-
-
 
 
         cancelbtn.setOnClickListener(new View.OnClickListener() {
@@ -1458,9 +1450,9 @@ public class ChatActivity extends AppCompatActivity {
                 linSend.setEnabled(false);
                 linSend.setClickable(false);
 
-                if(type.equalsIgnoreCase("image")){
-                    final String current_user_ref = "messages/"+mCurrentUserId+"/"+mChatUser;
-                    final String chat_user_ref = "messages/"+ mChatUser +"/"+mCurrentUserId;
+                if (type.equalsIgnoreCase("image")) {
+                    final String current_user_ref = "messages/" + mCurrentUserId + "/" + mChatUser;
+                    final String chat_user_ref = "messages/" + mChatUser + "/" + mCurrentUserId;
 
                     DatabaseReference user_message_push = mRootReference.child("messages")
                             .child(mCurrentUserId).child(mChatUser).push();
@@ -1468,37 +1460,36 @@ public class ChatActivity extends AppCompatActivity {
                     final String push_id = user_message_push.getKey();
 
                     //---PUSHING IMAGE INTO STORAGE---
-                    StorageReference filepath = mImageStorage.child("message_images").child(push_id+".jpg");
+                    StorageReference filepath = mImageStorage.child("message_images").child(push_id + ".jpg");
                     filepath.putFile(url).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
 
                                 @SuppressWarnings("VisibleForTests")
                                 String download_url = task.getResult().getDownloadUrl().toString();
 
                                 Map messageMap = new HashMap();
-                                messageMap.put("message",download_url);
-                                messageMap.put("seen",false);
-                                messageMap.put("type","image");
+                                messageMap.put("message", download_url);
+                                messageMap.put("seen", false);
+                                messageMap.put("type", "image");
                                 messageMap.put("time", ServerValue.TIMESTAMP);
-                                messageMap.put("from",mCurrentUserId);
+                                messageMap.put("from", mCurrentUserId);
 
                                 Map messageUserMap = new HashMap();
-                                messageUserMap.put(current_user_ref+"/"+push_id,messageMap);
-                                messageUserMap.put(chat_user_ref+"/"+push_id,messageMap);
+                                messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
+                                messageUserMap.put(chat_user_ref + "/" + push_id, messageMap);
 
-                                mRootReference.updateChildren(messageUserMap, new DatabaseReference.CompletionListener(){
+                                mRootReference.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
 
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        if(databaseError != null){
+                                        if (databaseError != null) {
                                             progessLoad.setVisibility(View.GONE);
 
-                                            Log.e("CHAT_ACTIVITY","Cannot add message to database");
-                                        }
-                                        else{
+                                            Log.e("CHAT_ACTIVITY", "Cannot add message to database");
+                                        } else {
                                             progessLoad.setVisibility(View.GONE);
 
                                             Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
@@ -1512,7 +1503,7 @@ public class ChatActivity extends AppCompatActivity {
 
                         }
                     });
-                }else if(type.equalsIgnoreCase("video")){
+                } else if (type.equalsIgnoreCase("video")) {
                     ArrayList<String> supportedMedia = new ArrayList<String>();
                     progessLoad.setVisibility(View.VISIBLE);
 
@@ -1662,7 +1653,7 @@ public class ChatActivity extends AppCompatActivity {
                         Toast.makeText(ChatActivity.this, "Only .mp4,.mov,.3gp File formats allowed ", Toast.LENGTH_SHORT).show();
 
                     }
-                }else if(type.equalsIgnoreCase("videofile")){
+                } else if (type.equalsIgnoreCase("videofile")) {
                     ArrayList<String> supportedMedia = new ArrayList<String>();
 
                     supportedMedia.add(".mp4");
@@ -1698,7 +1689,7 @@ public class ChatActivity extends AppCompatActivity {
 
                             Bitmap b = ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND);
 
-                            final String thumbImage  = BitMapToString((b));
+                            final String thumbImage = BitMapToString((b));
 
                             file = videoFile;
                             Uri video = Uri.parse(videoUrl);
@@ -1708,8 +1699,6 @@ public class ChatActivity extends AppCompatActivity {
 
                             pathToStoredVideo = getRealPathFromURIPathVideo(video, ChatActivity.this);
                             Log.d("video", "Recorded Video Path " + pathToStoredVideo);
-
-
 
 
                             Toast.makeText(ChatActivity.this, "Video selected",
@@ -1722,7 +1711,6 @@ public class ChatActivity extends AppCompatActivity {
                                     .child(mCurrentUserId).child(mChatUser).push();
 
                             final String push_id = user_message_push.getKey();
-
 
 
 // StorageReference
@@ -1792,7 +1780,6 @@ public class ChatActivity extends AppCompatActivity {
                                     });
 
 
-
                             //}
                         } catch (Exception e) {
 
@@ -1818,8 +1805,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
 }
