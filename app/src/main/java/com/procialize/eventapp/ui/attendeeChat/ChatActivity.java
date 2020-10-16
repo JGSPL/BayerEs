@@ -76,6 +76,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -179,6 +181,7 @@ public class ChatActivity extends AppCompatActivity {
     public static String videoflag = "0";
     ConnectionDetector cd;
     Attendee attendee;
+    private FirebaseFirestore mFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,6 +289,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mRootReference = FirebaseDatabase.getInstance().getReference();
         mImageStorage = FirebaseStorage.getInstance().getReference();
+        mFirestore = FirebaseFirestore.getInstance();
 
         try {
 
@@ -466,6 +470,14 @@ public class ChatActivity extends AppCompatActivity {
                                 Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                                 mMessageView.setText("");
                             }
+
+                        }
+                    });
+
+                    mFirestore.collection("User/"+ mChatUser+"/Notification").add(messageMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Toast.makeText(ChatActivity.this, "Notification sent", Toast.LENGTH_SHORT).show();
 
                         }
                     });

@@ -8,7 +8,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0.0(4)"
+        versionName "1.0.0(5)"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     android {
@@ -203,5 +203,7 @@ dependencies {
 
     //implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0-RC1'
     implementation 'com.google.android.gms:play-services:11.8.0'
+    implementation 'com.google.firebase:firebase-firestore:11.8.0'
+
 }
 apply plugin: 'com.google.gms.google-services'

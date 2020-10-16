@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_designation.setText(designation + " - " + city);
 
 
-        if(stoeUsername!=null){
+        if((stoeUsername!=null) && !(stoeUsername.equalsIgnoreCase(""))){
             fireEmail = stoeUsername;
         }else{
             if (email.equalsIgnoreCase("")) {
