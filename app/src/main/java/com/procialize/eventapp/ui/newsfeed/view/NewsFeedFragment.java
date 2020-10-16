@@ -193,6 +193,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             @Override
             public void onRefresh() {
 
+                new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
                 feedrefresh.setRefreshing(false);
                 if (connectionDetector.isConnectingToInternet()) {
                     newsfeedAdapter.getNewsFeedList().clear();

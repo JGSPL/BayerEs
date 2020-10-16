@@ -1,14 +1,20 @@
 package com.procialize.eventapp.ui.quiz.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
@@ -16,21 +22,30 @@ import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
+import com.procialize.eventapp.ui.quiz.adapter.QuizListAdapter;
+import com.procialize.eventapp.ui.quiz.model.QuizList;
+import com.procialize.eventapp.ui.quiz.model.QuizListing;
 import com.procialize.eventapp.ui.quiz.viewmodel.QuizListingViewModel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.QUIZLOGO_MEDIA_PATH;
 
-public class QuizListingActivity extends AppCompatActivity {
+public class QuizListingActivity extends AppCompatActivity implements QuizListAdapter.QuizListAdapterListner {
 
     QuizListingViewModel quizlistingviewmodel;
     ConnectionDetector cd;
     public static LinearLayout ll_main;
     RecyclerView quizrecycler;
     SessionManager session;
-    String api_token = "",event_id;
+    String api_token = "", event_id;
     SwipeRefreshLayout quizRefreash;
     TextView tv_header;
+    QuizListAdapter quizAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +69,81 @@ public class QuizListingActivity extends AppCompatActivity {
         cd = ConnectionDetector.getInstance(this);
         quizlistingviewmodel = ViewModelProviders.of(this).get(QuizListingViewModel.class);
 
-        if(cd.isConnectingToInternet()){
+        if (cd.isConnectingToInternet()) {
             quizlistingviewmodel.getQuizList(api_token, event_id);
-        }else {
+
+            quizlistingviewmodel.getQuizList().observe(this, new Observer<QuizListing>() {
+                @Override
+                public void onChanged(QuizListing event) {
+                    RefreashToken refreashToken = new RefreashToken(QuizListingActivity.this);
+                    String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+//                    String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getDetailpreencrypt().getLogo_url_path()));
+//                    String strFilePath = CommonFunction.stripquotes(event.getDetailpreencrypt().getLogo_url_path());
+                    JsonParser jp = new JsonParser();
+                    JsonElement je = jp.parse(decrypteventdetail);
+                    JsonElement je2 = je.getAsJsonObject().get("logo_url_path");
+                    JsonElement je3 = je.getAsJsonObject().get("quiz_logo");
+                    JsonElement je4 = je.getAsJsonObject().get("quiz_list");
+                    JsonElement je5 = je3.getAsJsonObject().get("app_quiz_logo");
+                    String strFilePath = String.valueOf(je5);
+                    Gson gson = new Gson();
+                    List<QuizList> gsonevent = gson.fromJson(je4, new TypeToken<ArrayList<QuizList>>() {
+                    }.getType());
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(QUIZLOGO_MEDIA_PATH, strFilePath.replace("\\/", "/"));
+                    SharedPreference.putPref(QuizListingActivity.this, map);
+                    setupQuizAdapter(gsonevent);
+                }
+            });
+        } else {
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
         }
+
+        quizRefreash.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                quizRefreash.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    quizlistingviewmodel.getQuizList(api_token, event_id);
+
+                    quizlistingviewmodel.getQuizList().observe(QuizListingActivity.this, new Observer<QuizListing>() {
+                        @Override
+                        public void onChanged(QuizListing event) {
+                            RefreashToken refreashToken = new RefreashToken(QuizListingActivity.this);
+                            String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+//                    String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getDetailpreencrypt().getLogo_url_path()));
+//                    String strFilePath = CommonFunction.stripquotes(event.getDetailpreencrypt().getLogo_url_path());
+                            JsonParser jp = new JsonParser();
+                            JsonElement je = jp.parse(decrypteventdetail);
+                            JsonElement je2 = je.getAsJsonObject().get("logo_url_path");
+                            JsonElement je3 = je.getAsJsonObject().get("quiz_logo");
+                            JsonElement je4 = je.getAsJsonObject().get("quiz_list");
+                            JsonElement je5 = je3.getAsJsonObject().get("app_quiz_logo");
+                            String strFilePath = String.valueOf(je5);
+                            Gson gson = new Gson();
+                            List<QuizList> gsonevent = gson.fromJson(je4, new TypeToken<ArrayList<QuizList>>() {
+                            }.getType());
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put(QUIZLOGO_MEDIA_PATH, strFilePath.replace("\\/", "/"));
+                            SharedPreference.putPref(QuizListingActivity.this, map);
+                            setupQuizAdapter(gsonevent);
+                        }
+                    });
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection..!");
+                }
+            }
+        });
+    }
+
+    public void setupQuizAdapter(List<QuizList> commentList) {
+        quizAdapter = new QuizListAdapter(QuizListingActivity.this, commentList, QuizListingActivity.this);
+        quizrecycler.setLayoutManager(new LinearLayoutManager(this));
+        quizrecycler.setAdapter(quizAdapter);
+        quizAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMoreSelected(QuizList event, final int position) {
     }
 }

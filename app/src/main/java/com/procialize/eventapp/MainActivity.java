@@ -76,6 +76,7 @@ import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.profile.model.ProfileDetails;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
+import com.procialize.eventapp.ui.quiz.view.QuizListingActivity;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
 import java.io.File;
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event, tr_home, tr_profile, tr_logout,tr_event_info, tr_live_poll;
+    TableRow tr_switch_event, tr_home, tr_profile, tr_quiz,tr_logout,tr_event_info, tr_live_poll;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_event_info = findViewById(R.id.tr_event_info);
         tr_logout = findViewById(R.id.tr_logout);
         txt_version = findViewById(R.id.txt_version);
+        tr_quiz = findViewById(R.id.tr_quiz);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -241,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_profile.setOnClickListener(this);
         tr_event_info.setOnClickListener(this);
         tr_logout.setOnClickListener(this);
+        tr_quiz.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -481,6 +484,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, EventInfoActivity.class));
+                /*getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")
+                        .commit();*/
+                break;
+
+                case R.id.tr_quiz:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, QuizListingActivity.class));
                 /*getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_frame, EventInfoActivity.newInstance(), "")

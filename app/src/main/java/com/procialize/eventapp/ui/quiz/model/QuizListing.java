@@ -40,6 +40,18 @@ public class QuizListing {
     @Expose
     String detail;
 
+    public Detaildecrypt getDetailpreencrypt() {
+        return detailpreencrypt;
+    }
+
+    public void setDetailpreencrypt(Detaildecrypt detailpreencrypt) {
+        this.detailpreencrypt = detailpreencrypt;
+    }
+
+    @SerializedName("detailpreencrypt")
+    @Expose
+    Detaildecrypt detailpreencrypt;
+
     @SerializedName("totalRecords")
     @Expose
     String totalRecords;
