@@ -195,8 +195,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
 
                 feedrefresh.setRefreshing(false);
                 if (connectionDetector.isConnectingToInternet()) {
-                    newsfeedAdapter.getNewsFeedList().clear();
-                    newsfeedAdapter.notifyDataSetChanged();
+
                     /*if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                         newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
                     }*/
@@ -319,8 +318,8 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     void init() {
         if (connectionDetector.isConnectingToInternet()) {
 
-            newsfeedAdapter.getNewsFeedList().clear();
-            newsfeedAdapter.notifyDataSetChanged();
+           /* newsfeedAdapter.getNewsFeedList().clear();
+            newsfeedAdapter.notifyDataSetChanged();*/
 
            /* newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
             newsfeedViewModel.getNewsRepository().observeForever(new Observer<FetchNewsfeedMultiple>() {
@@ -385,7 +384,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 String mediaPath1 = strFilePath.replace("\\", "");
                                 //List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
                                 newsfeedAdapter.addAll(feedList);
-
+                                setupRecyclerView();
                                 newsFeedDatabaseViewModel.deleteNewsFeedMediaDataList(getActivity());
                                 insertIntoDb(feedList);
 
@@ -420,7 +419,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 }
                             }
 
-                            setupRecyclerView();
+                           // setupRecyclerView();
                         }
 
                         @Override

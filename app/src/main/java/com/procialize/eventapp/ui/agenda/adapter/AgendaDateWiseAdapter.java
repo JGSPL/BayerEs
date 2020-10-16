@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.procialize.eventapp.R;
@@ -23,7 +25,10 @@ import com.procialize.eventapp.ui.agenda.model.AgendaList;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -78,19 +83,28 @@ public class AgendaDateWiseAdapter extends RecyclerView.Adapter<AgendaDateWiseAd
 
 
         try {
-/*
-            SimpleDateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.UK);
-            SimpleDateFormat targetFormat = new SimpleDateFormat("HH:mm aa");
+            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
+            SimpleDateFormat targetFormat = new SimpleDateFormat("hh:mm aa");
 
             Date startTime = originalFormat.parse(agenda.getSession_start_time());
-            Date endTime = originalFormat.parse(agenda.getSession_end_time());*/
-            String strStartTime = CommonFunction.convertEventDate(agenda.getSession_start_time());
-            String strEndTime = CommonFunction.convertEventDate(agenda.getSession_end_time());
-            //String strEndTime = targetFormat.format(endTime);
-
+            Date endTime = originalFormat.parse(agenda.getSession_end_time());
+            String strEndTime = targetFormat.format(endTime);
+            String strStartTime = targetFormat.format(startTime);
 
             holder.tv_start_time.setText(strStartTime.toUpperCase());
             holder.tv_end_time.setText(strEndTime.toUpperCase());
+
+            Date currentTime = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String strCurrnetDate = dateFormat.format(currentTime);
+            if(CommonFunction.isTimeBetweenTwoTime(agenda.getSession_start_time(), agenda.getSession_end_time(), strCurrnetDate))
+            {
+                holder.iv_next_arrow.setImageDrawable(context.getResources().getDrawable(R.mipmap.ic_live_streaming));
+            }
+            else
+            {
+                holder.iv_next_arrow.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_right_arrow));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -53,14 +53,26 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <cn.jzvd.JzvdStd
+    <!--<cn.jzvd.JzvdStd
         android:id="@+id/videoview"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/trans"
         android:scaleType="centerCrop"
-        />
+        android:visibility="gone"/>-->
 
+    <!--<com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/youtube_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp" />-->
+
+    <fragment
+        android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
+        android:id="@+id/youtube_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="Instantiatable" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
