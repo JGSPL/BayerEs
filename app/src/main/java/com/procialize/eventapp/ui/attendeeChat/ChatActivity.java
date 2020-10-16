@@ -289,7 +289,6 @@ public class ChatActivity extends AppCompatActivity {
 
         mRootReference = FirebaseDatabase.getInstance().getReference();
         mImageStorage = FirebaseStorage.getInstance().getReference();
-        mFirestore = FirebaseFirestore.getInstance();
 
         try {
 
@@ -474,13 +473,6 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
 
-                    mFirestore.collection("User/"+ mChatUser+"/Notification").add(messageMap).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Toast.makeText(ChatActivity.this, "Notification sent", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
 
 
                     //TODO: Get the ID of the chat the user is taking part in
