@@ -20,6 +20,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -76,8 +77,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -90,6 +90,7 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.KeyboardUtility;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
 import com.procialize.eventapp.costumTools.TouchImageView;
@@ -104,6 +105,9 @@ import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -120,6 +124,12 @@ import java.util.Map;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import retrofit2.http.Url;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -181,7 +191,9 @@ public class ChatActivity extends AppCompatActivity {
     public static String videoflag = "0";
     ConnectionDetector cd;
     Attendee attendee;
-    private FirebaseFirestore mFirestore;
+    OkHttpClient mClient = new OkHttpClient();
+
+    String refreshedToken = "";//add your user refresh tokens who are logged in with firebase.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,6 +264,11 @@ public class ChatActivity extends AppCompatActivity {
         ImageView ivattDetail = actionBarView.findViewById(R.id.ivattDetail);
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - " + city);
+
+       refreshedToken  = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_GCM_ID);
+        final JSONArray jsonArray = new JSONArray();
+        jsonArray.put(refreshedToken);
+      //  jsonArray.put("eaYckEgz31Y:APA91bH44N6C4UyGnZ7jwx6B5MMv0eEpd8vT4TktTIVjiRzBsYgyzR_HL8J9my4ocbh6YTVLSU92fXLGlmlw6nN8fJZ6DmDrjq47itB-MbtF_Zu8W7oUHIyNUZUwjEjY7-CiLhSE3ZX_");
 
         // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         //lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
@@ -473,6 +490,7 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
 
+                    sendMessage(jsonArray,"Chat Notification",mChatUser +" "+ mCurrentUserId,"Http:\\google.com",message);
 
 
                     //TODO: Get the ID of the chat the user is taking part in
@@ -482,6 +500,9 @@ public class ChatActivity extends AppCompatActivity {
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                     // FirebaseDatabase.getInstance().getReference().child("message/" + chatID).push().setValue(messageMap);
+
+
+
 
 
                     if (currentUser != null) {
@@ -1808,6 +1829,67 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void sendMessage(final JSONArray recipients, final String title, final String body, final String icon, final String message) {
+
+        new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    JSONObject root = new JSONObject();
+                    JSONObject notification = new JSONObject();
+                    notification.put("body", body);
+                    notification.put("title", title);
+                    notification.put("icon", icon);
+
+                    JSONObject data = new JSONObject();
+                    data.put("message", message);
+                    root.put("notification", notification);
+                    root.put("data", data);
+                    root.put("registration_ids", recipients);
+
+                    String result = postToFCM(root.toString());
+                    Log.d("Main Activity", "Result: " + result);
+                    return result;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                try {
+                    JSONObject resultJson = new JSONObject(result);
+                    int success, failure;
+                    success = resultJson.getInt("success");
+                    failure = resultJson.getInt("failure");
+                    Toast.makeText(ChatActivity.this, "Message Success: " + success + "Message Failed: " + failure, Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(ChatActivity.this, "Message Failed, Unknown error occurred.", Toast.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
+    }
+
+    String postToFCM(String bodyString) throws IOException {
+
+
+
+        String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
+        final MediaType JSON
+                = MediaType.parse("application/json; charset=utf-8");
+
+        RequestBody body = RequestBody.create(JSON, bodyString);
+        Request request = new Request.Builder()
+                .url(FCM_MESSAGE_URL)
+                .post(body)
+                .addHeader("Authorization", "key=" + "AAAA4xkbUmY:APA91bHJtoRFEI_jxvR7jJEIA0M-Wa4adoRiLGWIMiWdAgEg5CLjsJBRuByvHHj-764l5zVRav8N_qwn_etLCzUHsL-xfhJTrQQFSYkHRurjID5haW2TpfZF1JRDw0y4vKBoqVg6Lldb")
+                .build();
+        Response response = mClient.newCall(request).execute();
+        return response.body().string();
     }
 
 

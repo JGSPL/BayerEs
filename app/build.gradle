@@ -203,7 +203,6 @@ dependencies {
 
     //implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0-RC1'
     implementation 'com.google.android.gms:play-services:11.8.0'
-    implementation 'com.google.firebase:firebase-firestore:11.8.0'
 
     implementation files('libs\\YouTubeAndroidPlayerApi.jar')
 
