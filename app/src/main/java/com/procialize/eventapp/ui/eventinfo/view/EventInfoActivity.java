@@ -72,6 +72,7 @@ public class EventInfoActivity extends AppCompatActivity {
     String api_token = "";
     SupportMapFragment mapFragment;
     ScrollView scrollView;
+    ImageView view_one;
 
     public static EventInfoActivity newInstance() {
         return new EventInfoActivity();
@@ -85,6 +86,7 @@ public class EventInfoActivity extends AppCompatActivity {
         eventInfoViewModel = ViewModelProviders.of(this).get(EventInfoViewModel.class);
         eventInfoDatabaseViewModel = ViewModelProviders.of(this).get(EventInfoDatabaseViewModel.class);
 
+        view_one = findViewById(R.id.view_one);
         scrollView = findViewById(R.id.scrollView);
         iv_back = findViewById(R.id.iv_back);
         tv_header = findViewById(R.id.tv_header);
@@ -146,6 +148,8 @@ public class EventInfoActivity extends AppCompatActivity {
                             String strEvent_image = eventInfos.get(0).getEvent_image();
                             String strHeader_image = eventInfos.get(0).getHeader_image();
                             String strBackground_image = eventInfos.get(0).getBackground_image();
+                            String strEventCoverImage = eventInfos.get(0).getEvent_cover_image();
+
 
                             tv_event_name.setText(strEvent_name);
                             tv_date.setText(CommonFunction.convertEventDate(strEvent_start_date) + " - " + CommonFunction.convertEventDate(strEvent_end_date));
@@ -174,6 +178,23 @@ public class EventInfoActivity extends AppCompatActivity {
                                             return false;
                                         }
                                     }).into(iv_event);
+
+                            Glide.with(getApplicationContext())
+                                    .load(mediaPath1 + strEventCoverImage)
+                                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                                    .listener(new RequestListener<Drawable>() {
+                                        @Override
+                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                            progressView.setVisibility(View.GONE);
+                                            return false;
+                                        }
+
+                                        @Override
+                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                            progressView.setVisibility(View.GONE);
+                                            return false;
+                                        }
+                                    }).into(view_one);
 
                             mapFragment.getMapAsync(new OnMapReadyCallback() {
                                 @Override
@@ -216,7 +237,7 @@ public class EventInfoActivity extends AppCompatActivity {
                         String strEvent_image = eventInfos.get(0).getEvent_image();
                         String strHeader_image = eventInfos.get(0).getHeader_image();
                         String strBackground_image = eventInfos.get(0).getBackground_image();
-
+                        String strEventCoverImage = eventInfos.get(0).getEvent_cover_image();
                         tv_event_name.setText(strEvent_name);
                         tv_date.setText(CommonFunction.convertEventDate(strEvent_start_date) + " - " + CommonFunction.convertEventDate(strEvent_end_date));
                         tv_address.setText(strEvent_location);
@@ -252,6 +273,23 @@ public class EventInfoActivity extends AppCompatActivity {
                                 googleMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
                             }
                         });
+
+                        Glide.with(getApplicationContext())
+                                .load(mediaPath1 + strEventCoverImage)
+                                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                                .listener(new RequestListener<Drawable>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                        progressView.setVisibility(View.GONE);
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                        progressView.setVisibility(View.GONE);
+                                        return false;
+                                    }
+                                }).into(view_one);
 
                     }
                 }

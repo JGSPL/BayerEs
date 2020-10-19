@@ -41,6 +41,12 @@ public class TableEventInfo implements Serializable {
     String header_image;
     @ColumnInfo(name = "fld_background_image")
     String background_image;
+    @ColumnInfo(name = "fld_event_cover_image")
+    String event_cover_image;
+
+    public void setEvent_cover_image(String event_cover_image) {
+        this.event_cover_image = event_cover_image;
+    }
 
     public int getId() {
         return id;
@@ -144,5 +150,9 @@ public class TableEventInfo implements Serializable {
 
     public void setBackground_image(String background_image) {
         this.background_image = background_image;
+    }
+
+    public String getEvent_cover_image() {
+        return event_cover_image;
     }
 }

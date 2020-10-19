@@ -87,9 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="10dp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non arcu dapibus, iaculis mi eget, consectetur diam. Nulla dui purus, commodo in erat quis, sollicitudin ultricies ipsum. Sed dapibus ante sed tellus condimentum, eget posuere orci consectetur. Vestibulum consectetur lorem sed ante scelerisque, a consectetur sem molestie"
+        android:text=""
         android:textColor="@color/black" />
-ve
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"

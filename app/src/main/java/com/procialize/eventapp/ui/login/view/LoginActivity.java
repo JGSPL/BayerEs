@@ -157,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                 new SessionManager(context).saveCurrentEvent(eventLists.get(0));
 
                 eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, new SessionManager(context));
-                eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
+                eventListViewModel.getupdateUserdatq().observe((LifecycleOwner) view.getContext(),new Observer<UpdateDeviceInfo>() {
                     @Override
                     public void onChanged(UpdateDeviceInfo updateDeviceInfo) {
                         String decrypteventdetail = refreashToken.decryptedData(updateDeviceInfo.getDetail());
@@ -213,7 +213,12 @@ public class LoginActivity extends AppCompatActivity {
                             eventListViewModel.getupdateUserdatq().removeObservers((LifecycleOwner) context);
                         }
                         EventAppDB eventAppDB = EventAppDB.getDatabase(context);
-                        List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
+                        if (eventListViewModel != null && eventListViewModel.getEventList().hasObservers()) {
+                            eventListViewModel.getEventList().removeObservers((LifecycleOwner) context);
+                        }
+                        String strAttendeeId = userData.get(0).getAttendee_id();
+                        List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().
+                                getProfileWithEventId(eventId,strAttendeeId);
                         if (profileDataUpdated.size() > 0) {
                             isClickable = true;
                             eventListViewModel.openMainPage((Activity) context);
@@ -223,6 +228,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+
             }
         });
     }
