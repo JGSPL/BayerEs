@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "975378797158-tp7k8r175i20oddo17r3v7goi0q4annu.apps.googleusercontent.com",
+          "client_id": "975378797158-sdghqfqqmk2k1mei0sbvjo0ilo8cutcb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.procialize.eventapp",
@@ -23,11 +23,27 @@
           }
         },
         {
-          "client_id": "975378797158-rk4bb8ob6eb1qacom6s3l3i1t8od703m.apps.googleusercontent.com",
+          "client_id": "975378797158-rhc419i54p13k51q0ep9ttmsf9bme1ev.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.procialize.eventapp",
+            "certificate_hash": "de7d284f1606abadd5acbf7a3b7e95c908bffd49"
+          }
+        },
+        {
+          "client_id": "975378797158-opomoto49do9hv8ativ4mgaqbk5927ep.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.procialize.eventapp",
             "certificate_hash": "272d5982c6e844ffd3c24060e23ea3ed687417b3"
+          }
+        },
+        {
+          "client_id": "975378797158-di7i9akqd9kf231g5a5ajm64ahpq1de8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.procialize.eventapp",
+            "certificate_hash": "960c09088ee4ef2795a6d5e41ff3a7ca3e78ac63"
           }
         },
         {

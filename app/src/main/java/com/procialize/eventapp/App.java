@@ -5,13 +5,17 @@ import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 
+import com.crashlytics.android.Crashlytics;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.KLog;
+import com.google.firebase.FirebaseApp;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Utility.Utils;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * @author Alexey Danilov (danikula@gmail.com).
@@ -29,6 +33,9 @@ public class App extends Application {
         super.onCreate();
         KLog.init(BuildConfig.DEBUG, "[VideoCache]:");
         initImageLoader(getApplicationContext());
+        Fabric.with(this, new Crashlytics());
+
+
     }
 
     public static HttpProxyCacheServer getProxy(Context context) {

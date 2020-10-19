@@ -55,6 +55,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -94,6 +98,7 @@ import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
 import com.procialize.eventapp.costumTools.TouchImageView;
+import com.procialize.eventapp.firebase.MySingleton;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
@@ -128,7 +133,6 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import retrofit2.http.Url;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
@@ -194,6 +198,15 @@ public class ChatActivity extends AppCompatActivity {
     OkHttpClient mClient = new OkHttpClient();
 
     String refreshedToken = "";//add your user refresh tokens who are logged in with firebase.
+
+    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    final private String serverKey = "key=" + "AAAA4xkbUmY:APA91bHJtoRFEI_jxvR7jJEIA0M-Wa4adoRiLGWIMiWdAgEg5CLjsJBRuByvHHj-764l5zVRav8N_qwn_etLCzUHsL-xfhJTrQQFSYkHRurjID5haW2TpfZF1JRDw0y4vKBoqVg6Lldb";
+    final private String contentType = "application/json";
+    final String TAG = "NOTIFICATION TAG";
+
+    String NOTIFICATION_TITLE;
+    String NOTIFICATION_MESSAGE;
+    String TOPIC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -490,7 +503,7 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
 
-                    sendMessage(jsonArray,"Chat Notification",mChatUser +" "+ mCurrentUserId,"Http:\\google.com",message);
+                //    sendMessage(jsonArray,"Chat Notification",mChatUser +" "+ mCurrentUserId,"Http:\\google.com",message);
 
 
                     //TODO: Get the ID of the chat the user is taking part in
@@ -499,52 +512,26 @@ public class ChatActivity extends AppCompatActivity {
                     // Check for new messages
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                    // FirebaseDatabase.getInstance().getReference().child("message/" + chatID).push().setValue(messageMap);
+                    //Send Text Notification
+                    TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                    NOTIFICATION_TITLE = firebase_id;
+                    NOTIFICATION_MESSAGE = message;
 
+                    JSONObject notification = new JSONObject();
+                    JSONObject notifcationBody = new JSONObject();
+                    try {
+                        notifcationBody.put("title", NOTIFICATION_TITLE);
+                        notifcationBody.put("message", NOTIFICATION_MESSAGE);
 
-
-
-
-                    if (currentUser != null) {
-                        String UID = currentUser.getUid();
-                        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                        Query query = rootRef.child("message_read_states").child(chatID).orderByChild(UID).equalTo(false);
-                        query.addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                String messageID = dataSnapshot.getKey();
-                                //TODO: Handle Notification here, using the messageID
-                                // A datasnapshot received here will be a new message that the user has not read
-                                // If you want to display data about the message or chat,
-                                // Use the chatID and/or messageID and declare a new
-                                // SingleValueEventListener here, and add it to the chat/message DatabaseReference.
-                            }
-
-                            @Override
-                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                String messageID = dataSnapshot.getKey();
-                                //TODO: Remove the notification
-                                // If the user reads the message in the app, before checking the notification
-                                // then the notification is no longer relevant, remove it here.
-                                // In onChildAdded you could use the messageID(s) to keep track of the notifications
-                            }
-
-                            @Override
-                            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                        notification.put("to", TOPIC);
+                        notification.put("data", notifcationBody);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onCreate: " + e.getMessage() );
                     }
+                    sendNotification(notification);
+
+
+
 
 
                 } else {
@@ -555,7 +542,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        //----THE WRAP CONTENT OF IMAGE VIEW IS GIVING ERROR--- SO REMOVING THIS FUNCTIONALITY-------
 
 
         mChatAddButton.setOnClickListener(new View.OnClickListener() {
@@ -1830,8 +1816,35 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+    private void sendNotification(JSONObject notification) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, "onResponse: " + response.toString());
 
-    public void sendMessage(final JSONArray recipients, final String title, final String body, final String icon, final String message) {
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ChatActivity.this, "Request error", Toast.LENGTH_LONG).show();
+                        Log.i(TAG, "onErrorResponse: Didn't work");
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", serverKey);
+                params.put("Content-Type", contentType);
+                return params;
+            }
+        };
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+    }
+
+
+    /*public void sendMessage(final JSONArray recipients, final String title, final String body, final String icon, final String message) {
 
         new AsyncTask<String, String, String>() {
             @Override
@@ -1891,7 +1904,7 @@ public class ChatActivity extends AppCompatActivity {
         Response response = mClient.newCall(request).execute();
         return response.body().string();
     }
-
+*/
 
 }
 
