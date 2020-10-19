@@ -87,6 +87,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
     View bgView;
     private Attendee attendee;
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
+    String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +155,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
             }
         });
 
+        currentUserId = SharedPreference.getPref(this,SharedPreferencesConstant.KEY_ATTENDEE_ID);
+        if(currentUserId.equalsIgnoreCase(attendeeid)){
+            et_message.setVisibility(View.GONE);
+            ll_send_message.setVisibility(View.GONE);
+        }
+
         CommonFunction.showBackgroundImage(AttendeeDetailActivity.this, ll_main);
         tv_attendee_name.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
@@ -180,6 +187,8 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
         tv_attendee_city.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         tv_mobile.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         tv_email.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+
+
 
         if (prof_pic.trim() != null) {
             Glide.with(AttendeeDetailActivity.this)
