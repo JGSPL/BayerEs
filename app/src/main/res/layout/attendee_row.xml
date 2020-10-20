@@ -146,6 +146,8 @@
                 android:id="@+id/rl_count"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
+                android:layout_marginRight="10dp"
+
                 android:layout_gravity="center"
                 android:visibility="gone">
 

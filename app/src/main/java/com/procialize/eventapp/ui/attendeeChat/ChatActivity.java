@@ -87,6 +87,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
@@ -258,6 +259,11 @@ public class ChatActivity extends AppCompatActivity {
         attendeeid = attendee.getAttendee_id();
         firebase_id = attendee.getFirebase_id();
         mChatUser = attendee.getFirebase_id();
+
+        EventAppDB.getDatabase(this).attendeeChatDao().updateIsRead(firebase_id);
+        EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
+       // int unreadMsgCount = EventAppDB.getDatabase(this).attendeeChatDao().getChatCountId(firebase_id);
+
 
         //---SETTING ONLINE------
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -514,7 +520,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     //Send Text Notification
                     TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
-                    NOTIFICATION_TITLE = firebase_id;
+                    NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                     NOTIFICATION_MESSAGE = message;
 
                     JSONObject notification = new JSONObject();

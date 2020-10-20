@@ -29,10 +29,14 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.session.SessionManager;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
+import com.procialize.eventapp.ui.attendeeChat.model.ChatCount;
+import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
 import com.procialize.eventapp.ui.newsFeedLike.model.AttendeeList;
 
 import java.util.ArrayList;
@@ -116,62 +120,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             }
 
 
-           /* try {
-                if (attendee_design.equalsIgnoreCase("0")) {
-                    holder.designationTv.setVisibility(View.INVISIBLE);
-                } else {
-                    if (attendee.getDesignation().equalsIgnoreCase("N A")) {
-                        holder.designationTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
-                    }
-                    if (attendee.getDesignation().equalsIgnoreCase("")) {
-                        holder.designationTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
-                    }
-                    if (attendee.getDesignation().equalsIgnoreCase(" ")) {
-                        holder.designationTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
-                    } else {
-                        holder.designationTv.setVisibility(View.VISIBLE);
-                        holder.designationTv.setText(attendee.getDesignation());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                holder.designationTv.setVisibility(View.INVISIBLE);
-            }
 
-            try {
-                if (attendee_company.equalsIgnoreCase("0")) {
-                    holder.companyTv.setVisibility(View.INVISIBLE);
-                } else {
-                    if (attendee.getCompany_name().equalsIgnoreCase("N A")) {
-                        holder.companyTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
-                    }
-                    if (attendee.getCompany_name().equalsIgnoreCase("")) {
-                        holder.companyTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
-                    }
-                    if (attendee.getCompany_name().equalsIgnoreCase(" ")) {
-                        holder.companyTv.setVisibility(View.INVISIBLE);
-                        holder.tv_concat.setVisibility(View.INVISIBLE);
-                    } else {
-                        holder.companyTv.setVisibility(View.VISIBLE);
-                        holder.companyTv.setText(attendee.getCompany_name());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                holder.designationTv.setVisibility(View.INVISIBLE);
-            }*/
-
-          /*  if (attendee.getCompany_name().equalsIgnoreCase("") &&
-                    attendee.getDesignation().equalsIgnoreCase("")) {
-                holder.tv_concat.setVisibility(View.INVISIBLE);
-            } else {
-                holder.tv_concat.setVisibility(View.VISIBLE);
-            }*/
             try {
                 if (attendee_company.equalsIgnoreCase("0")) {
                     holder.companyTv.setVisibility(View.INVISIBLE);
@@ -243,10 +192,12 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
 
                 }
 
-                String attendee_id = attendee.getAttendee_id();
-                /*String unreadMsgCount = procializeDB.getAttendeeChatForAttendeeId(attendee_id);
-                if (!unreadMsgCount.equalsIgnoreCase("0")) {
-                    holder.tv_count.setText(unreadMsgCount);
+                String firebase_id = attendee.getFirebase_id();
+                int unreadMsgCount = EventAppDB.getDatabase(context).attendeeChatDao().getChatCountId(firebase_id);
+          //      List<Table_Attendee_Chatcount> attenChatCount  = EventAppDB.getDatabase(context).attendeeChatDao().getAllDaoAttendee();
+
+                if (unreadMsgCount > 0) {
+                    holder.tv_count.setText(String.valueOf(unreadMsgCount));
                     holder.tv_count.setVisibility(View.VISIBLE);
                     holder.rl_count.setVisibility(View.VISIBLE);
                     holder.ic_rightarrow.setVisibility(View.GONE);
@@ -255,7 +206,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                     holder.tv_count.setVisibility(View.GONE);
                     holder.rl_count.setVisibility(View.GONE);
                     holder.ic_rightarrow.setVisibility(View.VISIBLE);
-                }*/
+                }
             }
 
             //holder.iv_background.setBackgroundColor(Color.parseColor(colorActive));
