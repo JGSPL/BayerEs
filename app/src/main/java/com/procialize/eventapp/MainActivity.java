@@ -501,8 +501,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SessionManager.logoutUser(MainActivity.this);
                 SharedPreference.clearPref(this, AUTHERISATION_KEY);
                 SharedPreference.clearPref(this, IS_LOGIN);
-                EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
-                EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
                 EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();

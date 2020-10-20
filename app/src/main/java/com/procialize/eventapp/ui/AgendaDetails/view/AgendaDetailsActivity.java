@@ -300,7 +300,7 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_live_stream:
-                agendaViewModel.openAgendaDetails(this, agendaDetails.getLivestream_link());
+                agendaViewModel.openAgendaDetails(this, agendaDetails.getLivestream_link(),agendaDetails);
                 break;
             case R.id.ll_rate:
                 if (ConnectionDetector.getInstance(AgendaDetailsActivity.this).isConnectingToInternet()) {
