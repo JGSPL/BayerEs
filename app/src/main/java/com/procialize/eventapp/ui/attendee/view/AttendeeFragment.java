@@ -456,41 +456,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             getActivity().startActivity(new Intent(getContext(), ChatActivity.class)
                     .putExtra("page", "ListPage")
                     .putExtra("Attendee", (Serializable) attendee));
-            /*Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
-            chatIntent.putExtra("user_id", attendee.getFirebase_id());
-            chatIntent.putExtra("user_name", attendee.getFirst_name() + " " + attendee.getLast_name());
-            chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
-            chatIntent.putExtra("sProfilePic", SprofilePic);
-            chatIntent.putExtra("rProfilepic", attendee.getProfile_picture());
-            chatIntent.putExtra("attendeeid", attendee.getAttendee_id());
-            chatIntent.putExtra("firebase_id", attendee.getFirebase_id());
-            chatIntent.putExtra("Message", "");
-            chatIntent.putExtra("page", "ListPage");
-
-            chatIntent.putExtra("lname", attendee.getLast_name());
-            chatIntent.putExtra("company", attendee.getCompany_name());
-            chatIntent.putExtra("city", attendee.getCity());
-            chatIntent.putExtra("designation", attendee.getDesignation());
-            chatIntent.putExtra("attendee_type", attendee.getAttendee_type());
-            chatIntent.putExtra("mobile", attendee.getMobile());
-            chatIntent.putExtra("email", attendee.getEmail());
-
-            startActivity(chatIntent);*/
         } else {
-           /* Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
-            intent.putExtra("attendeeid", attendee.getAttendee_id());
-            intent.putExtra("firebase_id", attendee.getFirebase_id());
-
-            intent.putExtra("fname", attendee.getFirst_name());
-            intent.putExtra("lname", attendee.getLast_name());
-            intent.putExtra("company", attendee.getCompany_name());
-            intent.putExtra("city", attendee.getCity());
-            intent.putExtra("designation", attendee.getDesignation());
-            intent.putExtra("prof_pic", attendee.getProfile_picture());
-            intent.putExtra("attendee_type", attendee.getAttendee_type());
-            intent.putExtra("mobile", attendee.getMobile());
-            intent.putExtra("email", attendee.getEmail());
-            startActivity(intent);*/
             getActivity().startActivity(new Intent(getContext(), AttendeeDetailActivity.class)
                     .putExtra("Attendee", (Serializable) attendee));
         }

@@ -42,4 +42,9 @@ public interface AttendeeChatDao {
     public int getChatCountId(String ChatCount_receId);
 
 
+    @Query("SELECT chat_count_read as chat_count_read from Table_Attendee_Chatcount where ChatCount_receId= :ChatCount_receId")
+    public String getReadId(String ChatCount_receId);
+    @Query("UPDATE Table_Attendee_Chatcount SET chat_count_read='0' WHERE ChatCount_receId = :ChatCount_receId")
+    void updateIsReadZero(String ChatCount_receId);
+
 }

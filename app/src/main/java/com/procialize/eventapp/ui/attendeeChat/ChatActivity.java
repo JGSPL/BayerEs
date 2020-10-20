@@ -105,6 +105,7 @@ import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
+import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
@@ -232,21 +233,10 @@ public class ChatActivity extends AppCompatActivity {
 
         final LinearLayout linMain = findViewById(R.id.linMain);
 
-        /*Intent intent = getIntent();
-        lname = intent.getStringExtra("lname");
-        company = intent.getStringExtra("company");
-        city = intent.getStringExtra("city");
-        designation = intent.getStringExtra("designation");
-        attendee_type = intent.getStringExtra("attendee_type");
-        mobile = intent.getStringExtra("mobile");
-        email = intent.getStringExtra("email");
-        attendeeid = intent.getStringExtra("attendeeid");
-        firebase_id = intent.getStringExtra("firebase_id");
-        firstMessage = intent.getStringExtra("Message");
-        page = intent.getStringExtra("page");*/
         Intent intent = getIntent();
         page = intent.getStringExtra("page");
         attendee = (Attendee) getIntent().getSerializableExtra("Attendee");
+
         final String userName = attendee.getFirst_name();
         lname = attendee.getLast_name();
         company = attendee.getCompany_name();
@@ -259,6 +249,20 @@ public class ChatActivity extends AppCompatActivity {
         attendeeid = attendee.getAttendee_id();
         firebase_id = attendee.getFirebase_id();
         mChatUser = attendee.getFirebase_id();
+
+        //.........................set Data on Attendee Chat table......................//
+        List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
+        if (attenChatCount.size() > 0) {
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);
+
+        } else {
+            Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
+            attChat.setChatCount_receId(firebase_id);
+            attChat.setChat_count(1);
+            attChat.setChat_count_read("1");
+            attChat.setChat_mess("");
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
+        }
 
         EventAppDB.getDatabase(this).attendeeChatDao().updateIsRead(firebase_id);
         EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
@@ -1340,6 +1344,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         JzvdStd.releaseAllVideos();
+        EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsReadZero( firebase_id);
 
         finish();
         KeyboardUtility.hideSoftKeyboard(this);
@@ -1512,6 +1517,27 @@ public class ChatActivity extends AppCompatActivity {
                                             Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                                             mMessageView.setText("");
                                             myDialog.dismiss();
+
+                                            // Check for new messages
+                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                            //Send Text Notification
+                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                            NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                            NOTIFICATION_MESSAGE = "Image";
+
+                                            JSONObject notification = new JSONObject();
+                                            JSONObject notifcationBody = new JSONObject();
+                                            try {
+                                                notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                notification.put("to", TOPIC);
+                                                notification.put("data", notifcationBody);
+                                            } catch (JSONException e) {
+                                                Log.e(TAG, "onCreate: " + e.getMessage() );
+                                            }
+                                            sendNotification(notification);
                                         }
 
                                     }
@@ -1624,6 +1650,27 @@ public class ChatActivity extends AppCompatActivity {
                                                             mMessageView.setText("");
                                                             myDialog.dismiss();
                                                             progessLoad.setVisibility(View.GONE);
+
+                                                            // Check for new messages
+                                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                            //Send Text Notification
+                                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                            NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                                            NOTIFICATION_MESSAGE = "Video";
+
+                                                            JSONObject notification = new JSONObject();
+                                                            JSONObject notifcationBody = new JSONObject();
+                                                            try {
+                                                                notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                                notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                                notification.put("to", TOPIC);
+                                                                notification.put("data", notifcationBody);
+                                                            } catch (JSONException e) {
+                                                                Log.e(TAG, "onCreate: " + e.getMessage() );
+                                                            }
+                                                            sendNotification(notification);
 
                                                         }
 
@@ -1768,6 +1815,27 @@ public class ChatActivity extends AppCompatActivity {
                                                         mMessageView.setText("");
                                                         progessLoad.setVisibility(View.GONE);
                                                         myDialog.dismiss();
+
+                                                        // Check for new messages
+                                                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                        //Send Text Notification
+                                                        TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                        NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                                        NOTIFICATION_MESSAGE = "Video";
+
+                                                        JSONObject notification = new JSONObject();
+                                                        JSONObject notifcationBody = new JSONObject();
+                                                        try {
+                                                            notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                            notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                            notification.put("to", TOPIC);
+                                                            notification.put("data", notifcationBody);
+                                                        } catch (JSONException e) {
+                                                            Log.e(TAG, "onCreate: " + e.getMessage() );
+                                                        }
+                                                        sendNotification(notification);
                                                     }
 
                                                 }

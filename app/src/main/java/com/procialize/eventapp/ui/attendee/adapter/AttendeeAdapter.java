@@ -96,6 +96,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             holder.companyTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
             holder.ic_rightarrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
             holder.linMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+            holder.iv_background.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
+            holder.tv_count.setTextColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+
 
             try {
                 if (attendee_location.equalsIgnoreCase("0")) {
@@ -209,7 +212,6 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                 }
             }
 
-            //holder.iv_background.setBackgroundColor(Color.parseColor(colorActive));
         } catch (Exception e) {
             e.printStackTrace();
         }

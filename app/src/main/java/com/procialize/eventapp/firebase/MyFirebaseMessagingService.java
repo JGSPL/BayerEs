@@ -24,8 +24,11 @@ import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
+import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -34,6 +37,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private final String ADMIN_CHANNEL_ID = "admin_channel";
     int Count = 0;
+    PendingIntent contentIntent;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -68,9 +72,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(senderId);
             if (attenChatCount.size() > 0) {
-                Count = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getChatCountId(senderId);
-                Count++;
-                EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateChatCount(Count, senderId);
+                String read  = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getReadId(senderId);
+                if(read.equalsIgnoreCase("0")) {
+                    Count = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getChatCountId(senderId);
+                    Count++;
+                    EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateChatCount(Count, senderId);
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setLargeIcon(largeIcon)
+                            // .setContentTitle(remoteMessage.getData().get("title"))
+                            .setContentText(remoteMessage.getData().get("message"))
+                            .setAutoCancel(true)
+                            .setSound(notificationSoundUri)
+                            .setContentIntent(pendingIntent);
+
+
+                    //Set notification color to match your app color template
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                    }
+                    notificationManager.notify(notificationID, notificationBuilder.build());
+                    Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+
+                    Attendee attendee = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                    if(attendee!=null) {
+
+                        Intent notificationIntent = new Intent(getApplicationContext(),
+                                ChatActivity.class);
+                        notificationIntent.putExtra("Attendee", (Serializable)attendee);
+                        notificationIntent.putExtra("page", "Notification");
+                        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        contentIntent = PendingIntent.getActivity(
+                                getApplicationContext(), new Random().nextInt(),
+                                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                }
 
             } else {
                 Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
@@ -79,27 +117,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 attChat.setChat_count_read("0");
                 attChat.setChat_mess("");
                 EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
+
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setLargeIcon(largeIcon)
+                        // .setContentTitle(remoteMessage.getData().get("title"))
+                        .setContentText(remoteMessage.getData().get("message"))
+                        .setAutoCancel(true)
+                        .setSound(notificationSoundUri)
+                        .setContentIntent(pendingIntent);
+
+
+                //Set notification color to match your app color template
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                }
+                notificationManager.notify(notificationID, notificationBuilder.build());
+                Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+
+                Attendee attendee = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                if(attendee!=null) {
+
+                    Intent notificationIntent = new Intent(getApplicationContext(),
+                            ChatActivity.class);
+                    notificationIntent.putExtra("Attendee", (Serializable)attendee);
+                    notificationIntent.putExtra("page", "Notification");
+                    notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    contentIntent = PendingIntent.getActivity(
+                            getApplicationContext(), new Random().nextInt(),
+                            notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                }
             }
 
 
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(largeIcon)
-                // .setContentTitle(remoteMessage.getData().get("title"))
-                .setContentText(remoteMessage.getData().get("message"))
-                .setAutoCancel(true)
-                .setSound(notificationSoundUri)
-                .setContentIntent(pendingIntent);
 
-
-        //Set notification color to match your app color template
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
-        }
-        notificationManager.notify(notificationID, notificationBuilder.build());
-            Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
-            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
     }
 
     }
