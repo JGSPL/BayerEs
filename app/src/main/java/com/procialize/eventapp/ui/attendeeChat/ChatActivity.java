@@ -20,6 +20,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -54,6 +55,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -76,11 +81,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
@@ -88,20 +95,26 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.KeyboardUtility;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.costumTools.ScalingUtilities;
 import com.procialize.eventapp.costumTools.TouchImageView;
+import com.procialize.eventapp.firebase.MySingleton;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
 import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
+import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -118,6 +131,11 @@ import java.util.Map;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import retrofit2.http.Url;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -179,6 +197,18 @@ public class ChatActivity extends AppCompatActivity {
     public static String videoflag = "0";
     ConnectionDetector cd;
     Attendee attendee;
+    OkHttpClient mClient = new OkHttpClient();
+
+    String refreshedToken = "";//add your user refresh tokens who are logged in with firebase.
+
+    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    final private String serverKey = "key=" + "AAAA4xkbUmY:APA91bHJtoRFEI_jxvR7jJEIA0M-Wa4adoRiLGWIMiWdAgEg5CLjsJBRuByvHHj-764l5zVRav8N_qwn_etLCzUHsL-xfhJTrQQFSYkHRurjID5haW2TpfZF1JRDw0y4vKBoqVg6Lldb";
+    final private String contentType = "application/json";
+    final String TAG = "NOTIFICATION TAG";
+
+    String NOTIFICATION_TITLE;
+    String NOTIFICATION_MESSAGE;
+    String TOPIC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,21 +233,10 @@ public class ChatActivity extends AppCompatActivity {
 
         final LinearLayout linMain = findViewById(R.id.linMain);
 
-        /*Intent intent = getIntent();
-        lname = intent.getStringExtra("lname");
-        company = intent.getStringExtra("company");
-        city = intent.getStringExtra("city");
-        designation = intent.getStringExtra("designation");
-        attendee_type = intent.getStringExtra("attendee_type");
-        mobile = intent.getStringExtra("mobile");
-        email = intent.getStringExtra("email");
-        attendeeid = intent.getStringExtra("attendeeid");
-        firebase_id = intent.getStringExtra("firebase_id");
-        firstMessage = intent.getStringExtra("Message");
-        page = intent.getStringExtra("page");*/
         Intent intent = getIntent();
         page = intent.getStringExtra("page");
         attendee = (Attendee) getIntent().getSerializableExtra("Attendee");
+
         final String userName = attendee.getFirst_name();
         lname = attendee.getLast_name();
         company = attendee.getCompany_name();
@@ -230,6 +249,25 @@ public class ChatActivity extends AppCompatActivity {
         attendeeid = attendee.getAttendee_id();
         firebase_id = attendee.getFirebase_id();
         mChatUser = attendee.getFirebase_id();
+
+        //.........................set Data on Attendee Chat table......................//
+        List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
+        if (attenChatCount.size() > 0) {
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);
+
+        } else {
+            Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
+            attChat.setChatCount_receId(firebase_id);
+            attChat.setChat_count(1);
+            attChat.setChat_count_read("1");
+            attChat.setChat_mess("");
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
+        }
+
+        EventAppDB.getDatabase(this).attendeeChatDao().updateIsRead(firebase_id);
+        EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
+       // int unreadMsgCount = EventAppDB.getDatabase(this).attendeeChatDao().getChatCountId(firebase_id);
+
 
         //---SETTING ONLINE------
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -249,6 +287,11 @@ public class ChatActivity extends AppCompatActivity {
         ImageView ivattDetail = actionBarView.findViewById(R.id.ivattDetail);
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - " + city);
+
+       refreshedToken  = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_GCM_ID);
+        final JSONArray jsonArray = new JSONArray();
+        jsonArray.put(refreshedToken);
+      //  jsonArray.put("eaYckEgz31Y:APA91bH44N6C4UyGnZ7jwx6B5MMv0eEpd8vT4TktTIVjiRzBsYgyzR_HL8J9my4ocbh6YTVLSU92fXLGlmlw6nN8fJZ6DmDrjq47itB-MbtF_Zu8W7oUHIyNUZUwjEjY7-CiLhSE3ZX_");
 
         // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         //lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
@@ -470,6 +513,8 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
 
+                //    sendMessage(jsonArray,"Chat Notification",mChatUser +" "+ mCurrentUserId,"Http:\\google.com",message);
+
 
                     //TODO: Get the ID of the chat the user is taking part in
                     String chatID = push_id;
@@ -477,49 +522,26 @@ public class ChatActivity extends AppCompatActivity {
                     // Check for new messages
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                    // FirebaseDatabase.getInstance().getReference().child("message/" + chatID).push().setValue(messageMap);
+                    //Send Text Notification
+                    TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                    NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                    NOTIFICATION_MESSAGE = message;
 
+                    JSONObject notification = new JSONObject();
+                    JSONObject notifcationBody = new JSONObject();
+                    try {
+                        notifcationBody.put("title", NOTIFICATION_TITLE);
+                        notifcationBody.put("message", NOTIFICATION_MESSAGE);
 
-                    if (currentUser != null) {
-                        String UID = currentUser.getUid();
-                        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                        Query query = rootRef.child("message_read_states").child(chatID).orderByChild(UID).equalTo(false);
-                        query.addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                String messageID = dataSnapshot.getKey();
-                                //TODO: Handle Notification here, using the messageID
-                                // A datasnapshot received here will be a new message that the user has not read
-                                // If you want to display data about the message or chat,
-                                // Use the chatID and/or messageID and declare a new
-                                // SingleValueEventListener here, and add it to the chat/message DatabaseReference.
-                            }
-
-                            @Override
-                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                String messageID = dataSnapshot.getKey();
-                                //TODO: Remove the notification
-                                // If the user reads the message in the app, before checking the notification
-                                // then the notification is no longer relevant, remove it here.
-                                // In onChildAdded you could use the messageID(s) to keep track of the notifications
-                            }
-
-                            @Override
-                            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                        notification.put("to", TOPIC);
+                        notification.put("data", notifcationBody);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "onCreate: " + e.getMessage() );
                     }
+                    sendNotification(notification);
+
+
+
 
 
                 } else {
@@ -530,7 +552,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        //----THE WRAP CONTENT OF IMAGE VIEW IS GIVING ERROR--- SO REMOVING THIS FUNCTIONALITY-------
 
 
         mChatAddButton.setOnClickListener(new View.OnClickListener() {
@@ -1323,6 +1344,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         JzvdStd.releaseAllVideos();
+        EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsReadZero( firebase_id);
 
         finish();
         KeyboardUtility.hideSoftKeyboard(this);
@@ -1495,6 +1517,27 @@ public class ChatActivity extends AppCompatActivity {
                                             Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                                             mMessageView.setText("");
                                             myDialog.dismiss();
+
+                                            // Check for new messages
+                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                            //Send Text Notification
+                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                            NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                            NOTIFICATION_MESSAGE = "Image";
+
+                                            JSONObject notification = new JSONObject();
+                                            JSONObject notifcationBody = new JSONObject();
+                                            try {
+                                                notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                notification.put("to", TOPIC);
+                                                notification.put("data", notifcationBody);
+                                            } catch (JSONException e) {
+                                                Log.e(TAG, "onCreate: " + e.getMessage() );
+                                            }
+                                            sendNotification(notification);
                                         }
 
                                     }
@@ -1607,6 +1650,27 @@ public class ChatActivity extends AppCompatActivity {
                                                             mMessageView.setText("");
                                                             myDialog.dismiss();
                                                             progessLoad.setVisibility(View.GONE);
+
+                                                            // Check for new messages
+                                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                            //Send Text Notification
+                                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                            NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                                            NOTIFICATION_MESSAGE = "Video";
+
+                                                            JSONObject notification = new JSONObject();
+                                                            JSONObject notifcationBody = new JSONObject();
+                                                            try {
+                                                                notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                                notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                                notification.put("to", TOPIC);
+                                                                notification.put("data", notifcationBody);
+                                                            } catch (JSONException e) {
+                                                                Log.e(TAG, "onCreate: " + e.getMessage() );
+                                                            }
+                                                            sendNotification(notification);
 
                                                         }
 
@@ -1751,6 +1815,27 @@ public class ChatActivity extends AppCompatActivity {
                                                         mMessageView.setText("");
                                                         progessLoad.setVisibility(View.GONE);
                                                         myDialog.dismiss();
+
+                                                        // Check for new messages
+                                                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                        //Send Text Notification
+                                                        TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                        NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                                        NOTIFICATION_MESSAGE = "Video";
+
+                                                        JSONObject notification = new JSONObject();
+                                                        JSONObject notifcationBody = new JSONObject();
+                                                        try {
+                                                            notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                            notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                            notification.put("to", TOPIC);
+                                                            notification.put("data", notifcationBody);
+                                                        } catch (JSONException e) {
+                                                            Log.e(TAG, "onCreate: " + e.getMessage() );
+                                                        }
+                                                        sendNotification(notification);
                                                     }
 
                                                 }
@@ -1805,7 +1890,95 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+    private void sendNotification(JSONObject notification) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(FCM_API, notification,
+                new com.android.volley.Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i(TAG, "onResponse: " + response.toString());
 
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ChatActivity.this, "Request error", Toast.LENGTH_LONG).show();
+                        Log.i(TAG, "onErrorResponse: Didn't work");
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", serverKey);
+                params.put("Content-Type", contentType);
+                return params;
+            }
+        };
+        MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+    }
+
+
+    /*public void sendMessage(final JSONArray recipients, final String title, final String body, final String icon, final String message) {
+
+        new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    JSONObject root = new JSONObject();
+                    JSONObject notification = new JSONObject();
+                    notification.put("body", body);
+                    notification.put("title", title);
+                    notification.put("icon", icon);
+
+                    JSONObject data = new JSONObject();
+                    data.put("message", message);
+                    root.put("notification", notification);
+                    root.put("data", data);
+                    root.put("registration_ids", recipients);
+
+                    String result = postToFCM(root.toString());
+                    Log.d("Main Activity", "Result: " + result);
+                    return result;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                try {
+                    JSONObject resultJson = new JSONObject(result);
+                    int success, failure;
+                    success = resultJson.getInt("success");
+                    failure = resultJson.getInt("failure");
+                    Toast.makeText(ChatActivity.this, "Message Success: " + success + "Message Failed: " + failure, Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(ChatActivity.this, "Message Failed, Unknown error occurred.", Toast.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
+    }
+
+    String postToFCM(String bodyString) throws IOException {
+
+
+
+        String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
+        final MediaType JSON
+                = MediaType.parse("application/json; charset=utf-8");
+
+        RequestBody body = RequestBody.create(JSON, bodyString);
+        Request request = new Request.Builder()
+                .url(FCM_MESSAGE_URL)
+                .post(body)
+                .addHeader("Authorization", "key=" + "AAAA4xkbUmY:APA91bHJtoRFEI_jxvR7jJEIA0M-Wa4adoRiLGWIMiWdAgEg5CLjsJBRuByvHHj-764l5zVRav8N_qwn_etLCzUHsL-xfhJTrQQFSYkHRurjID5haW2TpfZF1JRDw0y4vKBoqVg6Lldb")
+                .build();
+        Response response = mClient.newCall(request).execute();
+        return response.body().string();
+    }
+*/
 
 }
 

@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,10 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.BuildConfig;
@@ -71,6 +77,9 @@ public class LoginActivity extends AppCompatActivity {
     public static ActivityLoginBinding activityLoginBinding;
     public static SessionManager sessionManager;
     public static RefreashToken refreashToken;
+    private static String device_token;
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +88,20 @@ public class LoginActivity extends AppCompatActivity {
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this, activityLoginBinding));
         activityLoginBinding.executePendingBindings();
+
+        if (checkPlayServices()) {
+
+
+            device_token = SharedPreference.getPref(this, KEY_GCM_ID);;
+
+            if (device_token.isEmpty()) {
+
+                new getGCMRegId().execute();
+            }
+
+        } else {
+            Log.i("GCMDemo", "No valid Google Play Services APK found.");
+        }
 
         CommonFirebase.crashlytics("Login Screen", "");
         CommonFirebase.firbaseAnalytics(this, "Login Screen", "");
@@ -126,7 +149,6 @@ public class LoginActivity extends AppCompatActivity {
     public static void getEventDetails(final View view) {
 
         final Context context = view.getContext();
-        final String device_token = "11111";
         final String platform = "android";
         final String device = Build.MODEL;
         final String osVersion = Build.VERSION.RELEASE;
@@ -157,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                 new SessionManager(context).saveCurrentEvent(eventLists.get(0));
 
                 eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, new SessionManager(context));
-                eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
+                eventListViewModel.getupdateUserdatq().observe((LifecycleOwner) view.getContext(),new Observer<UpdateDeviceInfo>() {
                     @Override
                     public void onChanged(UpdateDeviceInfo updateDeviceInfo) {
                         String decrypteventdetail = refreashToken.decryptedData(updateDeviceInfo.getDetail());
@@ -176,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
                         map.put(KEY_MOBILE, userData.get(0).getMobile());
                         //map.put(KEY_TOKEN, "");
                         map.put(KEY_CITY, userData.get(0).getCity());
-                        //map.put(KEY_GCM_ID, "");
+                        map.put(KEY_GCM_ID, device_token);
                         map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
                         map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
                         map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
@@ -213,7 +235,12 @@ public class LoginActivity extends AppCompatActivity {
                             eventListViewModel.getupdateUserdatq().removeObservers((LifecycleOwner) context);
                         }
                         EventAppDB eventAppDB = EventAppDB.getDatabase(context);
-                        List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
+                        if (eventListViewModel != null && eventListViewModel.getEventList().hasObservers()) {
+                            eventListViewModel.getEventList().removeObservers((LifecycleOwner) context);
+                        }
+                        String strAttendeeId = userData.get(0).getAttendee_id();
+                        List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().
+                                getProfileWithEventId(eventId,strAttendeeId);
                         if (profileDataUpdated.size() > 0) {
                             isClickable = true;
                             eventListViewModel.openMainPage((Activity) context);
@@ -223,6 +250,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+
             }
         });
     }
@@ -231,5 +260,64 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         ActivityCompat.finishAffinity(LoginActivity.this);
+    }
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i("GCMDemo", "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private class getGCMRegId extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+
+
+            try {
+                //gcmRegID = gcmRegistrationHelper.GCMRegister(REG_ID);
+                String token = FirebaseInstanceId.getInstance().getToken();
+                Log.d("MYTAG", "This is your Firebase token" + token);
+
+                device_token = token;
+
+                HashMap<String, String> map = new HashMap<>();
+                map.put(KEY_GCM_ID, device_token);
+                SharedPreference.putPref(LoginActivity.this, map);
+
+                // storeRegistrationId(getApplicationContext(), gcmRegID);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            // session = new SessionManagement(getApplicationContext());
+            // if (session.isLoggedIn()) {
+            // Update GCM ID to Server
+            // new updateGCMRegId().execute();
+            // }
+
+        }
     }
 }

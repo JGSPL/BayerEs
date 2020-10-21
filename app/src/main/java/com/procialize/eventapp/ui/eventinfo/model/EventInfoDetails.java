@@ -41,6 +41,14 @@ public class EventInfoDetails {
     @SerializedName("background_image")
     @Expose
     private String background_image;
+    @SerializedName("event_cover_image")
+    @Expose
+    private String event_cover_image;
+
+    public String getEvent_cover_image() {
+        return event_cover_image;
+    }
+
 
     public String getEvent_id() {
         return event_id;

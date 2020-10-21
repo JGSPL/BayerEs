@@ -65,10 +65,12 @@ public class EventListViewModel extends ViewModel {
                 .putExtra("position", "" + position)
                 .putExtra("eventBg", "" + eventBg)
         );
+        activity.finish();
     }
 
     public void openMainPage(Activity activity) {
         activity.startActivity(new Intent(activity, MainActivity.class));
+        activity.finish();
     }
 
 

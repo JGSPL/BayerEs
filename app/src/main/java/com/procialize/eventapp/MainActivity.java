@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,7 +80,6 @@ import com.procialize.eventapp.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.eventapp.ui.quiz.view.QuizListingActivity;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,13 +133,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String api_token, eventid;
     String fName;
     String fireEmail;
+
     String storeFireid, storeFirename, stoeUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         navView = findViewById(R.id.bottom_navigation);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
@@ -184,14 +181,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView iv_edit = outer.findViewById(R.id.iv_edit);
         iv_edit.setOnClickListener(this);
         TextView tv_designation = outer.findViewById(R.id.tv_designation);
-        TextView tv_city = outer.findViewById(R.id.tv_city);
         tv_name.setText(fName + " " + lName);
-        tv_designation.setText(designation);
-        tv_city.setText(city);
+        tv_designation.setText(designation + " - " + city);
 
-        if (stoeUsername != null) {
+
+        if((stoeUsername!=null) && !(stoeUsername.equalsIgnoreCase(""))){
             fireEmail = stoeUsername;
-        } else {
+        }else{
             if (email.equalsIgnoreCase("")) {
                 fireEmail = fName + "_" + attendee_id + "_" + event_id + "@procialize.in";
             } else {
@@ -210,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (stoeUsername != null) {
                     normal_login_user(stoeUsername, "12345678");
 
-                } else {
+                }else{
                     register_user(fName, fireEmail, "12345678");
 
                 }
@@ -281,6 +277,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
 
 
+
+
                     default:
                         return true;
                 }
@@ -289,11 +287,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putString("isFrom", "MainActivity");
+        bundle.putString("isFrom","MainActivity");
         newsFeedFragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_frame, newsFeedFragment,"NewsFeed")
+                .replace(R.id.fragment_frame, newsFeedFragment, "")
                 .commit();
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -303,16 +301,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
                         // Switch to page one
-                        NewsFeedFragment myFragment = (NewsFeedFragment) getSupportFragmentManager().findFragmentByTag("NewsFeed");
-                        if (myFragment != null && myFragment.isVisible()) {
-                            Log.d("ONNewsFeed","ONNewsFeed");
-                        } else {
-                            JzvdStd.releaseAllVideos();
-                            getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "NewsFeed")
-                                    .commit();
-                        }
+                        JzvdStd.releaseAllVideos();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_frame, NewsFeedFragment.newInstance(), "")
+                                .commit();
                         break;
                     case R.id.navigation_agenda:
                         // Switch to page two
@@ -357,10 +350,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getAttendeeAndInsertIntoDB();
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
 
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -526,8 +515,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SessionManager.logoutUser(MainActivity.this);
                 SharedPreference.clearPref(this, AUTHERISATION_KEY);
                 SharedPreference.clearPref(this, IS_LOGIN);
-                EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
-                EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
                 EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
@@ -538,30 +525,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //-----REGISTERING THE NEW USER------
     private void register_user(final String displayname, final String email, final String password) {
 
-        mauth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        mauth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 //------IF USER IS SUCCESSFULLY REGISTERED-----
-                if (task.isSuccessful()) {
+                if(task.isSuccessful()){
 
                     FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
-                    final String uid = current_user.getUid();
+                    final String uid=current_user.getUid();
                     String token_id = FirebaseInstanceId.getInstance().getToken();
-                    Map userMap = new HashMap();
-                    userMap.put("device_token", token_id);
-                    userMap.put("name", displayname);
-                    userMap.put("status", "Hello Events");
-                    userMap.put("image", "default");
-                    userMap.put("thumb_image", "default");
-                    userMap.put("online", "true");
+                    Map userMap=new HashMap();
+                    userMap.put("device_token",token_id);
+                    userMap.put("name",displayname);
+                    userMap.put("status","Hello Events");
+                    userMap.put("image","default");
+                    userMap.put("thumb_image","default");
+                    userMap.put("online","true");
 
                     mDatabase.child(uid).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task1) {
-                            if (task1.isSuccessful()) {
+                            if(task1.isSuccessful()){
 
-                                // Toast.makeText(getApplicationContext(), "New User is created", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(), "New User is created", Toast.LENGTH_SHORT).show();
                                /* Intent intent=new Intent(MainActivity.this,MainActivity.class);
 
                                 //----REMOVING THE LOGIN ACTIVITY FROM THE QUEUE----
@@ -570,9 +557,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 finish();*/
 
 
-                            } else {
-                                login_user(email, password);
-                                //  Toast.makeText(MainActivity.this, "YOUR NAME IS NOT REGISTERED... MAKE NEW ACCOUNT-- ", Toast.LENGTH_SHORT).show();
+
+                            }
+                            else{
+                                login_user(email,password);
+                              //  Toast.makeText(MainActivity.this, "YOUR NAME IS NOT REGISTERED... MAKE NEW ACCOUNT-- ", Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -582,8 +571,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
                 //---ERROR IN ACCOUNT CREATING OF NEW USER---
-                else {
-                    login_user(email, password);
+                else{
+                    login_user(email,password);
 
                     //Toast.makeText(getApplicationContext(), "ERROR REGISTERING USER....", Toast.LENGTH_SHORT).show();
                 }
@@ -592,107 +581,114 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
     //Login User
     private void login_user(String email, String password) {
 
         //---SIGN IN FOR THE AUTHENTICATE EMAIL-----
-        mauth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,
+        mauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this,
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()) {
+                        if(task.isSuccessful()){
 
                             //---ADDING DEVICE TOKEN ID AND SET ONLINE TO BE TRUE---
                             //---DEVICE TOKEN IS USED FOR SENDING NOTIFICATION----
-                            String user_id = mauth.getCurrentUser().getUid();
-                            String token_id = FirebaseInstanceId.getInstance().getToken();
+                            String user_id=mauth.getCurrentUser().getUid();
+                            String token_id= FirebaseInstanceId.getInstance().getToken();
                             Map addValue = new HashMap();
-                            addValue.put("device_token", token_id);
-                            addValue.put("online", "true");
+                            addValue.put("device_token",token_id);
+                            addValue.put("online","true");
 
                             //---IF UPDATE IS SUCCESSFULL , THEN OPEN MAIN ACTIVITY---
-                            mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener() {
+                            mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener(){
 
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
-                                    if (databaseError == null) {
+                                    if(databaseError==null){
 
                                         //---OPENING MAIN ACTIVITY---
-                                        Log.e("Login : ", "Logged in Successfully");
-                                        Utility.createShortSnackBar(ll_main, "Logged in Successfully");
+                                        Log.e("Login : ","Logged in Successfully" );
+                                        Utility.createShortSnackBar(ll_main,"Logged in Successfully");
                                         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                        getChatUpdate(api_token, eventid, currentuser, fireEmail, fName, "0");
+                                        getChatUpdate(api_token,eventid,currentuser,fireEmail,fName,"0");
 
-                                    } else {
-                                        Toast.makeText(MainActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
-                                        Log.e("Error is : ", databaseError.toString());
+                                    }
+                                    else{
+                                        Toast.makeText(MainActivity.this, databaseError.toString()  , Toast.LENGTH_SHORT).show();
+                                        Log.e("Error is : ",databaseError.toString());
 
                                     }
                                 }
                             });
 
 
-                        } else {
+
+                        }
+                        else{
                             //---IF AUTHENTICATION IS WRONG----
                            /* Toast.makeText(MainActivity.this, "Wrong Credentials" +
                                     "", Toast.LENGTH_SHORT).show();*/
                         }
                     }
                 });
-    }
+        }
 
-    //Normal Login User
-    private void normal_login_user(String email, String password) {
+        //Normal Login User
+        private void normal_login_user(String email, String password) {
 
-        //---SIGN IN FOR THE AUTHENTICATE EMAIL-----
-        mauth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,
-                new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+            //---SIGN IN FOR THE AUTHENTICATE EMAIL-----
+            mauth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this,
+                    new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        if (task.isSuccessful()) {
+                            if(task.isSuccessful()){
 
-                            //---ADDING DEVICE TOKEN ID AND SET ONLINE TO BE TRUE---
-                            //---DEVICE TOKEN IS USED FOR SENDING NOTIFICATION----
-                            String user_id = mauth.getCurrentUser().getUid();
-                            String token_id = FirebaseInstanceId.getInstance().getToken();
-                            Map addValue = new HashMap();
-                            addValue.put("device_token", token_id);
-                            addValue.put("online", "true");
+                                //---ADDING DEVICE TOKEN ID AND SET ONLINE TO BE TRUE---
+                                //---DEVICE TOKEN IS USED FOR SENDING NOTIFICATION----
+                                String user_id=mauth.getCurrentUser().getUid();
+                                String token_id= FirebaseInstanceId.getInstance().getToken();
+                                Map addValue = new HashMap();
+                                addValue.put("device_token",token_id);
+                                addValue.put("online","true");
 
-                            //---IF UPDATE IS SUCCESSFULL , THEN OPEN MAIN ACTIVITY---
-                            mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener() {
+                                //---IF UPDATE IS SUCCESSFULL , THEN OPEN MAIN ACTIVITY---
+                                mDatabaseReference.child(user_id).updateChildren(addValue, new DatabaseReference.CompletionListener(){
 
-                                @Override
-                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
-                                    if (databaseError == null) {
+                                        if(databaseError==null){
 
-                                        //---OPENING MAIN ACTIVITY---
-                                        Log.e("Login : ", "Logged in Successfully");
-                                        //   Utility.createShortSnackBar(ll_main,"Logged in Successfully");
-                                        // String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                        // getChatUpdate(api_token,eventid,currentuser,stoeUsername,storeFirename,"1");
+                                            //---OPENING MAIN ACTIVITY---
+                                            Log.e("Login : ","Logged in Successfully" );
+                                          //   Utility.createShortSnackBar(ll_main,"Logged in Successfully");
+                                           // String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                           // getChatUpdate(api_token,eventid,currentuser,stoeUsername,storeFirename,"1");
 
-                                    } else {
-                                        Toast.makeText(MainActivity.this, databaseError.toString(), Toast.LENGTH_SHORT).show();
-                                        Log.e("Error is : ", databaseError.toString());
+                                        }
+                                        else{
+                                            Toast.makeText(MainActivity.this, databaseError.toString()  , Toast.LENGTH_SHORT).show();
+                                            Log.e("Error is : ",databaseError.toString());
 
+                                        }
                                     }
-                                }
-                            });
+                                });
 
 
-                        } else {
-                            //---IF AUTHENTICATION IS WRONG----
+
+                            }
+                            else{
+                                //---IF AUTHENTICATION IS WRONG----
                                /* Toast.makeText(MainActivity.this, "Wrong Credentials" +
                                         "", Toast.LENGTH_SHORT).show();*/
+                            }
                         }
-                    }
-                });
-    }
+                    });
+        }
 
 
     private void getAttendeeAndInsertIntoDB() {
@@ -706,16 +702,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 attendeeViewModel.getAttendeeList().observe(this, new Observer<FetchAttendee>() {
                     @Override
                     public void onChanged(FetchAttendee event) {
-                        if (event != null) {
+                        if(event != null) {
                             //List<Attendee> attendeeList = event.getAttandeeList();
-                            String strCommentList = event.getDetail();
+                            String strCommentList =event.getDetail();
                             RefreashToken refreashToken = new RefreashToken(MainActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
-                            List<Attendee> attendeeList = gson.fromJson(data, new TypeToken<ArrayList<Attendee>>() {
-                            }.getType());
+                            List<Attendee> attendeeList = gson.fromJson(data, new TypeToken<ArrayList<Attendee>>() {}.getType());
                             //Delete All attendee from local db and insert attendee
-                            if (attendeeList != null) {
+                            if(attendeeList!=null) {
                                 attendeeDatabaseViewModel.deleteAllAttendee(MainActivity.this);
                                 attendeeDatabaseViewModel.insertIntoDb(MainActivity.this, attendeeList);
                             }
@@ -743,8 +738,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     RefreashToken refreashToken = new RefreashToken(MainActivity.this);
                     String data = refreashToken.decryptedData(strEventList);
                     JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                    ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
-                    }.getType());
+                    ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
 
                     //List<ProfileDetails> profileDetails = profile.getProfileDetails();
                     if (profileDetails.size() > 0) {
@@ -759,7 +753,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         //map.put(KEY_TOKEN, "");
                         map.put(KEY_CITY, profileDetails.get(0).getCity());
                         //map.put(KEY_GCM_ID, "");
-                        map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
+                        map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
                         map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                         map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                         map.put(IS_LOGIN, "true");
@@ -774,27 +768,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //Update Api
-    public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username, String id) {
-        updateApi = ApiUtils.getAPIService();
+        //Update Api
+        public MutableLiveData<LoginOrganizer> getChatUpdate(final String token, final String event_id, String firebase_id, String firEmail, String firebase_username , String id) {
+            updateApi = ApiUtils.getAPIService();
 
-        updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username, firEmail, id).enqueue(new Callback<LoginOrganizer>() {
-            @Override
-            public void onResponse(Call<LoginOrganizer> call,
-                                   Response<LoginOrganizer> response) {
-                if (response.isSuccessful()) {
-                    chatUpdate.setValue(response.body());
+            updateApi.UpdateChatUserInfo(token, event_id, firebase_id, firebase_username,firEmail,id).enqueue(new Callback<LoginOrganizer>() {
+                @Override
+                public void onResponse(Call<LoginOrganizer> call,
+                                       Response<LoginOrganizer> response) {
+                    if (response.isSuccessful()) {
+                        chatUpdate.setValue(response.body());
                     //    Utility.createShortSnackBar(ll_main,"Chat info updated");
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
-                chatUpdate.setValue(null);
-            }
-        });
-        return chatUpdate;
-    }
+                @Override
+                public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                    chatUpdate.setValue(null);
+                }
+            });
+            return chatUpdate;
+        }
 
     public BaseFragment getActiveFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {

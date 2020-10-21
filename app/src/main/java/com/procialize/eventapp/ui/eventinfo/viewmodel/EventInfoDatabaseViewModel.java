@@ -36,6 +36,7 @@ public class EventInfoDatabaseViewModel extends ViewModel {
             tableEventInfo.setEvent_image(eventInfoDetails.get(i).getEvent_image());
             tableEventInfo.setHeader_image(eventInfoDetails.get(i).getHeader_image());
             tableEventInfo.setBackground_image(eventInfoDetails.get(i).getBackground_image());
+            tableEventInfo.setEvent_cover_image(eventInfoDetails.get(i).getEvent_cover_image());
             eventAppDB.eventInfoDao().insertEventInfo(tableEventInfo);
         }
     }

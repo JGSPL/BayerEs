@@ -195,7 +195,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             }
             if (imagesSelectednew.size() > 1) {
                 ivArrayDotsPager = new ImageView[imagesSelectednew.size()];
-                Utility.setupPagerIndidcatorDots(this, 0, ll_dots, imagesSelectednew.size());
+                Utility.setupPagerIndidcatorDots(this, mediaPosition, ll_dots, imagesSelectednew.size());
                 vp_media.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

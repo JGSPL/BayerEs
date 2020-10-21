@@ -258,6 +258,7 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
             }
         });
 
+
         return myImageLayout;
     }
 
