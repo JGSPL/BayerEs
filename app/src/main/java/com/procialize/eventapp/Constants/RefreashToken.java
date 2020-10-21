@@ -118,7 +118,7 @@ public class RefreashToken {
             if (isvalidtoken == false) {
                 String username = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_EMAIL);
                 String otp = SharedPreference.getPref(context, SharedPreferencesConstant.OTP);
-                String accesstoken = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_TOKEN);
+                String accesstoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
                 mApiService = ApiUtils.getAPIService();
                 GetRefreashToken(username, otp, accesstoken);
             } else {

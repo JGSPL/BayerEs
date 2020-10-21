@@ -1,10 +1,14 @@
 package com.procialize.eventapp.ui.quiz.view;
 
+import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,6 +58,21 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
 
         new RefreashToken(QuizListingActivity.this).callGetRefreashToken(QuizListingActivity.this);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+
+            }
+        });
         quizrecycler=findViewById(R.id.quizrecycler);
         quizRefreash=findViewById(R.id.quizrefresher);
         ll_main=findViewById(R.id.ll_main);
@@ -144,6 +163,10 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
     }
 
     @Override
-    public void onMoreSelected(QuizList event, final int position) {
+    public void onMoreSelected(QuizList quiz, final int position) {
+        Intent intent = new Intent(QuizListingActivity.this, QuizDetailActivity.class);
+        intent.putExtra("timer", quiz.getTimer());
+        intent.putExtra("folder_name", quiz.getFolder_name());
+        startActivity(intent);
     }
 }

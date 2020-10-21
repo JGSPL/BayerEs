@@ -23,6 +23,42 @@ public class QuizList {
     @Expose
     String quiz_id;
 
+    @SerializedName("total_quiz")
+    @Expose
+    String total_quiz;
+
+    public String getTotal_quiz() {
+        return total_quiz;
+    }
+
+    public void setTotal_quiz(String total_quiz) {
+        this.total_quiz = total_quiz;
+    }
+
+    public String getTotal_correct() {
+        return total_correct;
+    }
+
+    public void setTotal_correct(String total_correct) {
+        this.total_correct = total_correct;
+    }
+
+    @SerializedName("total_correct")
+    @Expose
+    String total_correct;
+
+    public String getTimer() {
+        return timer;
+    }
+
+    public void setTimer(String timer) {
+        this.timer = timer;
+    }
+
+    @SerializedName("timer")
+    @Expose
+    String timer;
+
     public QuizQuestion getQuiz_question() {
         return quiz_question;
     }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -98,10 +99,20 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
             holder.textViewTime.setVisibility(View.VISIBLE);
             holder.quiz_status.setText("Completed");
 
-            holder.textViewTime.setText(Integer.parseInt(String.valueOf(quizList.size()))+"/"+
+            holder.textViewTime.setText(Integer.parseInt(String.valueOf(quizList.size())) + "/" +
                     Integer.parseInt(String.valueOf(quizList.size())));
 
             holder.progressBarCircle.setMax(Integer.parseInt(String.valueOf(quizList.size())));
+
+            holder.quiz_list_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    isClickable = false;
+                    listener.onMoreSelected(quiz, position);
+
+                }
+            });
 //            if(quizList.get(position).getTotal_correct().equalsIgnoreCase("0")){
 //                holder.progressBarCircle.setProgress(0);
 
@@ -110,6 +121,16 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
 ////                holder.progressBarCircle.setProgress(Integer.parseInt(quiz.get()));
 //            }
         }
+
+        holder.quiz_list_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                isClickable = false;
+                listener.onMoreSelected(quiz, position);
+
+            }
+        });
         holder.quiz_title_txt.setText(quiz.getFolder_name());
     }
 
@@ -122,10 +143,11 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
     public class QuizViewHolder extends RecyclerView.ViewHolder {
 
 
-        public TextView quiz_title_txt,quiz_status,textViewTime;
+        public TextView quiz_title_txt, quiz_status, textViewTime;
         RelativeLayout rl_bg_image;
         ImageView profileIV;
-        ProgressBar progressBar,progressBarCircle;
+        ProgressBar progressBar, progressBarCircle;
+        LinearLayout quiz_list_layout;
 
         public QuizViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -136,6 +158,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
             quiz_status = itemView.findViewById(R.id.quiz_status);
             progressBarCircle = itemView.findViewById(R.id.progressBarCircle);
             textViewTime = itemView.findViewById(R.id.textViewTime);
+            quiz_list_layout = itemView.findViewById(R.id.quiz_list_layout);
 
 
         }

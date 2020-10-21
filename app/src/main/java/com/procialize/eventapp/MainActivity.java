@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_live_poll;
+    TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz,tr_live_poll;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
