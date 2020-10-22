@@ -39,6 +39,7 @@
                         android:id="@+id/profileIV"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:background="@drawable/border"
                         android:layout_centerInParent="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/profilepic_placeholder" />

@@ -44,6 +44,9 @@
                     android:layout_centerInParent="true"
                     android:adjustViewBounds="true"
                     android:contentDescription="TODO"
+                    android:background="@drawable/border"
+
+
                     android:scaleType="centerCrop"
                     android:src="@drawable/profilepic_placeholder" />
             </androidx.cardview.widget.CardView>

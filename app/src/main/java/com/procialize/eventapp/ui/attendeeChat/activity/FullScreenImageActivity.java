@@ -45,7 +45,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
     String type;
     JzvdStd videoplayer;
     RelativeLayout rlMain;
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +82,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
     private void bindViews() {
         progressDialog = new ProgressDialog(this);
         mImageView = (TouchImageView) findViewById(R.id.imageView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -107,6 +107,8 @@ public class FullScreenImageActivity extends AppCompatActivity {
         Glide.with(this).load(urlPhotoUser).centerCrop().override(40, 40).into(ivUser);
         if (type.equalsIgnoreCase("image")) {
             videoplayer.setVisibility(View.GONE);
+            toolbar.setVisibility(View.VISIBLE);
+
             mImageView.setVisibility(View.VISIBLE);
             Glide.with(this).load((urlPhotoClick))
                     .placeholder(R.drawable.gallery_placeholder)
@@ -129,6 +131,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
             videoplayer.setUp(urlPhotoClick, ""
                     , JzvdStd.SCREEN_NORMAL);
             JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
+            toolbar.setVisibility(View.GONE);
 
 
 

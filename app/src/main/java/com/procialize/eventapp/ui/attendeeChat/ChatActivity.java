@@ -34,6 +34,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -169,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 25;
+    public static final int TOTAL_ITEM_TO_LOAD = 30;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
@@ -288,16 +289,6 @@ public class ChatActivity extends AppCompatActivity {
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - " + city);
 
-       refreshedToken  = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_GCM_ID);
-        final JSONArray jsonArray = new JSONArray();
-        jsonArray.put(refreshedToken);
-      //  jsonArray.put("eaYckEgz31Y:APA91bH44N6C4UyGnZ7jwx6B5MMv0eEpd8vT4TktTIVjiRzBsYgyzR_HL8J9my4ocbh6YTVLSU92fXLGlmlw6nN8fJZ6DmDrjq47itB-MbtF_Zu8W7oUHIyNUZUwjEjY7-CiLhSE3ZX_");
-
-        // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        //lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1));
-        // mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        //  mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
 
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
         linBack.setOnClickListener(new View.OnClickListener() {
@@ -567,6 +558,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         //----LOADING 10 MESSAGES ON SWIPE REFRESH----
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -582,17 +574,67 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
 
-               /*if(mSwipeRefreshLayout.isRefreshing()==true){
-                   mSwipeRefreshLayout.setRefreshing(false);
-               }*/
-               /* if(messagesListds2.size()>0){
-                    messagesList.clear();
-                }
-                loadMessages();*/
-
 
             }
         });
+
+
+/*
+        mMessagesList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            int ydy = 0;
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int offset = dy - ydy;
+                ydy = dy;
+                boolean shouldRefresh = (mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0)
+                        && (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING) && offset > 30;
+                if (shouldRefresh) {
+                    //swipeRefreshLayout.setRefreshing(true);
+                    //Refresh to load data here.
+                    */
+/*if (cd.isConnectingToInternet()) {
+
+                        itemPos = 0;
+                        mCurrentPage++;
+                        loadMoreMessages();
+                    } else {
+                        Utility.createShortSnackBar(linMain, "No internet connection");
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                    }*//*
+
+                    return;
+                }
+                boolean shouldPullUpRefresh = mLinearLayoutManager.findLastCompletelyVisibleItemPosition() == mLinearLayoutManager.getChildCount() - 1
+                        && recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING && offset < -30;
+                if (shouldPullUpRefresh) {
+                    //swipeRefreshLayout.setRefreshing(true);
+                    //refresh to load data here.
+                    if (cd.isConnectingToInternet()) {
+
+                        itemPos = 0;
+                        mCurrentPage++;
+                        loadMoreMessages();
+                    } else {
+                        Utility.createShortSnackBar(linMain, "No internet connection");
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                    }
+
+
+                    return;
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+*/
 
     }
 
