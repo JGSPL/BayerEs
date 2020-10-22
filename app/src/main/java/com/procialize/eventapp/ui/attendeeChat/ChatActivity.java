@@ -559,6 +559,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //----LOADING 10 MESSAGES ON SWIPE REFRESH----
 
+/*
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -575,6 +576,27 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
+            }
+        });
+*/
+        mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(-1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
+                    Log.d("-----","end");
+                    if (cd.isConnectingToInternet()) {
+
+                        itemPos = 0;
+                        mCurrentPage++;
+                        loadMoreMessages();
+                    } else {
+                        Utility.createShortSnackBar(linMain, "No internet connection");
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                    }
+                }
             }
         });
 
