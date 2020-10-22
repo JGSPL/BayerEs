@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/ll_main"
     tools:context=".ui.liveStreaming.view.LiveStreamingActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -66,14 +67,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp" />-->
-
+    <LinearLayout
+        android:id="@+id/ll_youtube"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
     <fragment
         android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
         android:id="@+id/youtube_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="Instantiatable" />
+        tools:ignore="Instantiatable"/>
+    </LinearLayout>
+    <com.longtailvideo.jwplayer.JWPlayerView
+        android:id="@+id/jwplayer"
+        android:layout_width="match_parent"
+        android:layout_height="230dp" />
+
     <LinearLayout
+        android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -97,7 +110,8 @@
         android:layout_gravity="left"
         android:background="@color/linecolor" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -121,7 +135,7 @@
         android:layout_height="match_parent"
         layout="@layout/content_main"
         android:layout_weight="1"/>
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/ll_comment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -162,20 +176,20 @@
                 android:textColor="@color/black"/>
 
 
-            <!--            <TextView
+            &lt;!&ndash;            <TextView
                             android:id="@+id/textData"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="10sp"
-                            android:visibility="visible" />-->
+                            android:visibility="visible" />&ndash;&gt;
 
         </LinearLayout>
 
-        <!--<ImageView
+        &lt;!&ndash;<ImageView
             android:id="@+id/commentBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_send"/>-->
+            android:src="@drawable/ic_send"/>&ndash;&gt;
         <FrameLayout
             android:id="@+id/fl_post_comment"
             android:layout_width="40dp"
@@ -200,6 +214,6 @@
                 android:tint="@color/white"
                 android:translationZ="0dp" />
         </FrameLayout>
-    </LinearLayout>
+    </LinearLayout>-->
     </LinearLayout>
 </LinearLayout>

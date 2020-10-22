@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.BuildConfig;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.R;
@@ -48,6 +49,10 @@ import com.procialize.eventapp.ui.profile.roomDB.ProfileEventId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
@@ -231,82 +236,84 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             final String eventBg = event.getBackground_image();
             CommonFunction.saveBackgroundImage(EventListActivity.this, event.getBackground_image());
             session.saveCurrentEvent(event);
-            eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
-            eventListViewModel.getupdateUserdatq().observeForever(new Observer<UpdateDeviceInfo>() {
-                @Override
-                public void onChanged(UpdateDeviceInfo event) {
-                    RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
-                    String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+            //eventListViewModel.updateUserData(api_token, eventId, device_token, platform, device, osVersion, appVersion, session);
 
-                    Gson gson = new Gson();
-                    List<LoginUserInfo> userData = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<LoginUserInfo>>() {
-                    }.getType());
-                  /*  String fname = userData.get(0).getFirst_name();
-                    String lName = userData.get(0).getLast_name();
-                    String designation = userData.get(0).getDesignation();
-                    String company = userData.get(0).getCompany_name();
-                    String attnId = userData.get(0).getAttendee_id();
-                    String profilePic = userData.get(0).getProfile_picture();
-                    String city = userData.get(0).getCity();
-                    String is_god = userData.get(0).getIs_god();
-                    String emailId = userData.get(0).getEmail();*/
+            ApiUtils.getAPIService().updateDeviceInfo(api_token, eventId, device_token, platform, device, osVersion, appVersion)
+                    .enqueue(new Callback<UpdateDeviceInfo>() {
+                        @Override
+                        public void onResponse(Call<UpdateDeviceInfo> call, Response<UpdateDeviceInfo> response) {
+                            if (response.isSuccessful()) {
+                                try {
+                                    RefreashToken refreashToken = new RefreashToken(EventListActivity.this);
+                                    String decrypteventdetail = refreashToken.decryptedData(response.body().getDetail());
 
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(KEY_FNAME, userData.get(0).getFirst_name());
-                    map.put(KEY_LNAME, userData.get(0).getLast_name());
-                    map.put(KEY_EMAIL, userData.get(0).getEmail());
-                    map.put(KEY_PASSWORD, "");
-                    map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
-                    map.put(KEY_COMPANY, userData.get(0).getCompany_name());
-                    map.put(KEY_MOBILE, userData.get(0).getMobile());
-                    //map.put(KEY_TOKEN, "");
-                    map.put(KEY_CITY, userData.get(0).getCity());
-                   // map.put(KEY_GCM_ID, device_token);
-                    map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
-                    map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
-                    map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
-                    if( userData.get(0).getFirebase_id()==null){
-                        map.put(FIREBASE_ID, "0");
+                                    Gson gson = new Gson();
+                                    List<LoginUserInfo> userData = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<LoginUserInfo>>() {
+                                    }.getType());
+                                    HashMap<String, String> map = new HashMap<>();
+                                    map.put(KEY_FNAME, userData.get(0).getFirst_name());
+                                    map.put(KEY_LNAME, userData.get(0).getLast_name());
+                                    map.put(KEY_EMAIL, userData.get(0).getEmail());
+                                    map.put(KEY_PASSWORD, "");
+                                    map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
+                                    map.put(KEY_COMPANY, userData.get(0).getCompany_name());
+                                    map.put(KEY_MOBILE, userData.get(0).getMobile());
+                                    //map.put(KEY_TOKEN, "");
+                                    map.put(KEY_CITY, userData.get(0).getCity());
+                                    // map.put(KEY_GCM_ID, device_token);
+                                    map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
+                                    map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
+                                    map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
+                                    if( userData.get(0).getFirebase_id()==null){
+                                        map.put(FIREBASE_ID, "0");
 
-                    }else{
-                        map.put(FIREBASE_ID, userData.get(0).getFirebase_id());
+                                    }else{
+                                        map.put(FIREBASE_ID, userData.get(0).getFirebase_id());
 
-                    }
-                    if( userData.get(0).getFirebase_name()==null){
-                        map.put(FIREBASE_NAME, "");
+                                    }
+                                    if( userData.get(0).getFirebase_name()==null){
+                                        map.put(FIREBASE_NAME, "");
 
-                    }else{
-                        map.put(FIREBASE_NAME, userData.get(0).getFirebase_name());
+                                    }else{
+                                        map.put(FIREBASE_NAME, userData.get(0).getFirebase_name());
 
-                    }
-                    if( userData.get(0).getFirebase_username()==null){
-                        map.put(FIREBASEUSER_NAME, "");
-                    }else{
-                        map.put(FIREBASEUSER_NAME, userData.get(0).getFirebase_username());
-                    }
-                  //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
+                                    }
+                                    if( userData.get(0).getFirebase_username()==null){
+                                        map.put(FIREBASEUSER_NAME, "");
+                                    }else{
+                                        map.put(FIREBASEUSER_NAME, userData.get(0).getFirebase_username());
+                                    }
+                                    //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
 
-                    map.put(IS_LOGIN, "true");
-                    map.put(EVENT_ID, eventId);
-                    SharedPreference.putPref(EventListActivity.this, map);
-                    //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
+                                    map.put(IS_LOGIN, "true");
+                                    map.put(EVENT_ID, eventId);
+                                    SharedPreference.putPref(EventListActivity.this, map);
+                                    //session.createLoginSession(fname, lName, emailId, "", company, designation, "", city, profilePic, attnId, "", is_god);
 
 
-                    if (eventListViewModel != null && eventListViewModel.getupdateUserdatq().hasObservers()) {
-                        eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
-                    }
-                    EventAppDB eventAppDB = EventAppDB.getDatabase(EventListActivity.this);
-                    List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
-                    if (profileDataUpdated.size() > 0) {
-                        isClickable = true;
-                        eventListViewModel.openMainPage(EventListActivity.this);
-                    } else {
-                        isClickable = true;
-                        eventListViewModel.openProfilePage(EventListActivity.this, userData, position, eventBg);
-                    }
-                }
-            });
-            // }
+                                    if (eventListViewModel != null && eventListViewModel.getupdateUserdatq().hasObservers()) {
+                                        eventListViewModel.getupdateUserdatq().removeObservers(EventListActivity.this);
+                                    }
+                                    EventAppDB eventAppDB = EventAppDB.getDatabase(EventListActivity.this);
+                                    List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
+                                    if (profileDataUpdated.size() > 0) {
+                                        isClickable = true;
+                                        eventListViewModel.openMainPage(EventListActivity.this);
+                                    } else {
+                                        isClickable = true;
+                                        eventListViewModel.openProfilePage(EventListActivity.this, userData, position, eventBg);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UpdateDeviceInfo> call, Throwable t) {
+                            Utility.createShortSnackBar(ll_main, "Failure...!!");
+                        }
+                    });
         } else {
             isClickable = true;
             Utility.createShortSnackBar(ll_main, "No Internet Connection..!");

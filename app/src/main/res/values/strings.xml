@@ -46,4 +46,6 @@
 
     <string name="maps_api_key">AIzaSyCmc8lu_Yp2dWhpm3TLtGVTcZXJJHjHg5k</string>
     <string name="designandeveloped"><u>Design &amp; Developed by Procialize</u></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
