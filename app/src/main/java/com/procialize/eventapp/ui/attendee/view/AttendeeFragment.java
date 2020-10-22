@@ -1,7 +1,10 @@
 package com.procialize.eventapp.ui.attendee.view;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -24,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -33,6 +37,7 @@ import com.google.gson.reflect.TypeToken;
 import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
+import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
@@ -46,18 +51,23 @@ import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.eventapp.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
+import com.procialize.eventapp.ui.attendeeChat.model.ChatCount;
+import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
+import com.procialize.eventapp.ui.attendeeChat.viewmodel.AttendeeChatCountViewModel;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.speaker.view.SpeakerDetailActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_FNAME;
 import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 
@@ -91,6 +101,8 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     int attendeePageSize = 100;
     AttendeeViewModel attendeeViewModel;
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
+    public static AttendeeChatCountViewModel  attendeeChatCountViewModel ;
+    IntentFilter spotChatFilter;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -99,6 +111,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     ImageView iv_search;
     String strAttendeeName = "";
     String attendee_message = "";
+    SpotChatReciever spotChatReciever;
 
     public static AttendeeFragment newInstance() {
 
@@ -132,6 +145,8 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
 
         attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+        attendeeChatCountViewModel = ViewModelProviders.of(this).get(AttendeeChatCountViewModel.class);
+
         searchEt.setHintTextColor(Color.parseColor(eventColor3));
         searchEt.setTextColor(Color.parseColor(eventColor3));
         int color = Color.parseColor(eventColor3);
@@ -194,30 +209,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                     progressBar.setVisibility(View.GONE);
                     attendeefeedrefresh.setRefreshing(false);
 
-                    /*int totalPages_db = 0;
-                    int totRecords = dbHelper.getAttendeeDetails().size();
-                    if ((int) (totRecords % attendeePageSize) == 0) {
-                        totalPages_db = (int) (totRecords / attendeePageSize);
-                    } else {
-                        totalPages_db = (int) (totRecords / attendeePageSize) + 1;
-                    }
 
-                    if (currentPage < totalPages_db) {
-
-                        attendeeAdapter.removeLoadingFooter();
-                        isLoading = false;
-
-                        currentPage += 1;
-
-                        attendeesDBList = dbHelper.getAllAttendeeDetails("" + attendeeAdapter.getAttendeeListFiltered().size(), attendeePageSize + "");
-                        attendeeAdapter.addAll(attendeesDBList);
-                        attendeefeedrefresh.setRefreshing(false);
-
-                        if (currentPage != totalPages)
-                            attendeeAdapter.addLoadingFooter();
-                        else
-                            isLastPage = true;
-                    }*/
                 }
             }
 
@@ -263,6 +255,13 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                     }
                 }
             });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            spotChatReciever = new SpotChatReciever();
+            spotChatFilter = new IntentFilter(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(spotChatReciever, spotChatFilter);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -362,11 +361,31 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                 List<Attendee> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Attendee>>() {}.getType());
                 if (eventLists != null) {
                     attendeeDatabaseViewModel.deleteAllAttendee(getActivity());
+                    //attendeeChatCountViewModel.deleteAllAttendee(getContext());
                     attendeeDatabaseViewModel.insertIntoDb(getActivity(), eventLists);
 
+                    /*String ChatValue =  SharedPreference.getPref(getContext(), SharedPreferencesConstant.Chat_Table);
+                    if(ChatValue.equalsIgnoreCase("")) {
+                        List<Table_Attendee_Chatcount> attenChatCount = new ArrayList<>();
+                        for (int i = 0; i < eventLists.size(); i++) {
+                            Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
+                            attChat.setChatCount_receId(eventLists.get(i).getFirebase_id());
+                            attChat.setChat_count(0);
+                            attChat.setChat_count_read("0");
+                            attChat.setChat_mess("");
+                            attenChatCount.add(attChat);
+                        }
+                        attendeeChatCountViewModel.insertIntoDb(getContext(), attenChatCount);
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(ChatValue, "1");
+                        SharedPreference.putPref(getContext(), map);
+                    }*/
                     progressBar.setVisibility(View.GONE);
 
                     setupEventAdapter(eventLists);
+
+
+
                 }
 
                 //Delete All attendee from local db and insert attendee
@@ -437,41 +456,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             getActivity().startActivity(new Intent(getContext(), ChatActivity.class)
                     .putExtra("page", "ListPage")
                     .putExtra("Attendee", (Serializable) attendee));
-            /*Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
-            chatIntent.putExtra("user_id", attendee.getFirebase_id());
-            chatIntent.putExtra("user_name", attendee.getFirst_name() + " " + attendee.getLast_name());
-            chatIntent.putExtra("loginUser_name", SUserNmae + " " + SlName);
-            chatIntent.putExtra("sProfilePic", SprofilePic);
-            chatIntent.putExtra("rProfilepic", attendee.getProfile_picture());
-            chatIntent.putExtra("attendeeid", attendee.getAttendee_id());
-            chatIntent.putExtra("firebase_id", attendee.getFirebase_id());
-            chatIntent.putExtra("Message", "");
-            chatIntent.putExtra("page", "ListPage");
-
-            chatIntent.putExtra("lname", attendee.getLast_name());
-            chatIntent.putExtra("company", attendee.getCompany_name());
-            chatIntent.putExtra("city", attendee.getCity());
-            chatIntent.putExtra("designation", attendee.getDesignation());
-            chatIntent.putExtra("attendee_type", attendee.getAttendee_type());
-            chatIntent.putExtra("mobile", attendee.getMobile());
-            chatIntent.putExtra("email", attendee.getEmail());
-
-            startActivity(chatIntent);*/
         } else {
-           /* Intent intent = new Intent(getActivity(), AttendeeDetailActivity.class);
-            intent.putExtra("attendeeid", attendee.getAttendee_id());
-            intent.putExtra("firebase_id", attendee.getFirebase_id());
-
-            intent.putExtra("fname", attendee.getFirst_name());
-            intent.putExtra("lname", attendee.getLast_name());
-            intent.putExtra("company", attendee.getCompany_name());
-            intent.putExtra("city", attendee.getCity());
-            intent.putExtra("designation", attendee.getDesignation());
-            intent.putExtra("prof_pic", attendee.getProfile_picture());
-            intent.putExtra("attendee_type", attendee.getAttendee_type());
-            intent.putExtra("mobile", attendee.getMobile());
-            intent.putExtra("email", attendee.getEmail());
-            startActivity(intent);*/
             getActivity().startActivity(new Intent(getContext(), AttendeeDetailActivity.class)
                     .putExtra("Attendee", (Serializable) attendee));
         }
@@ -496,4 +481,16 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
         }
     }
+
+    private class SpotChatReciever extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            try{
+                attendeeAdapter.notifyDataSetChanged();
+                attendeerecycler.smoothScrollToPosition(0);}catch (Exception e)
+            {e.printStackTrace();}
+        }
+    }
+
 }

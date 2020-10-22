@@ -34,6 +34,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -87,6 +88,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.MainActivity;
@@ -104,6 +106,7 @@ import com.procialize.eventapp.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.adapter.MessageAdapter;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
+import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.profile.view.ProfileActivity;
@@ -167,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 25;
+    public static final int TOTAL_ITEM_TO_LOAD = 30;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
@@ -231,21 +234,10 @@ public class ChatActivity extends AppCompatActivity {
 
         final LinearLayout linMain = findViewById(R.id.linMain);
 
-        /*Intent intent = getIntent();
-        lname = intent.getStringExtra("lname");
-        company = intent.getStringExtra("company");
-        city = intent.getStringExtra("city");
-        designation = intent.getStringExtra("designation");
-        attendee_type = intent.getStringExtra("attendee_type");
-        mobile = intent.getStringExtra("mobile");
-        email = intent.getStringExtra("email");
-        attendeeid = intent.getStringExtra("attendeeid");
-        firebase_id = intent.getStringExtra("firebase_id");
-        firstMessage = intent.getStringExtra("Message");
-        page = intent.getStringExtra("page");*/
         Intent intent = getIntent();
         page = intent.getStringExtra("page");
         attendee = (Attendee) getIntent().getSerializableExtra("Attendee");
+
         final String userName = attendee.getFirst_name();
         lname = attendee.getLast_name();
         company = attendee.getCompany_name();
@@ -258,6 +250,25 @@ public class ChatActivity extends AppCompatActivity {
         attendeeid = attendee.getAttendee_id();
         firebase_id = attendee.getFirebase_id();
         mChatUser = attendee.getFirebase_id();
+
+        //.........................set Data on Attendee Chat table......................//
+        List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
+        if (attenChatCount.size() > 0) {
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);
+
+        } else {
+            Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
+            attChat.setChatCount_receId(firebase_id);
+            attChat.setChat_count(1);
+            attChat.setChat_count_read("1");
+            attChat.setChat_mess("");
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
+        }
+
+        EventAppDB.getDatabase(this).attendeeChatDao().updateIsRead(firebase_id);
+        EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
+       // int unreadMsgCount = EventAppDB.getDatabase(this).attendeeChatDao().getChatCountId(firebase_id);
+
 
         //---SETTING ONLINE------
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -278,16 +289,6 @@ public class ChatActivity extends AppCompatActivity {
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - " + city);
 
-       refreshedToken  = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_GCM_ID);
-        final JSONArray jsonArray = new JSONArray();
-        jsonArray.put(refreshedToken);
-      //  jsonArray.put("eaYckEgz31Y:APA91bH44N6C4UyGnZ7jwx6B5MMv0eEpd8vT4TktTIVjiRzBsYgyzR_HL8J9my4ocbh6YTVLSU92fXLGlmlw6nN8fJZ6DmDrjq47itB-MbtF_Zu8W7oUHIyNUZUwjEjY7-CiLhSE3ZX_");
-
-        // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        //lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1));
-        // mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        //  mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
 
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
         linBack.setOnClickListener(new View.OnClickListener() {
@@ -514,7 +515,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     //Send Text Notification
                     TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
-                    NOTIFICATION_TITLE = firebase_id;
+                    NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                     NOTIFICATION_MESSAGE = message;
 
                     JSONObject notification = new JSONObject();
@@ -557,6 +558,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         //----LOADING 10 MESSAGES ON SWIPE REFRESH----
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -572,17 +574,67 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
 
-               /*if(mSwipeRefreshLayout.isRefreshing()==true){
-                   mSwipeRefreshLayout.setRefreshing(false);
-               }*/
-               /* if(messagesListds2.size()>0){
-                    messagesList.clear();
-                }
-                loadMessages();*/
-
 
             }
         });
+
+
+/*
+        mMessagesList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            int ydy = 0;
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int offset = dy - ydy;
+                ydy = dy;
+                boolean shouldRefresh = (mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0)
+                        && (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING) && offset > 30;
+                if (shouldRefresh) {
+                    //swipeRefreshLayout.setRefreshing(true);
+                    //Refresh to load data here.
+                    */
+/*if (cd.isConnectingToInternet()) {
+
+                        itemPos = 0;
+                        mCurrentPage++;
+                        loadMoreMessages();
+                    } else {
+                        Utility.createShortSnackBar(linMain, "No internet connection");
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                    }*//*
+
+                    return;
+                }
+                boolean shouldPullUpRefresh = mLinearLayoutManager.findLastCompletelyVisibleItemPosition() == mLinearLayoutManager.getChildCount() - 1
+                        && recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING && offset < -30;
+                if (shouldPullUpRefresh) {
+                    //swipeRefreshLayout.setRefreshing(true);
+                    //refresh to load data here.
+                    if (cd.isConnectingToInternet()) {
+
+                        itemPos = 0;
+                        mCurrentPage++;
+                        loadMoreMessages();
+                    } else {
+                        Utility.createShortSnackBar(linMain, "No internet connection");
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                    }
+
+
+                    return;
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+*/
 
     }
 
@@ -1334,6 +1386,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         JzvdStd.releaseAllVideos();
+        EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsReadZero( firebase_id);
 
         finish();
         KeyboardUtility.hideSoftKeyboard(this);
@@ -1506,6 +1559,27 @@ public class ChatActivity extends AppCompatActivity {
                                             Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                                             mMessageView.setText("");
                                             myDialog.dismiss();
+
+                                            // Check for new messages
+                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                            //Send Text Notification
+                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                            NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                            NOTIFICATION_MESSAGE = "Image";
+
+                                            JSONObject notification = new JSONObject();
+                                            JSONObject notifcationBody = new JSONObject();
+                                            try {
+                                                notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                notification.put("to", TOPIC);
+                                                notification.put("data", notifcationBody);
+                                            } catch (JSONException e) {
+                                                Log.e(TAG, "onCreate: " + e.getMessage() );
+                                            }
+                                            sendNotification(notification);
                                         }
 
                                     }
@@ -1618,6 +1692,27 @@ public class ChatActivity extends AppCompatActivity {
                                                             mMessageView.setText("");
                                                             myDialog.dismiss();
                                                             progessLoad.setVisibility(View.GONE);
+
+                                                            // Check for new messages
+                                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                            //Send Text Notification
+                                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                            NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                                            NOTIFICATION_MESSAGE = "Video";
+
+                                                            JSONObject notification = new JSONObject();
+                                                            JSONObject notifcationBody = new JSONObject();
+                                                            try {
+                                                                notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                                notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                                notification.put("to", TOPIC);
+                                                                notification.put("data", notifcationBody);
+                                                            } catch (JSONException e) {
+                                                                Log.e(TAG, "onCreate: " + e.getMessage() );
+                                                            }
+                                                            sendNotification(notification);
 
                                                         }
 
@@ -1762,6 +1857,27 @@ public class ChatActivity extends AppCompatActivity {
                                                         mMessageView.setText("");
                                                         progessLoad.setVisibility(View.GONE);
                                                         myDialog.dismiss();
+
+                                                        // Check for new messages
+                                                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                                        //Send Text Notification
+                                                        TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                        NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                                                        NOTIFICATION_MESSAGE = "Video";
+
+                                                        JSONObject notification = new JSONObject();
+                                                        JSONObject notifcationBody = new JSONObject();
+                                                        try {
+                                                            notifcationBody.put("title", NOTIFICATION_TITLE);
+                                                            notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                                            notification.put("to", TOPIC);
+                                                            notification.put("data", notifcationBody);
+                                                        } catch (JSONException e) {
+                                                            Log.e(TAG, "onCreate: " + e.getMessage() );
+                                                        }
+                                                        sendNotification(notification);
                                                     }
 
                                                 }

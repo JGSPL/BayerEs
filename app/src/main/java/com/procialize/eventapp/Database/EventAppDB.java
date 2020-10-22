@@ -10,6 +10,8 @@ import com.procialize.eventapp.ui.agenda.roomDB.AgendaDao;
 import com.procialize.eventapp.ui.agenda.roomDB.TableAgenda;
 import com.procialize.eventapp.ui.attendee.roomDB.AttendeeDao;
 import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
+import com.procialize.eventapp.ui.attendeeChat.roomDb.AttendeeChatDao;
+import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
 import com.procialize.eventapp.ui.eventinfo.roomDB.EventInfoDao;
 import com.procialize.eventapp.ui.eventinfo.roomDB.TableEventInfo;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
@@ -23,7 +25,7 @@ import com.procialize.eventapp.ui.speaker.roomDB.SpeakerDao;
 import com.procialize.eventapp.ui.speaker.roomDB.TableSpeaker;
 
 @Database(entities = {UploadMultimedia.class, TableNewsFeed.class, TableNewsFeedMedia.class,
-        ProfileEventId.class, TableAttendee.class, TableSpeaker.class, TableAgenda.class, TableEventInfo.class},
+        ProfileEventId.class, TableAttendee.class, TableSpeaker.class, TableAgenda.class, TableEventInfo.class, Table_Attendee_Chatcount.class},
         version = 1, exportSchema = false)
 public abstract class EventAppDB extends RoomDatabase {
 
@@ -35,6 +37,7 @@ public abstract class EventAppDB extends RoomDatabase {
     public abstract SpeakerDao speakerDao();
     public abstract AgendaDao agendaDao();
     public abstract EventInfoDao eventInfoDao();
+    public abstract AttendeeChatDao attendeeChatDao();
 
     public static EventAppDB getDatabase(final Context context) {
         if (eventAppDB == null) {

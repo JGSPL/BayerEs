@@ -494,8 +494,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     comment.putExtra("type", mes.getType());
 
                     comment.putExtra("urlPhotoClick", mes.getMessage());
+                    JzvdStd.releaseAllVideos();
+
                     context.startActivity(comment);
+
                 }else if(mes.getType().equalsIgnoreCase(("video"))) {
+                    JzvdStd.releaseAllVideos();
+
                     Intent comment = new Intent(context, FullScreenImageActivity.class);
                     comment.putExtra("nameUser", uName);
 
@@ -503,6 +508,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     comment.putExtra("urlPhotoUser", uImage);
                     comment.putExtra("urlPhotoClick", mes.getMessage());
                     context.startActivity(comment);
+
                 }
 
 
@@ -513,6 +519,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onClick(View v) {
                 //ChatActivity.videoflag = "1";
+                JzvdStd.releaseAllVideos();
+
                 Intent comment = new Intent(context, FullScreenImageActivity.class);
                 comment.putExtra("nameUser", uName);
 
@@ -527,6 +535,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onClick(View v) {
                 //ChatActivity.videoflag = "1";
+                JzvdStd.releaseAllVideos();
+
                 Intent comment = new Intent(context, FullScreenImageActivity.class);
                 comment.putExtra("nameUser", uName);
 
