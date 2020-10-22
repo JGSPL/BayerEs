@@ -702,8 +702,6 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                         likeStatus = "";
                     }
                     Utility.createShortSnackBar(cl_main, response.body().getHeader().get(0).getMsg());
-
-
                 }
             }
 
