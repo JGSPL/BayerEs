@@ -35,20 +35,8 @@ public class SpotQnAViewModel extends ViewModel {
                 question);
     }
 
-
     public LiveData<LoginOrganizer> submitSpotQnAList() {
+        isValid.setValue(false);
         return submitQnAData;
-    }
-
-    public void validation(String postStatus) {
-        if (postStatus.isEmpty()) {
-            isValid.setValue(false);
-        } else {
-            isValid.setValue(true);
-        }
-    }
-
-    public MutableLiveData<Boolean> getIsValid() {
-        return isValid;
     }
 }

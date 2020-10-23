@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +23,11 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
+import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.spotQnA.adapter.SpotQnAAdapter;
 import com.procialize.eventapp.ui.spotQnA.model.FetchSpotQnA;
@@ -34,6 +37,7 @@ import com.procialize.eventapp.ui.spotQnA.viewModel.SpotQnAViewModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -42,6 +46,9 @@ import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.PROFILE_PIC_MEDIA_PATH;
+import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class SpotQnAFragment extends Fragment implements View.OnClickListener ,SpotQnAAdapter.EventAdapterListner{
 
@@ -54,6 +61,7 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener ,S
     Agenda agenda;
     String noOfLikes = "0";
     String likeStatus = "";
+    SwipeRefreshLayout  question_refresh;
     public static SpotQnAFragment newInstance() {
         return new SpotQnAFragment();
     }
@@ -67,6 +75,7 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener ,S
 
         fl_main = root.findViewById(R.id.fl_main);
         tv_ask_question = root.findViewById(R.id.tv_ask_question);
+        question_refresh = root.findViewById(R.id.question_refresh);
         rv_spot_qna = root.findViewById(R.id.rv_spot_qna);
         tv_ask_question.setOnClickListener(this);
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
@@ -74,35 +83,25 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener ,S
         agenda = (Agenda) getArguments().getSerializable("agendaDetails");
 
 
-        if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
-            spotQnAViewModel.getSpotQnA(api_token,eventid,agenda.getSession_id(),
-                    "100",
-                    "1");
-            spotQnAViewModel.getSpotQnAList().observe(getActivity(), new Observer<FetchSpotQnA>() {
-                @Override
-                public void onChanged(FetchSpotQnA fetchSpotQnA) {
-                    String strCommentList = fetchSpotQnA.getDetail();
-                    RefreashToken refreashToken = new RefreashToken(getContext());
-                    String data = refreashToken.decryptedData(strCommentList);
+        getDataFromApi();
+
+        question_refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                question_refresh.setRefreshing(false);
+                if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
+                    //currentPage = PAGE_START;
+                    getDataFromApi();
+                } else {
                     try {
-                        Gson gson = new Gson();
-                        List<SpotQnAList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<SpotQnAList>>() {
-                        }.getType());
-                        if (agendaLists != null) {
-                            if (agendaLists.size() > 0) {
-                                List<SpotQnA> spotQnAs = agendaLists.get(0).getSession_question_list();
-                                setupAgendaAdapter(spotQnAs);
-                            }
-                        }
+                        Utility.createShortSnackBar(fl_main, "No Internet Connection");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if (spotQnAViewModel != null && spotQnAViewModel.getSpotQnAList().hasObservers()) {
-                        spotQnAViewModel.getSpotQnAList().removeObservers(getActivity());
-                    }
                 }
-            });
-        }
+            }
+        });
         return root;
     }
 
@@ -110,12 +109,6 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener ,S
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_ask_question:
-                /*getActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_frame, AskQuestionFragment.newInstance(), "")
-                        .addToBackStack(null)
-                        .commit();*/
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("agendaDetails", (Serializable) agenda);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -175,5 +168,46 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener ,S
                 Utility.createShortSnackBar(fl_main, "Failure..");
             }
         });
+    }
+
+    public void getDataFromApi()
+    {
+        if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
+            spotQnAViewModel.getSpotQnA(api_token,eventid,agenda.getSession_id(),
+                    "100",
+                    "1");
+            spotQnAViewModel.getSpotQnAList().observe(getActivity(), new Observer<FetchSpotQnA>() {
+                @Override
+                public void onChanged(FetchSpotQnA fetchSpotQnA) {
+                    if(!fetchSpotQnA.getDetail().isEmpty()) {
+                        String strCommentList = fetchSpotQnA.getDetail();
+                        RefreashToken refreashToken = new RefreashToken(getContext());
+                        String data = refreashToken.decryptedData(strCommentList);
+                        try {
+                            Gson gson = new Gson();
+                            List<SpotQnAList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<SpotQnAList>>() {
+                            }.getType());
+                            if (agendaLists != null) {
+                                if (agendaLists.size() > 0) {
+                                    List<SpotQnA> spotQnAs = agendaLists.get(0).getSession_question_list();
+                                    setupAgendaAdapter(spotQnAs);
+
+                                    String strFilePath = CommonFunction.stripquotes(agendaLists.get(0).getProfile_pic_url_path());
+                                    HashMap<String, String> map = new HashMap<>();
+                                    map.put(PROFILE_PIC_MEDIA_PATH, strFilePath.replace("\\/", "/"));
+                                    SharedPreference.putPref(getActivity(), map);
+
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (spotQnAViewModel != null && spotQnAViewModel.getSpotQnAList().hasObservers()) {
+                            spotQnAViewModel.getSpotQnAList().removeObservers(getActivity());
+                        }
+                    }
+                }
+            });
+        }
     }
 }

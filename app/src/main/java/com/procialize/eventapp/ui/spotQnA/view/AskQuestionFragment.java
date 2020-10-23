@@ -3,6 +3,7 @@ package com.procialize.eventapp.ui.spotQnA.view;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.procialize.eventapp.ConnectionDetector;
+import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
@@ -89,26 +91,36 @@ public class AskQuestionFragment extends Fragment implements View.OnClickListene
                         .commit();*/
                 break;
             case R.id.ll_send_question:
-                if(ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
+                if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
                     ll_send_question.setEnabled(true);
                     final String question = et_question.getText().toString().trim();
-                    spotQnAViewModel.validation(question);
-                    spotQnAViewModel.getIsValid().observe(this, new Observer<Boolean>() {
-                        @Override
-                        public void onChanged(Boolean aBoolean) {
-                            if (aBoolean) {
-                                api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
-                                eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
-                                spotQnAViewModel.submitSpotQnA(api_token, eventid, agenda.getSession_id(), question);
-                            } else {
-                                ll_send_question.setEnabled(true);
-                                Utility.createShortSnackBar(fl_main, "Please enter some status to post");
+                    if (!question.isEmpty()) {
+                        api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
+                        eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
+
+                        spotQnAViewModel.submitSpotQnA(api_token, eventid, agenda.getSession_id(), question);
+                        spotQnAViewModel.submitSpotQnAList().observe(getActivity(), new Observer<LoginOrganizer>() {
+                            @Override
+                            public void onChanged(LoginOrganizer loginOrganizer) {
+                                if (loginOrganizer.getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                                    getFragmentManager().popBackStack();
+                                    Utility.createShortSnackBar(fl_main, loginOrganizer.getHeader().get(0).getMsg());
+                                } else {
+                                    ll_send_question.setEnabled(true);
+                                    Utility.createShortSnackBar(fl_main, loginOrganizer.getHeader().get(0).getMsg());
+                                }
+                                if (spotQnAViewModel != null && spotQnAViewModel.submitSpotQnAList().hasObservers()) {
+                                    spotQnAViewModel.submitSpotQnAList().removeObservers(getActivity());
+                                }
                             }
-                        }
-                    });
-                }else
-                {
+                        });
+                    } else {
+                        ll_send_question.setEnabled(true);
+                        Utility.createShortSnackBar(fl_main, "Please enter some status to post");
+                    }
+
+                } else {
                     Utility.createShortSnackBar(fl_main, "No Internet Connection..!");
                 }
                 break;

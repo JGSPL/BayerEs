@@ -158,6 +158,11 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
 
+        if(livestreamLink.isEmpty())
+        {ll_live_stream.setVisibility(View.GONE);}
+        else
+        {ll_live_stream.setVisibility(View.VISIBLE);}
+
         /*try {
             Date currentTime = Calendar.getInstance().getTime();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

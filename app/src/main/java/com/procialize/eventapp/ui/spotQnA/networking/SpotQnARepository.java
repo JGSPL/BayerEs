@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
-import com.procialize.eventapp.ui.agenda.model.FetchAgenda;
 import com.procialize.eventapp.ui.spotQnA.model.FetchSpotQnA;
 
 import retrofit2.Call;
@@ -54,24 +53,21 @@ public class SpotQnARepository {
     }
 
 
-    public MutableLiveData<LoginOrganizer> submitSpotQnA(String token, String event_id, String session_id,
-                                                        String question) {
-        eventApi.PostQnASession(token, event_id, session_id,
-                question)
-                .enqueue(new Callback<LoginOrganizer>() {
-                    @Override
-                    public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
-                        if (response.isSuccessful()) {
-                            submitSpotQnAData.setValue(response.body());
-                        }
+    public MutableLiveData<LoginOrganizer> submitSpotQnA(String token, String event_id, String session_id,String question) {
+        eventApi.PostQnASession(token, event_id, session_id,question)
+            .enqueue(new Callback<LoginOrganizer>() {
+                @Override
+                public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
+                    if (response.isSuccessful()) {
+                        submitSpotQnAData.setValue(response.body());
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<LoginOrganizer> call, Throwable t) {
-                        submitSpotQnAData.setValue(null);
-                    }
-                });
-
+                @Override
+                public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                    submitSpotQnAData.setValue(null);
+                }
+            });
         return submitSpotQnAData;
     }
 }

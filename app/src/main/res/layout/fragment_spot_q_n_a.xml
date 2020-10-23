@@ -1,33 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fl_main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.spotQnA.view.SpotQnAFragment">
 
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-       <TextView
-           android:id="@+id/tv_ask_question"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:text="Ask Question"
-           android:background="@color/albumColorPrimary"
-           android:padding="10dp"
-           android:textColor="@color/white"
-           android:gravity="center"
-           android:textSize="15dp"
-           android:layout_margin="15dp"></TextView>
+        <TextView
+            android:id="@+id/tv_ask_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@color/albumColorPrimary"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Ask Question"
+            android:textColor="@color/white"
+            android:textSize="15dp"></TextView>
 
-       <androidx.recyclerview.widget.RecyclerView
-           android:id="@+id/rv_spot_qna"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           tools:listitem="@layout/recycler_item_spot_qna"/>
-   </LinearLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/question_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_pullrefresh">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_spot_qna"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/recycler_item_spot_qna" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
 
 </FrameLayout>

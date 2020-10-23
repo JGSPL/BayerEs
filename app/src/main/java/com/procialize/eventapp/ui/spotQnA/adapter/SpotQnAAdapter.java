@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.PROFILE_PIC_MEDIA_PATH;
 
 public class SpotQnAAdapter extends RecyclerView.Adapter<SpotQnAAdapter.SpotQnAViewHolder> {
 
@@ -49,7 +50,7 @@ public class SpotQnAAdapter extends RecyclerView.Adapter<SpotQnAAdapter.SpotQnAV
         this.spotQnAList = spotQnALists;
         this.listener = listener;
 
-        mediaPath = SharedPreference.getPref(context, EVENT_LIST_MEDIA_PATH);
+        mediaPath = SharedPreference.getPref(context, PROFILE_PIC_MEDIA_PATH);
     }
 
     @NonNull
@@ -63,7 +64,7 @@ public class SpotQnAAdapter extends RecyclerView.Adapter<SpotQnAAdapter.SpotQnAV
     public void onBindViewHolder(@NonNull final SpotQnAAdapter.SpotQnAViewHolder holder, final int position) {
         final SpotQnA spotQnA = spotQnAList.get(position);
         holder.tv_name.setText(spotQnA.getOrg_first_name() + " " + spotQnA.getOrg_last_name());
-        holder.tv_time.setText(CommonFunction.convertDate(spotQnA.getCreated()));
+        holder.tv_time.setText(CommonFunction.convertDateToTime(spotQnA.getCreated()));
         holder.tv_question.setText(spotQnA.getQuestion());
 
         if (spotQnA.getLike_flag().equalsIgnoreCase("1")) {
@@ -86,7 +87,7 @@ public class SpotQnAAdapter extends RecyclerView.Adapter<SpotQnAAdapter.SpotQnAV
         }
 
         if (spotQnA.getProfile_picture() != null) {
-            Glide.with(context).load(spotQnA.getProfile_picture().trim()).listener(new RequestListener<Drawable>() {
+            Glide.with(context).load(mediaPath+spotQnA.getProfile_picture().trim()).listener(new RequestListener<Drawable>() {
                 @Override
                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                     holder.iv_profile.setImageResource(R.drawable.profilepic_placeholder);

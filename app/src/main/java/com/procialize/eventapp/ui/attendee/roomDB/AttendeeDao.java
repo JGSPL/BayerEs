@@ -2,6 +2,7 @@ package com.procialize.eventapp.ui.attendee.roomDB;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Ignore;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -35,6 +36,7 @@ public interface AttendeeDao {
     @Query("DELETE FROM tbl_attendee where fld_attendee_id=:attendeeId")
     void deleteAttendee(String attendeeId);
 
+    @Ignore
     @Query("SELECT * from tbl_attendee where firebase_id=:firebase_id")
     Attendee getAttendeeDetailsFromFireId(String firebase_id);
 }
