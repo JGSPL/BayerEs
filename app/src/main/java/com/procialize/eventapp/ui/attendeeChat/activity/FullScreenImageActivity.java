@@ -34,6 +34,7 @@ import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 
 public class FullScreenImageActivity extends AppCompatActivity {
@@ -90,7 +91,9 @@ public class FullScreenImageActivity extends AppCompatActivity {
         tvUser = (TextView) toolbar.findViewById(R.id.title);
         videoplayer = findViewById(R.id.videoplayer);
         rlMain = findViewById(R.id.rlMain);
-        ivUser.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+        //iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+
+        ivUser.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         CommonFunction.showBackgroundImage(this, rlMain);
 
     }
