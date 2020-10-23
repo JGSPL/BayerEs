@@ -217,7 +217,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
                     transaction.replace(R.id.fragment_frame, fragInfo);
                     transaction.commit();
                 } else if (tab.getPosition() == 1) {
-                   // Toast.makeText(LiveStreamingActivity.this, "1", Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    SpotPollFragment fragInfo = new SpotPollFragment();
+                    fragInfo.setArguments(bundle);
+                    transaction.replace(R.id.fragment_frame, fragInfo);
+                    transaction.commit();
                 } else if (tab.getPosition() == 2) {
                    // Toast.makeText(LiveStreamingActivity.this, "2", Toast.LENGTH_SHORT).show();
                 } else if (tab.getPosition() == 3) {

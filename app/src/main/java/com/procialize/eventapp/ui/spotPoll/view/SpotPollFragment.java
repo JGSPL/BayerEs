@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -28,7 +31,10 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.ui.agenda.model.Agenda;
+import com.procialize.eventapp.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.eventapp.ui.livepoll.model.FetchLivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll;
 import com.procialize.eventapp.ui.livepoll.model.Logo;
@@ -43,6 +49,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
@@ -52,6 +59,10 @@ public class SpotPollFragment extends Fragment {
     MutableLiveData<FetchLivePoll> FetchLivePollList = new MutableLiveData<>();
     private APIService eventApi;
     ProgressBar progressBar,progressView;
+    Agenda agenda;
+    CardView Pollcard;
+    TextView  tvPollTitle;
+    Button btnPollStart;
 
     public static SpotPollFragment newInstance() {
 
@@ -65,9 +76,22 @@ public class SpotPollFragment extends Fragment {
         iv_logo = root.findViewById(R.id.iv_logo);
         progressBar = root.findViewById(R.id.progressBar);
         progressView = root.findViewById(R.id.progressView);
+        Pollcard = root.findViewById(R.id.Pollcard);
+        tvPollTitle = root.findViewById(R.id.tvPollTitle);
+        btnPollStart = root.findViewById(R.id.btnPollStart);
+
         new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
+        agenda = (Agenda) getArguments().getSerializable("agendaDetails");
+
+        CommonFunction.showBackgroundImage(getContext(), Pollcard);
+        btnPollStart.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
+        btnPollStart.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
+        tvPollTitle.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
+
+
+
         if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
             getLivepoll(api_token,eventid);
 
@@ -80,8 +104,7 @@ public class SpotPollFragment extends Fragment {
     public MutableLiveData<FetchLivePoll> getLivepoll(String token, String eventid) {
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.livePollFetch(token,eventid
-        )
+        eventApi.SpotLivePollFetch(token,eventid,agenda.getSession_id())
                 .enqueue(new Callback<FetchLivePoll>() {
                     @Override
                     public void onResponse(Call<FetchLivePoll> call, Response<FetchLivePoll> response) {

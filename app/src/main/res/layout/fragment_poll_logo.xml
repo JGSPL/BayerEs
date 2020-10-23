@@ -3,8 +3,8 @@
     android:id="@+id/Pollcard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="20dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
     android:background="@color/colorwhite">
     <ScrollView
         android:layout_width="match_parent"
@@ -54,6 +54,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Live Poll"
+            android:id="@+id/tvPollTitle"
             android:textColor="@color/black"
             android:textSize="@dimen/textsizenormal"
             android:layout_marginTop="20dp">

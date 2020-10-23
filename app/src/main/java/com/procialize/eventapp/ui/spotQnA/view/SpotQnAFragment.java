@@ -77,6 +77,7 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener ,S
         tv_ask_question = root.findViewById(R.id.tv_ask_question);
         question_refresh = root.findViewById(R.id.question_refresh);
         rv_spot_qna = root.findViewById(R.id.rv_spot_qna);
+
         tv_ask_question.setOnClickListener(this);
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
