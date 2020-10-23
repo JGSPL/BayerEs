@@ -214,7 +214,6 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_chat);
         mChatAddButton = (ImageView) findViewById(R.id.chatAddButton);
         mChatSendButton = (ImageView) findViewById(R.id.chatSendButton);
@@ -559,7 +558,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //----LOADING 10 MESSAGES ON SWIPE REFRESH----
 
-/*
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -578,7 +577,8 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-*/
+
+/*
         mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -599,6 +599,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
+*/
 
 
 /*
@@ -745,7 +746,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 mSwipeRefreshLayout.setRefreshing(false);
 
-                mLinearLayoutManager.scrollToPositionWithOffset(10, 0);
+                mLinearLayoutManager.scrollToPositionWithOffset(30, 0);
             }
 
             @Override
@@ -1553,8 +1554,7 @@ public class ChatActivity extends AppCompatActivity {
 
                             if (task.isSuccessful()) {
 
-                                @SuppressWarnings("VisibleForTests")
-                                String download_url = task.getResult().getDownloadUrl().toString();
+                                @SuppressWarnings("VisibleForTests") final String download_url = task.getResult().getDownloadUrl().toString();
 
                                 Map messageMap = new HashMap();
                                 messageMap.put("message", download_url);
@@ -1588,13 +1588,14 @@ public class ChatActivity extends AppCompatActivity {
                                             //Send Text Notification
                                             TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
                                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
-                                            NOTIFICATION_MESSAGE = "Image";
+                                            NOTIFICATION_MESSAGE = "image";
 
                                             JSONObject notification = new JSONObject();
                                             JSONObject notifcationBody = new JSONObject();
                                             try {
                                                 notifcationBody.put("title", NOTIFICATION_TITLE);
                                                 notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                                                notifcationBody.put("image", download_url);
 
                                                 notification.put("to", TOPIC);
                                                 notification.put("data", notifcationBody);

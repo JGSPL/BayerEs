@@ -117,6 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_gravity="bottom"
+
         android:background="@android:color/transparent"
         app:elevation="0dp"
         app:labelVisibilityMode="unlabeled"

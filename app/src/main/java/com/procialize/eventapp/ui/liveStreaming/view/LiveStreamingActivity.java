@@ -52,6 +52,7 @@ import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
+import com.procialize.eventapp.ui.spotPoll.view.SpotPollFragment;
 import com.procialize.eventapp.ui.spotQnA.view.SpotQnAFragment;
 
 import java.io.File;
@@ -222,6 +223,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
                     case R.id.navigation_comment:
                         break;
                     case R.id.navigation_livepoll:
+                        Bundle bundlePoll = new Bundle();
+                        bundlePoll.putSerializable("agendaDetails", (Serializable) agendaDetails);
+                        FragmentTransaction transactionPoll = getSupportFragmentManager().beginTransaction();
+                        SpotPollFragment pollFragment = new SpotPollFragment();
+                        pollFragment.setArguments(bundlePoll);
+                        transactionPoll.replace(R.id.fragment_frame, pollFragment);
+                        transactionPoll.commit();
                         break;
                     case R.id.navigation_quiz:
                         break;
