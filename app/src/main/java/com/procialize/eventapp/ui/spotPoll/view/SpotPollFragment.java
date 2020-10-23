@@ -1,5 +1,6 @@
 package com.procialize.eventapp.ui.spotPoll.view;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
 
 
@@ -33,14 +35,19 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
+import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
 import com.procialize.eventapp.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.eventapp.ui.livepoll.model.FetchLivePoll;
 import com.procialize.eventapp.ui.livepoll.model.LivePoll;
+import com.procialize.eventapp.ui.livepoll.model.LivePoll_option;
 import com.procialize.eventapp.ui.livepoll.model.Logo;
 import com.procialize.eventapp.ui.livepoll.view.LivePollActivity;
+import com.procialize.eventapp.ui.livepoll.view.PollDetailActivity;
+import com.procialize.eventapp.ui.spotQnA.view.AskQuestionFragment;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +70,8 @@ public class SpotPollFragment extends Fragment {
     CardView Pollcard;
     TextView  tvPollTitle;
     Button btnPollStart;
+    List<LivePoll> PollLists;
+    List<LivePoll_option> optionLists;
 
     public static SpotPollFragment newInstance() {
 
@@ -90,16 +99,62 @@ public class SpotPollFragment extends Fragment {
         btnPollStart.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
         tvPollTitle.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
 
-
+        optionLists = new ArrayList<>();
 
         if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
             getLivepoll(api_token,eventid);
 
         } else {
         }
+
+        btnPollStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(PollLists.size()>0) {
+                   LivePoll pollList = new LivePoll();
+                   pollList.setId(PollLists.get(0).getId());
+                   pollList.setReplied(PollLists.get(0).getReplied());
+                    pollList.setShow_progress_bar(PollLists.get(0).getShow_progress_bar());
+                    pollList.setQuestion(PollLists.get(0).getQuestion());
+                    pollList.setHide_result(PollLists.get(0).getHide_result());
+                    pollList.setLive_poll_id(PollLists.get(0).getLive_poll_id());
+                    pollList.setStatus(PollLists.get(0).getStatus());
+                    pollList.setLive_poll_option_list(PollLists.get(0).getLive_poll_option_list());
+
+                    optionLists = pollList.getLive_poll_option_list();
+
+                    /* Intent polldetail = new Intent(getContext(), PollDetailActivity.class);
+                    polldetail.putExtra("id", pollList.getId());
+                    polldetail.putExtra("question", pollList.getQuestion());
+                    polldetail.putExtra("replied", pollList.getReplied());
+                    polldetail.putExtra("optionlist", (Serializable) optionLists);
+                    polldetail.putExtra("show_result", pollList.getHide_result());
+                    startActivity(polldetail);*/
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("optionlist", (Serializable) optionLists);
+                    bundle.putString("id", pollList.getId());
+                    bundle.putString("question", pollList.getQuestion());
+                    bundle.putString("replied", pollList.getReplied());
+                    bundle.putString("show_result", pollList.getHide_result());
+                    bundle.putString("session_id", agenda.getSession_id());
+
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    SpotPolldetailFragment fragInfo = new SpotPolldetailFragment();
+                    fragInfo.setArguments(bundle);
+                    transaction.replace(R.id.fragment_frame, fragInfo);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }else{
+                    Utility.createShortSnackBar(Pollcard, "Poll not available");
+
+                }
+            }
+        });
         
         return root;
     }
+
+
 
     public MutableLiveData<FetchLivePoll> getLivepoll(String token, String eventid) {
         eventApi = ApiUtils.getAPIService();
@@ -121,7 +176,7 @@ public class SpotPollFragment extends Fragment {
 
                                 progressBar.setVisibility(View.GONE);
 
-                                List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
+                                 PollLists = eventLists.get(0).getLivePoll_list();
 
                                 if(PollLists.size()>0) {
 
