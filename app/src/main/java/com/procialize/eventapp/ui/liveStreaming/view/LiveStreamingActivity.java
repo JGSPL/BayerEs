@@ -27,10 +27,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -49,6 +51,7 @@ import com.procialize.eventapp.ui.AgendaDetails.view.AgendaDetailsActivity;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
+import com.procialize.eventapp.ui.livestreamComment.view.LivestreamCommentFragment;
 import com.procialize.eventapp.ui.login.view.LoginActivity;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
@@ -86,7 +89,8 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
     String youtube_stream_url;
     String filePath;
     ImageView iv_back;
-    BottomNavigationView bottom_navigation;
+    //BottomNavigationView bottom_navigation;
+    TabLayout tablayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +123,8 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         ll_bottom = (LinearLayout) findViewById(R.id.ll_bottom);
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
         tvDescription = (TextView) findViewById(R.id.tvDescription);
-        bottom_navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        //bottom_navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        tablayout = findViewById(R.id.tablayout);
         tv_header = (TextView) findViewById(R.id.tv_header);
         tv_header.setText(sessionName);
         tvDescription.setText(sessionDescription);
@@ -202,7 +207,41 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             //  mCastContext = CastContext.getSharedInstance(this);
         }
 
-        ColorStateList iconsColorStates = new ColorStateList(
+        tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 0) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    LivestreamCommentFragment fragInfo = new LivestreamCommentFragment();
+                    transaction.replace(R.id.fragment_frame, fragInfo);
+                    transaction.commit();
+                } else if (tab.getPosition() == 1) {
+                   // Toast.makeText(LiveStreamingActivity.this, "1", Toast.LENGTH_SHORT).show();
+                } else if (tab.getPosition() == 2) {
+                   // Toast.makeText(LiveStreamingActivity.this, "2", Toast.LENGTH_SHORT).show();
+                } else if (tab.getPosition() == 3) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    SpotQnAFragment fragInfo = new SpotQnAFragment();
+                    fragInfo.setArguments(bundle);
+                    transaction.replace(R.id.fragment_frame, fragInfo);
+                    transaction.commit();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+    /*    ColorStateList iconsColorStates = new ColorStateList(
                 new int[][]{
                         new int[]{-android.R.attr.state_checked},
                         new int[]{android.R.attr.state_checked}
@@ -238,7 +277,7 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
 
                 return true;
             }
-        });
+        });*/
     }
 
     public static Bitmap retriveVideoFrameFromVideo(String videoPath)
@@ -339,7 +378,8 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         tvDescription.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
-
+        tablayout.setSelectedTabIndicatorColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        tablayout.setTabIconTint(ColorStateList.valueOf(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))));
     }
 
     @Override

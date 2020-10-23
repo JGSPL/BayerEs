@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/ll_main"
     tools:context=".ui.liveStreaming.view.LiveStreamingActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -73,13 +73,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone">
-    <fragment
-        android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
-        android:id="@+id/youtube_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="Instantiatable"/>
+
+        <fragment
+            android:id="@+id/youtube_view"
+            android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="Instantiatable" />
     </LinearLayout>
+
     <com.longtailvideo.jwplayer.JWPlayerView
         android:id="@+id/jwplayer"
         android:layout_width="match_parent"
@@ -89,131 +91,155 @@
         android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp">
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="10dp"
-        android:text=""
-        android:textColor="@color/black" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="3dp"
-        android:layout_gravity="left"
-        android:background="@color/linecolor" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_gravity="bottom"
-        android:background="@android:color/transparent"
-        app:elevation="0dp"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/livestream_nav_menu" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:layout_gravity="left"
-        android:background="@color/linecolor" />
-
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/content_main"
-        android:layout_weight="1"/>
-    <!--<LinearLayout
-        android:id="@+id/ll_comment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="3dp"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="center"
-            android:paddingLeft="5dp">
-
-            <ImageView
-                android:id="@+id/iv_gif"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:background="@mipmap/ic_emoji"
-                android:padding="15dp" />
-
-            <EditText
-                android:id="@+id/et_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:hint="Message"
-                android:imeOptions="actionSend|flagNoEnterAction"
-                android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
-                android:textSize="15dp"
-                android:textColor="@color/black"/>
-
-
-            &lt;!&ndash;            <TextView
-                            android:id="@+id/textData"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="10sp"
-                            android:visibility="visible" />&ndash;&gt;
-
-        </LinearLayout>
-
-        &lt;!&ndash;<ImageView
-            android:id="@+id/commentBt"
+        <TextView
+            android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_send"/>&ndash;&gt;
-        <FrameLayout
-            android:id="@+id/fl_post_comment"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@color/activetab">
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:text=""
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="left"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="3dp"
+            android:background="@color/linecolor" />
+
+     <!--   <com.google.android.material.bottomnavigation.BottomNavigationView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"
+            app:elevation="0dp"
+            app:labelVisibilityMode="unlabeled"
+            app:menu="@menu/livestream_nav_menu"
+            app:tabMode="scrollable" />-->
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/ti_comment"
+                android:icon="@drawable/livestream_comment_selector" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/ti_spot_live_poll"
+                android:icon="@drawable/livestream_live_poll" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/ti_spot_quiz"
+                android:icon="@drawable/livestream_quiz" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/ti_spot_qna"
+                android:icon="@drawable/livestream_qna" />
+
+        </com.google.android.material.tabs.TabLayout>
 
 
-            <ImageView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="left"
+            android:layout_marginBottom="3dp"
+            android:background="@color/linecolor" />
+
+        <include
+            layout="@layout/content_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <!--<LinearLayout
+            android:id="@+id/ll_comment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:paddingLeft="5dp">
+
+                <ImageView
+                    android:id="@+id/iv_gif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@mipmap/ic_emoji"
+                    android:padding="15dp" />
+
+                <EditText
+                    android:id="@+id/et_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:hint="Message"
+                    android:imeOptions="actionSend|flagNoEnterAction"
+                    android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"/>
+
+
+                &lt;!&ndash;            <TextView
+                                android:id="@+id/textData"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="10sp"
+                                android:visibility="visible" />&ndash;&gt;
+
+            </LinearLayout>
+
+            &lt;!&ndash;<ImageView
+                android:id="@+id/commentBt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_send"/>&ndash;&gt;
+            <FrameLayout
+                android:id="@+id/fl_post_comment"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:scaleType="centerCrop" />
+                android:background="@color/activetab">
 
-            <ImageView
-                android:id="@+id/iv_send"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:padding="10dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/ic_send"
-                android:tint="@color/white"
-                android:translationZ="0dp" />
-        </FrameLayout>
-    </LinearLayout>-->
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/iv_send"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_send"
+                    android:tint="@color/white"
+                    android:translationZ="0dp" />
+            </FrameLayout>
+        </LinearLayout>-->
     </LinearLayout>
 </LinearLayout>
