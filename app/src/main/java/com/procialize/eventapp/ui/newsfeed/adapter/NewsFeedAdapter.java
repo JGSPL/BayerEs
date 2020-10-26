@@ -423,6 +423,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                                     } else {
                                                                         context.startActivity(new Intent(context, ChatActivity.class)
                                                                                 .putExtra("page", "ListPage")
+                                                                                .putExtra("firstMessage", "")
                                                                                 .putExtra("Attendee", (Serializable) attendee));
                                                                     }
                                                                 }
@@ -503,6 +504,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                                                                     } else {
                                                                         context.startActivity(new Intent(context, ChatActivity.class)
                                                                                 .putExtra("page", "ListPage")
+                                                                                .putExtra("firstMessage", "")
                                                                                 .putExtra("Attendee", (Serializable) attendee));
                                                                     }
                                                                 }

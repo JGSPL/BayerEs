@@ -117,6 +117,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             Intent notificationIntent = new Intent(getApplicationContext(),
                                     ChatActivity.class);
                             notificationIntent.putExtra("Attendee", (Serializable)attendee);
+                            notificationIntent.putExtra("firstMessage","");
                             notificationIntent.putExtra("page", "Notification");
                             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                     | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -149,6 +150,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             Intent notificationIntent = new Intent(getApplicationContext(),
                                     ChatActivity.class);
                             notificationIntent.putExtra("Attendee", (Serializable)attendee);
+                            notificationIntent.putExtra("firstMessage","");
                             notificationIntent.putExtra("page", "Notification");
                             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                     | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -194,6 +196,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     Intent notificationIntent = new Intent(getApplicationContext(),
                             ChatActivity.class);
                     notificationIntent.putExtra("Attendee", (Serializable)attendee);
+                    notificationIntent.putExtra("firstMessage", "");
                     notificationIntent.putExtra("page", "Notification");
                     notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                             | Intent.FLAG_ACTIVITY_CLEAR_TOP);

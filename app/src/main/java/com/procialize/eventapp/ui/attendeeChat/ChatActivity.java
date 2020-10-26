@@ -235,6 +235,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         page = intent.getStringExtra("page");
+        firstMessage = intent.getStringExtra("firstMessage");
         attendee = (Attendee) getIntent().getSerializableExtra("Attendee");
 
         final String userName = attendee.getFirst_name();
@@ -254,6 +255,8 @@ public class ChatActivity extends AppCompatActivity {
         List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
         if (attenChatCount.size() > 0) {
             EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);
+            EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
+
 
         } else {
             Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
@@ -264,8 +267,7 @@ public class ChatActivity extends AppCompatActivity {
             EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
         }
 
-        EventAppDB.getDatabase(this).attendeeChatDao().updateIsRead(firebase_id);
-        EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
+       // EventAppDB.getDatabase(this).attendeeChatDao().updateIsRead(firebase_id);
        // int unreadMsgCount = EventAppDB.getDatabase(this).attendeeChatDao().getChatCountId(firebase_id);
 
 
@@ -559,6 +561,7 @@ public class ChatActivity extends AppCompatActivity {
         //----LOADING 10 MESSAGES ON SWIPE REFRESH----
 
 
+/*
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -577,8 +580,9 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+*/
 
-/*
+
         mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -599,7 +603,7 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-*/
+
 
 
 /*
@@ -1981,76 +1985,35 @@ public class ChatActivity extends AppCompatActivity {
         };
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
+        if (attenChatCount.size() > 0) {
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);
+            EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
 
 
-    /*public void sendMessage(final JSONArray recipients, final String title, final String body, final String icon, final String message) {
-
-        new AsyncTask<String, String, String>() {
-            @Override
-            protected String doInBackground(String... params) {
-                try {
-                    JSONObject root = new JSONObject();
-                    JSONObject notification = new JSONObject();
-                    notification.put("body", body);
-                    notification.put("title", title);
-                    notification.put("icon", icon);
-
-                    JSONObject data = new JSONObject();
-                    data.put("message", message);
-                    root.put("notification", notification);
-                    root.put("data", data);
-                    root.put("registration_ids", recipients);
-
-                    String result = postToFCM(root.toString());
-                    Log.d("Main Activity", "Result: " + result);
-                    return result;
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                try {
-                    JSONObject resultJson = new JSONObject(result);
-                    int success, failure;
-                    success = resultJson.getInt("success");
-                    failure = resultJson.getInt("failure");
-                    Toast.makeText(ChatActivity.this, "Message Success: " + success + "Message Failed: " + failure, Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(ChatActivity.this, "Message Failed, Unknown error occurred.", Toast.LENGTH_LONG).show();
-                }
-            }
-        }.execute();
+        } else {
+            Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
+            attChat.setChatCount_receId(firebase_id);
+            attChat.setChat_count(1);
+            attChat.setChat_count_read("1");
+            attChat.setChat_mess("");
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
+        }
     }
 
-    String postToFCM(String bodyString) throws IOException {
+    @Override
+    protected void onPause() {
 
+        super.onPause();
+        EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsReadZero( firebase_id);
 
-
-        String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
-        final MediaType JSON
-                = MediaType.parse("application/json; charset=utf-8");
-
-        RequestBody body = RequestBody.create(JSON, bodyString);
-        Request request = new Request.Builder()
-                .url(FCM_MESSAGE_URL)
-                .post(body)
-                .addHeader("Authorization", "key=" + "AAAA4xkbUmY:APA91bHJtoRFEI_jxvR7jJEIA0M-Wa4adoRiLGWIMiWdAgEg5CLjsJBRuByvHHj-764l5zVRav8N_qwn_etLCzUHsL-xfhJTrQQFSYkHRurjID5haW2TpfZF1JRDw0y4vKBoqVg6Lldb")
-                .build();
-        Response response = mClient.newCall(request).execute();
-        return response.body().string();
     }
-*/
+
 
 }
 
 
- /*
-            ActionBar action = getSupportActionBar();
-            LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
-            View actionBarView = inflater.inflate(R.layout.app_bar_layout,null);
-            action.setCustomView(actionBarView);
-        */

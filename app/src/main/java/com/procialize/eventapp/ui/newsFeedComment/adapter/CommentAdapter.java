@@ -268,6 +268,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                                                             } else {
                                                                                 context.startActivity(new Intent(context, ChatActivity.class)
                                                                                         .putExtra("page", "ListPage")
+                                                                                        .putExtra("firstMessage", "")
                                                                                         .putExtra("Attendee", (Serializable) attendee));
                                                                             }
                                                                         }
@@ -362,6 +363,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                                                             } else {
                                                                                 context.startActivity(new Intent(context, ChatActivity.class)
                                                                                         .putExtra("page", "ListPage")
+                                                                                        .putExtra("firstMessage", "")
                                                                                         .putExtra("Attendee", (Serializable) attendee));
                                                                             }
                                                                         }
