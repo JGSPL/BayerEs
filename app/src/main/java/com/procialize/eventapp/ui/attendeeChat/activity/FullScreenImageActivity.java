@@ -92,8 +92,15 @@ public class FullScreenImageActivity extends AppCompatActivity {
         videoplayer = findViewById(R.id.videoplayer);
         rlMain = findViewById(R.id.rlMain);
         //iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        ivUser.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        toolbar.getNavigationIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+
         CommonFunction.showBackgroundImage(this, rlMain);
 
     }
@@ -106,8 +113,8 @@ public class FullScreenImageActivity extends AppCompatActivity {
         type = getIntent().getStringExtra("type");
 
         Log.i("TAG", "imagem recebida " + urlPhotoClick);
-        tvUser.setText(nameUser); // Name
-        Glide.with(this).load(urlPhotoUser).centerCrop().override(40, 40).into(ivUser);
+       // tvUser.setText(nameUser); // Name
+       // Glide.with(this).load(urlPhotoUser).centerCrop().override(40, 40).into(ivUser);
         if (type.equalsIgnoreCase("image")) {
             videoplayer.setVisibility(View.GONE);
             toolbar.setVisibility(View.VISIBLE);

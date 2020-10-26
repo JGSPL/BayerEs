@@ -58,21 +58,22 @@
         </LinearLayout>
 
     </LinearLayout>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+   <!-- <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/message_swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout">
+        android:layout_above="@+id/linearLayout">-->
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:clipToPadding="false"
         android:paddingBottom="40dp"
+        android:layout_above="@+id/linearLayout"
         android:nestedScrollingEnabled="true"
         android:id="@+id/recycleViewMessageList"
         android:layout_alignParentTop="true" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <!--</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 
     <ProgressBar
         android:id="@+id/progressBar"

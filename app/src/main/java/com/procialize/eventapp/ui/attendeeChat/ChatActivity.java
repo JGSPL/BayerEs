@@ -170,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 30;
+    public static final int TOTAL_ITEM_TO_LOAD = 1000;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
@@ -261,8 +261,8 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
             attChat.setChatCount_receId(firebase_id);
-            attChat.setChat_count(1);
-            attChat.setChat_count_read("1");
+            attChat.setChat_count(0);
+            attChat.setChat_count_read("0");
             attChat.setChat_mess("");
             EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
         }
@@ -333,7 +333,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessageAdapter = new MessageAdapter(messagesList, userName/*,loginUser_name,sProfilepic*/, prof_pic);
 
         mMessagesList = (RecyclerView) findViewById(R.id.recycleViewMessageList);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
+        //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
         mLinearLayoutManager = new LinearLayoutManager(ChatActivity.this);
 
         // mMessagesList.setHasFixedSize(true);
@@ -454,6 +454,27 @@ public class ChatActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                             mMessageView.setText("");
+
+                            // Check for new messages
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                            //Send Text Notification
+                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                            NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                            NOTIFICATION_MESSAGE = firstMessage;
+
+                            JSONObject notification = new JSONObject();
+                            JSONObject notifcationBody = new JSONObject();
+                            try {
+                                notifcationBody.put("title", NOTIFICATION_TITLE);
+                                notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                notification.put("to", TOPIC);
+                                notification.put("data", notifcationBody);
+                            } catch (JSONException e) {
+                                Log.e(TAG, "onCreate: " + e.getMessage() );
+                            }
+                            sendNotification(notification);
                         }
 
                     }
@@ -597,7 +618,7 @@ public class ChatActivity extends AppCompatActivity {
                         loadMoreMessages();
                     } else {
                         Utility.createShortSnackBar(linMain, "No internet connection");
-                        mSwipeRefreshLayout.setRefreshing(false);
+                      //  mSwipeRefreshLayout.setRefreshing(false);
 
                     }
                 }
@@ -692,7 +713,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     mMessagesList.scrollToPosition(messagesList.size() - 1);
 
-                    mSwipeRefreshLayout.setRefreshing(false);
+                  //  mSwipeRefreshLayout.setRefreshing(false);
                 }
 
                 @Override
@@ -748,9 +769,9 @@ public class ChatActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 mMessageAdapter.notifyDataSetChanged();
 
-                mSwipeRefreshLayout.setRefreshing(false);
+              //  mSwipeRefreshLayout.setRefreshing(false);
 
-                mLinearLayoutManager.scrollToPositionWithOffset(30, 0);
+               // mLinearLayoutManager.scrollToPositionWithOffset(0, 0);
             }
 
             @Override
