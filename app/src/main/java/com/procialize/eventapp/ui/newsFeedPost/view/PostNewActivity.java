@@ -381,6 +381,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                         @Override
                                         public void onChanged(@Nullable LoginOrganizer result) {
                                             if (result != null) {
+
                                                 //btn_post.setEnabled(true);
                                                 String status = result.getHeader().get(0).getType();
                                                 String message = result.getHeader().get(0).getMsg();
@@ -389,7 +390,6 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                                 postNewsFeedViewModel.startNewsFeedFragment(PostNewActivity.this);
                                             } else {
                                                 btn_post.setEnabled(true);
-
                                                 Utility.createShortSnackBar(linear, "Error occured, Please try after some time..");
                                             }
                                         }
@@ -404,7 +404,10 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     } else {
                         try {
                             btn_post.setEnabled(false);
-                            postNewsFeedViewModel.insertMultimediaIntoDB(this, postText, resultList);
+                            Date date = new Date();
+                            long time = date.getTime();
+
+                            postNewsFeedViewModel.insertMultimediaIntoDB(this, postText, resultList,String.valueOf(time));
                             postNewsFeedViewModel.getDBStatus().observe(this, new Observer<Boolean>() {
                                 @Override
                                 public void onChanged(Boolean aBoolean) {

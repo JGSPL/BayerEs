@@ -53,6 +53,7 @@ import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.eventapp.ui.newsFeedLike.view.LikeActivity;
+import com.procialize.eventapp.ui.newsFeedPost.networking.PostNewsFeedRepository;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.service.BackgroundServiceToCompressMedia;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
@@ -102,6 +103,7 @@ public class NewsFeedViewModel extends ViewModel {
     private LiveData<List<UploadMultimedia>> nonCompressedMultimediaMutableLiveData = new MutableLiveData<>();
     private LiveData<List<UploadMultimedia>> newsFeedDataToUpload = new MutableLiveData<>();
     private LiveData<List<String>> folderUniqueIdMutableLiveData = new MutableLiveData<>();
+    private LiveData<Integer> folderUniqueIdCount = new MutableLiveData<>();
     MutableLiveData<LoginOrganizer> multimediaUploadLiveData = new MutableLiveData<>();
     MutableLiveData<Boolean> isUpdatedIntoDB = new MutableLiveData<>();
     private MutableLiveData<Boolean> mIsUpdating = new MutableLiveData<>();
@@ -532,6 +534,17 @@ public class NewsFeedViewModel extends ViewModel {
 
     public LiveData<List<String>> getFolderIdList() {
         return folderUniqueIdMutableLiveData;
+    }
+
+
+    //----------------get Folder Unique Id present------------------------
+    public void getIsUniqueIdPresent(Activity activity,String folderUniqueId) {
+        EventAppDB eventAppDB = EventAppDB.getDatabase(activity);
+        folderUniqueIdCount = eventAppDB.newsFeedUniqueIdUploadedStartedDao().isUniqueIdPresent(folderUniqueId);
+    }
+
+    public LiveData<Integer> isUniqueIdPresent() {
+        return folderUniqueIdCount;
     }
 
     //----------------Multimedia to compress------------------------
@@ -986,4 +999,11 @@ public class NewsFeedViewModel extends ViewModel {
             }
         }
     }
+
+
+    public void insertFolderUniqueIdIntoDB(Context context,String time) {
+        PostNewsFeedRepository postNewsFeedRepository = PostNewsFeedRepository.getInstance();
+        postNewsFeedRepository.insertFolderUniqueIdIntoDb(context,time);
+    }
+
 }

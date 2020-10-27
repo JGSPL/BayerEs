@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +23,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -56,7 +56,6 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LI
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.FIREBASEUSER_NAME;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.FIREBASE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.FIREBASE_NAME;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.FIREBASE_STATUS;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_CITY;
@@ -69,7 +68,6 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_LNAM
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBILE;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.ui.eventList.adapter.EventAdapter.isClickable;
 
 public class LoginActivity extends AppCompatActivity {
@@ -79,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
     public static RefreashToken refreashToken;
     private static String device_token;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    public static CountDownTimer countdowntimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +135,11 @@ public class LoginActivity extends AppCompatActivity {
                 String url = "https://www.theeventapp.in/terms-of-use";
                 view.getContext().startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url)));
                 //finish();
+            } else if (message.equalsIgnoreCase("OTP sent on register email id/mobile no")) {
+                Utility.hideKeyboard(view);
+                Utility.displayToast(view.getContext(), message);
+                countdowntimer = new CountDownTimerClass(30000, 1000);
+                countdowntimer.start();
             } else {
 //                Constant.displayToast(view.getContext(), message);
                 Utility.hideKeyboard(view);
@@ -145,6 +149,27 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
+    public static class CountDownTimerClass extends CountDownTimer {
+        public CountDownTimerClass(long startTime, long interval) {
+            super(startTime, interval);
+
+        }
+
+        @Override
+        public void onFinish() {
+            activityLoginBinding.btnResendOTP.setClickable(true);
+            activityLoginBinding.btnResendOTP.setText("Resend OTP");
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            int progress = (int) (millisUntilFinished / 1000);
+            activityLoginBinding.btnResendOTP.setText("Resend OTP : " + Integer.toString(progress));
+            activityLoginBinding.btnResendOTP.setClickable(false);
+        }
+    }
+
 
     public static void getEventDetails(final View view) {
 

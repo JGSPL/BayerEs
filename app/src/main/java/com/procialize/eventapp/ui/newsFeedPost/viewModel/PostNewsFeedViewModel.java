@@ -157,9 +157,9 @@ public class PostNewsFeedViewModel extends ViewModel {
         }
     }
 
-    public void insertMultimediaIntoDB(Context context, String postStatus, ArrayList<SelectedImages> resultList) {
+    public void insertMultimediaIntoDB(Context context, String postStatus, ArrayList<SelectedImages> resultList, String time) {
         postNewsFeedRepository = PostNewsFeedRepository.getInstance();
-        isInsertedIntoDB = postNewsFeedRepository.insertIntoDb(context, postStatus, resultList);
+        isInsertedIntoDB = postNewsFeedRepository.insertIntoDb(context, postStatus, resultList,time);
     }
 
     public MutableLiveData<Boolean> getDBStatus() {
@@ -216,6 +216,7 @@ public class PostNewsFeedViewModel extends ViewModel {
     {
         return attendeeList;
     }
+
 
 
 }

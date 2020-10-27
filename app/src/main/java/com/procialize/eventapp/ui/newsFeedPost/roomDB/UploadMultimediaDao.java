@@ -48,4 +48,5 @@ public interface UploadMultimediaDao {
     List<UploadMultimedia> getNonUploadMultimedia();
 /*    @Query("DELETE FROM tbl_upload_multimedia WHERE fld_folderUniqueId = :folderUniqueId")
     void updateIsUploded(String folderUniqueId);*/
+
 }
