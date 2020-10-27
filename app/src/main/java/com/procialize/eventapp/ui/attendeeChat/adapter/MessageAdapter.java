@@ -316,7 +316,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     String proxyUrl = proxy.getProxyUrl(mes.getMessage());
                     Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
 
-                    holder.videoplayer2.setUp(proxyUrl.trim(), ""
+                    holder.videoplayer2.setUp(mes.getMessage(), ""
                             , JzvdStd.SCREEN_NORMAL);
                     JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
 
@@ -435,7 +435,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     String proxyUrl = proxy.getProxyUrl(mes.getMessage());
                     Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
 
-                    holder.videoplayer.setUp(proxyUrl.trim(), ""
+                    holder.videoplayer.setUp(mes.getMessage(), ""
                             , JzvdStd.SCREEN_NORMAL);
                     JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
 
