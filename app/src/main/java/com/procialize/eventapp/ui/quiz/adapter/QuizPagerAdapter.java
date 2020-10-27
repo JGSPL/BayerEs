@@ -91,7 +91,7 @@ public class QuizPagerAdapter extends PagerAdapter {
 
         viewGroup = (RadioGroup) myImageLayout.findViewById(R.id.radiogroup);
 
-        txt_page.setText(String.valueOf(position + 1) + "/" + String.valueOf(q.size()));
+        txt_page.setText(String.valueOf(position + 1) + "/" + String.valueOf(quizList.size()));
 
         if (quizList.get(position).getReplied() == null) {
 
