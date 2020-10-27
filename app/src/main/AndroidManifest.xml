@@ -179,7 +179,7 @@
             android:name=".ui.livepoll.view.LivePollActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".ui.livepoll.view.PollDetailActivity"
             android:screenOrientation="portrait"

@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:id="@+id/linMain"
     android:layout_height="match_parent">
+
+
     <include layout="@layout/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+
         android:id="@+id/headerlayout"></include>
 
-    <include layout="@layout/import_activity_chat"></include>
+    <include layout="@layout/import_activity_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/headerlayout"
+        ></include>
 
-</LinearLayout>
+
+
+</RelativeLayout>
+<!--
+</ScrollView>-->

@@ -34,6 +34,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +42,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -223,6 +225,7 @@ public class ChatActivity extends AppCompatActivity {
         cd = ConnectionDetector.getInstance(this);
 
         getWindow().setBackgroundDrawable(getDrawable(R.drawable.chat_bg));
+       getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         //-----GETING FROM INTENT----
         // mChatUser = getIntent().getStringExtra("user_id");
@@ -231,7 +234,7 @@ public class ChatActivity extends AppCompatActivity {
         //String sProfilepic = getIntent().getStringExtra("sProfilepic");
         // final String prof_pic = getIntent().getStringExtra("rProfilepic");
 
-        final LinearLayout linMain = findViewById(R.id.linMain);
+        final RelativeLayout linMain = findViewById(R.id.linMain);
 
         Intent intent = getIntent();
         page = intent.getStringExtra("page");
@@ -286,9 +289,23 @@ public class ChatActivity extends AppCompatActivity {
         mUserLastSeen = (TextView) actionBarView.findViewById(R.id.textView5);
         mUserImage = (CircleImageView) actionBarView.findViewById(R.id.circleImageView);
         LinearLayout linBack = actionBarView.findViewById(R.id.linBack);
+        ImageView backImage = actionBarView.findViewById(R.id.backImage);
+
         ImageView ivattDetail = actionBarView.findViewById(R.id.ivattDetail);
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - " + city);
+
+        mMessageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMessageView.requestFocus();
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(ChatActivity.this.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+            }
+        });
 
 
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
@@ -1437,6 +1454,7 @@ public class ChatActivity extends AppCompatActivity {
         EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsReadZero( firebase_id);
 
         finish();
+
         KeyboardUtility.hideSoftKeyboard(this);
 
     }
