@@ -127,7 +127,7 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
         subBtn = root.findViewById(R.id.subBtn);
         PollBtn = root.findViewById(R.id.PollBtn);
         progressBar = root.findViewById(R.id.progressBar);
-        TextView title = root.findViewById(R.id.title);
+        TextView title = root.findViewById(R.id.txtTitle);
         subBtn.setOnClickListener(this);
         CommonFunction.showBackgroundImage(getContext(), relative);
 
