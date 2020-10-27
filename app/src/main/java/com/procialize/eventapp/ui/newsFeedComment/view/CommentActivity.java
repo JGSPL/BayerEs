@@ -1179,7 +1179,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             public void onChanged(LoginOrganizer loginOrganizer) {
                 Utility.createShortSnackBar(ll_main, "Success");
                 et_comment.setText("");
-                getComments(Integer.parseInt(tv_comment_count.getText().toString()) + 1);
+
+                int commentCount = Integer.parseInt(tv_comment_count.getText().toString()) + 1;
+                tv_comment_count.setText(commentCount + "");
+                getComments(Integer.parseInt(tv_comment_count.getText().toString()));
+
+                if (commentViewModel != null && commentViewModel.postCommentResponse().hasObservers()) {
+                    commentViewModel.postCommentResponse().removeObservers(CommentActivity.this);
+                }
             }
         });
     }
@@ -1280,6 +1287,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                             commentList.clear();
                             dialog.dismiss();
                             Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+
+                            commentAdapter.remove(commentAdapter.getItem(position));
+
                             int commentCount = Integer.parseInt(tv_comment_count.getText().toString()) - 1;
                             tv_comment_count.setText(commentCount + "");
                             getComments(Integer.parseInt(tv_comment_count.getText().toString()));
