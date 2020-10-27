@@ -397,7 +397,6 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                 } else {
                                     btn_post.setEnabled(true);
                                     Utility.createShortSnackBar(linear, "Please enter some status to post");
-
                                 }
                             }
                         });
