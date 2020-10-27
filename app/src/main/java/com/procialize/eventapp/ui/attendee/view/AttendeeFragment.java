@@ -82,7 +82,6 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     String eventid, colorActive;
     TextView pullrefresh;
     String picPath = "";
-
     // TODO: Rename and change types of parameters
 
     private APIService mAPIService;
