@@ -212,7 +212,7 @@ public class ChatActivity extends AppCompatActivity {
     String NOTIFICATION_TITLE;
     String NOTIFICATION_MESSAGE;
     String TOPIC;
-
+    ImageView backImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -289,7 +289,8 @@ public class ChatActivity extends AppCompatActivity {
         mUserLastSeen = (TextView) actionBarView.findViewById(R.id.textView5);
         mUserImage = (CircleImageView) actionBarView.findViewById(R.id.circleImageView);
         LinearLayout linBack = actionBarView.findViewById(R.id.linBack);
-        ImageView backImage = actionBarView.findViewById(R.id.backImage);
+         backImage = actionBarView.findViewById(R.id.backImage);
+        backImage.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_ATOP);
 
         ImageView ivattDetail = actionBarView.findViewById(R.id.ivattDetail);
         mUserName.setText(userName);
@@ -2028,6 +2029,8 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
 
         super.onResume();
+        backImage.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_ATOP);
+
         List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
         if (attenChatCount.size() > 0) {
             EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);
