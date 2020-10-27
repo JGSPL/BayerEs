@@ -1,0 +1,39 @@
+-- Merging decision tree log ---
+manifest
+ADDED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+	package
+		ADDED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:3:5-38
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+		ADDED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+	android:versionCode
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+		ADDED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:2:1-5:12
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+application
+ADDED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml:4:5-20
+uses-sdk
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+		ADDED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+		ADDED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml
+		INJECTED from G:\AndroidWorkspace\EventAppMVVM\library\src\main\AndroidManifest.xml

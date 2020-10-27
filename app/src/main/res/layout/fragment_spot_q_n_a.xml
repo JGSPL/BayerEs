@@ -8,9 +8,11 @@
     tools:context=".ui.spotQnA.view.SpotQnAFragment">
 
     <LinearLayout
+        android:id="@+id/ll_qna"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
 
         <TextView
             android:id="@+id/tv_ask_question"
@@ -38,9 +40,19 @@
                 android:id="@+id/rv_spot_qna"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="true"
                 tools:listitem="@layout/recycler_item_spot_qna" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_ask_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <include layout="@layout/fragment_ask_question"/>
+    </LinearLayout>
 </FrameLayout>

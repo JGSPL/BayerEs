@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -112,7 +113,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     ImageView iv_profile;
     int totalPages = 0;
     int newsFeedPageNumber = 1;
-    int newsFeedPageSize = 500;
+    int newsFeedPageSize = 30;
 
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -123,7 +124,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     String likeStatus = "";
     String strPath = "";
     private List<UploadMultimedia> mediaList;
-    String isFrom="";
+    String isFrom = "";
     public boolean isUploadingStarted = false;
 
     public static NewsFeedFragment newInstance() {
@@ -287,17 +288,17 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             });
         } else {
             //if(isFrom.equalsIgnoreCase("MainActivity")) {
-                if (connectionDetector.isConnectingToInternet()) {
-                    if (!isUploadingStarted) {
-                        List<UploadMultimedia> nonUploadedMultimedia = eventAppDB.uploadMultimediaDao().getNonUploadMultimedia();
-                        if (nonUploadedMultimedia.size() > 0) {
-                            showProgressBar();
-                            uploadData();
-                        }
+            if (connectionDetector.isConnectingToInternet()) {
+                if (!isUploadingStarted) {
+                    List<UploadMultimedia> nonUploadedMultimedia = eventAppDB.uploadMultimediaDao().getNonUploadMultimedia();
+                    if (nonUploadedMultimedia.size() > 0) {
+                        showProgressBar();
+                        uploadData();
                     }
-                } else {
-                    Utility.createShortSnackBar(cl_main, "No Internet Connection");
                 }
+            } else {
+                Utility.createShortSnackBar(cl_main, "No Internet Connection");
+            }
             //}
         }
         mReceiver = new UploadMultimediaBackgroundReceiver();
@@ -419,7 +420,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 }
                             }
 
-                           // setupRecyclerView();
+                            // setupRecyclerView();
                         }
 
                         @Override
@@ -445,52 +446,53 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     private void loadNextPage() {
-        if (totalPages >= currentPage) {
-            Log.d("loadNextPage", "loadNextPage: " + currentPage);
-            if (newsfeedViewModel != null /*&& newsfeedViewModel.getNewsRepository().hasObservers()*/) {
-                newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-            }
-            newsfeedApi = ApiUtils.getAPIService();
-
-            // newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
-            newsfeedApi.NewsFeedFetchMultiple(api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage)).enqueue(new Callback<FetchNewsfeedMultiple>() {
-                @Override
-                public void onResponse(Call<FetchNewsfeedMultiple> call,
-                                       Response<FetchNewsfeedMultiple> response) {
-                    if (response.isSuccessful()) {
-                        newsfeedAdapter.removeLoadingFooter();
-                        isLoading = false;
-                        String strEventList = response.body().getDetail();
-                        RefreashToken refreashToken = new RefreashToken(getActivity());
-                        String data = refreashToken.decryptedData(strEventList);
-                        Gson gson = new Gson();
-                        List<Newsfeed_detail> feedList = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {
-                        }.getType());
-
-
-                        // List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
-                        if (feedList.size() > 0) {
-                            newsfeedAdapter.addAll(feedList);
-                            insertIntoDb(feedList);
-                        }
-
-
-                        if (currentPage != totalPages) {
-                            newsfeedAdapter.addLoadingFooter();
-                            // newsfeedAdapter.notifyDataSetChanged();
-                        } else
-                            isLastPage = true;
-
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
-
-                }
-            });
+        //if (totalPages >= currentPage) {
+        Log.d("loadNextPage", "loadNextPage: " + currentPage);
+        if (newsfeedViewModel != null /*&& newsfeedViewModel.getNewsRepository().hasObservers()*/) {
+            newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
         }
+        newsfeedApi = ApiUtils.getAPIService();
+
+        // newsfeedViewModel.init(getActivity(), api_token, eventid, String.valueOf(newsFeedPageSize), String.valueOf(currentPage));
+        newsfeedApi.NewsFeedFetchMultiple(api_token, eventid, String.valueOf(newsFeedPageSize),
+                String.valueOf(currentPage)).enqueue(new Callback<FetchNewsfeedMultiple>() {
+            @Override
+            public void onResponse(Call<FetchNewsfeedMultiple> call,
+                                   Response<FetchNewsfeedMultiple> response) {
+                if (response.isSuccessful()) {
+                    newsfeedAdapter.removeLoadingFooter();
+                    isLoading = false;
+                    String strEventList = response.body().getDetail();
+                    RefreashToken refreashToken = new RefreashToken(getActivity());
+                    String data = refreashToken.decryptedData(strEventList);
+                    Gson gson = new Gson();
+                    List<Newsfeed_detail> feedList = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {
+                    }.getType());
+
+
+                    // List<Newsfeed_detail> feedList = response.body().getNewsfeed_detail();
+                    if (feedList.size() > 0) {
+                        newsfeedAdapter.addAll(feedList);
+                        insertIntoDb(feedList);
+                    }
+
+
+                    if (currentPage != totalPages) {
+                        newsfeedAdapter.addLoadingFooter();
+                        // newsfeedAdapter.notifyDataSetChanged();
+                    } else
+                        isLastPage = true;
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
+
+            }
+        });
+    }
 /*
         newsfeedViewModel.getNewsRepository().observe(this, new Observer<FetchNewsfeedMultiple>() {
             @Override
@@ -519,7 +521,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             }
         });
 */
-    }
+    //}
 
 
     public void insertIntoDb(List<Newsfeed_detail> feedList) {
@@ -744,78 +746,38 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     public void uploadData() {
         Log.d("Service End upload", "in upload");
         if (newsfeedViewModel != null) {
+
             newsfeedViewModel.getFolderUniqueId(getActivity());
             newsfeedViewModel.getFolderIdList().observe(getActivity(), new Observer<List<String>>() {
                 @Override
                 public void onChanged(List<String> folderUniqueIdList) {
                     for (int i = 0; i < folderUniqueIdList.size(); i++) {
                         final String folderUniqueId = folderUniqueIdList.get(i);
-                        //newsfeedViewModel.getNewsFeedDataAccrodingToFolderUniqueId(getActivity(), folderUniqueId);
-                        EventAppDB eventAppDB = EventAppDB.getDatabase(getActivity());
-                        List<UploadMultimedia> uploadMultimedia = eventAppDB.uploadMultimediaDao().getMultimediaToUpload(folderUniqueId);
-                        if (uploadMultimedia != null) {
-                            String postText = "";
-                            if (uploadMultimedia.size() > 0) {
-                                postText = uploadMultimedia.get(0).getPost_status();
-                                if (!postText.isEmpty()) {
-                                    uploadMultimedia.remove(0);
-                                }
-
-
-                                postNewsFeed(folderUniqueId, api_token, eventid, postText, uploadMultimedia);
-                                        /*newsfeedViewModel.sendPost(api_token, eventid, postText, uploadMultimedia);
-                                        newsfeedViewModel.getPostStatus().observe(getActivity(), new Observer<LoginOrganizer>() {
-                                            @Override
-                                            public void onChanged(@Nullable final LoginOrganizer result) {
-                                                if (result != null) {
-                                                    newsfeedViewModel.updateisUplodedIntoDB(getActivity(), folderUniqueId);
-
-                                                    new Handler().postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            String status = result.getHeader().get(0).getType();
-                                                            String message = result.getHeader().get(0).getMsg();
-                                                            Utility.createLongSnackBar(cl_main, message);
-
-                                                            if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
-                                                                newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
-                                                            }
-                                                            currentPage = PAGE_START;
-                                                            init();
-                                                            //isFromUploading = true;
-                                                            hideProgressBar();
-                                                        }
-                                                    }, 1500);
-                                                } else {
-                                                    Utility.createLongSnackBar(cl_main, "failure");
-                                                }
-                                                if (newsfeedViewModel != null && newsfeedViewModel.getPostStatus().hasObservers()) {
-                                                    newsfeedViewModel.getPostStatus().removeObservers(getActivity());
-                                                }
-                                            }
-                                        });*/
-                            } else {
-                                hideProgressBar();
-                            }
-                        }
-                        /*newsfeedViewModel.getNewsFeedToUpload().observeForever(new Observer<List<UploadMultimedia>>() {
+                        newsfeedViewModel.getIsUniqueIdPresent(getActivity(), folderUniqueId);
+                        newsfeedViewModel.isUniqueIdPresent().observe(getActivity(), new Observer<Integer>() {
                             @Override
-                            public void onChanged(List<UploadMultimedia> uploadMultimedia) {
-                                if (uploadMultimedia != null) {
-                                    String postText = "";
-                                    if (uploadMultimedia.size() > 0) {
-                                        postText = uploadMultimedia.get(0).getPost_status();
-                                        if (!postText.isEmpty()) {
-                                            uploadMultimedia.remove(0);
+                            public void onChanged(Integer integer) {
+                                if (integer <= 0) {
+                                    EventAppDB eventAppDB = EventAppDB.getDatabase(getActivity());
+                                    List<UploadMultimedia> uploadMultimedia = eventAppDB.uploadMultimediaDao().getMultimediaToUpload(folderUniqueId);
+                                    if (uploadMultimedia != null) {
+                                        String postText = "";
+                                        if (uploadMultimedia.size() > 0) {
+                                            postText = uploadMultimedia.get(0).getPost_status();
+                                            if (!postText.isEmpty()) {
+                                                uploadMultimedia.remove(0);
+                                            }
+                                            postNewsFeed(folderUniqueId, api_token, eventid, postText, uploadMultimedia);
+                                        } else {
+                                            hideProgressBar();
                                         }
-                                        postNewsFeed(folderUniqueId, api_token, eventid, postText, uploadMultimedia);
-
-                                    } else {
-                                        hideProgressBar();
                                     }
                                 }
+                                if (newsfeedViewModel != null && newsfeedViewModel.isUniqueIdPresent().hasObservers()) {
+                                    newsfeedViewModel.isUniqueIdPresent().removeObservers(NewsFeedFragment.this);
+                                }
                             }
-                        });*/
+                        });
                     }
                     if (newsfeedViewModel != null && newsfeedViewModel.getNewsRepository().hasObservers()) {
                         newsfeedViewModel.getNewsRepository().removeObservers(NewsFeedFragment.this);
@@ -885,6 +847,9 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
     }
 
     public void postNewsFeed(final String folderUniqueId, String token, String event_id, String Post_content, List<UploadMultimedia> resultList) {
+
+
+        newsfeedViewModel.insertFolderUniqueIdIntoDB(getActivity(),folderUniqueId);
         isUploadingStarted = true;
         newsfeedApi = ApiUtils.getAPIService();
         RequestBody mevent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
@@ -925,7 +890,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("media_file_thumb[]", fileName + ".png", RequestBody.create(MediaType.parse("image/png"), file));
             thumbParts.add(filePart);
         }
-        if ( newsfeedApi.postNewsFeed(token, mevent_id, mPost_content, parts, thumbParts).isExecuted())
+        if (newsfeedApi.postNewsFeed(token, mevent_id, mPost_content, parts, thumbParts).isExecuted())
             newsfeedApi.postNewsFeed(token, mevent_id, mPost_content, parts, thumbParts).cancel();
 
         newsfeedApi.postNewsFeed(token, mevent_id, mPost_content, parts, thumbParts)//,Media_file,Media_file_thumb)

@@ -22,7 +22,9 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.ui.newsFeedLike.model.LikeDetail;
+import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
@@ -37,6 +39,11 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> 
     private List<LikeDetail> likeDetails;
     private Context context;
     String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
+
+    private PaginationAdapterCallback mCallback;
+    private boolean retryPageLoad = false;
+    private boolean isLoadingAdded = false;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_name;
@@ -57,8 +64,9 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> 
     }
 
 
-    public LikeAdapter(Context context, List<LikeDetail> likeDetails) {
-        this.likeDetails = likeDetails;
+    public LikeAdapter(Context context/*, List<LikeDetail> likeDetails*/) {
+        //this.likeDetails = likeDetails;
+        this.likeDetails = new ArrayList<>();
         this.context = context;
         eventColor1 = SharedPreference.getPref(context, EVENT_COLOR_1);
         eventColor2 = SharedPreference.getPref(context, EVENT_COLOR_2);
@@ -79,6 +87,11 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         LikeDetail likeDetail = likeDetails.get(position);
 
+        if (likeDetail.getLike_id() != null) {
+            holder.itemView.setVisibility(View.VISIBLE);
+        } else {
+            holder.itemView.setVisibility(View.GONE);
+        }
         if (position + 1 == likeDetails.size()) {
             holder.v_divider.setVisibility(View.INVISIBLE);
         } else {
@@ -114,5 +127,77 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> 
     @Override
     public int getItemCount() {
         return likeDetails.size();
+    }
+
+    public void add(LikeDetail r) {
+        likeDetails.add(r);
+        notifyItemInserted(likeDetails.size() - 1);
+    }
+
+    public void addAll(List<LikeDetail> moveResults) {
+        for (LikeDetail result : moveResults) {
+            add(result);
+        }
+    }
+
+    public void remove(LikeDetail r) {
+        int position = likeDetails.indexOf(r);
+        if (position > -1) {
+            likeDetails.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void clear() {
+        isLoadingAdded = false;
+        while (getItemCount() > 0) {
+            remove(getItem(0));
+        }
+    }
+
+    public boolean isEmpty() {
+        return getItemCount() == 0;
+    }
+
+
+    public void addLoadingFooter() {
+        isLoadingAdded = true;
+        add(new LikeDetail());
+    }
+
+    public void removeLoadingFooter() {
+        try {
+            isLoadingAdded = false;
+
+            int position = likeDetails.size() - 1;
+            LikeDetail result = getItem(position);
+
+            if (result != null) {
+                likeDetails.remove(position);
+                notifyItemRemoved(position);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public LikeDetail getItem(int position) {
+        return likeDetails.get(position);
+    }
+
+    /**
+     * Displays Pagination retry footer view along with appropriate errorMsg
+     *
+     * @param show
+     * @param errorMsg to display if page load fails
+     */
+    public void showRetry(boolean show, @Nullable String errorMsg) {
+        retryPageLoad = show;
+        notifyItemChanged(likeDetails.size() - 1);
+    }
+
+
+    public List<LikeDetail> getLikeDetails() {
+        return likeDetails;
     }
 }

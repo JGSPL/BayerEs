@@ -23,4 +23,14 @@ public class FetchSpotQnA {
     public String getDetail() {
         return detail;
     }
+
+
+    @SerializedName("totalRecords")
+    @Expose
+    String totalRecords;
+
+    public String getTotalRecords() {
+        return totalRecords;
+    }
+
 }

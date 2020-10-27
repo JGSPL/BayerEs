@@ -89,24 +89,26 @@ public class AgendaFragment extends Fragment implements AgendaAdapter.AgendaAdap
             @Override
             public void onChanged(FetchAgenda event) {
                 swiperefresh_agenda.setRefreshing(false);
-                String strCommentList = event.getDetail();
-                RefreashToken refreashToken = new RefreashToken(getContext());
-                String data = refreashToken.decryptedData(strCommentList);
-                try {
-                    Gson gson = new Gson();
-                    List<AgendaList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {
-                    }.getType());
-                    if (agendaLists != null) {
-                        agendaDatabaseViewModel.deleteAllAgenda(getActivity());
-                        agendaDatabaseViewModel.insertIntoDb(getActivity(), agendaLists.get(0).getAgenda_list());
+                if(event!=null) {
+                    String strCommentList = event.getDetail();
+                    RefreashToken refreashToken = new RefreashToken(getContext());
+                    String data = refreashToken.decryptedData(strCommentList);
+                    try {
+                        Gson gson = new Gson();
+                        List<AgendaList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<AgendaList>>() {
+                        }.getType());
+                        if (agendaLists != null) {
+                            agendaDatabaseViewModel.deleteAllAgenda(getActivity());
+                            agendaDatabaseViewModel.insertIntoDb(getActivity(), agendaLists.get(0).getAgenda_list());
 
-                        if (agendaLists.size() > 0) {
-                            List<Agenda> agenda = agendaLists.get(0).getAgenda_list();
-                            setupAgendaAdapter(agenda);
+                            if (agendaLists.size() > 0) {
+                                List<Agenda> agenda = agendaLists.get(0).getAgenda_list();
+                                setupAgendaAdapter(agenda);
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
                 if (agendaViewModel != null && agendaViewModel.getAgendaList().hasObservers()) {
                     agendaViewModel.getAgendaList().removeObservers(getActivity());

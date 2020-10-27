@@ -1,151 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fl_main"
     tools:context=".ui.spotQnA.view.AskQuestionFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ask Question"
-            android:textColor="@color/white" />
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/ll_post_status"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:background="@color/black"
-            android:orientation="horizontal"
-            android:padding="1dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/et_question"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@color/white"
-                android:gravity="top|left"
-                android:hint="Enter your question.."
-                android:imeOptions="actionSend|flagNoEnterAction"
-                android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
-                android:maxLength="500"
-                android:maxLines="10"
-                android:minLines="6"
-                android:padding="10dp"
-                android:scrollbars="vertical"
-                android:textColorHint="@color/black"
-                android:textSize="15dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_count"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="right"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="12dp"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/tv_total_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="/500"
-                android:textColor="@color/white"
-                android:textSize="10sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal">
+                android:text="Ask Question"
+                android:textColor="@color/white" />
 
             <LinearLayout
-                android:id="@+id/ll_cancel"
+                android:id="@+id/ll_post_status"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@color/activetab"
-                android:gravity="center"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@color/black"
                 android:orientation="horizontal"
                 android:padding="1dp">
 
-                <LinearLayout
-                    android:id="@+id/ll_cancel_inner"
+                <EditText
+                    android:id="@+id/et_question"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:background="@color/white"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:id="@+id/tv_contact"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:elevation="0dp"
-                        android:gravity="center_vertical"
-                        android:minHeight="0dp"
-                        android:text="Cancel"
-                        android:textAllCaps="false"
-                        android:textColor="@color/activetab"
-                        android:textSize="@dimen/textsizesmall" />
-                </LinearLayout>
+                    android:gravity="top|left"
+                    android:hint="Enter your question.."
+                    android:imeOptions="actionSend|flagNoEnterAction"
+                    android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
+                    android:maxLength="500"
+                    android:maxLines="10"
+                    android:minLines="6"
+                    android:padding="10dp"
+                    android:scrollbars="vertical"
+                    android:textColorHint="@color/black"
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_send_question"
+                android:id="@+id/ll_count"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:background="@color/activetab"
-                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="right"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_send_question"
+                    android:id="@+id/tv_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_marginBottom="4dp"
-                    android:text="Send Question"
-                    android:textAllCaps="false"
+                    android:paddingLeft="12dp"
+                    android:text="0"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/textsizesmall" />
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/tv_total_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="/500"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_cancel"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/activetab"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="1dp">
+
+                    <LinearLayout
+                        android:id="@+id/ll_cancel_inner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/tv_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:elevation="0dp"
+                            android:gravity="center_vertical"
+                            android:minHeight="0dp"
+                            android:text="Cancel"
+                            android:textAllCaps="false"
+                            android:textColor="@color/activetab"
+                            android:textSize="@dimen/textsizesmall" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_send_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/activetab"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_send_question"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_marginBottom="4dp"
+                        android:text="Send Question"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/textsizesmall" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </FrameLayout>
