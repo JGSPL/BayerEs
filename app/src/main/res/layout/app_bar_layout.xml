@@ -20,6 +20,7 @@
         android:layout_width="22dp"
         android:layout_height="22dp"
         android:background="@mipmap/ic_back"
+        android:tint="@color/black"
         android:layout_marginRight="5dp"
         android:id="@+id/backImage" />
     </LinearLayout>

@@ -289,6 +289,8 @@ public class ChatActivity extends AppCompatActivity {
         mUserLastSeen = (TextView) actionBarView.findViewById(R.id.textView5);
         mUserImage = (CircleImageView) actionBarView.findViewById(R.id.circleImageView);
         LinearLayout linBack = actionBarView.findViewById(R.id.linBack);
+        ImageView backImage = actionBarView.findViewById(R.id.backImage);
+
         ImageView ivattDetail = actionBarView.findViewById(R.id.ivattDetail);
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - " + city);
