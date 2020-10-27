@@ -90,7 +90,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
             holder.rl_bg_image.setVisibility(View.GONE);
         }
 
-        if(quizList.get(position).getQuiz_question().getReplied().equalsIgnoreCase("0")){
+        if(quizList.get(position).getQuiz_question().get(0).getReplied().equalsIgnoreCase("0")){
             holder.progressBarCircle.setVisibility(View.INVISIBLE);
             holder.textViewTime.setVisibility(View.INVISIBLE);
             holder.quiz_status.setText("Tap to start");

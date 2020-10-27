@@ -273,7 +273,7 @@ public class LoginViewModel extends BaseObservable {
                 try {
                     if (response.isSuccessful()) {
                         activityLoginBinding.btnResendOTP.setClickable(true);
-                        setToastMessage(" OTP sent on register email id/mobile no");
+                        setToastMessage("OTP sent on register email id/mobile no");
                     } else {
                         activityLoginBinding.btnResendOTP.setClickable(true);
                         if (response.body() != null) {

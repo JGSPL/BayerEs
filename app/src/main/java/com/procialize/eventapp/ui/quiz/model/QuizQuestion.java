@@ -3,6 +3,8 @@ package com.procialize.eventapp.ui.quiz.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class QuizQuestion {
 
     @SerializedName("id")
@@ -72,4 +74,16 @@ public class QuizQuestion {
     @SerializedName("selected_option")
     @Expose
     String selected_option;
+
+    public List<QuizOption> getQuiz_option() {
+        return quiz_option;
+    }
+
+    public void setQuiz_option(List<QuizOption> quiz_option) {
+        this.quiz_option = quiz_option;
+    }
+
+    @SerializedName("quiz_option")
+    @Expose
+    List<QuizOption> quiz_option;
 }

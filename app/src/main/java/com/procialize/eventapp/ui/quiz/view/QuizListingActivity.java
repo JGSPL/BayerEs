@@ -166,6 +166,7 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
     public void onMoreSelected(QuizList quiz, final int position) {
         Intent intent = new Intent(QuizListingActivity.this, QuizDetailActivity.class);
         intent.putExtra("timer", quiz.getTimer());
+        intent.putExtra("folder_id", quiz.getFolder_id());
         intent.putExtra("folder_name", quiz.getFolder_name());
         startActivity(intent);
     }

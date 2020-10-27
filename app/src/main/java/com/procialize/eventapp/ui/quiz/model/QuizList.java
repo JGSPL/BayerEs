@@ -7,9 +7,17 @@ import java.util.List;
 
 public class QuizList {
 
+    public List<QuizQuestion> getQuiz_question() {
+        return quiz_question;
+    }
+
+    public void setQuiz_question(List<QuizQuestion> quiz_question) {
+        this.quiz_question = quiz_question;
+    }
+
     @SerializedName("quiz_question")
     @Expose
-    QuizQuestion quiz_question;
+    List<QuizQuestion> quiz_question;
 
     @SerializedName("folder_name")
     @Expose
@@ -59,13 +67,6 @@ public class QuizList {
     @Expose
     String timer;
 
-    public QuizQuestion getQuiz_question() {
-        return quiz_question;
-    }
-
-    public void setQuiz_question(QuizQuestion quiz_question) {
-        this.quiz_question = quiz_question;
-    }
 
     public String getFolder_name() {
         return folder_name;
@@ -90,17 +91,4 @@ public class QuizList {
     public void setQuiz_id(String quiz_id) {
         this.quiz_id = quiz_id;
     }
-
-    public List<QuizOption> getQuiz_option() {
-        return quiz_option;
-    }
-
-    public void setQuiz_option(List<QuizOption> quiz_option) {
-        this.quiz_option = quiz_option;
-    }
-
-    @SerializedName("quiz_option")
-    @Expose
-    List<QuizOption> quiz_option;
-
 }

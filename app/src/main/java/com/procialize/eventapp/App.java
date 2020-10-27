@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
-
+import androidx.lifecycle.LifecycleObserver;
 import com.crashlytics.android.Crashlytics;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.KLog;
@@ -14,15 +14,26 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.procialize.eventapp.Constants.Constant;
 import com.procialize.eventapp.Utility.Utils;
-
+import com.procialize.eventapp.ui.quiz.model.QuizOption;
+import java.util.ArrayList;
 import io.fabric.sdk.android.Fabric;
 
 /**
  * @author Alexey Danilov (danikula@gmail.com).
  */
-public class App extends Application {
+public class App extends Application implements LifecycleObserver {
 
     private HttpProxyCacheServer proxy;
+
+    public ArrayList<QuizOption> getQuizOptionList() {
+        return quizOptionList;
+    }
+
+    public void setQuizOptionList(ArrayList<QuizOption> quizOptionList) {
+        this.quizOptionList = quizOptionList;
+    }
+
+    private ArrayList<QuizOption> quizOptionList = new ArrayList<QuizOption>();
 
     @Override
     public void onCreate() {
