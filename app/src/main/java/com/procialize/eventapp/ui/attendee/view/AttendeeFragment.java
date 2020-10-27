@@ -353,6 +353,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
             @Override
             public void onChanged(FetchAttendee event) {
                 //List<Attendee> eventLists = event.getAttandeeList();
+                if(event.getDetail()!=null){
 
                 String strCommentList =event.getDetail();
                 RefreashToken refreashToken = new RefreashToken(getContext());
@@ -383,6 +384,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
                     progressBar.setVisibility(View.GONE);
 
                     setupEventAdapter(eventLists);
+                }
 
 
 

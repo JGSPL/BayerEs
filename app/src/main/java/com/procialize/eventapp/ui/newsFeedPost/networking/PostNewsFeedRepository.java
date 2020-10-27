@@ -13,6 +13,7 @@ import com.procialize.eventapp.Database.EventAppDB;
 import com.procialize.eventapp.GetterSetter.Header;
 import com.procialize.eventapp.GetterSetter.LoginOrganizer;
 import com.procialize.eventapp.ui.newsFeedPost.model.SelectedImages;
+import com.procialize.eventapp.ui.newsFeedPost.roomDB.NewsFeedUniqueIdUploadedStarted;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.eventapp.ui.newsFeedPost.roomDB.UploadMultimediaDao;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
@@ -85,12 +86,12 @@ public class PostNewsFeedRepository {
         return newsData;
     }
 
-    public MutableLiveData<Boolean> insertIntoDb(Context context, String postStatus, ArrayList<SelectedImages> resultList) {
+    public MutableLiveData<Boolean> insertIntoDb(Context context, String postStatus, ArrayList<SelectedImages> resultList,String time) {
         eventAppDB = EventAppDB.getDatabase(context);
 
         int previousCount = eventAppDB.uploadMultimediaDao().getRowCount();
-        Date date = new Date();
-        long time = date.getTime();
+      /*  Date date = new Date();
+        long time = date.getTime();*/
 
         if (!postStatus.isEmpty()) {
             UploadMultimedia uploadMultimediaPostStatus = new UploadMultimedia();
@@ -101,7 +102,7 @@ public class PostNewsFeedRepository {
             uploadMultimediaPostStatus.setIs_uploaded("0");
             uploadMultimediaPostStatus.setMedia_type("");
             uploadMultimediaPostStatus.setCompressedPath("");
-            uploadMultimediaPostStatus.setFolderUniqueId(String.valueOf(time));
+            uploadMultimediaPostStatus.setFolderUniqueId(time);
             uploadMultimediaPostStatus.setMimeType("");
             eventAppDB.uploadMultimediaDao().insertMultimediaToUpload(uploadMultimediaPostStatus);
         }
@@ -131,4 +132,15 @@ public class PostNewsFeedRepository {
             return isInserted;
         }
     }
+
+    public void insertFolderUniqueIdIntoDb(Context context,String time) {
+        eventAppDB = EventAppDB.getDatabase(context);
+       /* Date date = new Date();
+        long time = date.getTime();*/
+
+        NewsFeedUniqueIdUploadedStarted newsFeedUniqueIdUploadedStarted = new NewsFeedUniqueIdUploadedStarted();
+        newsFeedUniqueIdUploadedStarted.setFolder_uniqueid(time);
+        eventAppDB.newsFeedUniqueIdUploadedStartedDao().insertFolderUniqueId(newsFeedUniqueIdUploadedStarted);
+    }
+
 }

@@ -34,6 +34,7 @@ import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 
 public class FullScreenImageActivity extends AppCompatActivity {
@@ -45,7 +46,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
     String type;
     JzvdStd videoplayer;
     RelativeLayout rlMain;
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +83,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
     private void bindViews() {
         progressDialog = new ProgressDialog(this);
         mImageView = (TouchImageView) findViewById(R.id.imageView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -90,7 +91,16 @@ public class FullScreenImageActivity extends AppCompatActivity {
         tvUser = (TextView) toolbar.findViewById(R.id.title);
         videoplayer = findViewById(R.id.videoplayer);
         rlMain = findViewById(R.id.rlMain);
-        ivUser.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
+        //iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        toolbar.getNavigationIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+
         CommonFunction.showBackgroundImage(this, rlMain);
 
     }
@@ -103,10 +113,12 @@ public class FullScreenImageActivity extends AppCompatActivity {
         type = getIntent().getStringExtra("type");
 
         Log.i("TAG", "imagem recebida " + urlPhotoClick);
-        tvUser.setText(nameUser); // Name
-        Glide.with(this).load(urlPhotoUser).centerCrop().override(40, 40).into(ivUser);
+       // tvUser.setText(nameUser); // Name
+       // Glide.with(this).load(urlPhotoUser).centerCrop().override(40, 40).into(ivUser);
         if (type.equalsIgnoreCase("image")) {
             videoplayer.setVisibility(View.GONE);
+            toolbar.setVisibility(View.VISIBLE);
+
             mImageView.setVisibility(View.VISIBLE);
             Glide.with(this).load((urlPhotoClick))
                     .placeholder(R.drawable.gallery_placeholder)
@@ -129,6 +141,7 @@ public class FullScreenImageActivity extends AppCompatActivity {
             videoplayer.setUp(urlPhotoClick, ""
                     , JzvdStd.SCREEN_NORMAL);
             JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
+            toolbar.setVisibility(View.GONE);
 
 
 

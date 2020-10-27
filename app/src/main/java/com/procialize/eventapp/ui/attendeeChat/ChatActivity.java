@@ -34,6 +34,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -169,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 25;
+    public static final int TOTAL_ITEM_TO_LOAD = 1000;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
@@ -213,7 +214,6 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_chat);
         mChatAddButton = (ImageView) findViewById(R.id.chatAddButton);
         mChatSendButton = (ImageView) findViewById(R.id.chatSendButton);
@@ -235,6 +235,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         page = intent.getStringExtra("page");
+        firstMessage = intent.getStringExtra("firstMessage");
         attendee = (Attendee) getIntent().getSerializableExtra("Attendee");
 
         final String userName = attendee.getFirst_name();
@@ -254,18 +255,19 @@ public class ChatActivity extends AppCompatActivity {
         List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
         if (attenChatCount.size() > 0) {
             EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);
+            EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
+
 
         } else {
             Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
             attChat.setChatCount_receId(firebase_id);
-            attChat.setChat_count(1);
-            attChat.setChat_count_read("1");
+            attChat.setChat_count(0);
+            attChat.setChat_count_read("0");
             attChat.setChat_mess("");
             EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
         }
 
-        EventAppDB.getDatabase(this).attendeeChatDao().updateIsRead(firebase_id);
-        EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
+       // EventAppDB.getDatabase(this).attendeeChatDao().updateIsRead(firebase_id);
        // int unreadMsgCount = EventAppDB.getDatabase(this).attendeeChatDao().getChatCountId(firebase_id);
 
 
@@ -288,16 +290,6 @@ public class ChatActivity extends AppCompatActivity {
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - " + city);
 
-       refreshedToken  = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_GCM_ID);
-        final JSONArray jsonArray = new JSONArray();
-        jsonArray.put(refreshedToken);
-      //  jsonArray.put("eaYckEgz31Y:APA91bH44N6C4UyGnZ7jwx6B5MMv0eEpd8vT4TktTIVjiRzBsYgyzR_HL8J9my4ocbh6YTVLSU92fXLGlmlw6nN8fJZ6DmDrjq47itB-MbtF_Zu8W7oUHIyNUZUwjEjY7-CiLhSE3ZX_");
-
-        // mUserName.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        //lineaeSend.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1));
-        // mChatAddButton.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        //  mChatSendButton.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)), PorterDuff.Mode.SRC_ATOP);
 
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
         linBack.setOnClickListener(new View.OnClickListener() {
@@ -341,7 +333,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessageAdapter = new MessageAdapter(messagesList, userName/*,loginUser_name,sProfilepic*/, prof_pic);
 
         mMessagesList = (RecyclerView) findViewById(R.id.recycleViewMessageList);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
+        //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.message_swipe_layout);
         mLinearLayoutManager = new LinearLayoutManager(ChatActivity.this);
 
         // mMessagesList.setHasFixedSize(true);
@@ -462,6 +454,27 @@ public class ChatActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(ChatActivity.this, "Message sent", Toast.LENGTH_SHORT).show();
                             mMessageView.setText("");
+
+                            // Check for new messages
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                            //Send Text Notification
+                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                            NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
+                            NOTIFICATION_MESSAGE = firstMessage;
+
+                            JSONObject notification = new JSONObject();
+                            JSONObject notifcationBody = new JSONObject();
+                            try {
+                                notifcationBody.put("title", NOTIFICATION_TITLE);
+                                notifcationBody.put("message", NOTIFICATION_MESSAGE);
+
+                                notification.put("to", TOPIC);
+                                notification.put("data", notifcationBody);
+                            } catch (JSONException e) {
+                                Log.e(TAG, "onCreate: " + e.getMessage() );
+                            }
+                            sendNotification(notification);
                         }
 
                     }
@@ -567,6 +580,9 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         //----LOADING 10 MESSAGES ON SWIPE REFRESH----
+
+
+/*
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -582,17 +598,91 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
 
-               /*if(mSwipeRefreshLayout.isRefreshing()==true){
-                   mSwipeRefreshLayout.setRefreshing(false);
-               }*/
-               /* if(messagesListds2.size()>0){
-                    messagesList.clear();
-                }
-                loadMessages();*/
-
 
             }
         });
+*/
+
+
+        mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(-1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
+                    Log.d("-----","end");
+                    if (cd.isConnectingToInternet()) {
+
+                        itemPos = 0;
+                        mCurrentPage++;
+                        loadMoreMessages();
+                    } else {
+                        Utility.createShortSnackBar(linMain, "No internet connection");
+                      //  mSwipeRefreshLayout.setRefreshing(false);
+
+                    }
+                }
+            }
+        });
+
+
+
+/*
+        mMessagesList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            int ydy = 0;
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int offset = dy - ydy;
+                ydy = dy;
+                boolean shouldRefresh = (mLinearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0)
+                        && (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING) && offset > 30;
+                if (shouldRefresh) {
+                    //swipeRefreshLayout.setRefreshing(true);
+                    //Refresh to load data here.
+                    */
+/*if (cd.isConnectingToInternet()) {
+
+                        itemPos = 0;
+                        mCurrentPage++;
+                        loadMoreMessages();
+                    } else {
+                        Utility.createShortSnackBar(linMain, "No internet connection");
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                    }*//*
+
+                    return;
+                }
+                boolean shouldPullUpRefresh = mLinearLayoutManager.findLastCompletelyVisibleItemPosition() == mLinearLayoutManager.getChildCount() - 1
+                        && recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING && offset < -30;
+                if (shouldPullUpRefresh) {
+                    //swipeRefreshLayout.setRefreshing(true);
+                    //refresh to load data here.
+                    if (cd.isConnectingToInternet()) {
+
+                        itemPos = 0;
+                        mCurrentPage++;
+                        loadMoreMessages();
+                    } else {
+                        Utility.createShortSnackBar(linMain, "No internet connection");
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                    }
+
+
+                    return;
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+*/
 
     }
 
@@ -623,7 +713,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     mMessagesList.scrollToPosition(messagesList.size() - 1);
 
-                    mSwipeRefreshLayout.setRefreshing(false);
+                  //  mSwipeRefreshLayout.setRefreshing(false);
                 }
 
                 @Override
@@ -679,9 +769,9 @@ public class ChatActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 mMessageAdapter.notifyDataSetChanged();
 
-                mSwipeRefreshLayout.setRefreshing(false);
+              //  mSwipeRefreshLayout.setRefreshing(false);
 
-                mLinearLayoutManager.scrollToPositionWithOffset(10, 0);
+               // mLinearLayoutManager.scrollToPositionWithOffset(0, 0);
             }
 
             @Override
@@ -1489,8 +1579,7 @@ public class ChatActivity extends AppCompatActivity {
 
                             if (task.isSuccessful()) {
 
-                                @SuppressWarnings("VisibleForTests")
-                                String download_url = task.getResult().getDownloadUrl().toString();
+                                @SuppressWarnings("VisibleForTests") final String download_url = task.getResult().getDownloadUrl().toString();
 
                                 Map messageMap = new HashMap();
                                 messageMap.put("message", download_url);
@@ -1524,13 +1613,14 @@ public class ChatActivity extends AppCompatActivity {
                                             //Send Text Notification
                                             TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
                                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
-                                            NOTIFICATION_MESSAGE = "Image";
+                                            NOTIFICATION_MESSAGE = "image";
 
                                             JSONObject notification = new JSONObject();
                                             JSONObject notifcationBody = new JSONObject();
                                             try {
                                                 notifcationBody.put("title", NOTIFICATION_TITLE);
                                                 notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                                                notifcationBody.put("image", download_url);
 
                                                 notification.put("to", TOPIC);
                                                 notification.put("data", notifcationBody);
@@ -1916,76 +2006,35 @@ public class ChatActivity extends AppCompatActivity {
         };
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
+        if (attenChatCount.size() > 0) {
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);
+            EventAppDB.getDatabase(this).attendeeChatDao().updateChatCount(0, firebase_id);
 
 
-    /*public void sendMessage(final JSONArray recipients, final String title, final String body, final String icon, final String message) {
-
-        new AsyncTask<String, String, String>() {
-            @Override
-            protected String doInBackground(String... params) {
-                try {
-                    JSONObject root = new JSONObject();
-                    JSONObject notification = new JSONObject();
-                    notification.put("body", body);
-                    notification.put("title", title);
-                    notification.put("icon", icon);
-
-                    JSONObject data = new JSONObject();
-                    data.put("message", message);
-                    root.put("notification", notification);
-                    root.put("data", data);
-                    root.put("registration_ids", recipients);
-
-                    String result = postToFCM(root.toString());
-                    Log.d("Main Activity", "Result: " + result);
-                    return result;
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                try {
-                    JSONObject resultJson = new JSONObject(result);
-                    int success, failure;
-                    success = resultJson.getInt("success");
-                    failure = resultJson.getInt("failure");
-                    Toast.makeText(ChatActivity.this, "Message Success: " + success + "Message Failed: " + failure, Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(ChatActivity.this, "Message Failed, Unknown error occurred.", Toast.LENGTH_LONG).show();
-                }
-            }
-        }.execute();
+        } else {
+            Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
+            attChat.setChatCount_receId(firebase_id);
+            attChat.setChat_count(1);
+            attChat.setChat_count_read("1");
+            attChat.setChat_mess("");
+            EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
+        }
     }
 
-    String postToFCM(String bodyString) throws IOException {
+    @Override
+    protected void onPause() {
 
+        super.onPause();
+        EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsReadZero( firebase_id);
 
-
-        String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
-        final MediaType JSON
-                = MediaType.parse("application/json; charset=utf-8");
-
-        RequestBody body = RequestBody.create(JSON, bodyString);
-        Request request = new Request.Builder()
-                .url(FCM_MESSAGE_URL)
-                .post(body)
-                .addHeader("Authorization", "key=" + "AAAA4xkbUmY:APA91bHJtoRFEI_jxvR7jJEIA0M-Wa4adoRiLGWIMiWdAgEg5CLjsJBRuByvHHj-764l5zVRav8N_qwn_etLCzUHsL-xfhJTrQQFSYkHRurjID5haW2TpfZF1JRDw0y4vKBoqVg6Lldb")
-                .build();
-        Response response = mClient.newCall(request).execute();
-        return response.body().string();
     }
-*/
+
 
 }
 
 
- /*
-            ActionBar action = getSupportActionBar();
-            LayoutInflater inflater = (LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
-            View actionBarView = inflater.inflate(R.layout.app_bar_layout,null);
-            action.setCustomView(actionBarView);
-        */

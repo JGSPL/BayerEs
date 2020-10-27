@@ -2,32 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlMain"
-    android:layout_height="match_parent"
-    android:background="#424242"
-   >
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/colorwhite"
+        app:navigationIcon="@mipmap/ic_back"
+        android:background="@android:color/transparent"
         android:elevation="10dp"
-        tools:ignore="UnusedAttribute">
+        >
 
         <ImageView
             android:id="@+id/avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_back"
+            android:visibility="gone"
             android:layout_marginEnd="@dimen/spacing_double"
             android:layout_marginRight="@dimen/spacing_double"
-            tools:ignore="UnusedAttribute" />
+             />
 
         <TextView android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:ignore="PrivateResource"
+
             android:layout_gravity="center_vertical|start" />
 
     </androidx.appcompat.widget.Toolbar>

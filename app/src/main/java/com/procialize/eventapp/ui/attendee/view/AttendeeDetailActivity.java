@@ -300,6 +300,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                         attendeeDatabaseViewModel.insertIntoDbSingle(AttendeeDetailActivity.this,attendee);
                                         startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
                                                 .putExtra("page", "AttendeeDetail")
+                                                .putExtra("firstMessage", message)
                                                 .putExtra("Attendee", (Serializable) attendee));
 
                                         /*Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
@@ -363,6 +364,7 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                         attendeeDatabaseViewModel.insertIntoDbSingle(AttendeeDetailActivity.this,attendee);
                                         startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
                                                 .putExtra("page", "AttendeeDetail")
+                                                .putExtra("firstMessage", message)
                                                 .putExtra("Attendee", (Serializable) attendee));
 
                                         finish();

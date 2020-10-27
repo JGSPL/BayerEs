@@ -40,6 +40,7 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.attendeeChat.activity.FullScreenImageActivity;
 import com.procialize.eventapp.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
+import com.procialize.eventapp.ui.newsFeedDetails.view.NewsfeedDetailsInLandscape;
 import com.procialize.eventapp.ui.newsfeed.model.News_feed_media;
 import com.procialize.eventapp.ui.newsfeed.view.LandscapeVideoActivity;
 
@@ -258,7 +259,17 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
             }
         });
 
-
+        videoview.fullscreenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ChatActivity.videoflag = "1";
+                JzvdStd.releaseAllVideos();
+                Intent comment = new Intent(context, NewsfeedDetailsInLandscape.class);
+                comment.putExtra("urlPhotoClick", news_feed_media.get(position).getMedia_file());
+                comment.putExtra("thumbImage", thumbImages.get(position));
+                context.startActivity(comment);
+            }
+        });
         return myImageLayout;
     }
 

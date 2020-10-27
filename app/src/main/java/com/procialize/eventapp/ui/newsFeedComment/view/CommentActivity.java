@@ -46,6 +46,7 @@ import androidx.core.content.FileProvider;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -91,6 +92,7 @@ import com.procialize.eventapp.ui.newsFeedComment.model.GifResult;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsFeedComment.viewModel.CommentViewModel;
 import com.procialize.eventapp.ui.newsFeedPost.viewModel.PostNewsFeedViewModel;
+import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.newsfeed.adapter.SwipeMultimediaAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.newsfeed.model.Mention;
@@ -98,6 +100,11 @@ import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.networking.NewsfeedRepository;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
+import com.procialize.eventapp.ui.spotQnA.adapter.SpotQnAAdapter;
+import com.procialize.eventapp.ui.spotQnA.model.FetchSpotQnA;
+import com.procialize.eventapp.ui.spotQnA.model.SpotQnA;
+import com.procialize.eventapp.ui.spotQnA.model.SpotQnAList;
+import com.procialize.eventapp.ui.spotQnA.view.SpotQnAFragment;
 import com.procialize.eventapp.ui.tagging.adapter.UsersAdapter;
 import com.procialize.eventapp.ui.tagging.model.TaggingComment;
 
@@ -135,6 +142,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.IS_GOD;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.NEWS_FEED_MEDIA_PATH;
+import static com.procialize.eventapp.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 import static com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment.newsfeedAdapter;
 
 
@@ -176,6 +184,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     Dialog myDialog;
     String spannedString;
     String postStatus;
+    CommentAdapter commentAdapter;
+    LinearLayoutManager linearLayoutManager;
+    int pageSize = 30;
+    int totalPages = 0;
+    private int currentPage = PAGE_START;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -638,6 +653,40 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
         /*iv_comments.setImageDrawable(getResources().getDrawable(R.drawable.ic_comment));
         iv_share.setImageDrawable(getResources().getDrawable(R.drawable.ic_share));*/
+
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(CommentActivity.this);
+        rv_comments.setLayoutManager(mLayoutManager);
+        commentAdapter = new CommentAdapter(this/*, FragmentNewsFeed.this*/, CommentActivity.this);
+        linearLayoutManager = new LinearLayoutManager(CommentActivity.this, LinearLayoutManager.VERTICAL, false);
+        rv_comments.setLayoutManager(linearLayoutManager);
+        rv_comments.setAdapter(commentAdapter);
+        commentAdapter.notifyDataSetChanged();
+
+        rv_comments.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+            @Override
+            protected void loadMoreItems() {
+                isLoading = true;
+                currentPage += 1;
+                Log.e("currentPage", currentPage + "");
+                loadNextPage();
+            }
+
+            @Override
+            public int getTotalPageCount() {
+                return totalPages;
+            }
+
+            @Override
+            public boolean isLastPage() {
+                return isLastPage;
+            }
+
+            @Override
+            public boolean isLoading() {
+                return isLoading;
+            }
+        });
+
         getComments(Integer.parseInt(tv_comment_count.getText().toString()));
         setDynamicColor();
 
@@ -662,7 +711,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         if (connectionDetector.isConnectingToInternet()) {
             String newsFeedId = newsfeed_detail.getNews_feed_id();
             ApiUtils.getAPIService().getComment(api_token, event_id,
-                    newsFeedId, "1000", "1")
+                    newsFeedId, pageSize + "",
+                    currentPage + "")
                     .enqueue(new Callback<Comment>() {
                         @Override
                         public void onResponse(Call<Comment> call, Response<Comment> response) {
@@ -677,18 +727,44 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
                                 // commentList = response.body().getCommentDetails();
                                 if (commentList != null) {
+                                    String totRecords = response.body().getTotal_records();
+                                    Long longTotalRecords = Long.parseLong(totRecords);
+                                    if (longTotalRecords < pageSize) {
+                                        totalPages = 1;
+                                    } else {
+                                        if ((int) (longTotalRecords % pageSize) == 0) {
+                                            totalPages = (int) (longTotalRecords / pageSize);
+                                        } else {
+                                            totalPages = (int) (longTotalRecords / pageSize) + 1;
+                                        }
+                                    }
+                                    Log.e("totalPages", "" + totalPages);
+
+                                    commentAdapter.getCommentDetails().clear();
+                                    commentAdapter.notifyDataSetChanged();
+                                    commentAdapter.addAll(commentList);
                                     setupCommentAdapter(commentList);
+
+                                    if (currentPage <= totalPages)
+                                        commentAdapter.addLoadingFooter();
+                                    else isLastPage = true;
+                                    //setupCommentAdapter(commentList);
                                     //showCommentCount(commentList);
                                     showCommentCount(commentCount);
 
                                     List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
                                     newsfeed_details.get(positionOfList).setTotal_comments(commentCount + "");
                                     newsfeedAdapter.notifyDataSetChanged();
-
                                 } else {
                                     commentList = new ArrayList<>();
+                                    //setupCommentAdapter(commentList);
+                                    commentAdapter.addAll(commentList);
                                     setupCommentAdapter(commentList);
-                                    //showCommentCount(commentList);
+
+                                    if (currentPage <= totalPages)
+                                        commentAdapter.addLoadingFooter();
+                                    else isLastPage = true;
+
                                     showCommentCount(commentCount);
 
                                     List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
@@ -751,10 +827,20 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void setupCommentAdapter(List<CommentDetail> commentList) {
-        CommentAdapter commentAdapter = new CommentAdapter(CommentActivity.this, commentList, CommentActivity.this);
+
+        if (commentAdapter == null) {
+           /* newsfeedAdapter = new NewsFeedAdapter(getContext(), newsfeedArrayList, NewsFeedFragment.this);
+            recycler_feed.setLayoutManager(new LinearLayoutManager(getContext()));*/
+            rv_comments.setAdapter(commentAdapter);
+            rv_comments.setItemAnimator(new DefaultItemAnimator());
+            rv_comments.setNestedScrollingEnabled(true);
+        } else {
+            commentAdapter.notifyDataSetChanged();
+        }
+        /*CommentAdapter commentAdapter = new CommentAdapter(CommentActivity.this, commentList, CommentActivity.this);
         rv_comments.setLayoutManager(new LinearLayoutManager(this));
         rv_comments.setAdapter(commentAdapter);
-        commentAdapter.notifyDataSetChanged();
+        commentAdapter.notifyDataSetChanged();*/
     }
 
     @Override
@@ -1952,4 +2038,65 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             return null;
         }
     }
+
+    public void loadNextPage() {
+        Log.e("pageNumber", "loadNextPage: " + currentPage);
+        if (connectionDetector.isConnectingToInternet()) {
+            String newsFeedId = newsfeed_detail.getNews_feed_id();
+            ApiUtils.getAPIService().getComment(api_token, event_id,
+                    newsFeedId, pageSize + "",
+                    currentPage + "")
+                    .enqueue(new Callback<Comment>() {
+                        @Override
+                        public void onResponse(Call<Comment> call, Response<Comment> response) {
+                            if (response.isSuccessful()) {
+                                commentAdapter.removeLoadingFooter();
+                                isLoading = false;
+                                String strCommentList = response.body().getDetail();
+                                RefreashToken refreashToken = new RefreashToken(CommentActivity.this);
+                                String data = refreashToken.decryptedData(strCommentList);
+                                Gson gson = new Gson();
+                                commentList = gson.fromJson(data, new TypeToken<ArrayList<CommentDetail>>() {
+                                }.getType());
+
+                                if (commentList != null) {
+                                    commentAdapter.addAll(commentList);
+                                    setupCommentAdapter(commentList);
+
+                                    if (currentPage <= totalPages)
+                                        commentAdapter.addLoadingFooter();
+                                    else isLastPage = true;
+                                    String totRecords = response.body().getTotal_records();
+
+                                    showCommentCount(Integer.parseInt(totRecords));
+
+                                    List<Newsfeed_detail> newsfeed_details = newsfeedAdapter.getNewsFeedList();
+                                    newsfeed_details.get(positionOfList).setTotal_comments(totRecords);
+                                    newsfeedAdapter.notifyDataSetChanged();
+
+                                } else {
+                                    commentList = new ArrayList<>();
+                                    //setupCommentAdapter(commentList);
+                                    commentAdapter.addAll(commentList);
+                                    setupCommentAdapter(commentList);
+
+
+                                    if (currentPage <= totalPages)
+                                        commentAdapter.addLoadingFooter();
+                                    else isLastPage = true;
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Comment> call, Throwable t) {
+                            //commentList.setValue(null);
+                        }
+                    });
+        } else {
+            Utility.createShortSnackBar(ll_main, "No Internet Connection");
+        }
+    }
+
 }

@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_comment"
         android:enabled="true"
-        android:icon="@drawable/newsfeed_selector"
-        app:showAsAction="collapseActionView" />
+        android:icon="@drawable/livestream_comment_selector"
+        app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/navigation_agenda"
+        android:id="@+id/navigation_livepoll"
         android:enabled="true"
-        android:icon="@drawable/agenda_selector"
-        app:showAsAction="collapseActionView" />
+        android:icon="@drawable/livestream_live_poll"
+        app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/navigation_attendee"
+        android:id="@+id/navigation_quiz"
         android:enabled="true"
-        android:icon="@drawable/attendee_selector"
-        app:showAsAction="collapseActionView" />
+        android:icon="@drawable/livestream_quiz"
+        app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/navigation_speaker"
+        android:id="@+id/navigation_qna"
         android:enabled="true"
-        android:icon="@drawable/speaker_selector"
-        app:showAsAction="collapseActionView" />
+        android:icon="@drawable/livestream_qna"
+        app:showAsAction="ifRoom" />
 
 
 </menu>

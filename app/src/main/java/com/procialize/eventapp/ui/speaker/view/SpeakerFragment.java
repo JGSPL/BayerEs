@@ -297,22 +297,25 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
             public void onChanged(FetchSpeaker event) {
                 //List<Speaker> eventLists = event.getSpeakerList();
                 String strCommentList =event.getDetail();
-                RefreashToken refreashToken = new RefreashToken(getContext());
-                String data = refreashToken.decryptedData(strCommentList);
-                Gson gson = new Gson();
-                List<Speaker> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Speaker>>() {}.getType());
+                if(strCommentList!=null) {
+                    RefreashToken refreashToken = new RefreashToken(getContext());
+                    String data = refreashToken.decryptedData(strCommentList);
+                    Gson gson = new Gson();
+                    List<Speaker> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Speaker>>() {
+                    }.getType());
 
-                //Delete All Speaker from local db and insert Speaker
-                if(eventLists!=null) {
-                    SpeakerDtabaseViewModel.deleteAllSpeaker(getActivity());
-                    SpeakerDtabaseViewModel.insertIntoDb(getActivity(), eventLists);
+                    //Delete All Speaker from local db and insert Speaker
+                    if (eventLists != null) {
+                        SpeakerDtabaseViewModel.deleteAllSpeaker(getActivity());
+                        SpeakerDtabaseViewModel.insertIntoDb(getActivity(), eventLists);
 
-                    progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
 
-                    setupEventAdapter(eventLists);
-                }else{
-                    progressBar.setVisibility(View.GONE);
+                        setupEventAdapter(eventLists);
+                    } else {
+                        progressBar.setVisibility(View.GONE);
 
+                    }
                 }
 
                 if (speakerViewModel != null && speakerViewModel.getSpeakerList().hasObservers()) {
