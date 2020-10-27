@@ -307,6 +307,19 @@ public interface APIService {
     Call<FetchLivePoll> livePollFetch(@Header("authorization") String authkey,
                                       @Field("event_id") String event_id);
 
+    @POST("Livepoll_api/SpotLivePollFetch")
+    @FormUrlEncoded
+    Call<FetchLivePoll> SpotLivePollFetch(@Header("authorization") String authkey,
+                                      @Field("event_id") String event_id,
+                                          @Field("session_id") String session_id);
+
+    @POST("Livepoll_api/SpotLivePollSubmit")
+    @FormUrlEncoded
+    Call<LoginOrganizer> SpotLivePollSubmit(@Header("authorization") String authkey,
+                                       @Field("event_id") String event_id,
+                                       @Field("live_poll_id") String live_poll_id,
+                                       @Field("live_poll_options_id") String live_poll_options_id);
+
     @POST("Agenda_api/RateSession")
     @FormUrlEncoded
     Call<LoginOrganizer> rateAgendaApi(@Header("authorization") String authorization,
