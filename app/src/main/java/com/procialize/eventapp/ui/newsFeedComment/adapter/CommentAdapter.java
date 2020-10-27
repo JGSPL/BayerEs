@@ -110,7 +110,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                 holder.ll_root.setVisibility(View.GONE);
             }
 
-            if (position + 1 == commentDetails.size()) {
+            if (position + 2 == commentDetails.size()) {
                 holder.v_divider.setVisibility(View.INVISIBLE);
             } else {
                 holder.v_divider.setVisibility(View.VISIBLE);

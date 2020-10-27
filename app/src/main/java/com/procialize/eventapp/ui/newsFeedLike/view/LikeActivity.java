@@ -66,7 +66,7 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
     LikeAdapter likeAdapter;
     LinearLayoutManager linearLayoutManager;
 
-    int pageSize = 30;
+    int pageSize = 100;
     int totalPages = 0;
     private int currentPage = PAGE_START;
     private boolean isLoading = false;

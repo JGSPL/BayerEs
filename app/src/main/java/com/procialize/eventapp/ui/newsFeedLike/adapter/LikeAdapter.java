@@ -92,7 +92,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> 
         } else {
             holder.itemView.setVisibility(View.GONE);
         }
-        if (position + 1 == likeDetails.size()) {
+        if (position + 2 == likeDetails.size()) {
             holder.v_divider.setVisibility(View.INVISIBLE);
         } else {
             holder.v_divider.setVisibility(View.VISIBLE);
