@@ -195,7 +195,7 @@ public class ChatActivity extends AppCompatActivity {
     public static File videoFile;
     Uri video;
     private ProgressBar progressBar;
-    String lname, company, city, designation, attendee_type, mobile, email, attendeeid, firebase_id, firstMessage, page;
+    String lname, company, city, designation, attendee_type, mobile, email, attendeeid, firebase_id, firstMessage, page, loginUser;
     LinearLayout lineaeSend;
     public static String videoflag = "0";
     ConnectionDetector cd;
@@ -253,6 +253,7 @@ public class ChatActivity extends AppCompatActivity {
         attendeeid = attendee.getAttendee_id();
         firebase_id = attendee.getFirebase_id();
         mChatUser = attendee.getFirebase_id();
+        loginUser = SharedPreference.getPref(this,SharedPreferencesConstant.KEY_FNAME);
 
         //.........................set Data on Attendee Chat table......................//
         List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
@@ -485,6 +486,8 @@ public class ChatActivity extends AppCompatActivity {
                             JSONObject notifcationBody = new JSONObject();
                             try {
                                 notifcationBody.put("title", NOTIFICATION_TITLE);
+                                notifcationBody.put("titleMain", loginUser+" sent you a message");
+
                                 notifcationBody.put("message", NOTIFICATION_MESSAGE);
 
                                 notification.put("to", TOPIC);
@@ -562,6 +565,7 @@ public class ChatActivity extends AppCompatActivity {
                     JSONObject notifcationBody = new JSONObject();
                     try {
                         notifcationBody.put("title", NOTIFICATION_TITLE);
+                        notifcationBody.put("titleMain", loginUser+" sent you a message");
                         notifcationBody.put("message", NOTIFICATION_MESSAGE);
 
                         notification.put("to", TOPIC);
@@ -1639,6 +1643,8 @@ public class ChatActivity extends AppCompatActivity {
                                             try {
                                                 notifcationBody.put("title", NOTIFICATION_TITLE);
                                                 notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                                                notifcationBody.put("titleMain", loginUser+" sent you an image");
+
                                                 notifcationBody.put("image", download_url);
 
                                                 notification.put("to", TOPIC);
@@ -1731,7 +1737,7 @@ public class ChatActivity extends AppCompatActivity {
 
                                                 progessLoad.setVisibility(View.GONE);
 
-                                                String download_url = taskSnapshot.getDownloadUrl().toString();
+                                                final String download_url = taskSnapshot.getDownloadUrl().toString();
                                                 Map messageMap = new HashMap();
                                                 messageMap.put("message", download_url);
                                                 messageMap.put("seen", false);
@@ -1766,13 +1772,16 @@ public class ChatActivity extends AppCompatActivity {
                                                             //Send Text Notification
                                                             TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
                                                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
-                                                            NOTIFICATION_MESSAGE = "Video";
+                                                            NOTIFICATION_MESSAGE = "Image";
 
                                                             JSONObject notification = new JSONObject();
                                                             JSONObject notifcationBody = new JSONObject();
                                                             try {
                                                                 notifcationBody.put("title", NOTIFICATION_TITLE);
                                                                 notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                                                                notifcationBody.put("titleMain", loginUser+" sent you a video");
+                                                                notifcationBody.put("image", download_url);
+
 
                                                                 notification.put("to", TOPIC);
                                                                 notification.put("data", notifcationBody);
@@ -1899,7 +1908,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
                                             // String download_url = taskSnapshot.getResult().getDownloadUrl().toString();
-                                            String download_url = taskSnapshot.getDownloadUrl().toString();
+                                            final String download_url = taskSnapshot.getDownloadUrl().toString();
                                             Map messageMap = new HashMap();
                                             messageMap.put("message", download_url);
                                             messageMap.put("seen", false);
@@ -1931,13 +1940,15 @@ public class ChatActivity extends AppCompatActivity {
                                                         //Send Text Notification
                                                         TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
                                                         NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
-                                                        NOTIFICATION_MESSAGE = "Video";
+                                                        NOTIFICATION_MESSAGE = "Image";
 
                                                         JSONObject notification = new JSONObject();
                                                         JSONObject notifcationBody = new JSONObject();
                                                         try {
                                                             notifcationBody.put("title", NOTIFICATION_TITLE);
                                                             notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                                                            notifcationBody.put("titleMain", loginUser+" sent you a video");
+                                                            notifcationBody.put("image", download_url);
 
                                                             notification.put("to", TOPIC);
                                                             notification.put("data", notifcationBody);
