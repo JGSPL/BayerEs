@@ -19,6 +19,7 @@ import com.procialize.eventapp.ui.livepoll.model.LivePoll_option;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,10 +29,11 @@ import java.util.List;
 public class PollGraphAdapter extends RecyclerView.Adapter<PollGraphAdapter.MyViewHolder> {
 
     String questionId;
-    private List<LivePoll_option> optionLists;
+    //private List<LivePoll_option> optionLists;
+    private ArrayList<LivePoll_option> optionLists;
     private Context context;
 
-    public PollGraphAdapter(Context context, List<LivePoll_option> optionLists, String questionId) {
+    public PollGraphAdapter(Context context, ArrayList<LivePoll_option> optionLists, String questionId) {
         this.optionLists = optionLists;
         this.context = context;
         this.questionId = questionId;

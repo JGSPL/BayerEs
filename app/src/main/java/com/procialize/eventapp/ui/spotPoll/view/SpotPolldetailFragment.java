@@ -74,24 +74,18 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID
 public class SpotPolldetailFragment extends Fragment implements View.OnClickListener{
     String questionId, question, replyFlag, quiz_options_id, show_result, session_id;
     ArrayList<LivePoll_option> optionLists = new ArrayList<>();
-    List<LivePoll_option> AlloptionLists;
     List<LivePoll> LivePollList;
     List<LivePoll> LivePollListResult = new ArrayList<>();
 
     TextView questionTv, test;
-    RadioGroup ll;
     Button subBtn, PollBtn;
     ProgressBar progressBar;
-    String selected;
-    int Count;
-    String MY_PREFS_NAME = "ProcializeInfo";
     String eventid;
     ViewGroup viewGroup;
     List<RadioButton> radios;
     String token, colorActive;
     LinearLayout linView;
     RecyclerView pollGraph;
-    ImageView headerlogoIv;
 
     private APIService mAPIService;
     LinearLayout relMain;
@@ -99,6 +93,10 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
     View root;
     MutableLiveData<FetchLivePoll> FetchLivePollList = new MutableLiveData<>();
     private APIService eventApi;
+    LinearLayout linThankyou;
+    Button ratebtn;
+    TextView tvPollTitle, tvPollTitle2;
+
 
     public static SpotPollFragment newInstance() {
 
@@ -127,7 +125,11 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
         subBtn = root.findViewById(R.id.subBtn);
         PollBtn = root.findViewById(R.id.PollBtn);
         progressBar = root.findViewById(R.id.progressBar);
-        TextView title = root.findViewById(R.id.txtTitle);
+        ratebtn = root.findViewById(R.id.ratebtn);
+        linThankyou = root.findViewById(R.id.linThankyou);
+        tvPollTitle = root.findViewById(R.id.tvPollTitle);
+        tvPollTitle2 = root.findViewById(R.id.tvPollTitle2);
+
         subBtn.setOnClickListener(this);
         CommonFunction.showBackgroundImage(getContext(), relative);
 
@@ -143,9 +145,16 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
 
         optionLists = new ArrayList<>();
         mAPIService = ApiUtils.getAPIService();
+        LinearLayout rate2 = root.findViewById(R.id.rate2);
+
+        rate2.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
+        ratebtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
+
+        ratebtn.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
+        tvPollTitle.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
+        tvPollTitle2.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
 
         questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_1)));
-        title.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
         relMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
         subBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_1)));
         subBtn.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
@@ -173,12 +182,34 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
         if (replyFlag != null) {
             if (replyFlag.equalsIgnoreCase("1")) {
                 subBtn.setVisibility(View.GONE);
+
+                linThankyou.setVisibility(View.VISIBLE);
+                questionTv.setVisibility(View.GONE);
             } else {
                 subBtn.setVisibility(View.VISIBLE);
+                questionTv.setVisibility(View.VISIBLE);
+                linThankyou.setVisibility(View.GONE);
+
             }
         }
 
         questionTv.setText(StringEscapeUtils.unescapeJava(question));
+
+        ratebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linThankyou.setVisibility(View.GONE);
+                viewGroup.setVisibility(View.GONE);
+                questionTv.setVisibility(View.VISIBLE);
+
+                PollGraphAdapter pollAdapter = new PollGraphAdapter(getContext(), optionLists, questionId);
+                pollAdapter.notifyDataSetChanged();
+                pollGraph.setAdapter(pollAdapter);
+                pollGraph.scheduleLayoutAnimation();
+                subBtn.setVisibility(View.GONE);
+                PollBtn.setVisibility(View.GONE);
+            }
+        });
 
 
 
@@ -231,12 +262,15 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
         if (replyFlag.equalsIgnoreCase("1")) {
             if (show_result.equalsIgnoreCase("0")) {
                 viewGroup.setVisibility(View.GONE);
-                PollGraphAdapter pollAdapter = new PollGraphAdapter(getContext(), optionLists, questionId);
+                linThankyou.setVisibility(View.VISIBLE);
+                questionTv.setVisibility(View.GONE);
+
+               /* PollGraphAdapter pollAdapter = new PollGraphAdapter(getContext(), optionLists, questionId);
                 pollAdapter.notifyDataSetChanged();
                 pollGraph.setAdapter(pollAdapter);
                 pollGraph.scheduleLayoutAnimation();
                 subBtn.setVisibility(View.GONE);
-                PollBtn.setVisibility(View.VISIBLE);
+                PollBtn.setVisibility(View.VISIBLE);*/
             } else {
             }
 
@@ -471,7 +505,7 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
                                                 poll.setShow_progress_bar(eventLists.get(0).getLivePoll_list().get(i).getShow_progress_bar());
                                                 poll.setReplied(eventLists.get(0).getLivePoll_list().get(i).getReplied());
                                                 poll.setLive_poll_option_list( eventLists.get(0).getLivePoll_list().get(i).getLive_poll_option_list());
-                                                //optionLists.add((LivePoll_option) eventLists.get(0).getLivePoll_list().get(i).getLive_poll_option_list());
+                                                optionLists.addAll(poll.getLive_poll_option_list());
                                                 LivePollListResult.add(poll);
 
                                             }
@@ -486,12 +520,16 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
 
 
                                                 viewGroup.setVisibility(View.GONE);
-                                                PollGraphAdapter pollAdapter = new PollGraphAdapter(getContext(), LivePollListResult.get(0).getLive_poll_option_list(), questionId);
+                                                linThankyou.setVisibility(View.VISIBLE);
+                                                questionTv.setVisibility(View.GONE);
+
+                                                //optionLists.add( LivePollListResult.get(0).getLive_poll_option_list());
+                                               /* PollGraphAdapter pollAdapter = new PollGraphAdapter(getContext(), LivePollListResult.get(0).getLive_poll_option_list(), questionId);
                                                 pollAdapter.notifyDataSetChanged();
                                                 pollGraph.setAdapter(pollAdapter);
                                                 pollGraph.scheduleLayoutAnimation();
                                                 subBtn.setVisibility(View.GONE);
-                                                PollBtn.setVisibility(View.VISIBLE);
+                                                PollBtn.setVisibility(View.VISIBLE);*/
 
                                             }
 

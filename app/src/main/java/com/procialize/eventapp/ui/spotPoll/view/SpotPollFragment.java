@@ -73,6 +73,7 @@ public class SpotPollFragment extends Fragment {
     List<LivePoll> PollLists;
     List<LivePoll_option> optionLists;
 
+
     public static SpotPollFragment newInstance() {
 
         return new SpotPollFragment();
