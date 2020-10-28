@@ -358,6 +358,7 @@ public class ChatActivity extends AppCompatActivity {
         // mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayoutManager);
         mMessagesList.setAdapter(mMessageAdapter);
+        mMessageAdapter.notifyDataSetChanged();
 
         mMessagesList.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
