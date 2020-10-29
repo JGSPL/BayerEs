@@ -58,10 +58,11 @@
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin"
+                    android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:gravity="left"
                     android:text=""
+                    android:singleLine="true"
                     android:textFontWeight="1"
                     android:textSize="@dimen/textsizenormal"
                     android:textStyle="bold" />

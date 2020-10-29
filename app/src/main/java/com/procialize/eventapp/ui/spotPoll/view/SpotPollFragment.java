@@ -73,6 +73,7 @@ public class SpotPollFragment extends Fragment {
     List<LivePoll> PollLists;
     List<LivePoll_option> optionLists;
 
+
     public static SpotPollFragment newInstance() {
 
         return new SpotPollFragment();
@@ -112,7 +113,7 @@ public class SpotPollFragment extends Fragment {
             public void onClick(View v) {
                 if(PollLists.size()>0) {
                    LivePoll pollList = new LivePoll();
-                   pollList.setId(PollLists.get(0).getId());
+                   pollList.setLive_poll_id(PollLists.get(0).getLive_poll_id());
                    pollList.setReplied(PollLists.get(0).getReplied());
                     pollList.setShow_progress_bar(PollLists.get(0).getShow_progress_bar());
                     pollList.setQuestion(PollLists.get(0).getQuestion());
@@ -132,7 +133,7 @@ public class SpotPollFragment extends Fragment {
                     startActivity(polldetail);*/
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("optionlist", (Serializable) optionLists);
-                    bundle.putString("id", pollList.getId());
+                    bundle.putString("id", pollList.getLive_poll_id());
                     bundle.putString("question", pollList.getQuestion());
                     bundle.putString("replied", pollList.getReplied());
                     bundle.putString("show_result", pollList.getHide_result());

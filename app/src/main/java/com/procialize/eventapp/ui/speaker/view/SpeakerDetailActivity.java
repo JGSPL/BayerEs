@@ -92,7 +92,7 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
     List<Speaker_Doc> pdf_list;
     private ConnectionDetector cd;
     String api_token, eventid;
-     View vwRateLine;
+     View vwRateLine,vwpdfLine;
      LinearLayout llMAin;
 
     @Override
@@ -129,6 +129,7 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
         ll_main = findViewById(R.id.ll_main);
         vwRateLine = findViewById(R.id.vwRateLine);
         llMAin = findViewById(R.id.ll_main);
+        vwpdfLine = findViewById(R.id.vwpdfLine);
 
         tv_attendee_name.setText(fname + " " + lname);
         tv_attendee_designation.setText(designation);
@@ -138,7 +139,12 @@ public class SpeakerDetailActivity extends AppCompatActivity implements View.OnC
         tv_email.setText(email);
         bgLinear = findViewById(R.id.bgLinear);
         bgView = findViewById(R.id.bgView);
-        tvdesc.setText(description);
+
+        if(description.equalsIgnoreCase("")) {
+            vwpdfLine.setVisibility(View.GONE);
+        }else {
+            tvdesc.setText(description);
+        }
 
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);

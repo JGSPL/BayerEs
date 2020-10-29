@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.procialize.eventapp.ui.speaker.model.Speaker_Doc;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LivePoll implements Serializable {
@@ -39,7 +40,7 @@ public class LivePoll implements Serializable {
 
     @SerializedName("live_poll_option_list")
     @Expose
-    List<LivePoll_option> live_poll_option_list;
+    ArrayList<LivePoll_option> live_poll_option_list;
 
     public String getId() {
         return id;
@@ -97,11 +98,11 @@ public class LivePoll implements Serializable {
         this.live_poll_id = live_poll_id;
     }
 
-    public List<LivePoll_option> getLive_poll_option_list() {
+    public ArrayList<LivePoll_option> getLive_poll_option_list() {
         return live_poll_option_list;
     }
 
-    public void setLive_poll_option_list(List<LivePoll_option> live_poll_option_list) {
+    public void setLive_poll_option_list(ArrayList<LivePoll_option> live_poll_option_list) {
         this.live_poll_option_list = live_poll_option_list;
     }
 }
