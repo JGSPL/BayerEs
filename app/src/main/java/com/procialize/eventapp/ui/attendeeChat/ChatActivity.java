@@ -172,7 +172,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 1000;
+    public static final int TOTAL_ITEM_TO_LOAD = 100;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
