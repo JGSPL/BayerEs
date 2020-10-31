@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/messageSingleLayout2"
         android:layout_width="250dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:padding="0dp">
     <RelativeLayout
