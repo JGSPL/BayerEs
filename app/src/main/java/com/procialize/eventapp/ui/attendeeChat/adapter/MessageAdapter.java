@@ -560,29 +560,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
 
-
-
-    @Override
-    public int getItemViewType(int position) {
-        /*if (directQuestionLists.get(position).getReceiver_id().equalsIgnoreCase(att_id)) {
-            return 1;
-        } else if (directQuestionLists.get(position).getSender_id().equalsIgnoreCase(att_id)) {
-            return 2;
-        } else {
-            return 0;
-        }*/
-         return position;
-    }
 
     //---NO OF ITEMS TO BE ADDED----
     @Override
     public int getItemCount() {
         return mMessagesList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public static Bitmap retriveVideoFrameFromVideo(String videoPath) throws Throwable

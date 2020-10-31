@@ -172,8 +172,9 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 100;
+    public static final int TOTAL_ITEM_TO_LOAD = 25;
     private int mCurrentPage = 1;
+    private int Totalpage = 0;
 
     //Solution for descending list on refresh
     private int itemPos = 0;
@@ -360,13 +361,6 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesList.setAdapter(mMessageAdapter);
         mMessageAdapter.notifyDataSetChanged();
 
-        mMessagesList.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                JzvdStd.goOnPlayOnPause();
-            }
-        });
 
 
         if (messagesList.size() == 0) {
@@ -626,6 +620,13 @@ public class ChatActivity extends AppCompatActivity {
         });
 */
 
+        mMessagesList.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                JzvdStd.goOnPlayOnPause();
+            }
+        });
 
         mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -636,14 +637,17 @@ public class ChatActivity extends AppCompatActivity {
                     Log.d("-----","end");
                     if (cd.isConnectingToInternet()) {
 
-                        itemPos = 0;
-                        mCurrentPage++;
-                        loadMoreMessages();
+                        if(mCurrentPage<=Totalpage) {
+                            itemPos = 0;
+                            mCurrentPage++;
+                            loadMoreMessages();
+                        }
                     } else {
                         Utility.createShortSnackBar(linMain, "No internet connection");
                       //  mSwipeRefreshLayout.setRefreshing(false);
 
                     }
+                }else{
                 }
             }
         });
@@ -714,6 +718,43 @@ public class ChatActivity extends AppCompatActivity {
         try {
             DatabaseReference messageRef = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
             Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
+            final Query totalmessage = messageRef.orderByKey();
+
+            DatabaseReference ref = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
+
+            //add listener to updated ref
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    //use the for loop here to step over each child and retrieve data
+                    int i=0;
+
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()){
+                        //String valueFromDB = childSnapshot.getValue(String.class);
+                        Messages messages = (Messages) dataSnapshot.getValue(Messages.class);
+                        i++;
+                        Log.i("Jimit", messages.getMessage() + "  "+ String.valueOf(i));
+                    }
+
+
+                    if (i < TOTAL_ITEM_TO_LOAD) {
+                        Totalpage = 1;
+                    } else {
+                        if ((int) (i % TOTAL_ITEM_TO_LOAD) == 0) {
+                            Totalpage = (int) (i / TOTAL_ITEM_TO_LOAD);
+                        } else {
+                            Totalpage = (int) (i / TOTAL_ITEM_TO_LOAD) + 1;
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
             messageQuery.addChildEventListener(new ChildEventListener() {
                 @Override
@@ -768,7 +809,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadMoreMessages() {
 
         DatabaseReference messageRef = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
-        Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+        Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(25);
 
         messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -779,6 +820,8 @@ public class ChatActivity extends AppCompatActivity {
 
                 if (!mPrevKey.equals(messageKey)) {
                     messagesList.add(itemPos++, message);
+                   // mMessageAdapter.notifyItemRangeChanged(0, mMessageAdapter.getItemCount());
+
 
                 } else {
                     mPrevKey = mLastKey;
@@ -794,7 +837,7 @@ public class ChatActivity extends AppCompatActivity {
 
               //  mSwipeRefreshLayout.setRefreshing(false);
 
-               // mLinearLayoutManager.scrollToPositionWithOffset(0, 0);
+              //  mLinearLayoutManager.scrollToPositionWithOffset(10, 0);
             }
 
             @Override

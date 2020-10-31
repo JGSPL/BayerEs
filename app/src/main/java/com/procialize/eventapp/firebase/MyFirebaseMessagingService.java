@@ -103,6 +103,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 .setStyle(new NotificationCompat.BigPictureStyle()
                                         .bigPicture(bitmap).bigLargeIcon(null))
                                 .setContentIntent(pendingIntent);
+
+
+
                         //Set notification color to match your app color template
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -125,6 +128,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                     getApplicationContext(), new Random().nextInt(),
                                     notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         }
+                        notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+                        notificationBuilder.setContentIntent(contentIntent);
+                        notificationBuilder.setAutoCancel(true);
+
 
 
                     }else{
@@ -140,6 +147,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
                         }
+
+
                         notificationManager.notify(notificationID, notificationBuilder.build());
                         Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
@@ -157,7 +166,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             contentIntent = PendingIntent.getActivity(
                                     getApplicationContext(), new Random().nextInt(),
                                     notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
                         }
+
+                        notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+                        notificationBuilder.setContentIntent(contentIntent);
+                        notificationBuilder.setAutoCancel(true);
                     }
 
 
