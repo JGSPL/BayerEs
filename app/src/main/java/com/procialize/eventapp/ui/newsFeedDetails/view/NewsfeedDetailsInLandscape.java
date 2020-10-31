@@ -79,7 +79,7 @@ public class NewsfeedDetailsInLandscape extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         JzvdStd.releaseAllVideos();
-        startActivity(new Intent(NewsfeedDetailsInLandscape.this, MainActivity.class));
+        //startActivity(new Intent(NewsfeedDetailsInLandscape.this, MainActivity.class));
         finish();
     }
 }

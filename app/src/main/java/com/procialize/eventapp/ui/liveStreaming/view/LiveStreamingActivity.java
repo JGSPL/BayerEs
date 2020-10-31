@@ -129,7 +129,10 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         tv_header = (TextView) findViewById(R.id.tv_header);
         tv_header.setText(sessionName);
         tvDescription.setText(sessionDescription);
-        CommonFunction.makeTextViewResizable(tvDescription, 1, " View More", true);
+
+        if(sessionDescription.length() > 30) {
+            CommonFunction.makeTextViewResizable(tvDescription, 1, " View More", true);
+        }
         setDynamicColor();
 
         /*getSupportFragmentManager()

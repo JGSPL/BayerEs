@@ -795,14 +795,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             imagesSelectednew1.add(mediaPath + newsfeed_detail.getNews_feed_media().get(i).getThumb_image());
         }
 
-        Utility.setupPagerIndidcatorDots(this, 0, ll_media_dots, imagesSelectednew.size());
+        Utility.setupPagerIndidcatorDots(this, Integer.parseInt(mediaPosition), ll_media_dots, imagesSelectednew.size());
         SwipeMultimediaAdapter swipepagerAdapter = new SwipeMultimediaAdapter(CommentActivity.this, imagesSelectednew, imagesSelectednew1, newsfeed_detail.getNews_feed_media());
         vp_media.setAdapter(swipepagerAdapter);
         swipepagerAdapter.notifyDataSetChanged();
         vp_media.setCurrentItem(Integer.parseInt(mediaPosition));
 
         if (imagesSelectednew.size() > 1) {
-            Utility.setupPagerIndidcatorDots(this, 0, ll_media_dots, imagesSelectednew.size());
+            Utility.setupPagerIndidcatorDots(this, Integer.parseInt(mediaPosition), ll_media_dots, imagesSelectednew.size());
             vp_media.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
