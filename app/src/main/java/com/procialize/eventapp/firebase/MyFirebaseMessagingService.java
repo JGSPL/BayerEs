@@ -25,6 +25,7 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
 
@@ -114,7 +115,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
 
-                        Attendee attendee = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                        TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                        final Attendee attendee = new Attendee();
+
+                        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+                        attendee.setMobile(tableAttendees.getMobile());
+                        attendee.setEmail(tableAttendees.getEmail());
+                        attendee.setFirebase_id(tableAttendees.getFirebase_id());
+                        attendee.setFirebase_name(tableAttendees.getFirebase_name());
+                        attendee.setFirebase_username(tableAttendees.getFirebase_username());
+                        attendee.setAttendee_id(tableAttendees.getAttendee_id());
+                        attendee.setFirst_name(tableAttendees.getFirst_name());
+                        attendee.setLast_name(tableAttendees.getLast_name());
+                        attendee.setCity(tableAttendees.getCity());
+                        attendee.setDesignation(tableAttendees.getDesignation());
+                        attendee.setCompany_name(tableAttendees.getCompany_name());
+                        attendee.setAttendee_type(tableAttendees.getAttendee_type());
+                        attendee.setTotal_sms(tableAttendees.getTotal_sms());
+                        attendee.setProfile_picture(tableAttendees.getProfile_picture());
+                        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+
                         if(attendee!=null) {
 
                             Intent notificationIntent = new Intent(getApplicationContext(),
@@ -153,7 +173,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
 
-                        Attendee attendee = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                        TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                        final Attendee attendee = new Attendee();
+
+                        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+                        attendee.setMobile(tableAttendees.getMobile());
+                        attendee.setEmail(tableAttendees.getEmail());
+                        attendee.setFirebase_id(tableAttendees.getFirebase_id());
+                        attendee.setFirebase_name(tableAttendees.getFirebase_name());
+                        attendee.setFirebase_username(tableAttendees.getFirebase_username());
+                        attendee.setAttendee_id(tableAttendees.getAttendee_id());
+                        attendee.setFirst_name(tableAttendees.getFirst_name());
+                        attendee.setLast_name(tableAttendees.getLast_name());
+                        attendee.setCity(tableAttendees.getCity());
+                        attendee.setDesignation(tableAttendees.getDesignation());
+                        attendee.setCompany_name(tableAttendees.getCompany_name());
+                        attendee.setAttendee_type(tableAttendees.getAttendee_type());
+                        attendee.setTotal_sms(tableAttendees.getTotal_sms());
+                        attendee.setProfile_picture(tableAttendees.getProfile_picture());
+                        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+
                         if(attendee!=null) {
 
                             Intent notificationIntent = new Intent(getApplicationContext(),
@@ -166,14 +205,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             contentIntent = PendingIntent.getActivity(
                                     getApplicationContext(), new Random().nextInt(),
                                     notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+                           // startActivity(notificationIntent);
+                            notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+                            notificationBuilder.setContentIntent(contentIntent);
+                            notificationBuilder.setAutoCancel(true);
 
 
                         }
 
-                        notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-                        notificationBuilder.setContentIntent(contentIntent);
-                        notificationBuilder.setAutoCancel(true);
+
                     }
 
 
@@ -206,7 +246,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
 
-                Attendee attendee = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                final Attendee attendee = new Attendee();
+
+                attendee.setFirebase_status(tableAttendees.getFirebase_status());
+                attendee.setMobile(tableAttendees.getMobile());
+                attendee.setEmail(tableAttendees.getEmail());
+                attendee.setFirebase_id(tableAttendees.getFirebase_id());
+                attendee.setFirebase_name(tableAttendees.getFirebase_name());
+                attendee.setFirebase_username(tableAttendees.getFirebase_username());
+                attendee.setAttendee_id(tableAttendees.getAttendee_id());
+                attendee.setFirst_name(tableAttendees.getFirst_name());
+                attendee.setLast_name(tableAttendees.getLast_name());
+                attendee.setCity(tableAttendees.getCity());
+                attendee.setDesignation(tableAttendees.getDesignation());
+                attendee.setCompany_name(tableAttendees.getCompany_name());
+                attendee.setAttendee_type(tableAttendees.getAttendee_type());
+                attendee.setTotal_sms(tableAttendees.getTotal_sms());
+                attendee.setProfile_picture(tableAttendees.getProfile_picture());
+                attendee.setFirebase_status(tableAttendees.getFirebase_status());
                 if(attendee!=null) {
 
                     Intent notificationIntent = new Intent(getApplicationContext(),

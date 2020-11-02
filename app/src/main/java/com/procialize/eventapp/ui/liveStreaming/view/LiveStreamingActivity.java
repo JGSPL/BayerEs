@@ -57,6 +57,7 @@ import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 import com.procialize.eventapp.ui.spotPoll.view.SpotPollFragment;
 import com.procialize.eventapp.ui.spotQnA.view.SpotQnAFragment;
+import com.procialize.eventapp.ui.spotgroupChat.view.SpotGroupChatFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -142,6 +143,14 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         mPlayerView = findViewById(R.id.jwplayer);
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_view);
 
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
+        fragInfo.setArguments(bundle);
+        transaction.replace(R.id.fragment_frame, fragInfo);
+        transaction.commit();
+
         if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
             // youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
             // Initializing video player with developer key
@@ -204,6 +213,8 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
 
             mPlayerView.load(pi);
 
+
+
             // Get a reference to the CastContext
             //  mCastContext = CastContext.getSharedInstance(this);
         }
@@ -212,8 +223,15 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                   /* FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     LivestreamCommentFragment fragInfo = new LivestreamCommentFragment();
+                    transaction.replace(R.id.fragment_frame, fragInfo);
+                    transaction.commit();*/
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
+                    fragInfo.setArguments(bundle);
                     transaction.replace(R.id.fragment_frame, fragInfo);
                     transaction.commit();
                 } else if (tab.getPosition() == 1) {
