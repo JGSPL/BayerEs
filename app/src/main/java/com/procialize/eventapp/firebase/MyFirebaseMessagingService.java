@@ -25,6 +25,7 @@ import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.ui.attendee.model.Attendee;
+import com.procialize.eventapp.ui.attendee.roomDB.TableAttendee;
 import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
 
@@ -45,7 +46,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        final Intent intent = new Intent(this, MainActivity.class);
+       /* final Intent intent = new Intent(this, MainActivity.class);*/
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int notificationID = new Random().nextInt(3000);
 
@@ -57,9 +58,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             setupChannels(notificationManager);
         }
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+       /* intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_ONE_SHOT);*/
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_launcher);
@@ -87,12 +88,46 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         long when = System.currentTimeMillis();
                         bitmap = getBitmapfromUrl(imageUri);
 
+                        TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                        final Attendee attendee = new Attendee();
+
+                        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+                        attendee.setMobile(tableAttendees.getMobile());
+                        attendee.setEmail(tableAttendees.getEmail());
+                        attendee.setFirebase_id(tableAttendees.getFirebase_id());
+                        attendee.setFirebase_name(tableAttendees.getFirebase_name());
+                        attendee.setFirebase_username(tableAttendees.getFirebase_username());
+                        attendee.setAttendee_id(tableAttendees.getAttendee_id());
+                        attendee.setFirst_name(tableAttendees.getFirst_name());
+                        attendee.setLast_name(tableAttendees.getLast_name());
+                        attendee.setCity(tableAttendees.getCity());
+                        attendee.setDesignation(tableAttendees.getDesignation());
+                        attendee.setCompany_name(tableAttendees.getCompany_name());
+                        attendee.setAttendee_type(tableAttendees.getAttendee_type());
+                        attendee.setTotal_sms(tableAttendees.getTotal_sms());
+                        attendee.setProfile_picture(tableAttendees.getProfile_picture());
+                        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+
+                        if(attendee!=null) {
+
+                            Intent notificationIntent = new Intent(getApplicationContext(),
+                                    ChatActivity.class);
+                            notificationIntent.putExtra("Attendee", (Serializable)attendee);
+                            notificationIntent.putExtra("firstMessage","");
+                            notificationIntent.putExtra("page", "Notification");
+                            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            contentIntent = PendingIntent.getActivity(
+                                    getApplicationContext(), new Random().nextInt(),
+                                    notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        }
+
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                                 .setSmallIcon(R.mipmap.ic_launcher)
                                 .setLargeIcon(bitmap)
                                 .setColorized(true)
                                 .setWhen(when)
-                                 .setContentTitle(remoteMessage.getData().get("titleMain"))
+                                .setContentTitle(remoteMessage.getData().get("titleMain"))
                                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
@@ -102,7 +137,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 .setSound(notificationSoundUri)
                                 .setStyle(new NotificationCompat.BigPictureStyle()
                                         .bigPicture(bitmap).bigLargeIcon(null))
-                                .setContentIntent(pendingIntent);
+                                .setContentIntent(contentIntent);
 
 
 
@@ -114,20 +149,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
 
-                        Attendee attendee = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
-                        if(attendee!=null) {
 
-                            Intent notificationIntent = new Intent(getApplicationContext(),
-                                    ChatActivity.class);
-                            notificationIntent.putExtra("Attendee", (Serializable)attendee);
-                            notificationIntent.putExtra("firstMessage","");
-                            notificationIntent.putExtra("page", "Notification");
-                            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            contentIntent = PendingIntent.getActivity(
-                                    getApplicationContext(), new Random().nextInt(),
-                                    notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        }
                         notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
                         notificationBuilder.setContentIntent(contentIntent);
                         notificationBuilder.setAutoCancel(true);
@@ -135,25 +157,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
                     }else{
-                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setLargeIcon(largeIcon)
-                                 .setContentTitle(remoteMessage.getData().get("titleMain"))
-                                .setContentText(remoteMessage.getData().get("message"))
-                                .setAutoCancel(true)
-                                .setSound(notificationSoundUri)
-                                .setContentIntent(pendingIntent);
-                        //Set notification color to match your app color template
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
-                        }
 
+                        TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                        final Attendee attendee = new Attendee();
 
-                        notificationManager.notify(notificationID, notificationBuilder.build());
-                        Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
-                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+                        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+                        attendee.setMobile(tableAttendees.getMobile());
+                        attendee.setEmail(tableAttendees.getEmail());
+                        attendee.setFirebase_id(tableAttendees.getFirebase_id());
+                        attendee.setFirebase_name(tableAttendees.getFirebase_name());
+                        attendee.setFirebase_username(tableAttendees.getFirebase_username());
+                        attendee.setAttendee_id(tableAttendees.getAttendee_id());
+                        attendee.setFirst_name(tableAttendees.getFirst_name());
+                        attendee.setLast_name(tableAttendees.getLast_name());
+                        attendee.setCity(tableAttendees.getCity());
+                        attendee.setDesignation(tableAttendees.getDesignation());
+                        attendee.setCompany_name(tableAttendees.getCompany_name());
+                        attendee.setAttendee_type(tableAttendees.getAttendee_type());
+                        attendee.setTotal_sms(tableAttendees.getTotal_sms());
+                        attendee.setProfile_picture(tableAttendees.getProfile_picture());
+                        attendee.setFirebase_status(tableAttendees.getFirebase_status());
 
-                        Attendee attendee = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
                         if(attendee!=null) {
 
                             Intent notificationIntent = new Intent(getApplicationContext(),
@@ -166,14 +190,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             contentIntent = PendingIntent.getActivity(
                                     getApplicationContext(), new Random().nextInt(),
                                     notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            // startActivity(notificationIntent);
 
 
 
                         }
+                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setLargeIcon(largeIcon)
+                                 .setContentTitle(remoteMessage.getData().get("titleMain"))
+                                .setContentText(remoteMessage.getData().get("message"))
+                                .setAutoCancel(true)
+                                .setSound(notificationSoundUri)
+                                .setContentIntent(contentIntent);
+                        //Set notification color to match your app color template
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                        }
+
+
+                        notificationManager.notify(notificationID, notificationBuilder.build());
+                        Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
 
                         notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
                         notificationBuilder.setContentIntent(contentIntent);
                         notificationBuilder.setAutoCancel(true);
+
+
                     }
 
 
@@ -188,25 +232,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 attChat.setChat_mess("");
                 EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
 
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setLargeIcon(largeIcon)
-                        // .setContentTitle(remoteMessage.getData().get("title"))
-                        .setContentText(remoteMessage.getData().get("message"))
-                        .setAutoCancel(true)
-                        .setSound(notificationSoundUri)
-                        .setContentIntent(pendingIntent);
+                TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                final Attendee attendee = new Attendee();
 
-
-                //Set notification color to match your app color template
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
-                }
-                notificationManager.notify(notificationID, notificationBuilder.build());
-                Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
-
-                Attendee attendee = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
+                attendee.setFirebase_status(tableAttendees.getFirebase_status());
+                attendee.setMobile(tableAttendees.getMobile());
+                attendee.setEmail(tableAttendees.getEmail());
+                attendee.setFirebase_id(tableAttendees.getFirebase_id());
+                attendee.setFirebase_name(tableAttendees.getFirebase_name());
+                attendee.setFirebase_username(tableAttendees.getFirebase_username());
+                attendee.setAttendee_id(tableAttendees.getAttendee_id());
+                attendee.setFirst_name(tableAttendees.getFirst_name());
+                attendee.setLast_name(tableAttendees.getLast_name());
+                attendee.setCity(tableAttendees.getCity());
+                attendee.setDesignation(tableAttendees.getDesignation());
+                attendee.setCompany_name(tableAttendees.getCompany_name());
+                attendee.setAttendee_type(tableAttendees.getAttendee_type());
+                attendee.setTotal_sms(tableAttendees.getTotal_sms());
+                attendee.setProfile_picture(tableAttendees.getProfile_picture());
+                attendee.setFirebase_status(tableAttendees.getFirebase_status());
                 if(attendee!=null) {
 
                     Intent notificationIntent = new Intent(getApplicationContext(),
@@ -220,6 +264,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             getApplicationContext(), new Random().nextInt(),
                             notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 }
+
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setLargeIcon(largeIcon)
+                        // .setContentTitle(remoteMessage.getData().get("title"))
+                        .setContentText(remoteMessage.getData().get("message"))
+                        .setAutoCancel(true)
+                        .setSound(notificationSoundUri)
+                        .setContentIntent(contentIntent);
+
+
+                //Set notification color to match your app color template
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                }
+                notificationManager.notify(notificationID, notificationBuilder.build());
+                Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+
+
             }
 
 
