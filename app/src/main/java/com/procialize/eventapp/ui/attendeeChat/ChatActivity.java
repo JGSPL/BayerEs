@@ -473,7 +473,7 @@ public class ChatActivity extends AppCompatActivity {
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                             //Send Text Notification
-                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                            TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                             NOTIFICATION_MESSAGE = firstMessage;
 
@@ -552,7 +552,7 @@ public class ChatActivity extends AppCompatActivity {
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                     //Send Text Notification
-                    TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                    TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                     NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                     NOTIFICATION_MESSAGE = message;
 
@@ -1678,7 +1678,7 @@ public class ChatActivity extends AppCompatActivity {
                                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                                             //Send Text Notification
-                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                            TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                                             NOTIFICATION_MESSAGE = "image";
 
@@ -1814,7 +1814,7 @@ public class ChatActivity extends AppCompatActivity {
                                                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                                                             //Send Text Notification
-                                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                            TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                                                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                                                             NOTIFICATION_MESSAGE = "Image";
 
@@ -1982,7 +1982,7 @@ public class ChatActivity extends AppCompatActivity {
                                                         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                                                         //Send Text Notification
-                                                        TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                        TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                                                         NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                                                         NOTIFICATION_MESSAGE = "Image";
 

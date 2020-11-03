@@ -18,6 +18,8 @@ public class MyFirebaseInstanceIDService  extends FirebaseInstanceIdService {
 
     private static final String TAG = "mFirebaseIIDService";
     private static final String SUBSCRIBE_TO = "userABC";
+    private static final String SUBSCRIBE_TO_chat = "OneToOneChat";
+
 
     @Override
     public void onTokenRefresh() {
@@ -31,6 +33,8 @@ public class MyFirebaseInstanceIDService  extends FirebaseInstanceIdService {
 
         // Once the token is generated, subscribe to topic with the userId
         FirebaseMessaging.getInstance().subscribeToTopic(SUBSCRIBE_TO);
+        FirebaseMessaging.getInstance().subscribeToTopic(SUBSCRIBE_TO_chat);
+
         Log.i(TAG, "onTokenRefresh completed with token: " + token);
     }
 }

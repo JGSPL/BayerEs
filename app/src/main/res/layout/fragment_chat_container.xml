@@ -26,13 +26,14 @@
             android:src="@drawable/addbutton"
             android:tint="@color/black" />
 
-        <EditText
+        <com.procialize.eventapp.fonts.RobotoEditext
             android:id="@+id/chatMessageView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Message"
+            android:hint="Type a message"
             android:layout_gravity="center"
             android:paddingLeft="5dp"
+            android:textSize="15sp"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:background="@color/colorwhite"
