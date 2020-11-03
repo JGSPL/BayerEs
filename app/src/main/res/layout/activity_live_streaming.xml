@@ -96,13 +96,16 @@
         android:layout_marginRight="10dp"
         android:orientation="vertical">
 
+        <!--<it.mike5v.viewmoretextview.ViewMoreTextView-->
         <TextView
             android:id="@+id/tvDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:text=""
+            android:minLines="1"
             android:textColor="@color/black" />
 
         <TextView

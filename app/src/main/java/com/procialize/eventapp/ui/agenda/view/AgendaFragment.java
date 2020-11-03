@@ -73,6 +73,7 @@ public class AgendaFragment extends Fragment implements AgendaAdapter.AgendaAdap
             @Override
             public void onRefresh() {
                 if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
+                    new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
                     getDataFromApi();
                 } else {
                     swiperefresh_agenda.setRefreshing(false);

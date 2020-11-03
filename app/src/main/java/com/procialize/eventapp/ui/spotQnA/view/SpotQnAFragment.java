@@ -117,7 +117,7 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
         spotQnAAdapter = new SpotQnAAdapter(getActivity()/*, FragmentNewsFeed.this*/, SpotQnAFragment.this);
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rv_spot_qna.setLayoutManager(linearLayoutManager);
-        //rv_spot_qna.setItemAnimator(new DefaultItemAnimator());
+        rv_spot_qna.setItemAnimator(new DefaultItemAnimator());
         rv_spot_qna.setAdapter(spotQnAAdapter);
         spotQnAAdapter.notifyDataSetChanged();
         getDataFromApi();

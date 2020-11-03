@@ -68,6 +68,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 import cn.jzvd.JzvdStd;
+import it.mike5v.viewmoretextview.ViewMoreTextView;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -76,7 +77,8 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 
 public class LiveStreamingActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener {
     JzvdStd videoview;
-    TextView tvDescription, tv_header;
+    TextView tv_header;
+    /*ViewMore*/TextView tvDescription;
     //YouTubePlayerView youTubeView;
     String YouvideoId;
     YouTubePlayer youTubePlayer;
@@ -123,18 +125,23 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         ll_youtube = (LinearLayout) findViewById(R.id.ll_youtube);
         ll_bottom = (LinearLayout) findViewById(R.id.ll_bottom);
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
-        tvDescription = (TextView) findViewById(R.id.tvDescription);
+        tvDescription = (/*ViewMore*/TextView) findViewById(R.id.tvDescription);
         //bottom_navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         tablayout = findViewById(R.id.tablayout);
         tv_header = (TextView) findViewById(R.id.tv_header);
         tv_header.setText(sessionName);
-        tvDescription.setText(sessionDescription);
+        tvDescription.setText(sessionDescription.trim());
 
-        if(sessionDescription.length() > 30) {
+        //if(sessionDescription.length() > 30) {
             CommonFunction.makeTextViewResizable(tvDescription, 1, " View More", true);
-        }
+        //}
         setDynamicColor();
-
+       /* tvDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvDescription.toggle();
+            }
+        });*/
         /*getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_frame, SpotQnAFragment.newInstance(), "")
