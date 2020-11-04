@@ -1,0 +1,176 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/linear"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:weightSum="10">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:elevation="0dp">
+
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:contentInsetStart="0dp"
+                android:contentInsetLeft="0dp"
+                android:contentInsetEnd="0dp"
+                android:contentInsetRight="0dp"
+                android:minHeight="?attr/actionBarSize"
+                app:contentInsetEnd="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetRight="0dp"
+                app:contentInsetStart="0dp">
+
+
+                <TextView
+                    android:id="@+id/tv_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/quizlistingtitle"
+                    android:textColor="@color/black" />
+
+
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/relative_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linear">
+
+        <ScrollView
+            android:id="@+id/scroller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:gravity="top"
+                android:orientation="vertical">
+
+                <com.procialize.eventapp.fonts.RobotoTextview
+                    android:id="@+id/questionTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textSize="16dp" />
+
+
+                <com.procialize.eventapp.fonts.RobotoTextview
+                    android:id="@+id/txt_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="left"
+                    android:padding="5dp" />
+
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+
+                <com.procialize.eventapp.costumTools.NoScrollRecycler
+                    android:id="@+id/quiz_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:dividerHeight="5dp"
+                    android:isScrollContainer="false"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                <com.procialize.eventapp.fonts.RobotoTextview
+                    android:id="@android:id/empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center|center_horizontal"
+                    android:text="No active quiz"
+                    android:textColor="@color/colorwhite"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </ScrollView>
+
+
+        <LinearLayout
+            android:id="@+id/ll_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <com.procialize.eventapp.fonts.RobotoButton
+                android:id="@+id/submit"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:paddingLeft="40dp"
+                android:paddingTop="10dp"
+                android:paddingRight="40dp"
+                android:paddingBottom="10dp"
+                android:text="Submit"
+                android:textAllCaps="false"
+                android:textColor="@color/colorwhite"
+                android:visibility="invisible" />
+
+            <com.procialize.eventapp.fonts.RobotoButton
+                android:id="@+id/btnNext"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:paddingLeft="40dp"
+                android:paddingTop="10dp"
+                android:paddingRight="40dp"
+                android:paddingBottom="10dp"
+                android:text="Next"
+                android:textAllCaps="false"
+                android:textColor="@color/colorwhite"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

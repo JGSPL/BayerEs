@@ -44,7 +44,6 @@ android {
             exclude 'lib/x86_64/libopencv_imgproc.so'
             exclude 'META-INF/core_release.kotlin_module'
         }
-
     }
 
     buildTypes {
@@ -212,13 +211,6 @@ dependencies {
     implementation files('libs\\YouTubeAndroidPlayerApi.jar')
 
     implementation 'com.android.volley:volley:1.1.1'
-
-
-    /*implementation ('com.longtailvideo.jwplayer:jwplayer-android-sdk:+') {
-        exclude module: 'appcompat-v7'
-        exclude module: 'play-services-ads'
-    }
-*/
 
     implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.15.0'
     implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.15.0'
