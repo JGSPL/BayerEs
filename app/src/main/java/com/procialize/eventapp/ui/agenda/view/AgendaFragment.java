@@ -62,6 +62,7 @@ public class AgendaFragment extends Fragment implements AgendaAdapter.AgendaAdap
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
         recycler_agenda = root.findViewById(R.id.recycler_agenda);
+        getDataFromDB();
         if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
             getDataFromApi();
         } else {
@@ -123,6 +124,7 @@ public class AgendaFragment extends Fragment implements AgendaAdapter.AgendaAdap
         agendaDatabaseViewModel.getAgenda().observeForever(new Observer<List<TableAgenda>>() {
             @Override
             public void onChanged(List<TableAgenda> tableAttendees) {
+                agendaDBList.clear();
                 for (int i = 0; i < tableAttendees.size(); i++) {
                     final Agenda agenda = new Agenda();
 

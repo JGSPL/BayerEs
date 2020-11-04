@@ -103,9 +103,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="0dp"
             android:text=""
-            android:minLines="1"
             android:textColor="@color/black" />
 
         <TextView

@@ -398,9 +398,9 @@ public class CommonFunction {
                     tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                     tv.invalidate();
                     if (viewMore) {
-                        makeTextViewResizable(tv, -1, "View Less", false);
+                        makeTextViewResizable(tv, -1, " View Less", false);
                     } else {
-                        makeTextViewResizable(tv, 1, "View More", true);
+                        makeTextViewResizable(tv, 1, " View More", true);
                     }
 
                 }

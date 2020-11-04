@@ -110,4 +110,64 @@ public class SpotQnA {
     public String getTotal_likes() {
         return total_likes;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public void setSession_id(String session_id) {
+        this.session_id = session_id;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    public void setAttendee_id(String attendee_id) {
+        this.attendee_id = attendee_id;
+    }
+
+    public void setOrg_first_name(String org_first_name) {
+        this.org_first_name = org_first_name;
+    }
+
+    public void setOrg_last_name(String org_last_name) {
+        this.org_last_name = org_last_name;
+    }
+
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setLike_flag(String like_flag) {
+        this.like_flag = like_flag;
+    }
+
+    public void setTotal_likes(String total_likes) {
+        this.total_likes = total_likes;
+    }
 }

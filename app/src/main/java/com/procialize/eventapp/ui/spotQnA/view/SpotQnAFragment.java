@@ -40,6 +40,7 @@ import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
+import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.spotQnA.adapter.SpotQnAAdapter;
 import com.procialize.eventapp.ui.spotQnA.model.FetchSpotQnA;
@@ -272,14 +273,13 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
             recycler_feed.setLayoutManager(new LinearLayoutManager(getContext()));*/
             rv_spot_qna.setAdapter(spotQnAAdapter);
             rv_spot_qna.setItemAnimator(new DefaultItemAnimator());
-            rv_spot_qna.setNestedScrollingEnabled(true);
         } else {
             spotQnAAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void onLikeClicked(SpotQnA spotQnA, int position, final TextView liketext, final ImageView likeImage) {
+    public void onLikeClicked(SpotQnA spotQnA, final int position, final TextView liketext, final ImageView likeImage) {
         ApiUtils.getAPIService().PostQnALikeSession(api_token, eventid, spotQnA.getId()).enqueue(new Callback<LikePost>() {
             @Override
             public void onResponse(Call<LikePost> call,
@@ -296,6 +296,10 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
                         }
 
                         likeImage.setImageDrawable(getContext().getDrawable(R.drawable.ic_active_like));
+                        List<SpotQnA> spotQnA = spotQnAAdapter.getSpotQnAList();
+                        spotQnA.get(position).setLike_flag("1");
+                        spotQnA.get(position).setTotal_likes(LikeCount + "");
+
                     } else {
                         if (Integer.parseInt(noOfLikes) > 0) {
                             int LikeCount = Integer.parseInt(noOfLikes) - 1;
@@ -306,6 +310,10 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
                             }
                             likeImage.setImageDrawable(getContext().getDrawable(R.drawable.ic_like));
                             noOfLikes = "0";
+
+                            List<SpotQnA> spotQnA = spotQnAAdapter.getSpotQnAList();
+                            spotQnA.get(position).setLike_flag("0");
+                            spotQnA.get(position).setTotal_likes(LikeCount + "");
                         }
                     }
                     Utility.createShortSnackBar(fl_main, response.body().getHeader().get(0).getMsg());

@@ -143,16 +143,16 @@ public class SpotQnAAdapter extends RecyclerView.Adapter<SpotQnAAdapter.SpotQnAV
 
     @Override
     public int getItemCount() {
-        return spotQnAList.size();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        return (null != spotQnAList ? spotQnAList.size() : 0);
     }
 
     @Override
     public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
         return position;
     }
 

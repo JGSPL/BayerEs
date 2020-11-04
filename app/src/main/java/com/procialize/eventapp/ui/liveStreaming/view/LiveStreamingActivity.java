@@ -77,7 +77,6 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 public class LiveStreamingActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener {
-    JzvdStd videoview;
     TextView tv_header;
     /*ViewMore*/TextView tvDescription;
     //YouTubePlayerView youTubeView;
@@ -131,11 +130,11 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         tablayout = findViewById(R.id.tablayout);
         tv_header = (TextView) findViewById(R.id.tv_header);
         tv_header.setText(sessionName);
-        tvDescription.setText(sessionDescription.trim());
+        tvDescription.setText(sessionShortDescription.trim());
 
-        //if(sessionDescription.length() > 30) {
+        if(sessionShortDescription.length() > 30) {
             CommonFunction.makeTextViewResizable(tvDescription, 1, " View More", true);
-        //}
+        }
         setDynamicColor();
        /* tvDescription.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,14 +173,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
                         // String youtube_stream_url = livestream_link;
                         YouvideoId = youtube_stream_url.substring(youtube_stream_url.lastIndexOf("=") + 1);
 
-                        String[] parts = youtube_stream_url.split("=");
-                        String part1 = parts[0]; // 004
-                        String videoId = parts[0]; // 034556
-                        String[] parts1 = videoId.split("&index");
-                        String url = parts1[0];
-                        String[] parts2 = videoId.split("&list");
-                        String url2 = parts2[0];
-                        Log.e("videoid", YouvideoId);
                         youTubePlayer = player;
                         //set the player style default
                         youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
@@ -233,10 +224,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
-                   /* FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    LivestreamCommentFragment fragInfo = new LivestreamCommentFragment();
-                    transaction.replace(R.id.fragment_frame, fragInfo);
-                    transaction.commit();*/
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
