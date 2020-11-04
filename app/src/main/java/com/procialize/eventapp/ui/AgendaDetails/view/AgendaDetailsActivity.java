@@ -6,8 +6,11 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -158,10 +161,11 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
 
-        if(livestreamLink.isEmpty())
-        {ll_live_stream.setVisibility(View.GONE);}
-        else
-        {ll_live_stream.setVisibility(View.VISIBLE);}
+        if (livestreamLink.isEmpty()) {
+            ll_live_stream.setVisibility(View.GONE);
+        } else {
+            ll_live_stream.setVisibility(View.VISIBLE);
+        }
 
         /*try {
             Date currentTime = Calendar.getInstance().getTime();
@@ -177,6 +181,23 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
             e.printStackTrace();
         }
 */
+        String eventColor3 = SharedPreference.getPref(this, EVENT_COLOR_3);
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+        if (switch_reminder.isChecked()) {
+        } else {
+            ColorStateList textColorStates = new ColorStateList(
+                    new int[][]{
+                            new int[]{-android.R.attr.state_checked},
+                            new int[]{android.R.attr.state_checked}
+                    },
+                    new int[]{
+                            //Color.parseColor(colorunselect),
+                            Color.parseColor("#8C" + eventColor3Opacity40),
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1))
+                    });
+            switch_reminder.getThumbDrawable().setTintList(textColorStates);
+            switch_reminder.getTrackDrawable().setTintList(textColorStates);
+        }
         setDynamicColor();
 /*
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -305,7 +326,7 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_live_stream:
-                agendaViewModel.openAgendaDetails(this, agendaDetails.getLivestream_link(),agendaDetails);
+                agendaViewModel.openAgendaDetails(this, agendaDetails.getLivestream_link(), agendaDetails);
                 break;
             case R.id.ll_rate:
                 if (ConnectionDetector.getInstance(AgendaDetailsActivity.this).isConnectingToInternet()) {

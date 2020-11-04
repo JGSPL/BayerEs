@@ -277,7 +277,7 @@ public class BackgroundServiceToCompressMedia extends IntentService {
                 "libx264", "-minrate", "4000k", "-maxrate", "4000k","-b:v", "250k", "-b:a", "48000",
                 "-profile:v", "baseline", "-level", "3.1" ,"-crf", "28","-preset", "veryfast",  "-ac", "2", "-ar", "22050", filePath };*/
         String[] complexCommand = new String[]{"-y", "-i", selectedVideoUri.toString(),  "-ss", "" + startMsForVideoCutting / 1000,
-                "-t", "" + (endMsForVideoCutting - startMsForVideoCutting) / 1000,"-s", "640x480", "-r", "25",
+                "-t", "" + (endMsForVideoCutting - startMsForVideoCutting) / 1000/*,"-s", "640x480"*/, "-r", "25",
                 //"-vcodec",
                 "-c:v",
                 "libx264", "-minrate", "4000k", "-maxrate", "4000k","-b:v", "250k", "-b:a", "48000",

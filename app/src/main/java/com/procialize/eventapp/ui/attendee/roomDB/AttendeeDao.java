@@ -37,5 +37,5 @@ public interface AttendeeDao {
     void deleteAttendee(String attendeeId);
 
     @Query("SELECT * from tbl_attendee where firebase_id=:firebase_id")
-    Attendee getAttendeeDetailsFromFireId(String firebase_id);
+    TableAttendee getAttendeeDetailsFromFireId(String firebase_id);
 }

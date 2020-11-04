@@ -153,11 +153,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_live_stream"
@@ -214,17 +209,18 @@
                     android:gravity="center"
                     android:text="Set Reminder"
                     android:textSize="16dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_reminder"
                     android:layout_width="50dp"
                     android:layout_gravity="center"
-                    app:track="@drawable/custom_track"
-                    android:thumb="@drawable/custom_thumb"
                     android:layout_height="30dp"
                     />
+                   <!-- app:track="@drawable/custom_track"
+                    android:thumb="@drawable/custom_thumb"-->
+
 
             </LinearLayout>
 

@@ -110,7 +110,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                 holder.ll_root.setVisibility(View.GONE);
             }
 
-            if (position + 1 == commentDetails.size()) {
+            if (position + 2 == commentDetails.size()) {
                 holder.v_divider.setVisibility(View.INVISIBLE);
             } else {
                 holder.v_divider.setVisibility(View.VISIBLE);
@@ -144,6 +144,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                     holder.tv_name.setText(Html.fromHtml(name1, Html.FROM_HTML_MODE_LEGACY));
                 }
                 holder.fl_gif.setVisibility(View.VISIBLE);
+                holder.tv_comment.setVisibility(View.INVISIBLE);
                 Glide.with(context)
                         .load(comments.getComment())
                         .listener(new RequestListener<Drawable>() {

@@ -316,7 +316,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     String proxyUrl = proxy.getProxyUrl(mes.getMessage());
                     Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
 
-                    holder.videoplayer2.setUp(proxyUrl.trim(), ""
+                    holder.videoplayer2.setUp(mes.getMessage(), ""
                             , JzvdStd.SCREEN_NORMAL);
                     JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
 
@@ -435,7 +435,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     String proxyUrl = proxy.getProxyUrl(mes.getMessage());
                     Log.d("LOG_TAG", "Use proxy url " + proxyUrl + " instead of original url " + mes.getMessage());
 
-                    holder.videoplayer.setUp(proxyUrl.trim(), ""
+                    holder.videoplayer.setUp(mes.getMessage(), ""
                             , JzvdStd.SCREEN_NORMAL);
                     JzvdStd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
 
@@ -560,29 +560,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
 
-
-
-    @Override
-    public int getItemViewType(int position) {
-        /*if (directQuestionLists.get(position).getReceiver_id().equalsIgnoreCase(att_id)) {
-            return 1;
-        } else if (directQuestionLists.get(position).getSender_id().equalsIgnoreCase(att_id)) {
-            return 2;
-        } else {
-            return 0;
-        }*/
-         return position;
-    }
 
     //---NO OF ITEMS TO BE ADDED----
     @Override
     public int getItemCount() {
         return mMessagesList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public static Bitmap retriveVideoFrameFromVideo(String videoPath) throws Throwable

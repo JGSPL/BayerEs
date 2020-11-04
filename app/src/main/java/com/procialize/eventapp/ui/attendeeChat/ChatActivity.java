@@ -34,6 +34,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +42,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -170,8 +172,9 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private MessageAdapter mMessageAdapter;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 1000;
+    public static final int TOTAL_ITEM_TO_LOAD = 25;
     private int mCurrentPage = 1;
+    private int Totalpage = 0;
 
     //Solution for descending list on refresh
     private int itemPos = 0;
@@ -193,7 +196,7 @@ public class ChatActivity extends AppCompatActivity {
     public static File videoFile;
     Uri video;
     private ProgressBar progressBar;
-    String lname, company, city, designation, attendee_type, mobile, email, attendeeid, firebase_id, firstMessage, page;
+    String lname, company, city, designation, attendee_type, mobile, email, attendeeid, firebase_id, firstMessage, page, loginUser;
     LinearLayout lineaeSend;
     public static String videoflag = "0";
     ConnectionDetector cd;
@@ -210,7 +213,7 @@ public class ChatActivity extends AppCompatActivity {
     String NOTIFICATION_TITLE;
     String NOTIFICATION_MESSAGE;
     String TOPIC;
-
+    ImageView backImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,6 +226,7 @@ public class ChatActivity extends AppCompatActivity {
         cd = ConnectionDetector.getInstance(this);
 
         getWindow().setBackgroundDrawable(getDrawable(R.drawable.chat_bg));
+       getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         //-----GETING FROM INTENT----
         // mChatUser = getIntent().getStringExtra("user_id");
@@ -231,7 +235,7 @@ public class ChatActivity extends AppCompatActivity {
         //String sProfilepic = getIntent().getStringExtra("sProfilepic");
         // final String prof_pic = getIntent().getStringExtra("rProfilepic");
 
-        final LinearLayout linMain = findViewById(R.id.linMain);
+        final RelativeLayout linMain = findViewById(R.id.linMain);
 
         Intent intent = getIntent();
         page = intent.getStringExtra("page");
@@ -250,6 +254,7 @@ public class ChatActivity extends AppCompatActivity {
         attendeeid = attendee.getAttendee_id();
         firebase_id = attendee.getFirebase_id();
         mChatUser = attendee.getFirebase_id();
+        loginUser = SharedPreference.getPref(this,SharedPreferencesConstant.KEY_FNAME);
 
         //.........................set Data on Attendee Chat table......................//
         List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
@@ -286,9 +291,24 @@ public class ChatActivity extends AppCompatActivity {
         mUserLastSeen = (TextView) actionBarView.findViewById(R.id.textView5);
         mUserImage = (CircleImageView) actionBarView.findViewById(R.id.circleImageView);
         LinearLayout linBack = actionBarView.findViewById(R.id.linBack);
+         backImage = actionBarView.findViewById(R.id.backImage);
+        backImage.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_ATOP);
+
         ImageView ivattDetail = actionBarView.findViewById(R.id.ivattDetail);
         mUserName.setText(userName);
         mUserLastSeen.setText(designation + " - " + city);
+
+        mMessageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMessageView.requestFocus();
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(ChatActivity.this.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+            }
+        });
 
 
         Picasso.with(ChatActivity.this).load(prof_pic).placeholder(R.drawable.profilepic_placeholder).into(mUserImage);
@@ -339,14 +359,8 @@ public class ChatActivity extends AppCompatActivity {
         // mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayoutManager);
         mMessagesList.setAdapter(mMessageAdapter);
+        mMessageAdapter.notifyDataSetChanged();
 
-        mMessagesList.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                JzvdStd.goOnPlayOnPause();
-            }
-        });
 
 
         if (messagesList.size() == 0) {
@@ -459,7 +473,7 @@ public class ChatActivity extends AppCompatActivity {
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                             //Send Text Notification
-                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                            TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                             NOTIFICATION_MESSAGE = firstMessage;
 
@@ -467,6 +481,8 @@ public class ChatActivity extends AppCompatActivity {
                             JSONObject notifcationBody = new JSONObject();
                             try {
                                 notifcationBody.put("title", NOTIFICATION_TITLE);
+                                notifcationBody.put("titleMain", loginUser+" sent you a message");
+
                                 notifcationBody.put("message", NOTIFICATION_MESSAGE);
 
                                 notification.put("to", TOPIC);
@@ -536,7 +552,7 @@ public class ChatActivity extends AppCompatActivity {
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                     //Send Text Notification
-                    TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                    TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                     NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                     NOTIFICATION_MESSAGE = message;
 
@@ -544,6 +560,7 @@ public class ChatActivity extends AppCompatActivity {
                     JSONObject notifcationBody = new JSONObject();
                     try {
                         notifcationBody.put("title", NOTIFICATION_TITLE);
+                        notifcationBody.put("titleMain", loginUser+" sent you a message");
                         notifcationBody.put("message", NOTIFICATION_MESSAGE);
 
                         notification.put("to", TOPIC);
@@ -603,6 +620,13 @@ public class ChatActivity extends AppCompatActivity {
         });
 */
 
+        mMessagesList.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                JzvdStd.goOnPlayOnPause();
+            }
+        });
 
         mMessagesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -613,14 +637,17 @@ public class ChatActivity extends AppCompatActivity {
                     Log.d("-----","end");
                     if (cd.isConnectingToInternet()) {
 
-                        itemPos = 0;
-                        mCurrentPage++;
-                        loadMoreMessages();
+                        if(mCurrentPage<=Totalpage) {
+                            itemPos = 0;
+                            mCurrentPage++;
+                            loadMoreMessages();
+                        }
                     } else {
                         Utility.createShortSnackBar(linMain, "No internet connection");
                       //  mSwipeRefreshLayout.setRefreshing(false);
 
                     }
+                }else{
                 }
             }
         });
@@ -691,6 +718,43 @@ public class ChatActivity extends AppCompatActivity {
         try {
             DatabaseReference messageRef = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
             Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
+            final Query totalmessage = messageRef.orderByKey();
+
+            DatabaseReference ref = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
+
+            //add listener to updated ref
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    //use the for loop here to step over each child and retrieve data
+                    int i=0;
+
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()){
+                        //String valueFromDB = childSnapshot.getValue(String.class);
+                        Messages messages = (Messages) dataSnapshot.getValue(Messages.class);
+                        i++;
+                        Log.i("Jimit", messages.getMessage() + "  "+ String.valueOf(i));
+                    }
+
+
+                    if (i < TOTAL_ITEM_TO_LOAD) {
+                        Totalpage = 1;
+                    } else {
+                        if ((int) (i % TOTAL_ITEM_TO_LOAD) == 0) {
+                            Totalpage = (int) (i / TOTAL_ITEM_TO_LOAD);
+                        } else {
+                            Totalpage = (int) (i / TOTAL_ITEM_TO_LOAD) + 1;
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
             messageQuery.addChildEventListener(new ChildEventListener() {
                 @Override
@@ -745,7 +809,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadMoreMessages() {
 
         DatabaseReference messageRef = mRootReference.child("messages").child(mCurrentUserId).child(mChatUser);
-        Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+        Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(25);
 
         messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -756,6 +820,8 @@ public class ChatActivity extends AppCompatActivity {
 
                 if (!mPrevKey.equals(messageKey)) {
                     messagesList.add(itemPos++, message);
+                   // mMessageAdapter.notifyItemRangeChanged(0, mMessageAdapter.getItemCount());
+
 
                 } else {
                     mPrevKey = mLastKey;
@@ -771,7 +837,7 @@ public class ChatActivity extends AppCompatActivity {
 
               //  mSwipeRefreshLayout.setRefreshing(false);
 
-               // mLinearLayoutManager.scrollToPositionWithOffset(0, 0);
+              //  mLinearLayoutManager.scrollToPositionWithOffset(10, 0);
             }
 
             @Override
@@ -1437,6 +1503,7 @@ public class ChatActivity extends AppCompatActivity {
         EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsReadZero( firebase_id);
 
         finish();
+
         KeyboardUtility.hideSoftKeyboard(this);
 
     }
@@ -1611,7 +1678,7 @@ public class ChatActivity extends AppCompatActivity {
                                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                                             //Send Text Notification
-                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                            TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
                                             NOTIFICATION_MESSAGE = "image";
 
@@ -1620,6 +1687,8 @@ public class ChatActivity extends AppCompatActivity {
                                             try {
                                                 notifcationBody.put("title", NOTIFICATION_TITLE);
                                                 notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                                                notifcationBody.put("titleMain", loginUser+" sent you an image");
+
                                                 notifcationBody.put("image", download_url);
 
                                                 notification.put("to", TOPIC);
@@ -1712,7 +1781,7 @@ public class ChatActivity extends AppCompatActivity {
 
                                                 progessLoad.setVisibility(View.GONE);
 
-                                                String download_url = taskSnapshot.getDownloadUrl().toString();
+                                                final String download_url = taskSnapshot.getDownloadUrl().toString();
                                                 Map messageMap = new HashMap();
                                                 messageMap.put("message", download_url);
                                                 messageMap.put("seen", false);
@@ -1745,15 +1814,18 @@ public class ChatActivity extends AppCompatActivity {
                                                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                                                             //Send Text Notification
-                                                            TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                            TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                                                             NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
-                                                            NOTIFICATION_MESSAGE = "Video";
+                                                            NOTIFICATION_MESSAGE = "Image";
 
                                                             JSONObject notification = new JSONObject();
                                                             JSONObject notifcationBody = new JSONObject();
                                                             try {
                                                                 notifcationBody.put("title", NOTIFICATION_TITLE);
                                                                 notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                                                                notifcationBody.put("titleMain", loginUser+" sent you a video");
+                                                                notifcationBody.put("image", download_url);
+
 
                                                                 notification.put("to", TOPIC);
                                                                 notification.put("data", notifcationBody);
@@ -1880,7 +1952,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
                                             // String download_url = taskSnapshot.getResult().getDownloadUrl().toString();
-                                            String download_url = taskSnapshot.getDownloadUrl().toString();
+                                            final String download_url = taskSnapshot.getDownloadUrl().toString();
                                             Map messageMap = new HashMap();
                                             messageMap.put("message", download_url);
                                             messageMap.put("seen", false);
@@ -1910,15 +1982,17 @@ public class ChatActivity extends AppCompatActivity {
                                                         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
                                                         //Send Text Notification
-                                                        TOPIC = "/topics/userABC"; //topic has to match what the receiver subscribed to
+                                                        TOPIC = "/topics/OneToOneChat"; //topic has to match what the receiver subscribed to
                                                         NOTIFICATION_TITLE = firebase_id + "@"+currentUser.getUid();
-                                                        NOTIFICATION_MESSAGE = "Video";
+                                                        NOTIFICATION_MESSAGE = "Image";
 
                                                         JSONObject notification = new JSONObject();
                                                         JSONObject notifcationBody = new JSONObject();
                                                         try {
                                                             notifcationBody.put("title", NOTIFICATION_TITLE);
                                                             notifcationBody.put("message", NOTIFICATION_MESSAGE);
+                                                            notifcationBody.put("titleMain", loginUser+" sent you a video");
+                                                            notifcationBody.put("image", download_url);
 
                                                             notification.put("to", TOPIC);
                                                             notification.put("data", notifcationBody);
@@ -2010,6 +2084,8 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
 
         super.onResume();
+        backImage.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_ATOP);
+
         List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(firebase_id);
         if (attenChatCount.size() > 0) {
             EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateIsRead( firebase_id);

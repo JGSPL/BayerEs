@@ -360,14 +360,15 @@ public class CommonFunction {
                     int lineEndIndex;
                     ViewTreeObserver obs = tv.getViewTreeObserver();
                     obs.removeGlobalOnLayoutListener(this);
+                    int lineCount = tv.getLineCount();
                     if (maxLine == 0) {
                         lineEndIndex = tv.getLayout().getLineEnd(0);
                         text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
-                    } else if (maxLine > 0 && tv.getLineCount() >= maxLine) {
+                    } else if (maxLine > 0 && lineCount >= maxLine) {
                         lineEndIndex = tv.getLayout().getLineEnd(maxLine - 1);
                         text = tv.getText().subSequence(0, lineEndIndex - expandText.length() + 1) + " " + expandText;
                     } else {
-                        lineEndIndex = tv.getLayout().getLineEnd(tv.getLayout().getLineCount() - 1);
+                        lineEndIndex = tv.getLayout().getLineEnd(lineCount - 1);
                         text = tv.getText().subSequence(0, lineEndIndex) + " " + expandText;
                     }
                     tv.setText(text);
@@ -375,16 +376,16 @@ public class CommonFunction {
                     tv.setText(
                             addClickablePartTextViewResizable(Html.fromHtml(tv.getText().toString()), tv, lineEndIndex, expandText,
                                     viewMore), TextView.BufferType.SPANNABLE);
-                }catch (Exception e)
-                {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
     private static SpannableStringBuilder
     addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
-                                      final int maxLine, final String spanableText, final boolean viewMore)
-    {
+                                      final int maxLine, final String spanableText, final boolean viewMore) {
         String str = strSpanned.toString();
         SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
 
@@ -397,9 +398,9 @@ public class CommonFunction {
                     tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                     tv.invalidate();
                     if (viewMore) {
-                        makeTextViewResizable(tv, -1, "View Less", false);
+                        makeTextViewResizable(tv, -1, " View Less", false);
                     } else {
-                        makeTextViewResizable(tv, 1, "View More", true);
+                        makeTextViewResizable(tv, 1, " View More", true);
                     }
 
                 }

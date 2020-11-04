@@ -57,6 +57,7 @@ import com.procialize.eventapp.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.eventapp.ui.speaker.view.SpeakerFragment;
 import com.procialize.eventapp.ui.spotPoll.view.SpotPollFragment;
 import com.procialize.eventapp.ui.spotQnA.view.SpotQnAFragment;
+import com.procialize.eventapp.ui.spotgroupChat.view.SpotGroupChatFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,6 +69,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 import cn.jzvd.JzvdStd;
+import it.mike5v.viewmoretextview.ViewMoreTextView;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -75,8 +77,8 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 public class LiveStreamingActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener {
-    JzvdStd videoview;
-    TextView tvDescription, tv_header;
+    TextView tv_header;
+    /*ViewMore*/TextView tvDescription;
     //YouTubePlayerView youTubeView;
     String YouvideoId;
     YouTubePlayer youTubePlayer;
@@ -123,15 +125,23 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         ll_youtube = (LinearLayout) findViewById(R.id.ll_youtube);
         ll_bottom = (LinearLayout) findViewById(R.id.ll_bottom);
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
-        tvDescription = (TextView) findViewById(R.id.tvDescription);
+        tvDescription = (/*ViewMore*/TextView) findViewById(R.id.tvDescription);
         //bottom_navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         tablayout = findViewById(R.id.tablayout);
         tv_header = (TextView) findViewById(R.id.tv_header);
         tv_header.setText(sessionName);
-        tvDescription.setText(sessionDescription);
-        CommonFunction.makeTextViewResizable(tvDescription, 1, " View More", true);
-        setDynamicColor();
+        tvDescription.setText(sessionShortDescription.trim());
 
+        if(sessionShortDescription.length() > 30) {
+            CommonFunction.makeTextViewResizable(tvDescription, 1, " View More", true);
+        }
+        setDynamicColor();
+       /* tvDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvDescription.toggle();
+            }
+        });*/
         /*getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_frame, SpotQnAFragment.newInstance(), "")
@@ -141,6 +151,14 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         youtube_stream_url = livestream_link;
         mPlayerView = findViewById(R.id.jwplayer);
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_view);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
+        fragInfo.setArguments(bundle);
+        transaction.replace(R.id.fragment_frame, fragInfo);
+        transaction.commit();
 
         if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
             // youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
@@ -155,14 +173,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
                         // String youtube_stream_url = livestream_link;
                         YouvideoId = youtube_stream_url.substring(youtube_stream_url.lastIndexOf("=") + 1);
 
-                        String[] parts = youtube_stream_url.split("=");
-                        String part1 = parts[0]; // 004
-                        String videoId = parts[0]; // 034556
-                        String[] parts1 = videoId.split("&index");
-                        String url = parts1[0];
-                        String[] parts2 = videoId.split("&list");
-                        String url2 = parts2[0];
-                        Log.e("videoid", YouvideoId);
                         youTubePlayer = player;
                         //set the player style default
                         youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
@@ -204,6 +214,8 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
 
             mPlayerView.load(pi);
 
+
+
             // Get a reference to the CastContext
             //  mCastContext = CastContext.getSharedInstance(this);
         }
@@ -212,8 +224,11 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    LivestreamCommentFragment fragInfo = new LivestreamCommentFragment();
+                    SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
+                    fragInfo.setArguments(bundle);
                     transaction.replace(R.id.fragment_frame, fragInfo);
                     transaction.commit();
                 } else if (tab.getPosition() == 1) {

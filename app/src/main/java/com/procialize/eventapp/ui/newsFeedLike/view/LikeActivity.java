@@ -66,7 +66,7 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
     LikeAdapter likeAdapter;
     LinearLayoutManager linearLayoutManager;
 
-    int pageSize = 30;
+    int pageSize = 100;
     int totalPages = 0;
     private int currentPage = PAGE_START;
     private boolean isLoading = false;
@@ -151,31 +151,39 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
                                 likeList = gson.fromJson(data, new TypeToken<ArrayList<LikeDetail>>() {
                                 }.getType());
 
-                                String totRecords = response.body().getTotal_records();
-                                Long longTotalRecords = Long.parseLong(totRecords);
-                                if (longTotalRecords < pageSize) {
-                                    totalPages = 1;
-                                } else {
-                                    if ((int) (longTotalRecords % pageSize) == 0) {
-                                        totalPages = (int) (longTotalRecords / pageSize);
+                                try {
+                                    String totRecords = response.body().getTotal_records();
+                                    Long longTotalRecords = Long.parseLong(totRecords);
+                                    if (longTotalRecords < pageSize) {
+                                        totalPages = 1;
                                     } else {
-                                        totalPages = (int) (longTotalRecords / pageSize) + 1;
+                                        if ((int) (longTotalRecords % pageSize) == 0) {
+                                            totalPages = (int) (longTotalRecords / pageSize);
+                                        } else {
+                                            totalPages = (int) (longTotalRecords / pageSize) + 1;
+                                        }
                                     }
-                                }
-                                Log.e("totalPages_like", "" + totalPages);
 
-                                likeAdapter.getLikeDetails().clear();
-                                likeAdapter.notifyDataSetChanged();
-                                likeAdapter.addAll(likeList);
-                                // likeList = like.getLikeDetails();
-                                if (likeList != null) {
-                                    setupLikeAdapter(likeList);
-                                    //showLikeCount(likeList);
+                                    Log.e("totalPages_like", "" + totalPages);
+
+                                    likeAdapter.getLikeDetails().clear();
+                                    likeAdapter.notifyDataSetChanged();
+                                    likeAdapter.addAll(likeList);
+                                    // likeList = like.getLikeDetails();
+                                    if (likeList != null) {
+                                        setupLikeAdapter(likeList);
+                                        //showLikeCount(likeList);
+                                    }
+
+                                    if (currentPage <= totalPages)
+                                        likeAdapter.addLoadingFooter();
+                                    else isLastPage = true;
+
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
                                 }
 
-                                if (currentPage <= totalPages)
-                                    likeAdapter.addLoadingFooter();
-                                else isLastPage = true;
                             }
                         }
 
