@@ -44,7 +44,6 @@ android {
             exclude 'lib/x86_64/libopencv_imgproc.so'
             exclude 'META-INF/core_release.kotlin_module'
         }
-
     }
 
     buildTypes {

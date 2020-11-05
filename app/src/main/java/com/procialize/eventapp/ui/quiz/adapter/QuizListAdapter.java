@@ -1,6 +1,8 @@
 package com.procialize.eventapp.ui.quiz.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,9 @@ import com.procialize.eventapp.ui.quiz.model.QuizList;
 
 import java.util.List;
 
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.QUIZLOGO_MEDIA_PATH;
 
 public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizViewHolder> {
@@ -57,6 +62,17 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
     public void onBindViewHolder(@NonNull final QuizListAdapter.QuizViewHolder holder, final int position) {
         //Newsfeed_detail feedData = feed_detail.get(position);
         final QuizList quiz = quizList.get(position);
+
+        String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+
+        holder.linQuiz.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        holder.layoutBottom.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        holder.quiz_title_txt.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
+        holder.quiz_status.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.textViewTime.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.right_arrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
 
         if (logoUrl != null) {
             holder.progressBar.setVisibility(View.GONE);
@@ -99,8 +115,8 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
             holder.textViewTime.setVisibility(View.VISIBLE);
             holder.quiz_status.setText("Completed");
 
-            holder.textViewTime.setText(Integer.parseInt(String.valueOf(quizList.size())) + "/" +
-                    Integer.parseInt(String.valueOf(quizList.size())));
+            holder.textViewTime.setText(Integer.parseInt(String.valueOf(quizList.get(position).getTotal_correct())) + "/" +
+                    Integer.parseInt(String.valueOf(quizList.get(position).getQuiz_question().size())));
 
             holder.progressBarCircle.setMax(Integer.parseInt(String.valueOf(quizList.size())));
 
@@ -145,9 +161,10 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
 
         public TextView quiz_title_txt, quiz_status, textViewTime;
         RelativeLayout rl_bg_image;
-        ImageView profileIV;
+        ImageView profileIV,right_arrow;
         ProgressBar progressBar, progressBarCircle;
-        LinearLayout quiz_list_layout;
+        LinearLayout quiz_list_layout,linQuiz;
+        RelativeLayout layoutBottom;
 
         public QuizViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -159,6 +176,9 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
             progressBarCircle = itemView.findViewById(R.id.progressBarCircle);
             textViewTime = itemView.findViewById(R.id.textViewTime);
             quiz_list_layout = itemView.findViewById(R.id.quiz_list_layout);
+            linQuiz = itemView.findViewById(R.id.linQuiz);
+            layoutBottom = itemView.findViewById(R.id.layoutBottom);
+            right_arrow = itemView.findViewById(R.id.right_arrow);
 
 
         }
