@@ -391,7 +391,6 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
         String eventColor3Opacity40 = eventColor3.replace("#", "");
         switch_reminder.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         tv_short_session_description.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
-        tv_rate.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         tv_session_description.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         tv_rate_this_session.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         tv_set_reminder.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));

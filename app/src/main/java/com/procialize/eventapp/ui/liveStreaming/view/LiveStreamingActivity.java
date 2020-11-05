@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -78,7 +79,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 
 public class LiveStreamingActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener {
     TextView tv_header;
-    /*ViewMore*/TextView tvDescription;
+    /*ViewMore*/ TextView tvDescription;
     //YouTubePlayerView youTubeView;
     String YouvideoId;
     YouTubePlayer youTubePlayer;
@@ -87,13 +88,14 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
     private JWPlayerView mPlayerView;
     YouTubePlayerSupportFragment youTubePlayerFragment;
     //private CastContext mCastContext;
-    LinearLayout ll_youtube, ll_bottom, ll_main;
+    LinearLayout ll_youtube, ll_bottom, ll_main, ll_inner_layout;
     AppBarLayout appBarLayout;
     String youtube_stream_url;
     String filePath;
     ImageView iv_back;
     //BottomNavigationView bottom_navigation;
     TabLayout tablayout;
+    TabItem ti_spot_quiz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,7 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             }
         });
         ll_main = (LinearLayout) findViewById(R.id.ll_main);
+        ll_inner_layout = (LinearLayout) findViewById(R.id.ll_inner_layout);
         ll_youtube = (LinearLayout) findViewById(R.id.ll_youtube);
         ll_bottom = (LinearLayout) findViewById(R.id.ll_bottom);
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
@@ -129,10 +132,11 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         //bottom_navigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         tablayout = findViewById(R.id.tablayout);
         tv_header = (TextView) findViewById(R.id.tv_header);
+        ti_spot_quiz = (TabItem) findViewById(R.id.ti_spot_quiz);
         tv_header.setText(sessionName);
         tvDescription.setText(sessionShortDescription.trim());
 
-        if(sessionShortDescription.length() > 30) {
+        if (sessionShortDescription.length() > 30) {
             CommonFunction.makeTextViewResizable(tvDescription, 1, " View More", true);
         }
         setDynamicColor();
@@ -215,7 +219,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             mPlayerView.load(pi);
 
 
-
             // Get a reference to the CastContext
             //  mCastContext = CastContext.getSharedInstance(this);
         }
@@ -240,7 +243,7 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
                     transaction.replace(R.id.fragment_frame, fragInfo);
                     transaction.commit();
                 } else if (tab.getPosition() == 2) {
-                   // Toast.makeText(LiveStreamingActivity.this, "2", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(LiveStreamingActivity.this, "2", Toast.LENGTH_SHORT).show();
                 } else if (tab.getPosition() == 3) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
@@ -263,19 +266,14 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             }
         });
 
-    /*    ColorStateList iconsColorStates = new ColorStateList(
-                new int[][]{
-                        new int[]{-android.R.attr.state_checked},
-                        new int[]{android.R.attr.state_checked}
-                },
-                new int[]{
-                        //Color.parseColor(colorunselect),
-                        Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)),
-                        Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
-                });
-        bottom_navigation.setItemIconTintList(iconsColorStates);
+        tablayout.getTabAt(0).getIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_IN);
+        tablayout.getTabAt(1).getIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_IN);
+        tablayout.getTabAt(2).getIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_IN);
+        tablayout.getTabAt(3).getIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_IN);
 
-        bottom_navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        //ti_spot_quiz.setItemIconTintList(iconsColorStates);
+
+      /*   bottom_navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment = null;
@@ -404,7 +402,8 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
 
     private void setDynamicColor() {
         CommonFunction.showBackgroundImage(this, ll_main);
-        tvDescription.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+        ll_inner_layout.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
+        tvDescription.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         tablayout.setSelectedTabIndicatorColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));

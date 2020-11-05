@@ -16,11 +16,11 @@ public class SpotQnAList {
         return session_question_list;
     }
 
-    @SerializedName("profile_pic_url_path")
+    /*@SerializedName("profile_pic_url_path")
     @Expose
     String profile_pic_url_path;
 
     public String getProfile_pic_url_path() {
         return profile_pic_url_path;
-    }
+    }*/
 }

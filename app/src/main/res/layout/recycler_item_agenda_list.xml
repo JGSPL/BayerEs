@@ -53,6 +53,8 @@
             android:gravity="left"
             android:text="Registartion of delegates"
             android:textSize="15dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textStyle="bold" />
 
         <com.procialize.eventapp.fonts.RobotoTextview
@@ -62,7 +64,7 @@
             android:ellipsize="end"
             android:gravity="left"
             android:maxLines="1"
-            android:text="Please gather at registration desk"
+            android:text=""
             android:textSize="14dp" />
 
     </LinearLayout>
