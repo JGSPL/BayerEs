@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.ui.quiz.model.QuizOption;
 import com.procialize.eventapp.ui.quiz.model.QuizQuestion;
 
@@ -27,6 +29,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 
 public class QuizPagerDialogAdapter extends PagerAdapter {
 
@@ -49,7 +53,6 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
     private String quizQuestionUrl = "";
 
     int flag = 0;
-    String MY_PREFS_NAME = "ProcializeInfo";
     private SparseIntArray mSpCheckedState = new SparseIntArray();
     String accessToken, event_id, colorActive;
     Context context;
@@ -95,7 +98,7 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
         viewGroup = (RadioGroup) myImageLayout.findViewById(R.id.radiogroup);
 
         txt_page.setText(String.valueOf(position + 1) + "/" + String.valueOf(quizList.size()));
-
+        quiz_question_distruct.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
         if (quizList.get(position).getReplied() == null) {
 
             if (raiolayout.getVisibility() == View.GONE) {
@@ -146,7 +149,14 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
                     AppCompatRadioButton rdbtn = new AppCompatRadioButton(context);
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(quizSpecificOptionListnew.get(i - 1).getOption()));
-                    rdbtn.setTextColor(Color.BLACK);
+                    rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+                    GradientDrawable border = new GradientDrawable();
+                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        rdbtn.setBackgroundDrawable(border);
+                    } else {
+                        rdbtn.setBackground(border);
+                    }
                     rdbtn.setTextSize(14);
 //                    rdbtn.setBackgroundResource(R.drawable.livepollback);
                     if (Build.VERSION.SDK_INT >= 21) {
@@ -162,7 +172,7 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
                                         /*   Color.parseColor("#585e44")//disabled
                                            , Color.parseColor("#e31e24")//enabled */
                                         Color.parseColor("#585e44")//disabled
-                                        , Color.parseColor("#585e44")//enabled
+                                        , Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))//enabled
 
                                 }
                         );
@@ -293,9 +303,16 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
                     final AppCompatRadioButton rdbtn = new AppCompatRadioButton(activity);
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(quizSpecificOptionListnew.get(i - 1).getOption()));
-                    rdbtn.setTextColor(Color.BLACK);
+                    rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+                    GradientDrawable border = new GradientDrawable();
+                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        rdbtn.setBackgroundDrawable(border);
+                    } else {
+                        rdbtn.setBackground(border);
+                    }
                     rdbtn.setTextSize(9);
-                    rdbtn.setBackgroundResource(R.drawable.livepollback);
+//                    rdbtn.setBackgroundResource(R.drawable.livepollback);
 
                     RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
                             width,
@@ -321,7 +338,7 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
                                 new int[]{
 
                                         Color.parseColor("#585e44")//disabled
-                                        , Color.parseColor("#e31e24")//enabled
+                                        , Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))//enabled
 
                                 }
                         );

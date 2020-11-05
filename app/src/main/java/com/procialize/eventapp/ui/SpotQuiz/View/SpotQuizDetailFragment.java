@@ -1,5 +1,6 @@
 package com.procialize.eventapp.ui.SpotQuiz.View;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
 public class SpotQuizDetailFragment extends Fragment implements View.OnClickListener {
@@ -92,6 +96,14 @@ public class SpotQuizDetailFragment extends Fragment implements View.OnClickList
         questionTv = root.findViewById(R.id.questionTv);
         pager = root.findViewById(R.id.pager);
         submit.setOnClickListener(this);
+        String eventColor3 = SharedPreference.getPref(getActivity(), EVENT_COLOR_3);
+
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+
+        submit.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_2)));
+        questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
+        tv_title.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
+        submit.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
 
         try {
             questionId = getArguments().getString("id");

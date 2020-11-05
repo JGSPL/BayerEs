@@ -64,7 +64,6 @@
                 android:gravity="center"
                 android:padding="10dp"
                 android:visibility="gone"
-                android:text="General Knowledge"
                 android:textColor="@color/colorwhite"
                 android:textSize="16dp" />
 
