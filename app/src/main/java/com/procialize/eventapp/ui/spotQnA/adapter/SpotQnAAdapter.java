@@ -139,12 +139,21 @@ public class SpotQnAAdapter extends RecyclerView.Adapter<SpotQnAAdapter.SpotQnAV
         } catch (Exception e) {
         }
         setDynamicColor(holder);
-
     }
 
     @Override
     public int getItemCount() {
-        return spotQnAList.size();
+        return (null != spotQnAList ? spotQnAList.size() : 0);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     public interface EventAdapterListner {
