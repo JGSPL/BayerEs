@@ -325,6 +325,11 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                             }
                         }.start();
                     } else {
+                        try {
+                            timercountdown.cancel();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         rv_timer.setVisibility(View.GONE);
                     }
 

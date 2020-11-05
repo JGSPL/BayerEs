@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/Quizcard"
+    android:background="@color/colorwhite"
+    android:layout_height="wrap_content">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_close"
+                android:layout_gravity="right"
+                android:id="@+id/imgClose"
+                android:padding="10dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/logoIv"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:src="@drawable/quizlogo"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY">
+            </ImageView>
+            <com.procialize.eventapp.fonts.RobotoTextview
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textsizenormal"
+                android:text="Live Quiz"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:id="@+id/title">
+
+            </com.procialize.eventapp.fonts.RobotoTextview>
+
+
+            <com.procialize.eventapp.fonts.RobotoButton
+                android:layout_width="180dp"
+                android:gravity="center"
+                android:id="@+id/btnQuizStart"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:textColor="@color/colorwhite"
+                android:text="start"
+                android:layout_height="35dp">
+
+            </com.procialize.eventapp.fonts.RobotoButton>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.cardview.widget.CardView>

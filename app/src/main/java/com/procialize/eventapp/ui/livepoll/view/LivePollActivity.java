@@ -48,6 +48,7 @@ import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.MainActivity;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFunction;
+import com.procialize.eventapp.Utility.KeyboardUtility;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
@@ -80,6 +81,7 @@ import static com.procialize.eventapp.Utility.CommonFirebase.crashlytics;
 import static com.procialize.eventapp.Utility.CommonFirebase.firbaseAnalytics;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
@@ -96,17 +98,20 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
     TextView empty, pullrefresh,title;
     LinearLayout linear;
     LivePollViewModel livePollViewModel;
-    ImageView iv_profile;
+    ImageView iv_profile, iv_back;
      String token;
+     View bgView;
     MutableLiveData<FetchLivePoll> FetchLivePollList = new MutableLiveData<>();
     private APIService eventApi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_polllist);
+        KeyboardUtility.hideSoftKeyboard(this);
+
         eventid = SharedPreference.getPref(this, EVENT_ID);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
         headerlogoIv = findViewById(R.id.headerlogoIv);
 
         setSupportActionBar(toolbar);
@@ -114,9 +119,9 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);*/
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+       /* toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -124,7 +129,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         });
 
         toolbar.getNavigationIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
-
+*/
         livePollViewModel = ViewModelProviders.of(this).get(LivePollViewModel.class);
 
         cd = ConnectionDetector.getInstance(this);
@@ -139,21 +144,30 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         iv_profile = findViewById(R.id.iv_profile);
         progressView = findViewById(R.id.progressView);
         title = findViewById(R.id.title);
-
+        bgView = findViewById(R.id.bgView);
         empty = findViewById(R.id.empty);
-
+        iv_back = findViewById(R.id.iv_back);
 
         optionLists = new ArrayList<>();
 
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+
+
         CommonFunction.showBackgroundImage(LivePollActivity.this, linear);
         title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
-
+        bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
 
 
          token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         crashlytics("Live Poll",token);
         firbaseAnalytics(this, "Live Poll", token);
-
 
 
         if (cd.isConnectingToInternet()) {

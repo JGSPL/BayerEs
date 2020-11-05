@@ -10,7 +10,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:background="@drawable/chat_bg"
+    android:background="@android:color/transparent"
     android:id="@+id/linMain"
     android:layout_height="match_parent">
 

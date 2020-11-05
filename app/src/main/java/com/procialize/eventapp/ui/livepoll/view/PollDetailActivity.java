@@ -91,7 +91,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
     String token, colorActive;
     LinearLayout linView;
     RecyclerView pollGraph;
-    ImageView headerlogoIv;
+    ImageView headerlogoIv, iv_back;
 
     private APIService mAPIService;
     RelativeLayout relative,relMain;
@@ -105,7 +105,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
         eventid = SharedPreference.getPref(this, EVENT_ID);
         colorActive = SharedPreference.getPref(this, EVENT_COLOR_3);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+       /* Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -119,15 +119,26 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
                 finish();
             }
         });
-        toolbar.getNavigationIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        toolbar.getNavigationIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);*/
 
         headerlogoIv = findViewById(R.id.headerlogoIv);
 
-        ImageView notificationlogoIv = findViewById(R.id.notificationlogoIv);
 
         pollGraph = findViewById(R.id.pollGraph);
         relative = findViewById(R.id.relative);
         test = findViewById(R.id.test);
+        iv_back = findViewById(R.id.iv_back);
+
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+
 
         CommonFunction.showBackgroundImage(PollDetailActivity.this, relative);
 

@@ -49,6 +49,7 @@ import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.costumTools.KeepScreenOnHandler;
 import com.procialize.eventapp.ui.AgendaDetails.view.AgendaDetailsActivity;
+import com.procialize.eventapp.ui.SpotQuiz.View.SpotQuizFragment;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
@@ -156,14 +157,14 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         mPlayerView = findViewById(R.id.jwplayer);
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_view);
 
-        /*Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
         bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
         fragInfo.setArguments(bundle);
         transaction.replace(R.id.fragment_frame, fragInfo);
         transaction.commit();
-*/
+
         if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
             // youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
             // Initializing video player with developer key
@@ -227,13 +228,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
-                    /*Bundle bundle = new Bundle();
+                    Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
                     fragInfo.setArguments(bundle);
                     transaction.replace(R.id.fragment_frame, fragInfo);
-                    transaction.commit();*/
+                    transaction.commit();
                 } else if (tab.getPosition() == 1) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
@@ -243,7 +244,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
                     transaction.replace(R.id.fragment_frame, fragInfo);
                     transaction.commit();
                 } else if (tab.getPosition() == 2) {
-                    // Toast.makeText(LiveStreamingActivity.this, "2", Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    SpotQuizFragment fragInfo = new SpotQuizFragment();
+                    fragInfo.setArguments(bundle);
+                    transaction.replace(R.id.fragment_frame, fragInfo);
+                    transaction.commit();
                 } else if (tab.getPosition() == 3) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
