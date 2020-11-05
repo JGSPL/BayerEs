@@ -50,7 +50,7 @@ public class PdfAdapter extends RecyclerView.Adapter<PdfAdapter.MyViewHolder> {
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
 
-        holder.tv_pdf_name.setPaintFlags(holder.tv_pdf_name.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+      //  holder.tv_pdf_name.setPaintFlags(holder.tv_pdf_name.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         String pdfName = pdfLists.get(position).getPdf_name();
         String s1 = pdfName.substring(0, 1).toUpperCase() + pdfName.substring(1);
         holder.tv_pdf_name.setText(s1 );

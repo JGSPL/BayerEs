@@ -55,6 +55,8 @@ import cn.jzvd.JzvdStd;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 public class GroupMessageAdapter extends RecyclerView.Adapter<GroupMessageAdapter.MessageViewHolder> implements CacheListener {
 
@@ -164,7 +166,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<GroupMessageAdapte
         TableAttendee tableAttendees = EventAppDB.getDatabase(context).attendeeDao().getAttendeeDetailsFromFireId(from_user_id);
         final Attendee attendee = new Attendee();
 
-        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+       // attendee.setFirebase_status(tableAttendees.getFirebase_status());
         attendee.setMobile(tableAttendees.getMobile());
         attendee.setEmail(tableAttendees.getEmail());
         attendee.setFirebase_id(tableAttendees.getFirebase_id());
@@ -183,9 +185,15 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<GroupMessageAdapte
 
 
         holder.innerRl2.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
-        // holder.innerRl1.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
+         holder.linMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
+        String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
-        holder.messageText2.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+
+        holder.messageText.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.displayTime.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+        holder.displayName.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
+
         if(from_user_id!=null) {
           //  if (from_user_id.equals(current_user_id)) {
                 holder.messageSingleLayout3.setVisibility(View.GONE);

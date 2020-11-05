@@ -72,6 +72,8 @@ public class LivePollAdapter extends RecyclerView.Adapter<LivePollAdapter.NewsVi
         final LivePoll pollList = pollLists.get(position);
 
         holder.linMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+        holder.mainLL.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_2)));
+
         String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
@@ -84,11 +86,12 @@ public class LivePollAdapter extends RecyclerView.Adapter<LivePollAdapter.NewsVi
         if(pollList.getStatus().equalsIgnoreCase("Tap To Participate")){
             holder.statusTv.setVisibility(View.VISIBLE);
             holder.statusTv.setText("Tap To Participate");
+            holder.ivewComplete.setBackgroundColor(Color.parseColor("#898989"));
 
-            holder.ivewComplete.setVisibility(View.GONE);
+            holder.ivewComplete.setVisibility(View.VISIBLE);
         }else{
             holder.statusTv.setVisibility(View.VISIBLE);
-            holder.statusTv.setText("Participated");
+            holder.statusTv.setText("Completed");
             holder.ivewComplete.setVisibility(View.VISIBLE);
 
             holder.ivewComplete.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
