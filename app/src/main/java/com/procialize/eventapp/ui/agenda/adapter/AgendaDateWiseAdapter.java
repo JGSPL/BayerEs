@@ -79,7 +79,7 @@ public class AgendaDateWiseAdapter extends RecyclerView.Adapter<AgendaDateWiseAd
         final Agenda agenda = agendaLists.get(position);
 
         holder.tv_session_name.setText(agenda.getSession_name());
-        holder.tv_description.setText(agenda.getSession_description());
+        holder.tv_description.setText(agenda.getSession_short_description());
 
 
         try {
@@ -97,7 +97,7 @@ public class AgendaDateWiseAdapter extends RecyclerView.Adapter<AgendaDateWiseAd
             Date currentTime = Calendar.getInstance().getTime();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String strCurrnetDate = dateFormat.format(currentTime);
-            if(CommonFunction.isTimeBetweenTwoTime(agenda.getSession_start_time(), agenda.getSession_end_time(), strCurrnetDate))
+            if(CommonFunction.isTimeBetweenTwoTime(agenda.getSession_start_time(), agenda.getSession_end_time(), strCurrnetDate) && !agenda.getLivestream_link().isEmpty())
             {
                 holder.iv_next_arrow.setImageDrawable(context.getResources().getDrawable(R.mipmap.ic_live_streaming));
             }

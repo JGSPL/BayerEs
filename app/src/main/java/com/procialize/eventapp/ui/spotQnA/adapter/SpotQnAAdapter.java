@@ -112,7 +112,7 @@ public class SpotQnAAdapter extends RecyclerView.Adapter<SpotQnAAdapter.SpotQnAV
             }
 
             if (spotQnA.getProfile_picture() != null) {
-                Glide.with(context).load(mediaPath + spotQnA.getProfile_picture().trim()).listener(new RequestListener<Drawable>() {
+                Glide.with(context).load(/*mediaPath +*/ spotQnA.getProfile_picture().trim()).listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         holder.iv_profile.setImageResource(R.drawable.profilepic_placeholder);

@@ -345,15 +345,15 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
                                     spotQnAAdapter.removeLoadingFooter();
                                     isLoading = false;
                                     Gson gson = new Gson();
-                                    List<SpotQnAList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<SpotQnAList>>() {
+                                    List<SpotQnA> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<SpotQnA>>() {
                                     }.getType());
                                     if (agendaLists != null) {
                                         if (agendaLists.size() > 0) {
 
-                                            String strFilePath = CommonFunction.stripquotes(agendaLists.get(0).getProfile_pic_url_path());
+                                          /*  String strFilePath = CommonFunction.stripquotes(agendaLists.get(0).getProfile_pic_url_path());
                                             HashMap<String, String> map = new HashMap<>();
                                             map.put(PROFILE_PIC_MEDIA_PATH, strFilePath.replace("\\/", "/"));
-                                            SharedPreference.putPref(getActivity(), map);
+                                            SharedPreference.putPref(getActivity(), map);*/
                                             String totRecords = response.body().getTotalRecords();
 
                                             Long longTotalRecords = Long.parseLong(totRecords);
@@ -370,13 +370,13 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
 
                                             Log.e("totalPages", "" + totalPages);
 
-                                            List<SpotQnA> spotQnAs = agendaLists.get(0).getSession_question_list();
+                                            //List<SpotQnA> spotQnAs = agendaLists.get
                                             /*spotQnAAdapter.getSpotQnAList().clear();
                                             spotQnAAdapter.notifyDataSetChanged();*/
                                             spotQnAAdapter.getSpotQnAList().clear();
                                             spotQnAAdapter.notifyDataSetChanged();
-                                            spotQnAAdapter.addAll(spotQnAs);
-                                            setupAgendaAdapter(spotQnAs);
+                                            spotQnAAdapter.addAll(agendaLists);
+                                            setupAgendaAdapter(agendaLists);
 
                                             if (currentPage <= totalPages)
                                                 spotQnAAdapter.addLoadingFooter();
@@ -414,14 +414,14 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
                                 String data = refreashToken.decryptedData(strCommentList);
                                 try {
                                     Gson gson = new Gson();
-                                    List<SpotQnAList> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<SpotQnAList>>() {
+                                    List<SpotQnA> agendaLists = gson.fromJson(data, new TypeToken<ArrayList<SpotQnA>>() {
                                     }.getType());
                                     if (agendaLists != null) {
                                         if (agendaLists.size() > 0) {
-                                            List<SpotQnA> spotQnAs = agendaLists.get(0).getSession_question_list();
-                                            spotQnAAdapter.addAll(spotQnAs);
+                                            //List<SpotQnA> spotQnAs = agendaLists.get(0).getSession_question_list();
+                                            spotQnAAdapter.addAll(agendaLists);
 
-                                            setupAgendaAdapter(spotQnAs);
+                                            setupAgendaAdapter(agendaLists);
 
                                             if (currentPage != totalPages)
                                                 spotQnAAdapter.addLoadingFooter();
