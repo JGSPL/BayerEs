@@ -205,6 +205,13 @@ public interface APIService {
                                 @Field("quiz_id") String quiz_id,
                                 @Field("quiz_options_id") String quiz_options_id);
 
+    @POST("Quiz_api/SpotQuizSubmit")
+    @FormUrlEncoded
+    Call<QuizSubmit> submitSpotQuiz(@Header("authorization") String auth,
+                                    @Field("event_id") String event_id,
+                                    @Field("quiz_id") String quiz_id,
+                                    @Field("quiz_options_id") String quiz_options_id);
+
     @POST("event_api_call/updateDeviceInfo")
     @FormUrlEncoded
     Call<UpdateDeviceInfo> updateDeviceInfo(@Header("authorization") String authorization, @Field("event_id") String event_id,
@@ -318,15 +325,21 @@ public interface APIService {
     @POST("Livepoll_api/SpotLivePollFetch")
     @FormUrlEncoded
     Call<FetchLivePoll> SpotLivePollFetch(@Header("authorization") String authkey,
-                                      @Field("event_id") String event_id,
+                                          @Field("event_id") String event_id,
                                           @Field("session_id") String session_id);
+
+    @POST("Quiz_api/SpotQuizFetch")
+    @FormUrlEncoded
+    Call<QuizListing> SpotQuizFetch(@Header("authorization") String authkey,
+                                    @Field("event_id") String event_id,
+                                    @Field("session_id") String session_id);
 
     @POST("Livepoll_api/SpotLivePollSubmit")
     @FormUrlEncoded
     Call<LoginOrganizer> SpotLivePollSubmit(@Header("authorization") String authkey,
-                                       @Field("event_id") String event_id,
-                                       @Field("live_poll_id") String live_poll_id,
-                                       @Field("live_poll_options_id") String live_poll_options_id);
+                                            @Field("event_id") String event_id,
+                                            @Field("live_poll_id") String live_poll_id,
+                                            @Field("live_poll_options_id") String live_poll_options_id);
 
     @POST("Agenda_api/RateSession")
     @FormUrlEncoded

@@ -48,6 +48,7 @@ import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.costumTools.KeepScreenOnHandler;
 import com.procialize.eventapp.ui.AgendaDetails.view.AgendaDetailsActivity;
+import com.procialize.eventapp.ui.SpotQuiz.View.SpotQuizFragment;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
 import com.procialize.eventapp.ui.agenda.view.AgendaFragment;
 import com.procialize.eventapp.ui.attendee.view.AttendeeFragment;
@@ -240,7 +241,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
                     transaction.replace(R.id.fragment_frame, fragInfo);
                     transaction.commit();
                 } else if (tab.getPosition() == 2) {
-                   // Toast.makeText(LiveStreamingActivity.this, "2", Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    SpotQuizFragment fragInfo = new SpotQuizFragment();
+                    fragInfo.setArguments(bundle);
+                    transaction.replace(R.id.fragment_frame, fragInfo);
+                    transaction.commit();
                 } else if (tab.getPosition() == 3) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);

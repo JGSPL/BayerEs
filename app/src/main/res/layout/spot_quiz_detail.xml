@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="60dp"
+    android:layout_width="match_parent"
+    android:layout_height="250dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rel1">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/linTop"
+            android:layout_width="match_parent"
+            android:weightSum="10"
+            android:layout_height="wrap_content">
+
+            <com.procialize.eventapp.fonts.RobotoTextview
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_weight="8"
+                android:layout_height="wrap_content"
+                android:text="Live Quiz"
+                android:textColor="@color/activetab"
+                android:layout_marginRight="70dp"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:layout_marginLeft="20dp">
+            </com.procialize.eventapp.fonts.RobotoTextview>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_close"
+                android:layout_gravity="right"
+                android:id="@+id/imgClose"
+                android:padding="10dp">
+            </ImageView>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/linTop"
+
+            android:id="@+id/linQuizQues"
+            android:layout_marginBottom="80dp"
+            android:gravity="top"
+            android:orientation="vertical">
+
+            <com.procialize.eventapp.fonts.RobotoTextview
+                android:id="@+id/questionTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:visibility="gone"
+                android:text="General Knowledge"
+                android:textColor="@color/colorwhite"
+                android:textSize="16dp" />
+
+
+
+            <com.procialize.eventapp.costumTools.CustomViewPager
+                android:id="@+id/pager"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="50dp"
+                android:layout_height="wrap_content" />
+
+
+            <com.procialize.eventapp.costumTools.NoScrollRecycler
+                android:id="@+id/quiz_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:descendantFocusability="beforeDescendants"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="5dp"
+                android:isScrollContainer="false"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/quiz_list"
+                android:orientation="vertical">
+
+
+                <com.procialize.eventapp.fonts.RobotoButton
+                    android:id="@+id/submit"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="Submit"
+                    android:textAllCaps="false"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
