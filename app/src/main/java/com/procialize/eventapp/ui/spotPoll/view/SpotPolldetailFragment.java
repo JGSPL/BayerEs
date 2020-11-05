@@ -233,7 +233,7 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
                 }
             }
         } else {
-            Toast.makeText(getContext(), "Select Option", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Option not available for this poll", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -5,25 +5,26 @@
     android:layout_height="wrap_content"
     android:gravity="left|center"
     android:orientation="vertical"
+    android:layout_marginBottom="-3dp"
     android:padding="3dp">
 
     <RelativeLayout
         android:id="@+id/rl_bg_image"
-        android:visibility="gone"
+        android:layout_marginBottom="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp">
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/layoutTop"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent" />
 
         <RelativeLayout
             android:id="@+id/layoutBottom"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:layout_below="@id/layoutTop"
             android:background="@color/colorwhite">
 
@@ -35,16 +36,16 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/layoutBottom"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="-40dp"
+            android:layout_marginBottom="-60dp"
             android:adjustViewBounds="true">
 
             <ImageView
                 android:id="@+id/profileIV"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_centerInParent="true"
                 android:contentDescription="TODO"
-                android:src="@drawable/quizlogo" />
+                android:background="@drawable/image_border" />
 
             <ProgressBar
                 android:layout_width="30dp"
@@ -54,7 +55,6 @@
 
         </RelativeLayout>
     </RelativeLayout>
-
 
 
     <LinearLayout
@@ -106,7 +106,8 @@
                 android:paddingLeft="10dp"
                 android:paddingBottom="5dp"
                 android:textSize="10sp"
-                android:textColor="@color/txtcolor"/>
+                android:layout_marginTop="10dp"
+                android:textColor="@color/txtcolor" />
 
         </LinearLayout>
 
@@ -148,13 +149,15 @@
         -->
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center"
+            android:gravity="right|center">
 
             <ProgressBar
                 android:id="@+id/progressBarCircle"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/quiz_pro"
                 android:indeterminate="false"
@@ -184,9 +187,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_rightarrow"
+                android:id="@+id/right_arrow"
                 android:contentDescription="TODO"
-                android:tint="@color/colorAccent"
+                android:src="@drawable/ic_rightarrow"
                 android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>

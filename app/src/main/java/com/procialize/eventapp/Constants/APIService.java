@@ -16,6 +16,7 @@ import com.procialize.eventapp.ui.newsFeedLike.model.Like;
 import com.procialize.eventapp.ui.newsfeed.model.FetchNewsfeedMultiple;
 import com.procialize.eventapp.ui.profile.model.Profile;
 import com.procialize.eventapp.ui.quiz.model.QuizListing;
+import com.procialize.eventapp.ui.quiz.model.QuizSubmit;
 import com.procialize.eventapp.ui.speaker.model.FetchSpeaker;
 import com.procialize.eventapp.ui.spotQnA.model.FetchSpotQnA;
 
@@ -196,6 +197,13 @@ public interface APIService {
     @FormUrlEncoded
     Call<QuizListing> getQuizList(@Header("authorization") String auth,
                                   @Field("event_id") String event_id);
+
+    @POST("quiz_api/QuizSubmit")
+    @FormUrlEncoded
+    Call<QuizSubmit> submitQuiz(@Header("authorization") String auth,
+                                @Field("event_id") String event_id,
+                                @Field("quiz_id") String quiz_id,
+                                @Field("quiz_options_id") String quiz_options_id);
 
     @POST("event_api_call/updateDeviceInfo")
     @FormUrlEncoded

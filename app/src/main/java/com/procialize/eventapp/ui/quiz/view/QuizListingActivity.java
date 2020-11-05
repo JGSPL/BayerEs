@@ -1,6 +1,7 @@
 package com.procialize.eventapp.ui.quiz.view;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.procialize.eventapp.ConnectionDetector;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
 import com.procialize.eventapp.Utility.CommonFirebase;
+import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
@@ -36,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.QUIZLOGO_MEDIA_PATH;
 
@@ -65,7 +68,7 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+//        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +80,8 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
         quizRefreash=findViewById(R.id.quizrefresher);
         ll_main=findViewById(R.id.ll_main);
         tv_header=findViewById(R.id.tv_header);
-
+        CommonFunction.showBackgroundImage(QuizListingActivity.this, ll_main);
+        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizListingActivity.this, EVENT_COLOR_1)));
         session = new SessionManager(getApplicationContext());
 
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
@@ -164,10 +168,20 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
 
     @Override
     public void onMoreSelected(QuizList quiz, final int position) {
-        Intent intent = new Intent(QuizListingActivity.this, QuizDetailActivity.class);
-        intent.putExtra("timer", quiz.getTimer());
-        intent.putExtra("folder_id", quiz.getFolder_id());
-        intent.putExtra("folder_name", quiz.getFolder_name());
-        startActivity(intent);
+        if(quiz.getQuiz_question().get(0).getReplied().equalsIgnoreCase("0")) {
+            QuizDetailActivity.count1 = 1;
+            QuizDetailActivity.submitflag = false;
+            Intent intent = new Intent(QuizListingActivity.this, QuizDetailActivity.class);
+            intent.putExtra("timer", quiz.getTimer());
+            intent.putExtra("folder_id", quiz.getFolder_id());
+            intent.putExtra("folder_name", quiz.getFolder_name());
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(QuizListingActivity.this, QuizSubmittedActivity.class);
+            intent.putExtra("timer", quiz.getTimer());
+            intent.putExtra("folder_id", quiz.getFolder_id());
+            intent.putExtra("folder_name", quiz.getFolder_name());
+            startActivity(intent);
+        }
     }
 }

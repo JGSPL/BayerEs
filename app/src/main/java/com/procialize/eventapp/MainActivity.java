@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -290,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });*/
 
-        //
         NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putString("isFrom", "MainActivity");
@@ -373,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getAttendeeAndInsertIntoDB();
     }
+
 
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -607,6 +605,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
     //Login User
     private void login_user(String email, String password) {
 
@@ -709,6 +708,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
+
     private void getAttendeeAndInsertIntoDB() {
         try {
             final AttendeeDatabaseViewModel attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
@@ -808,6 +808,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         return chatUpdate;
+    }
+
+    public BaseFragment getActiveFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return null;
+        }
+        String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        return (BaseFragment) getSupportFragmentManager().findFragmentByTag(tag);
     }
 
 }

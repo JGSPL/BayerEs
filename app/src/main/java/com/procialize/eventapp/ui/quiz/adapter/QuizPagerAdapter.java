@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +20,7 @@ import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.procialize.eventapp.R;
+import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.ui.quiz.model.QuizOption;
 import com.procialize.eventapp.ui.quiz.model.QuizQuestion;
 import com.procialize.eventapp.ui.quiz.view.QuizDetailActivity;
@@ -27,6 +29,9 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 
 public class QuizPagerAdapter extends PagerAdapter {
     private Activity activity;
@@ -93,6 +98,11 @@ public class QuizPagerAdapter extends PagerAdapter {
 
         txt_page.setText(String.valueOf(position + 1) + "/" + String.valueOf(quizList.size()));
 
+        String eventColor3 = SharedPreference.getPref(activity, EVENT_COLOR_3);
+
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+
+
         if (quizList.get(position).getReplied() == null) {
 
             if (raiolayout.getVisibility() == View.GONE) {
@@ -100,7 +110,7 @@ public class QuizPagerAdapter extends PagerAdapter {
             }
 
             quiz_title_txt.setText(StringEscapeUtils.unescapeJava(quizList.get(position).getQuestion()));
-            quizOptionList = QuizDetailActivity.app.getQuizOptionList();
+            quizOptionList = quizList.get(position).getQuiz_option();
             if (quizSpecificOptionListnew.size() > 0) {
                 quizSpecificOptionListnew.clear();
             }
@@ -142,7 +152,7 @@ public class QuizPagerAdapter extends PagerAdapter {
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setTypeface(typeFace);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(quizSpecificOptionListnew.get(i - 1).getOption()));
-                    rdbtn.setTextColor(Color.BLACK);
+//                    rdbtn.setTextColor(Color.BLACK);
                     rdbtn.setTextSize(14);
 //                    rdbtn.setBackgroundResource(R.drawable.livepollback);
                     if (Build.VERSION.SDK_INT >= 21) {
@@ -158,7 +168,7 @@ public class QuizPagerAdapter extends PagerAdapter {
                                         /* Color.parseColor("#585e44")//disabled
                                          , Color.parseColor("#e31e24")//enabled*/
                                         Color.parseColor("#4d4d4d")//disabled
-                                        , Color.parseColor("#4d4d4d")//enabled
+                                        , Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))//enabled
                                 }
                         );
 
@@ -180,12 +190,18 @@ public class QuizPagerAdapter extends PagerAdapter {
                     // rdbtn.setPadding(10,10,10,5);
                     rdbtn.setLayoutParams(p);
                     rdbtn.setTag(quizSpecificOptionListnew.get(i - 1).getOption_id());
-                    rdbtn.setBackgroundResource(R.drawable.livepollback);
-
+//                    rdbtn.setBackgroundResource(R.drawable.livepollback);
+                    GradientDrawable border = new GradientDrawable();
+                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        rdbtn.setBackgroundDrawable(border);
+                    } else {
+                        rdbtn.setBackground(border);
+                    }
 //                    rdbtn.setButtonDrawable(R.drawable.radio_buttontoggle_first);
                     rdbtn.setPaddingRelative(5, 5, 5, 5);
                     rdbtn.setPadding(15, 15, 15, 15);
-                    rdbtn.setTextColor(activity.getResources().getColor(R.color.textcolorLight));
+                    rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
 
                     if (checkArray[position] != null) {
                         if (rdbtn.getText().toString().equalsIgnoreCase(checkArray[position])) {
@@ -236,14 +252,14 @@ public class QuizPagerAdapter extends PagerAdapter {
             quiz_question_distruct.setText(StringEscapeUtils.unescapeJava(quizList.get(position).getQuestion()));
 
 
-        } else if (quizList.get(position).getReplied().equalsIgnoreCase("1")) {
+        } else if (quizList.get(position).getReplied().equalsIgnoreCase("0")) {
 
             if (raiolayout.getVisibility() == View.GONE) {
                 raiolayout.setVisibility(View.VISIBLE);
             }
 
             quiz_title_txt.setText(quizList.get(position).getQuestion());
-            quizOptionList = QuizDetailActivity.app.getQuizOptionList();
+            quizOptionList = quizList.get(position).getQuiz_option();
             if (quizSpecificOptionListnew.size() > 0) {
                 quizSpecificOptionListnew.clear();
             }
@@ -289,10 +305,17 @@ public class QuizPagerAdapter extends PagerAdapter {
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setTypeface(typeFace);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(quizSpecificOptionListnew.get(i - 1).getOption()));
-                    rdbtn.setTextColor(Color.BLACK);
+//                    rdbtn.setTextColor(Color.BLACK);
+                    rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
                     rdbtn.setTextSize(9);
-                    rdbtn.setBackgroundResource(R.drawable.livepollback);
-
+//                    rdbtn.setBackgroundResource(R.drawable.livepollback);
+                    GradientDrawable border = new GradientDrawable();
+                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        rdbtn.setBackgroundDrawable(border);
+                    } else {
+                        rdbtn.setBackground(border);
+                    }
                     RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
                             width,
                             height
@@ -319,7 +342,7 @@ public class QuizPagerAdapter extends PagerAdapter {
                                         /* Color.parseColor("#585e44")//disabled
                                          , Color.parseColor("#e31e24")//enabled*/
                                         Color.parseColor("#4d4d4d")//disabled
-                                        , Color.parseColor("#4d4d4d")//enabled
+                                        , Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))//enabled
                                 }
                         );
 
@@ -333,22 +356,22 @@ public class QuizPagerAdapter extends PagerAdapter {
                     rdbtn.setPaddingRelative(5, 5, 5, 5);
 
                     // rdbtn.setCompoundDrawablePadding(5);
-
-//                    ColorStateList colorStateList = new ColorStateList(
-//                            new int[][]{
-//                                    new int[]{-android.R.attr.state_checked}, // unchecked
-//                                    new int[]{android.R.attr.state_checked}  // checked
-//                            },
-//                            new int[]{
-//                                    Integer.parseInt(String.valueOf(activity.getResources().getDrawable(R.drawable.unchecked_radio))),
-//                                    Integer.parseInt(String.valueOf(activity.getResources().getDrawable(R.drawable.checked_radio)))
-//                            }
-//                    );
-//                    rdbtn.setSupportButtonTintList(colorStateList);
-                    //  rdbtn.setOnCheckedChangeListener(activity.this);
-
-//                    if (i == 1)
-//                        rdbtn.setChecked(true);
+//
+////                    ColorStateList colorStateList = new ColorStateList(
+////                            new int[][]{
+////                                    new int[]{-android.R.attr.state_checked}, // unchecked
+////                                    new int[]{android.R.attr.state_checked}  // checked
+////                            },
+////                            new int[]{
+////                                    Integer.parseInt(String.valueOf(activity.getResources().getDrawable(R.drawable.unchecked_radio))),
+////                                    Integer.parseInt(String.valueOf(activity.getResources().getDrawable(R.drawable.checked_radio)))
+////                            }
+////                    );
+////                    rdbtn.setSupportButtonTintList(colorStateList);
+//                    //  rdbtn.setOnCheckedChangeListener(activity.this);
+//
+////                    if (i == 1)
+////                        rdbtn.setChecked(true);
 
                     if (checkArray[position] != null) {
                         if (rdbtn.getText().toString().equalsIgnoreCase(checkArray[position])) {
@@ -433,7 +456,7 @@ public class QuizPagerAdapter extends PagerAdapter {
 //                } else {
 
                 String quizId = quizList.get(position).getId();
-                quizOptionList = QuizDetailActivity.app.getQuizOptionList();
+                quizOptionList = quizList.get(position).getQuiz_option();
                 if (quizSpecificOptionListnew.size() > 0) {
                     quizSpecificOptionListnew.clear();
                 }
@@ -466,6 +489,11 @@ public class QuizPagerAdapter extends PagerAdapter {
                 }
             }
         });
+
+        quiz_title_txt.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+//        holder.quiz_status.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+//        holder.textViewTime.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+//        holder.right_arrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
 
         view.addView(myImageLayout, 0);
         return myImageLayout;
