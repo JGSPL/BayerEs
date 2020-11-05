@@ -1901,7 +1901,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                 List<Header> heaserList = loginOrganizer.getHeader();
                                 newsfeedAdapter.getNewsFeedList().remove(positionOfList);
                                 newsfeedAdapter.notifyItemRemoved(positionOfList);
-                                newsfeedAdapter.notifyItemRangeChanged(positionOfList, newsfeedAdapter.getItemCount());
+                                //newsfeedAdapter.notifyItemRangeChanged(positionOfList, newsfeedAdapter.getItemCount());
                                 Utility.createShortSnackBar(ll_main, heaserList.get(0).getMsg());
                                 dialog.cancel();
                                 //startActivity(new Intent(CommentActivity.this, MainActivity.class));

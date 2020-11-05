@@ -308,7 +308,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         View badge = LayoutInflater.from(this)
                 .inflate(R.layout.notification_badge, itemView, true);
-        itemView.removeViewAt(itemView.getChildCount()-1);*/
+       */
+        /*itemView.removeViewAt(itemView.getChildCount()-1);*/
 
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -382,6 +383,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             mToolbar.showOverflowMenu();
             headerlogoIv = findViewById(R.id.headerlogoIv);
+            headerlogoIv.setOnClickListener(this);
 
             String eventLogo = SharedPreference.getPref(MainActivity.this, EVENT_LOGO);
             String eventListMediaPath = SharedPreference.getPref(MainActivity.this, EVENT_LIST_MEDIA_PATH);
@@ -466,6 +468,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.headerlogoIv:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, EventInfoActivity.class));
+                break;
             case R.id.iv_edit:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);

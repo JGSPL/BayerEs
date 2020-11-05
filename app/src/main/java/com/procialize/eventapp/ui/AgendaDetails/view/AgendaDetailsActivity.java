@@ -271,7 +271,6 @@ public class AgendaDetailsActivity extends AppCompatActivity implements View.OnC
                             e.printStackTrace();
                         }
 
-
                         agendaViewModel.reminderAgenda(api_token, event_id, sessionId, "0", "0");
                         agendaViewModel.reminderAgenda().observe(AgendaDetailsActivity.this, new Observer<LoginOrganizer>() {
                             @Override
