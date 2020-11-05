@@ -78,7 +78,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
     RelativeLayout rv_timer;
     QuizPagerAdapter quizPagerAdapter;
     public static boolean submitflag = false, isBackePressed = false;
-    public static CountDownTimer timercountdown;
+    CountDownTimer timercountdown;
     QuizPagerAdapter pagerAdapter;
     public static int count1 = 1;
     List<QuizList> quizList;
@@ -377,7 +377,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
 //            Log.e("size", adapter.getItemCount() + "");
 
 
-            String[] data = pagerAdapter.getselectedData();
+            String[] data = pagerAdapter.getselectedOption();
             String[] question = pagerAdapter.getselectedquestion();
 
             if (data != null) {
@@ -500,7 +500,9 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                     int answers = pagerAdapter.getCorrectOption();
                                     Intent intent = new Intent(QuizDetailActivity.this, YourScoreActivity.class);
                                     intent.putExtra("folderName", foldername);
+                                    intent.putExtra("folderid", folder_id);
                                     intent.putExtra("Answers", response.getTotal_correct_answer());
+                                    intent.putExtra("TotalQue", response.getTotal_questions());
                                     intent.putExtra("TotalQue", response.getTotal_questions());
                                     intent.putExtra("Page", "Question");
                                     startActivity(intent);
@@ -661,6 +663,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                     int answers = pagerAdapter.getCorrectOption();
                                     Intent intent = new Intent(QuizDetailActivity.this, YourScoreActivity.class);
                                     intent.putExtra("folderName", foldername);
+                                    intent.putExtra("folderid", folder_id);
                                     intent.putExtra("Answers", response.getTotal_correct_answer());
                                     intent.putExtra("TotalQue", response.getTotal_questions());
                                     intent.putExtra("Page", "Question");
@@ -738,7 +741,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         final RadioButton[] radioButton = new RadioButton[1];
 //            Log.e("size", adapter.getItemCount() + "");
 
-        String[] data = pagerAdapter.getselectedData();
+        String[] data = pagerAdapter.getselectedOption();
         String[] question = pagerAdapter.getselectedquestion();
 
         if (data != null) {
@@ -859,6 +862,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                 int answers = pagerAdapter.getCorrectOption();
                                 Intent intent = new Intent(QuizDetailActivity.this, YourScoreActivity.class);
                                 intent.putExtra("folderName", foldername);
+                                intent.putExtra("folderid", folder_id);
                                 intent.putExtra("Answers", response.getTotal_correct_answer());
                                 intent.putExtra("TotalQue", response.getTotal_questions());
                                 intent.putExtra("Page", "Question");

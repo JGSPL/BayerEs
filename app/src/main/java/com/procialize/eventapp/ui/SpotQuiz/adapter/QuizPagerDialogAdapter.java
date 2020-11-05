@@ -45,7 +45,7 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
     public static String[] dataIDArray;
     public static String[] checkArray;
     public static String[] ansArray;
-
+    public static String[] optionArray;
     String quiz_options_id;
     public static String selectedOption;
     public static int selectopt = 0;
@@ -65,6 +65,7 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
         dataIDArray = new String[quizList.size()];
         checkArray = new String[quizList.size()];
         ansArray = new String[quizList.size()];
+        optionArray = new String[quizList.size()];
         this.activity = activity;
 
 //        session = new SessionManager(context.getApplicationContext());
@@ -453,6 +454,7 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
 //                } else {
                 selectedOption = quizSpecificOptionListnew.get(i - 1).getOption_id();
                 selectopt = selectopt + 1;
+                optionArray[position] = selectedOption;
 //                }
 //                correctAnswer=quizList.get(position).getCorrect_answer();
                 if (selectedOption.equalsIgnoreCase(correctAnswer)) {
@@ -482,6 +484,11 @@ public class QuizPagerDialogAdapter extends PagerAdapter {
 
     public String[] getselectedData() {
         return dataArray;
+
+    }
+
+    public String[] getselectedOption() {
+        return optionArray;
 
     }
 

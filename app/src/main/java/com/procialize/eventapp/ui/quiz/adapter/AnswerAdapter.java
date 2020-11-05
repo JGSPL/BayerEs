@@ -2,6 +2,7 @@ package com.procialize.eventapp.ui.quiz.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -74,15 +75,16 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
             if (correctAns.equalsIgnoreCase(option)) {
                 if (correctAns.equalsIgnoreCase(SelectedAns)) {
                     holder.raiolayout.setBackgroundResource(R.drawable.quiz_correct);
-
-                    holder.radio.setBackgroundResource(R.drawable.checked_radio);
+                    holder.radio.setBackgroundResource(R.drawable.radiobtn_checked);
+//                    holder.radio.setColorFilter(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
                 } else if (option.equalsIgnoreCase(correctAns)) {
                     holder.raiolayout.setBackgroundResource(R.drawable.quiz_correct);
                     holder.radio.setBackgroundResource(R.drawable.unchecked_radio);
                 }
             } else if (option.equalsIgnoreCase(SelectedAns)) {
                 holder.raiolayout.setBackgroundResource(R.drawable.quiz_wrong);
-                holder.radio.setBackgroundResource(R.drawable.checked_radio);
+                holder.radio.setBackgroundResource(R.drawable.radiobtn_checked);
+//                holder.radio.setColorFilter(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
             }
         } catch (Exception e) {
             e.printStackTrace();

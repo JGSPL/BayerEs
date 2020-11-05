@@ -12,6 +12,7 @@ public final class SharedPreferencesConstant {
     public static final String PROFILE_PIC_MEDIA_PATH = "profilePicMediaPath";
     public static final String EVENT_INFO_MEDIA_PATH = "eventInfoMediaPath";
     public static final String QUIZLOGO_MEDIA_PATH = "quizLogoMediaPath";
+    public static final String QUIZSPOTLOGO_MEDIA_PATH = "quizSpotLogoMediaPath";
 
     public static final String KEY_FNAME = "name";
     public static final String KEY_LNAME = "lname";

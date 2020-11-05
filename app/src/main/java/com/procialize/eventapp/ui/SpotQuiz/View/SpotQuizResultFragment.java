@@ -180,42 +180,45 @@ public class SpotQuizResultFragment extends Fragment implements View.OnClickList
             quizDetailViewModel.getQuizList().observe(this, new Observer<QuizListing>() {
                 @Override
                 public void onChanged(QuizListing event) {
-                    RefreashToken refreashToken = new RefreashToken(getActivity());
-                    String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                    try {
+                        RefreashToken refreashToken = new RefreashToken(getActivity());
+                        String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
 //                    String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getDetailpreencrypt().getLogo_url_path()));
 //                    String strFilePath = CommonFunction.stripquotes(event.getDetailpreencrypt().getLogo_url_path());
-                    JsonParser jp = new JsonParser();
-                    JsonElement je = jp.parse(decrypteventdetail);
-                    JsonElement je2 = je.getAsJsonObject().get("logo_url_path");
-                    JsonElement je3 = je.getAsJsonObject().get("quiz_logo");
-                    JsonElement je4 = je.getAsJsonObject().get("quiz_list");
-                    JsonElement je5 = je3.getAsJsonObject().get("app_quiz_logo");
-                    String strFilePath = String.valueOf(je5);
-                    Gson gson = new Gson();
-                    quizList = gson.fromJson(je4, new TypeToken<ArrayList<QuizList>>() {
-                    }.getType());
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(QUIZLOGO_MEDIA_PATH, strFilePath.replace("\\/", "/"));
-                    SharedPreference.putPref(getActivity(), map);
+                        JsonParser jp = new JsonParser();
+                        JsonElement je = jp.parse(decrypteventdetail);
+                        JsonElement je2 = je.getAsJsonObject().get("logo_url_path");
+                        JsonElement je3 = je.getAsJsonObject().get("quiz_logo");
+                        JsonElement je4 = je.getAsJsonObject().get("quiz_list");
+                        JsonElement je5 = je3.getAsJsonObject().get("app_quiz_logo");
+                        String strFilePath = String.valueOf(je5);
+                        Gson gson = new Gson();
+                        quizList = gson.fromJson(je4, new TypeToken<ArrayList<QuizList>>() {
+                        }.getType());
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(QUIZLOGO_MEDIA_PATH, strFilePath.replace("\\/", "/"));
+                        SharedPreference.putPref(getActivity(), map);
 
-                    for (int i = 0; i < quizList.size(); i++) {
-                        if (folder_id.equalsIgnoreCase(quizList.get(i).getFolder_id())) {
-                            questionList = quizList.get(i).getQuiz_question();
+                        for (int i = 0; i < quizList.size(); i++) {
+                            if (folder_id.equalsIgnoreCase(quizList.get(i).getFolder_id())) {
+                                questionList = quizList.get(i).getQuiz_question();
+                            }
                         }
-                    }
 
-                    adapter = new QuizSubmitedAdapter(getActivity(), questionList);
-                    quiz_list.setAdapter(adapter);
-                    int itemcount = adapter.getItemCount();
-                    txt_count.setText("Questions " + 1 + "/" + itemcount);
-                    if (questionList.size() > 1) {
-                        btnNext.setVisibility(View.VISIBLE);
-                        submit.setVisibility(View.INVISIBLE);
-                    } else {
-                        btnNext.setVisibility(View.INVISIBLE);
-                        submit.setVisibility(View.VISIBLE);
+                        adapter = new QuizSubmitedAdapter(getActivity(), questionList);
+                        quiz_list.setAdapter(adapter);
+                        int itemcount = adapter.getItemCount();
+                        txt_count.setText("Questions " + 1 + "/" + itemcount);
+                        if (questionList.size() > 1) {
+                            btnNext.setVisibility(View.VISIBLE);
+                            submit.setVisibility(View.INVISIBLE);
+                        } else {
+                            btnNext.setVisibility(View.INVISIBLE);
+                            submit.setVisibility(View.VISIBLE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
                 }
             });
         } else {
