@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -38,6 +39,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
@@ -135,8 +138,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String api_token, eventid;
     String fName;
     String fireEmail;
-
+    MenuItem menuItem;
     String storeFireid, storeFirename, stoeUsername;
+    Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+       /* mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
@@ -283,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
                 }
             }
-        });
+        });*/
 
         NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
         Bundle bundle = new Bundle();
@@ -294,11 +298,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .replace(R.id.fragment_frame, newsFeedFragment, "")
                 .commit();
 
+        //To set icon on agenda when live streaming is going on
+        /*BottomNavigationMenuView bottomNavigationMenuView =
+                (BottomNavigationMenuView) navView.getChildAt(0);
+        View v = bottomNavigationMenuView.getChildAt(1);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) v;
+
+        View badge = LayoutInflater.from(this)
+                .inflate(R.layout.notification_badge, itemView, true);
+       */
+        /*itemView.removeViewAt(itemView.getChildCount()-1);*/
+
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment = null;
+                menuItem = item;
+
                 switch (item.getItemId()) {
+
                     case R.id.navigation_home:
                         // Switch to page one
                         NewsFeedFragment myFragment = (NewsFeedFragment) getSupportFragmentManager().findFragmentByTag("NewsFeed");
@@ -364,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             mToolbar.showOverflowMenu();
             headerlogoIv = findViewById(R.id.headerlogoIv);
+            headerlogoIv.setOnClickListener(this);
 
             String eventLogo = SharedPreference.getPref(MainActivity.this, EVENT_LOGO);
             String eventListMediaPath = SharedPreference.getPref(MainActivity.this, EVENT_LIST_MEDIA_PATH);
@@ -448,6 +467,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.headerlogoIv:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, EventInfoActivity.class));
+                break;
             case R.id.iv_edit:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);

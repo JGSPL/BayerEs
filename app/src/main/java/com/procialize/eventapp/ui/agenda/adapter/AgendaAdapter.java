@@ -32,27 +32,32 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 
 
-public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.MyViewHolder>{
+public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.MyViewHolder> {
 
     //List<EventSettingList> eventSettingLists;
     String attendee_design = "1", attendee_company = "1", attendee_location = "1";
     private Context context;
-    String newSessiondate = "",date="";
+    String newSessiondate = "", date = "";
     private List<Agenda> agendaLists;
     private AgendaAdapterListner listener;
     private List<Agenda> mainAgendaList = new ArrayList<Agenda>();
     AgendaDateWiseAdapter agendaDateWiseAdapter;
     String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
+
     public AgendaAdapter(Context context, List<Agenda> agendaList, AgendaAdapterListner listener) {
         this.agendaLists = agendaList;
         this.listener = listener;
         this.context = context;
 
-        eventColor1 = SharedPreference.getPref(context, EVENT_COLOR_1);
-        eventColor2 = SharedPreference.getPref(context, EVENT_COLOR_2);
-        eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
-        eventColor4 = SharedPreference.getPref(context, EVENT_COLOR_4);
-        eventColor5 = SharedPreference.getPref(context, EVENT_COLOR_5);
+        try {
+            eventColor1 = SharedPreference.getPref(context, EVENT_COLOR_1);
+            eventColor2 = SharedPreference.getPref(context, EVENT_COLOR_2);
+            eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+            eventColor4 = SharedPreference.getPref(context, EVENT_COLOR_4);
+            eventColor5 = SharedPreference.getPref(context, EVENT_COLOR_5);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -113,7 +118,8 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.MyViewHold
         holder.rv_agenda_list.setLayoutManager(mLayoutManager);
         agendaDateWiseAdapter = new AgendaDateWiseAdapter(context, mainAgendaList);
         agendaDateWiseAdapter.notifyDataSetChanged();
-        holder.rv_agenda_list.setAdapter(agendaDateWiseAdapter);    }
+        holder.rv_agenda_list.setAdapter(agendaDateWiseAdapter);
+    }
 
     @Override
     public int getItemCount() {

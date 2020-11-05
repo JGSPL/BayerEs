@@ -93,7 +93,8 @@ public class SpotPollFragment extends Fragment {
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
         agenda = (Agenda) getArguments().getSerializable("agendaDetails");
 
-        CommonFunction.showBackgroundImage(getContext(), Pollcard);
+       // CommonFunction.showBackgroundImage(getContext(), Pollcard);
+        Pollcard.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
         btnPollStart.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
         btnPollStart.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
         tvPollTitle.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));

@@ -114,12 +114,14 @@ public class RefreashToken {
             String expirytime = SharedPreference.getPref(context, SharedPreferencesConstant.EXPIRY_TIME);
             String timestamp_expiry = Utility.getDate(Long.parseLong(expirytime));
             boolean isvalidtoken = Utility.isTimeGreater(String.valueOf(timestamp_expiry));
+            String accesstoken = SharedPreference.getPref(context, KEY_TOKEN);
+            String accesstoken1 =accesstoken;
             if (isvalidtoken == false) {
                 String username = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_EMAIL);
                 String otp = SharedPreference.getPref(context, SharedPreferencesConstant.OTP);
-                String accesstoken = SharedPreference.getPref(context, KEY_TOKEN);
+                String accesstoken2 = SharedPreference.getPref(context, KEY_TOKEN);
                 mApiService = ApiUtils.getAPIService();
-                GetRefreashToken(username, otp, accesstoken);
+                GetRefreashToken(username, otp, accesstoken2);
             } else {
                 Log.d("TAG", "Token is already refreashed");
             }
