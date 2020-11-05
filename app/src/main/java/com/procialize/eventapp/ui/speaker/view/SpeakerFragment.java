@@ -292,10 +292,14 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
 
         currentPage = PAGE_START;
         speakerViewModel.getSpeaker(api_token, eventid, searchtext);
+
         speakerViewModel.getSpeakerList().observe(this, new Observer<FetchSpeaker>() {
             @Override
             public void onChanged(FetchSpeaker event) {
                 //List<Speaker> eventLists = event.getSpeakerList();
+                if (speakerViewModel != null && speakerViewModel.getSpeakerList().hasObservers()) {
+                    speakerViewModel.getSpeakerList().removeObservers(SpeakerFragment.this);
+                }
                 String strCommentList =event.getDetail();
                 if(strCommentList!=null) {
                     RefreashToken refreashToken = new RefreashToken(getContext());
@@ -317,12 +321,15 @@ public class SpeakerFragment  extends Fragment implements SpeakerAdapter.Speaker
 
                     }
                 }
-
+               /* if (SpeakerDtabaseViewModel != null && SpeakerDtabaseViewModel.getSpeakerList().hasObservers()) {
+                    SpeakerDtabaseViewModel.getSpeakerList().removeObservers(SpeakerFragment.this);
+                }*/
                 if (speakerViewModel != null && speakerViewModel.getSpeakerList().hasObservers()) {
                     speakerViewModel.getSpeakerList().removeObservers(SpeakerFragment.this);
                 }
             }
         });
+
     }
 
     public void setupEventAdapter(List<Speaker> commentList) {

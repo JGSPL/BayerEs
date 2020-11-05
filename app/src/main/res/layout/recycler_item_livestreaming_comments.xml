@@ -46,12 +46,12 @@
                 android:weightSum="10"
                 android:layout_marginLeft="45dp"
                 android:orientation="horizontal">
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.eventapp.fonts.RobotoTextViewHeader
                 android:id="@+id/name_text_layout"
                 android:layout_width="0dp"
                 android:layout_weight="8"
                 android:layout_height="wrap_content"
-
+                android:textStyle="bold"
                 android:visibility="visible"
                 android:textColor="@color/black"
                 android:layout_marginTop="8dp"

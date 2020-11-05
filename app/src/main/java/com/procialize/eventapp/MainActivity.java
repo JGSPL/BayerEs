@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String api_token, eventid;
     String fName;
     String fireEmail;
-
     String storeFireid, storeFirename, stoeUsername;
 
     @Override
