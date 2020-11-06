@@ -74,7 +74,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
     CustomViewPager pager;
     ProgressBar progressBarCircle;
     TextView textViewTime;
-    public int time = 10, timerForQuiz;
+    public int time = 0, timerForQuiz;
     RelativeLayout rv_timer;
     QuizPagerAdapter quizPagerAdapter;
     public static boolean submitflag = false, isBackePressed = false;
@@ -125,9 +125,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         });
 
         try {
-            if (timercountdown != null) {
                 timercountdown.cancel();
-            }
         } catch (Exception e) {
 
         }
@@ -301,8 +299,10 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
 
                             public void onFinish() {
                                 time = 0;
-                                if (timercountdown != null) {
+                                try {
                                     timercountdown.cancel();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
 
                                 if (questionList.size() == pager.getCurrentItem() + 1) {
@@ -325,7 +325,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                         //time = 0;
                                         time = timerForQuiz;
                                         timercountdown.cancel();
-                                        timercountdown.start();
+//                                        timercountdown.start();
                                         txt_time.setText("" + ":" + checkdigit(time));
                                     }
                                 }
@@ -516,7 +516,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                     count1 = 1;
                                     pagerAdapter.selectopt = 0;
                                     submitflag = true;
-
+                                    time = 0;
                                     finish();
                                 }
 
@@ -876,7 +876,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                 startActivity(intent);
                                 count1 = 1;
                                 pagerAdapter.selectopt = 0;
-                                submitflag = true;
+                                submitflag = false;
 
                                 finish();
                             }

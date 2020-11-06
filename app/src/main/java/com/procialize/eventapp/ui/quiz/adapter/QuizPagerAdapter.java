@@ -309,7 +309,7 @@ public class QuizPagerAdapter extends PagerAdapter {
                     rdbtn.setText(StringEscapeUtils.unescapeJava(quizSpecificOptionListnew.get(i - 1).getOption()));
 //                    rdbtn.setTextColor(Color.BLACK);
                     rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
-                    rdbtn.setTextSize(9);
+                    rdbtn.setTextSize(14);
 //                    rdbtn.setBackgroundResource(R.drawable.livepollback);
                     GradientDrawable border = new GradientDrawable();
                     border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity

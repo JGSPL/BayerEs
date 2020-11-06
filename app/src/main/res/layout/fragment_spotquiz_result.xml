@@ -32,7 +32,8 @@
                     android:gravity="left"
                     android:padding="10dp"
                     android:text=""
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    android:visibility="gone"/>
 
 
                 <com.procialize.eventapp.fonts.RobotoTextview
@@ -42,7 +43,8 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:gravity="left"
-                    android:padding="5dp" />
+                    android:padding="5dp"
+                    android:visibility="gone"/>
 
 
                 <androidx.viewpager.widget.ViewPager

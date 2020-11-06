@@ -25,7 +25,8 @@
                 android:textColor="@color/activetab"
                 android:layout_marginRight="70dp"
                 android:textSize="18sp"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:visibility="gone">
             </com.procialize.eventapp.fonts.RobotoTextview>
 
             <ImageView
