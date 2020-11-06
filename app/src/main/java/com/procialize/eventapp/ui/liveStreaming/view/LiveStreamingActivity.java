@@ -146,14 +146,14 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         mPlayerView = findViewById(R.id.jwplayer);
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_view);
 
-        /*Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
         bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
         fragInfo.setArguments(bundle);
         transaction.replace(R.id.fragment_frame, fragInfo);
         transaction.commit();
-*/
+
         if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
             // Initializing video player with developer key
             youTubePlayerFragment.initialize(getResources().getString(R.string.maps_api_key), new YouTubePlayer.OnInitializedListener() {
