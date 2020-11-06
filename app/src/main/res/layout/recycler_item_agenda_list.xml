@@ -34,6 +34,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/view_divider"
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:background="@color/black" />

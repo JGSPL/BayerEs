@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -154,60 +155,65 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         transaction.replace(R.id.fragment_frame, fragInfo);
         transaction.commit();
 */
-        if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
-            // Initializing video player with developer key
-            youTubePlayerFragment.initialize(getResources().getString(R.string.maps_api_key), new YouTubePlayer.OnInitializedListener() {
 
-                @Override
-                public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
-                                                    boolean wasRestored) {
-                    if (!wasRestored) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
+                    // Initializing video player with developer key
+                    youTubePlayerFragment.initialize(getResources().getString(R.string.maps_api_key), new YouTubePlayer.OnInitializedListener() {
 
-                        // String youtube_stream_url = livestream_link;
-                        YouvideoId = youtube_stream_url.substring(youtube_stream_url.lastIndexOf("=") + 1);
-                        youTubePlayer = player;
-                        //set the player style default
-                        youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                        //cue the 1st video by default
-                        youTubePlayer.cueVideo(YouvideoId);
+                        @Override
+                        public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
+                                                            boolean wasRestored) {
+                            if (!wasRestored) {
+
+                                // String youtube_stream_url = livestream_link;
+                                YouvideoId = youtube_stream_url.substring(youtube_stream_url.lastIndexOf("=") + 1);
+                                youTubePlayer = player;
+                                //set the player style default
+                                youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                                //cue the 1st video by default
+                                youTubePlayer.cueVideo(YouvideoId);
+                            }
+                        }
+
+                        @Override
+                        public void onInitializationFailure(YouTubePlayer.Provider arg0, YouTubeInitializationResult arg1) {
+                            youTubePlayer.play();
+                            youTubePlayer.getFullscreenControlFlags();
+                            Log.e("", "Youtube Player View initialization failed");
+                        }
+                    });
+                    ll_youtube.setVisibility(View.VISIBLE);
+                    mPlayerView.setVisibility(View.GONE);
+                } else {
+                    ll_youtube.setVisibility(View.GONE);
+                    mPlayerView.setVisibility(View.VISIBLE);
+
+                    // Handle hiding/showing of ActionBar
+                    mPlayerView.addOnFullscreenListener(LiveStreamingActivity.this);
+                    // Keep the screen on during playback
+                    new KeepScreenOnHandler(mPlayerView, getWindow());
+                    // Load a media source
+                    try {
+                        Bitmap bitmap = retriveVideoFrameFromVideo(livestream_link);
+                        filePath = CommonFunction.saveImage(LiveStreamingActivity.this, bitmap, "livestreamthumb");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
                     }
-                }
+                    PlaylistItem pi = new PlaylistItem.Builder()
+                            .file(livestream_link)
+                            .image(filePath)
+                            .build();
 
-                @Override
-                public void onInitializationFailure(YouTubePlayer.Provider arg0, YouTubeInitializationResult arg1) {
-                    youTubePlayer.play();
-                    youTubePlayer.getFullscreenControlFlags();
-                    Log.e("", "Youtube Player View initialization failed");
+                    mPlayerView.load(pi);
+                    // Get a reference to the CastContext
+                    //  mCastContext = CastContext.getSharedInstance(this);
                 }
-            });
-            ll_youtube.setVisibility(View.VISIBLE);
-            mPlayerView.setVisibility(View.GONE);
-        } else {
-            ll_youtube.setVisibility(View.GONE);
-            mPlayerView.setVisibility(View.VISIBLE);
-
-            // Handle hiding/showing of ActionBar
-            mPlayerView.addOnFullscreenListener(this);
-            // Keep the screen on during playback
-            new KeepScreenOnHandler(mPlayerView, getWindow());
-            // Load a media source
-            try {
-                Bitmap bitmap = retriveVideoFrameFromVideo(livestream_link);
-                filePath = CommonFunction.saveImage(this, bitmap, "livestreamthumb");
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
             }
-            PlaylistItem pi = new PlaylistItem.Builder()
-                    .file(livestream_link)
-                    .image(filePath)
-                    .build();
+        },500);
 
-            mPlayerView.load(pi);
-
-
-            // Get a reference to the CastContext
-            //  mCastContext = CastContext.getSharedInstance(this);
-        }
 
         tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
