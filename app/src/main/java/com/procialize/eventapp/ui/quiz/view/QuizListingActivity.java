@@ -2,7 +2,6 @@ package com.procialize.eventapp.ui.quiz.view;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -72,8 +71,8 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 onBackPressed();
-
             }
         });
         quizrecycler=findViewById(R.id.quizrecycler);
@@ -176,14 +175,12 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
             intent.putExtra("folder_id", quiz.getFolder_id());
             intent.putExtra("folder_name", quiz.getFolder_name());
             startActivity(intent);
-            finish();
         }else {
             Intent intent = new Intent(QuizListingActivity.this, QuizSubmittedActivity.class);
             intent.putExtra("timer", quiz.getTimer());
             intent.putExtra("folder_id", quiz.getFolder_id());
             intent.putExtra("folder_name", quiz.getFolder_name());
             startActivity(intent);
-            finish();
         }
     }
 }
