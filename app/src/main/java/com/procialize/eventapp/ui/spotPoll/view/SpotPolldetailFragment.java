@@ -160,7 +160,7 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
         questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_1)));
         relMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
         ScrollMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
-
+        relative.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
         subBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_1)));
         subBtn.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
         PollBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_1)));

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
+    android:layout_gravity="center"
     android:layout_marginRight="0dp"
     android:background="@color/transperent">
     <ScrollView
@@ -12,7 +13,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|center"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -61,19 +63,8 @@
 
         </com.procialize.eventapp.fonts.RobotoTextview>
 
-        <com.procialize.eventapp.fonts.RobotoTextview
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:visibility="gone"
-            android:text="Poll not available"
-            android:id="@+id/tvPollEmpty"
-            android:textColor="@color/black"
-            android:textSize="@dimen/textsizenormal"
-            android:layout_marginTop="0dp">
 
-        </com.procialize.eventapp.fonts.RobotoTextview>
+
 
         <com.procialize.eventapp.fonts.RobotoButton
             android:id="@+id/btnPollStart"
@@ -84,6 +75,7 @@
             android:layout_marginBottom="10dp"
             android:background="@color/activetab"
             android:gravity="center"
+            android:stateListAnimator="@null"
             android:textAllCaps="false"
             android:text="Start"
             android:textColor="@color/colorwhite">
@@ -93,4 +85,13 @@
 
     </LinearLayout>
     </ScrollView>
+    <com.procialize.eventapp.fonts.RobotoTextview
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="No Spot Poll Activated Right Now"
+        android:id="@+id/tvPollEmpty"
+        android:visibility="gone"/>
+
 </androidx.cardview.widget.CardView>
