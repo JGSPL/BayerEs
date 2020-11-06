@@ -136,7 +136,6 @@ public class SpotGroupChatFragment extends Fragment {
     OkHttpClient mClient = new OkHttpClient();
     Agenda agenda;
     String sessionId;
-
     String refreshedToken = "";//add your user refresh tokens who are logged in with firebase.
 
     final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
@@ -170,7 +169,6 @@ public class SpotGroupChatFragment extends Fragment {
         fl_post_comment = root.findViewById(R.id.fl_post_comment);
         agenda = (Agenda) getArguments().getSerializable("agendaDetails");
         sessionId = agenda.getSession_id();
-
 
         //-----GETING FROM INTENT----
         // mChatUser = getIntent().getStringExtra("user_id");

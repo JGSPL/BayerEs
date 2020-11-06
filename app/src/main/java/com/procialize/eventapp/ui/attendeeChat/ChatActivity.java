@@ -378,30 +378,7 @@ public class ChatActivity extends AppCompatActivity {
 
         }
 
-        //----ADDING LAST SEEN-----
 
-        mRootReference.child("users").child(mChatUser).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-//                String onlineValue=dataSnapshot.child("online").getValue().toString();
-                //  String imageValue = dataSnapshot.child("thumb_image").getValue().toString();
-
-               /* if(onlineValue.equals("true")){
-                    mUserLastSeen.setText("online");
-                }
-                else{
-                    GetTimeAgo getTimeAgo = new GetTimeAgo();
-                    long lastTime = Long.parseLong(onlineValue);
-                    String lastSeen = getTimeAgo.getTimeAgo(lastTime,getApplicationContext());
-                    mUserLastSeen.setText(lastSeen);
-                }*/
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
         //----ADDING SEEN OF MESSAGES----
