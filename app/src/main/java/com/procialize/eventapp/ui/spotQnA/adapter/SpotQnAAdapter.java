@@ -274,7 +274,7 @@ public class SpotQnAAdapter extends RecyclerView.Adapter<SpotQnAAdapter.SpotQnAV
         holder.tv_like_count.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         holder.tv_q.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         holder.tv_a.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
-        holder.view_bottom.setBackgroundColor(Color.parseColor(eventColor3));
+        holder.view_bottom.setBackgroundColor(Color.parseColor("#8C" + eventColor3Opacity40));
 
         String eventColor1 = SharedPreference.getPref(context, EVENT_COLOR_1);
         int color = Color.parseColor(eventColor1);

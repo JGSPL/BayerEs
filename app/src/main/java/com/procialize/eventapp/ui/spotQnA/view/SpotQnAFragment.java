@@ -38,6 +38,7 @@ import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
 import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 import com.procialize.eventapp.ui.newsFeedComment.model.LikePost;
+import com.procialize.eventapp.ui.newsFeedPost.view.PostNewActivity;
 import com.procialize.eventapp.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.eventapp.ui.newsfeed.adapter.NewsFeedAdapter;
 import com.procialize.eventapp.ui.newsfeed.model.Newsfeed_detail;
@@ -77,7 +78,7 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
     String noOfLikes = "0";
     String likeStatus = "";
     SwipeRefreshLayout question_refresh;
-    LinearLayout ll_ask_question, ll_qna;
+    LinearLayout ll_ask_question, ll_qna,ll_post_status;
     TextView tv_count,tv_send_question;
     EditText et_question;
     LinearLayout ll_cancel, ll_send_question,ll_cancel_inner;
@@ -107,6 +108,7 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
         question_refresh = root.findViewById(R.id.question_refresh);
         rv_spot_qna = root.findViewById(R.id.rv_spot_qna);
         ll_ask_question = root.findViewById(R.id.ll_ask_question);
+        ll_post_status = root.findViewById(R.id.ll_post_status);
         ll_qna = root.findViewById(R.id.ll_qna);
         tv_ask_question.setOnClickListener(this);
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
@@ -437,7 +439,7 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
 
                         @Override
                         public void onFailure(Call<FetchSpotQnA> call, Throwable t) {
-                            Utility.createShortSnackBar(fl_main, "Failure..!");
+                            //Utility.createShortSnackBar(fl_main, "Failure..!");
                         }
                     });
         }
@@ -453,5 +455,10 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
         tv_cancel.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_1)));
         ll_send_question.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_1)));
         tv_send_question.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_2)));
+
+        ll_post_status.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
+        et_question.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
+        et_question.setHintTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
+
     }
 }
