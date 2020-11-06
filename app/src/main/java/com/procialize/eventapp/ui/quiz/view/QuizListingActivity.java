@@ -176,12 +176,14 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
             intent.putExtra("folder_id", quiz.getFolder_id());
             intent.putExtra("folder_name", quiz.getFolder_name());
             startActivity(intent);
+            finish();
         }else {
             Intent intent = new Intent(QuizListingActivity.this, QuizSubmittedActivity.class);
             intent.putExtra("timer", quiz.getTimer());
             intent.putExtra("folder_id", quiz.getFolder_id());
             intent.putExtra("folder_name", quiz.getFolder_name());
             startActivity(intent);
+            finish();
         }
     }
 }

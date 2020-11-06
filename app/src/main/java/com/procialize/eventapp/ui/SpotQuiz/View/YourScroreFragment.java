@@ -23,10 +23,11 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 
 public class YourScroreFragment extends Fragment {
 
-    TextView tv_header, questionTv, txt_count, viewResult, txt_title;
+    TextView tvPollTitle2,tvPollTitle,tv_header, questionTv, txt_count, viewResult, txt_title;
     ProgressBar progressBarCircle;
     Button btn_ok;
     String Page, folderName, correnctcount, totalcount;
@@ -48,6 +49,8 @@ public class YourScroreFragment extends Fragment {
         txt_title = root.findViewById(R.id.txt_title);
         progressBarCircle = root.findViewById(R.id.progressBarCircle);
         btn_ok = root.findViewById(R.id.btn_ok);
+        tvPollTitle = root.findViewById(R.id.tvPollTitle);
+        tvPollTitle2 = root.findViewById(R.id.tvPollTitle2);
 //        relative = root.findViewById(R.id.relative);
 //        tv_header = root.findViewById(R.id.tv_header);
 //        relativeMain = root.findViewById(R.id.relativeMain);
@@ -69,6 +72,8 @@ public class YourScroreFragment extends Fragment {
         txt_title.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
         txt_title.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_2)));
         viewResult.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
+        tvPollTitle.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
+        tvPollTitle2.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
 //        relativeMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_2)));
 
         GradientDrawable border = new GradientDrawable();
