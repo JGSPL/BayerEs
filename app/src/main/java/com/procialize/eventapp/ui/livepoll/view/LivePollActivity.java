@@ -314,14 +314,18 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
     @Override
     public void onContactSelected(LivePoll pollList) {
         optionLists = pollList.getLive_poll_option_list();
+        if(pollList.getHide_result().equalsIgnoreCase("0")|| pollList.getReplied().equalsIgnoreCase("0")) {
+            Intent polldetail = new Intent(getApplicationContext(), PollDetailActivity.class);
+            polldetail.putExtra("id", pollList.getId());
+            polldetail.putExtra("question", pollList.getQuestion());
+            polldetail.putExtra("replied", pollList.getReplied());
+            polldetail.putExtra("optionlist", (Serializable) optionLists);
+            polldetail.putExtra("show_result", pollList.getHide_result());
+            startActivity(polldetail);
+        }else{
+            Utility.createShortSnackBar(linear, "Answer hide from admin");
 
-        Intent polldetail = new Intent(getApplicationContext(), PollDetailActivity.class);
-        polldetail.putExtra("id", pollList.getId());
-        polldetail.putExtra("question", pollList.getQuestion());
-        polldetail.putExtra("replied", pollList.getReplied());
-        polldetail.putExtra("optionlist", (Serializable) optionLists);
-        polldetail.putExtra("show_result", pollList.getHide_result());
-        startActivity(polldetail);
+        }
 
     }
 
