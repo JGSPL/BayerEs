@@ -456,6 +456,7 @@ public class SpotQnAFragment extends Fragment implements View.OnClickListener, S
         ll_send_question.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_1)));
         tv_send_question.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(),EVENT_COLOR_2)));
 
+        et_question.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_2)));
         ll_post_status.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
         et_question.setTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
         et_question.setHintTextColor(Color.parseColor(SharedPreference.getPref(getActivity(), EVENT_COLOR_1)));
