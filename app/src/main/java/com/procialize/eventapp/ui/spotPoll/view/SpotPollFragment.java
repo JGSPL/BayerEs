@@ -66,7 +66,7 @@ public class SpotPollFragment extends Fragment {
     ProgressBar progressBar,progressView;
     Agenda agenda;
     CardView Pollcard;
-    TextView  tvPollTitle;
+    TextView  tvPollTitle, tvPollEmpty;
     Button btnPollStart;
     List<LivePoll> PollLists;
     List<LivePoll_option> optionLists;
@@ -87,6 +87,7 @@ public class SpotPollFragment extends Fragment {
         Pollcard = root.findViewById(R.id.Pollcard);
         tvPollTitle = root.findViewById(R.id.tvPollTitle);
         btnPollStart = root.findViewById(R.id.btnPollStart);
+        tvPollEmpty = root.findViewById(R.id.tvPollEmpty);
 
         new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
@@ -179,36 +180,48 @@ public class SpotPollFragment extends Fragment {
                                  PollLists = eventLists.get(0).getLivePoll_list();
 
                                 if(PollLists.size()>0) {
+                                    iv_logo.setVisibility(View.VISIBLE);
+                                    if(isAdded()) {
+                                        Glide.with(SpotPollFragment.this)
+                                                .load(eventLists.get(0).getLogo_url_path() + eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
+                                                .listener(new RequestListener<Drawable>() {
+                                                    @Override
+                                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                        progressView.setVisibility(View.GONE);
+                                                        tvPollEmpty.setVisibility(View.GONE);
+                                                        progressBar.setVisibility(View.GONE);
+                                                        return false;
+                                                    }
 
-                                    Glide.with(getContext())
-                                            .load(eventLists.get(0).getLogo_url_path() + eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
-                                            .listener(new RequestListener<Drawable>() {
-                                                @Override
-                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                                    progressView.setVisibility(View.GONE);
-                                                    return false;
-                                                }
-
-                                                @Override
-                                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                                    progressView.setVisibility(View.GONE);
-
-                                                    return false;
-                                                }
-                                            }).into(iv_logo);
+                                                    @Override
+                                                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                        progressView.setVisibility(View.GONE);
+                                                        tvPollEmpty.setVisibility(View.GONE);
+                                                        progressBar.setVisibility(View.GONE);
+                                                        return false;
+                                                    }
+                                                }).into(iv_logo);
+                                    }
 
 
                                 }else{
                                     progressBar.setVisibility(View.GONE);
                                     progressView.setVisibility(View.GONE);
+                                    tvPollEmpty.setVisibility(View.VISIBLE);
+                                    progressBar.setVisibility(View.GONE);
+                                    btnPollStart.setVisibility(View.GONE);
+                                    iv_logo.setVisibility(View.GONE);
 
                                 }
 
 
                             }else{
 
+                                progressView.setVisibility(View.GONE);
+                                tvPollEmpty.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
-
+                                btnPollStart.setVisibility(View.GONE);
+                                iv_logo.setVisibility(View.GONE);
                             }
                         }
                     }
