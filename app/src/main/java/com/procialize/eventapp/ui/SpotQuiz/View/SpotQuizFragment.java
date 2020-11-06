@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,8 +21,10 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -54,19 +58,22 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_CO
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.QUIZLOGO_MEDIA_PATH;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.QUIZSPOTLOGO_MEDIA_PATH;
 
 public class SpotQuizFragment extends Fragment {
     String api_token, eventid;
     CardView Quizcard;
     ImageView quizlogo;
     Button btnQuizStart;
-    TextView title;
+    ProgressBar progressbar;
+    TextView txt_msg, title;
     Agenda agenda;
     private APIService eventApi;
     MutableLiveData<QuizListing> quizList = new MutableLiveData<>();
     List<QuizList> quizLists;
     List<QuizQuestion> questionList;
     List<QuizOption> quizOptionLists;
+    LinearLayout linear;
 
     public static SpotQuizFragment newInstance() {
 
@@ -81,6 +88,9 @@ public class SpotQuizFragment extends Fragment {
         Quizcard = root.findViewById(R.id.Quizcard);
         quizlogo = root.findViewById(R.id.logoIv);
         title = root.findViewById(R.id.title);
+        txt_msg = root.findViewById(R.id.txt_msg);
+        progressbar = root.findViewById(R.id.progressbar);
+        linear = root.findViewById(R.id.linear);
         new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
@@ -91,6 +101,7 @@ public class SpotQuizFragment extends Fragment {
         btnQuizStart.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
         btnQuizStart.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
         title.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
+        txt_msg.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
 
         if (ConnectionDetector.getInstance(getActivity()).isConnectingToInternet()) {
             getQuiz(api_token, eventid);
@@ -121,15 +132,29 @@ public class SpotQuizFragment extends Fragment {
                     bundle.putString("session_id", agenda.getSession_id());
 
                     if (quizLists.get(0).getQuiz_question().get(0).getReplied().equalsIgnoreCase("1")) {
+//                        Bundle bundle1 = new Bundle();
+//                        bundle1.putString("folder_id", quizLists.get(0).getFolder_id());
+//                        bundle1.putString("folderName",  quizLists.get(0).getFolder_name());
+//                        bundle1.putString("Answers", quizLists.get(0).getTotal_correct());
+//                        bundle1.putString("TotalQue", quizLists.get(0).getTotal_quiz());
+//                        bundle1.putString("id", quizLists.get(0).getQuiz_id());
+//                        bundle1.putString("session_id", agenda.getSession_id());
+//                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//                        SpotQuizResultFragment fragInfo = new SpotQuizResultFragment();
+//                        fragInfo.setArguments(bundle1);
+//                        transaction.replace(R.id.fragment_frame, fragInfo);
+//                        transaction.addToBackStack(null);
+//                        transaction.commit();
+
                         Bundle bundle1 = new Bundle();
-                        bundle1.putString("folder_id", quizLists.get(0).getFolder_id());
-                        bundle1.putString("folderName",  quizLists.get(0).getFolder_name());
+                        bundle1.putString("folderName", quizLists.get(0).getFolder_name());
                         bundle1.putString("Answers", quizLists.get(0).getTotal_correct());
-                        bundle1.putString("TotalQue", quizLists.get(0).getTotal_quiz());
+                        bundle1.putString("TotalQue",quizLists.get(0).getTotal_quiz());
                         bundle1.putString("id", quizLists.get(0).getQuiz_id());
-                        bundle1.putString("session_id", agenda.getSession_id());
+                        bundle1.putString("folder_id", quizLists.get(0).getFolder_id());
+                        bundle1.putString("session_id",  agenda.getSession_id());
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        SpotQuizResultFragment fragInfo = new SpotQuizResultFragment();
+                        YourScroreFragment fragInfo = new YourScroreFragment();
                         fragInfo.setArguments(bundle1);
                         transaction.replace(R.id.fragment_frame, fragInfo);
                         transaction.addToBackStack(null);
@@ -163,71 +188,65 @@ public class SpotQuizFragment extends Fragment {
                     @Override
                     public void onResponse(Call<QuizListing> call, Response<QuizListing> response) {
                         if (response.isSuccessful()) {
-                            quizList.setValue(response.body());
-                            String strCommentList = response.body().getDetail();
-                            RefreashToken refreashToken = new RefreashToken(getContext());
-                            String data = refreashToken.decryptedData(strCommentList);
-                            String decrypteventdetail = refreashToken.decryptedData(response.body().getDetail());
+                            try {
+
+
+                                quizList.setValue(response.body());
+                                String strCommentList = response.body().getDetail();
+                                RefreashToken refreashToken = new RefreashToken(getContext());
+                                String data = refreashToken.decryptedData(strCommentList);
+                                String decrypteventdetail = refreashToken.decryptedData(response.body().getDetail());
 //                    String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(event.getDetailpreencrypt().getLogo_url_path()));
 //                    String strFilePath = CommonFunction.stripquotes(event.getDetailpreencrypt().getLogo_url_path());
-                            JsonParser jp = new JsonParser();
-                            JsonElement je = jp.parse(decrypteventdetail);
-                            JsonElement je2 = je.getAsJsonObject().get("logo_url_path");
-                            JsonElement je3 = je.getAsJsonObject().get("quiz_logo");
-                            JsonElement je4 = je.getAsJsonObject().get("quiz_list");
-                            JsonElement je5 = je3.getAsJsonObject().get("app_quiz_logo");
-                            String strFilePath = String.valueOf(je5);
-                            Gson gson = new Gson();
-                            quizLists = gson.fromJson(je4, new TypeToken<ArrayList<QuizList>>() {
-                            }.getType());
-                            HashMap<String, String> map = new HashMap<>();
-                            map.put(QUIZLOGO_MEDIA_PATH, strFilePath.replace("\\/", "/"));
-                            SharedPreference.putPref(getActivity(), map);
+                                JsonParser jp = new JsonParser();
+                                JsonElement je = jp.parse(decrypteventdetail);
+                                JsonElement je2 = je.getAsJsonObject().get("logo_url_path");
+                                JsonElement je3 = je.getAsJsonObject().get("quiz_logo");
+                                JsonElement je4 = je.getAsJsonObject().get("quiz_list");
+                                JsonElement je5 = je3.getAsJsonObject().get("app_quiz_logo");
+                                String strFilePath = String.valueOf(je5);
+                                Gson gson = new Gson();
+                                quizLists = gson.fromJson(je4, new TypeToken<ArrayList<QuizList>>() {
+                                }.getType());
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put(QUIZSPOTLOGO_MEDIA_PATH, strFilePath.replace("\\/", "/"));
+                                SharedPreference.putPref(getActivity(), map);
+                                String logoUrl = SharedPreference.getPref(getActivity(), QUIZLOGO_MEDIA_PATH);
+                                if (quizList != null) {
+                                    Glide.with(getActivity()).load(logoUrl)
+                                            .apply(RequestOptions.skipMemoryCacheOf(false))
+                                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
+                                            .listener(new RequestListener<Drawable>() {
+                                                @Override
+                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                    quizlogo.setImageResource(R.drawable.quizlogo);
 
-                            if (quizList != null) {
-                                Glide.with(getContext())
-                                        .load(SharedPreference.getPref(getActivity(), QUIZLOGO_MEDIA_PATH))
-                                        .listener(new RequestListener<Drawable>() {
-                                            @Nullable
-                                            private GlideException e;
-                                            private Object model;
-                                            private Target<Drawable> target;
-                                            private boolean isFirstResource;
+                                                    progressbar.setVisibility(View.GONE);
+                                                    return true;
+                                                }
 
-                                            @Override
-                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                                this.e = e;
-                                                this.model = model;
-                                                this.target = target;
-                                                this.isFirstResource = isFirstResource;
-//                                    progressView.setVisibility(View.GONE);
-                                                return false;
-                                            }
-
-                                            @Override
-                                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                                    progressView.setVisibility(View.GONE);
-
-                                                return false;
-                                            }
-                                        }).into(quizlogo);
+                                                @Override
+                                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                    progressbar.setVisibility(View.GONE);
+                                                    return false;
+                                                }
+                                            }).into(quizlogo);
 
 
-                            } else {
-//                            progressBar.setVisibility(View.GONE);
+                                } else {
+                                    progressbar.setVisibility(View.GONE);
 //                            progressView.setVisibility(View.GONE);
 
+                                }
+
+
+                            } catch (Exception e) {
+                                linear.setVisibility(View.GONE);
+                                txt_msg.setVisibility(View.VISIBLE);
                             }
-
-
-                        } else {
-
-//                        progressBar.setVisibility(View.GONE);
-
                         }
+
                     }
-
-
                     @Override
                     public void onFailure(Call<QuizListing> call, Throwable t) {
                         quizList.setValue(null);

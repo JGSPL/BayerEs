@@ -2,6 +2,7 @@ package com.procialize.eventapp.Constants;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.auth0.android.jwt.JWT;
 import com.procialize.eventapp.ConnectionDetector;
@@ -10,9 +11,7 @@ import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.SharedPreferencesConstant;
 import com.procialize.eventapp.Utility.Utility;
-import com.procialize.eventapp.ui.eventList.view.EventListActivity;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -26,7 +25,6 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_EMAI
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_FNAME;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_LNAME;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_MOBILE;
-import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.TIME;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.TOTAL_EVENT;
@@ -97,8 +95,9 @@ public class RefreashToken {
                 } else {
                     if (response.body() != null) {
 
+                        Toast.makeText(context, "Invalid Token", Toast.LENGTH_SHORT).show();
                     } else {
-
+                        Toast.makeText(context, "Invalid Token", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

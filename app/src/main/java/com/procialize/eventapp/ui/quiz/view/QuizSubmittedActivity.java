@@ -289,6 +289,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
 
                 Intent intent = new Intent(QuizSubmittedActivity.this, YourScoreActivity.class);
                 intent.putExtra("folderName", foldername);
+                intent.putExtra("folderid", folder_id);
                 intent.putExtra("Answers", String.valueOf(adapter.getCorrectOption()));
                 intent.putExtra("TotalQue", String.valueOf(adapter.getselectedData().length));
                 intent.putExtra("Page", "Answer");

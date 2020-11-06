@@ -1,15 +1,14 @@
 package com.procialize.eventapp.ui.quiz.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
-import android.view.LayoutInflater;
-import android.widget.RadioGroup;
-import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.util.SparseIntArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -84,16 +83,20 @@ public class QuizSubmitedAdapter extends RecyclerView.Adapter<QuizSubmitedAdapte
         String eventColor3Opacity40 = eventColor3.replace("#", "");
 
         if (quizList.get(position).getReplied() != null) {
-            try{
+            try {
                 holder.txt_question.setText(StringEscapeUtils.unescapeJava(quizList.get(position).getQuestion()));
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
 
             holder.txt_question.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
 
-            if (quizList.get(position).getSelected_option().equals("0")) {
-                holder.tv_not_attempted.setVisibility(View.VISIBLE);
+            if (quizList.get(position).getSelected_option() != null) {
+                if (quizList.get(position).getSelected_option().equals("0")) {
+                    holder.tv_not_attempted.setVisibility(View.VISIBLE);
+                } else {
+                    holder.tv_not_attempted.setVisibility(View.GONE);
+                }
             } else {
                 holder.tv_not_attempted.setVisibility(View.GONE);
             }

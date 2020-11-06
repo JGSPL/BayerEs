@@ -142,7 +142,7 @@ public class SpotQuizDetailFragment extends Fragment implements View.OnClickList
 //            Log.e("size", adapter.getItemCount() + "");
 
 
-            String[] data = pagerAdapter.getselectedData();
+            String[] data = pagerAdapter.getselectedOption();
             String[] question = pagerAdapter.getselectedquestion();
 
             if (data != null) {

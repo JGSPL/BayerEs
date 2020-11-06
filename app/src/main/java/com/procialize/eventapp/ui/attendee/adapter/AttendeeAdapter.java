@@ -88,7 +88,6 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
             String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
             String eventColor3Opacity40 = eventColor3.replace("#", "");
-
             holder.nameTv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
             holder.designationTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
             holder.locationTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));

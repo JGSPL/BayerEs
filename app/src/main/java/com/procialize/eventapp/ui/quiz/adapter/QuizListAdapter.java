@@ -129,13 +129,13 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
 
                 }
             });
-//            if(quizList.get(position).getTotal_correct().equalsIgnoreCase("0")){
-//                holder.progressBarCircle.setProgress(0);
+            if(quizList.get(position).getTotal_correct().equalsIgnoreCase("0")){
+                holder.progressBarCircle.setProgress(0);
 
-//            }else {
-//
-////                holder.progressBarCircle.setProgress(Integer.parseInt(quiz.get()));
-//            }
+            }else {
+//                holder.progressBarCircle.setMin(Integer.parseInt(quizList.get(position).getTotal_correct()));
+                holder.progressBarCircle.setProgress(Integer.parseInt(quizList.get(position).getTotal_correct()));
+            }
         }
 
         holder.quiz_list_layout.setOnClickListener(new View.OnClickListener() {

@@ -30,7 +30,7 @@ public class YourScoreActivity extends AppCompatActivity {
     TextView tv_header,questionTv, txt_count, viewResult, txt_title;
     ProgressBar progressBarCircle;
     Button btn_ok;
-    String Page, folderName, correnctcount, totalcount;
+    String Page, folderName, correnctcount, folderid,totalcount;
     RelativeLayout relative,relativeMain;
 
     @Override
@@ -88,6 +88,7 @@ public class YourScoreActivity extends AppCompatActivity {
         folderName = intent.getStringExtra("folderName");
         correnctcount = intent.getStringExtra("Answers");
         totalcount = intent.getStringExtra("TotalQue");
+        folderid = intent.getStringExtra("folderid");
         Page = intent.getStringExtra("Page");
         if (Page.equalsIgnoreCase("Question")) {
             viewResult.setVisibility(View.VISIBLE);
@@ -99,9 +100,12 @@ public class YourScoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(YourScoreActivity.this, QuizSubmittedActivity.class);
-                intent1.putExtra("folder_id", folderName);
+                intent1.putExtra("folder_id", folderid);
+                intent1.putExtra("folder_name", folderName);
+                intent1.putExtra("timer", "");
                 startActivity(intent1);
                 finish();
+
             }
         });
 
