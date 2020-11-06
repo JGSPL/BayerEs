@@ -61,7 +61,7 @@ import static com.procialize.eventapp.Utility.SharedPreferencesConstant.QUIZSPOT
 
 public class SpotQuizFragment extends Fragment {
     String api_token, eventid;
-    CardView Quizcard;
+    LinearLayout Quizcard;
     ImageView quizlogo;
     Button btnQuizStart;
     ProgressBar progressbar;

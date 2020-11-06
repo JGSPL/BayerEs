@@ -152,7 +152,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         fragInfo.setArguments(bundle);
         transaction.replace(R.id.fragment_frame, fragInfo);
         transaction.commit();
-
         if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
             // Initializing video player with developer key
             youTubePlayerFragment.initialize(getResources().getString(R.string.maps_api_key), new YouTubePlayer.OnInitializedListener() {
