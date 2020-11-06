@@ -97,14 +97,19 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
     //BottomNavigationView bottom_navigation;
     TabLayout tablayout;
     TabItem ti_spot_quiz;
-    String livestream_link;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_streaming);
 
+        initView();
+
+    }
+
+    private void initView() {
         Intent intent = getIntent();
-        livestream_link = intent.getStringExtra("livestream_link");
+        final String livestream_link = intent.getStringExtra("livestream_link");
         agendaDetails = (Agenda) intent.getSerializableExtra("agendaDetails");
         sessionName = agendaDetails.getSession_name();
         sessionId = agendaDetails.getSession_id();
@@ -140,11 +145,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         youtube_stream_url = livestream_link;
         mPlayerView = findViewById(R.id.jwplayer);
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_view);
-
-
-    }
-
-    private void initView() {
 
         /*Bundle bundle = new Bundle();
         bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
@@ -310,13 +310,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
     @Override
     protected void onStart() {
         super.onStart();
-        //mPlayerView.onStart();
+        mPlayerView.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //mPlayerView.onResume();
+        mPlayerView.onResume();
     }
 
     @Override
