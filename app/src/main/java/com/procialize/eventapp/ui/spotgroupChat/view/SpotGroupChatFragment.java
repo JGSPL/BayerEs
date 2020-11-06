@@ -143,7 +143,6 @@ public class SpotGroupChatFragment extends Fragment {
     final private String serverKey = "key=" + "AAAA4xkbUmY:APA91bHJtoRFEI_jxvR7jJEIA0M-Wa4adoRiLGWIMiWdAgEg5CLjsJBRuByvHHj-764l5zVRav8N_qwn_etLCzUHsL-xfhJTrQQFSYkHRurjID5haW2TpfZF1JRDw0y4vKBoqVg6Lldb";
     final private String contentType = "application/json";
     final String TAG = "NOTIFICATION TAG";
-
     String NOTIFICATION_TITLE;
     String NOTIFICATION_MESSAGE;
     String TOPIC;
