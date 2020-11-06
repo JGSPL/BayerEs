@@ -71,7 +71,6 @@ import java.net.URL;
 import java.util.HashMap;
 
 import cn.jzvd.JzvdStd;
-import it.mike5v.viewmoretextview.ViewMoreTextView;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
