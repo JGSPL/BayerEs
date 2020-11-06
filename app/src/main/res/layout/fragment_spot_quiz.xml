@@ -9,12 +9,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
+        android:layout_gravity="top|center"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:id="@+id/linear"
+            android:gravity="top|center"
             android:layout_height="match_parent">
 
             <ImageView
@@ -71,8 +73,10 @@
                 android:layout_marginBottom="20dp"
                 android:layout_gravity="center"
                 android:textColor="@color/colorwhite"
-                android:text="start"
-                android:layout_height="35dp"
+                android:text="Start"
+                android:stateListAnimator="@null"
+
+                android:layout_height="40dp"
                 android:textAllCaps="false">
 
             </com.procialize.eventapp.fonts.RobotoButton>

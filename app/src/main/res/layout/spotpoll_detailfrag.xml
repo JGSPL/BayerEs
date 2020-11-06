@@ -137,6 +137,8 @@
                     android:background="@color/activetab"
                     android:gravity="center"
                     android:paddingTop="2dp"
+                    android:stateListAnimator="@null"
+
                     android:text="Submit"
                     android:textAllCaps="false"
                     android:textColor="@color/colorwhite"

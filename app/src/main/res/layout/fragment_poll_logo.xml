@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
+    android:layout_gravity="center"
     android:layout_marginRight="0dp"
     android:background="@color/transperent">
     <ScrollView
@@ -12,7 +13,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|center"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -73,6 +75,7 @@
             android:layout_marginBottom="10dp"
             android:background="@color/activetab"
             android:gravity="center"
+            android:stateListAnimator="@null"
             android:textAllCaps="false"
             android:text="Start"
             android:textColor="@color/colorwhite">
