@@ -209,7 +209,7 @@ public class ChatActivity extends AppCompatActivity {
     final private String serverKey = "key=" + "AAAA4xkbUmY:APA91bHJtoRFEI_jxvR7jJEIA0M-Wa4adoRiLGWIMiWdAgEg5CLjsJBRuByvHHj-764l5zVRav8N_qwn_etLCzUHsL-xfhJTrQQFSYkHRurjID5haW2TpfZF1JRDw0y4vKBoqVg6Lldb";
     final private String contentType = "application/json";
     final String TAG = "NOTIFICATION TAG";
-
+     String userName, prof_pic;
     String NOTIFICATION_TITLE;
     String NOTIFICATION_MESSAGE;
     String TOPIC;
@@ -241,19 +241,23 @@ public class ChatActivity extends AppCompatActivity {
         page = intent.getStringExtra("page");
         firstMessage = intent.getStringExtra("firstMessage");
         attendee = (Attendee) getIntent().getSerializableExtra("Attendee");
+        try {
 
-        final String userName = attendee.getFirst_name();
-        lname = attendee.getLast_name();
-        company = attendee.getCompany_name();
-        city = attendee.getCity();
-        designation = attendee.getDesignation();
-        final String prof_pic = attendee.getProfile_picture();
-        attendee_type = attendee.getAttendee_type();
-        mobile = attendee.getMobile();
-        email = attendee.getEmail();
-        attendeeid = attendee.getAttendee_id();
-        firebase_id = attendee.getFirebase_id();
-        mChatUser = attendee.getFirebase_id();
+            userName = attendee.getFirst_name();
+            lname = attendee.getLast_name();
+            company = attendee.getCompany_name();
+            city = attendee.getCity();
+            designation = attendee.getDesignation();
+            prof_pic = attendee.getProfile_picture();
+            attendee_type = attendee.getAttendee_type();
+            mobile = attendee.getMobile();
+            email = attendee.getEmail();
+            attendeeid = attendee.getAttendee_id();
+            firebase_id = attendee.getFirebase_id();
+            mChatUser = attendee.getFirebase_id();
+        }catch(Exception e){
+
+        }
         loginUser = SharedPreference.getPref(this,SharedPreferencesConstant.KEY_FNAME);
 
         //.........................set Data on Attendee Chat table......................//
