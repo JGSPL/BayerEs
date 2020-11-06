@@ -118,7 +118,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
             holder.textViewTime.setText(Integer.parseInt(String.valueOf(quizList.get(position).getTotal_correct())) + "/" +
                     Integer.parseInt(String.valueOf(quizList.get(position).getQuiz_question().size())));
 
-            holder.progressBarCircle.setMax(Integer.parseInt(String.valueOf(quizList.size())));
+            holder.progressBarCircle.setMax(Integer.parseInt(String.valueOf(quizList.get(position).getQuiz_question().size())));
 
             holder.quiz_list_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
