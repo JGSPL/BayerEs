@@ -144,7 +144,6 @@ public class SpotGroupChatFragment extends Fragment {
     String NOTIFICATION_MESSAGE;
     String TOPIC;
     ImageView backImage;
-
     public static SpotGroupChatFragment newInstance() {
 
         return new SpotGroupChatFragment();
