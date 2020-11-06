@@ -228,13 +228,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
-                   /* Bundle bundle = new Bundle();
+                   Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
                     fragInfo.setArguments(bundle);
                     transaction.replace(R.id.fragment_frame, fragInfo);
-                    transaction.commit();*/
+                    transaction.commit();
                 } else if (tab.getPosition() == 1) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
