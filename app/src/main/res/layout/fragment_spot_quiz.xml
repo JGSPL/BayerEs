@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/Quizcard"
-    android:background="@color/colorwhite"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:background="@color/transperent">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -21,7 +23,8 @@
                 android:src="@drawable/ic_close"
                 android:layout_gravity="right"
                 android:id="@+id/imgClose"
-                android:padding="10dp"></ImageView>
+                android:padding="10dp"
+                android:visibility="invisible" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -54,7 +57,8 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textColor="@color/black"
-                android:id="@+id/title">
+                android:id="@+id/title"
+                android:layout_margin="10dp">
 
             </com.procialize.eventapp.fonts.RobotoTextview>
 
@@ -68,7 +72,8 @@
                 android:layout_gravity="center"
                 android:textColor="@color/colorwhite"
                 android:text="start"
-                android:layout_height="35dp">
+                android:layout_height="35dp"
+                android:textAllCaps="false">
 
             </com.procialize.eventapp.fonts.RobotoButton>
 
