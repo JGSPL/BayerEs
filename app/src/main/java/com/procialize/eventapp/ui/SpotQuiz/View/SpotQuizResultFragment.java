@@ -33,6 +33,7 @@ import com.procialize.eventapp.Utility.CommonFirebase;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.session.SessionManager;
+import com.procialize.eventapp.ui.SpotQuiz.adapter.SpotQuizSubmittedAdapter;
 import com.procialize.eventapp.ui.SpotQuiz.viewModel.SpotQuizAfterSubmitModel;
 import com.procialize.eventapp.ui.quiz.adapter.QuizSubmitedAdapter;
 import com.procialize.eventapp.ui.quiz.model.QuizList;
@@ -63,7 +64,7 @@ public class SpotQuizResultFragment extends Fragment implements View.OnClickList
     List<QuizList> quizList;
     List<QuizQuestion> questionList;
     public static String totalque, total_correct, questionId, sessionid, folder_id, foldername , strTimer = "0";
-    QuizSubmitedAdapter adapter;
+    SpotQuizSubmittedAdapter adapter;
     LinearLayoutManager llm;
     int count = 1;
     RelativeLayout relative, relative_main;
@@ -159,10 +160,10 @@ public class SpotQuizResultFragment extends Fragment implements View.OnClickList
                     count = count + 1;
                     if (questionList.size() == llm.findLastVisibleItemPosition() + 2) {
 
-                        btnNext.setVisibility(View.INVISIBLE);
+                        btnNext.setVisibility(View.GONE);
                         submit.setVisibility(View.VISIBLE);
                     } else {
-                        btnNext.setVisibility(View.VISIBLE);
+                        btnNext.setVisibility(View.GONE);
                         submit.setVisibility(View.INVISIBLE);
                     }
 //                    } else {
@@ -205,7 +206,7 @@ public class SpotQuizResultFragment extends Fragment implements View.OnClickList
                             }
                         }
 
-                        adapter = new QuizSubmitedAdapter(getActivity(), questionList);
+                        adapter = new SpotQuizSubmittedAdapter(getActivity(), questionList);
                         quiz_list.setAdapter(adapter);
                         int itemcount = adapter.getItemCount();
                         txt_count.setText("Questions " + 1 + "/" + itemcount);

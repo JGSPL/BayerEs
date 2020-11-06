@@ -22,6 +22,7 @@
             android:padding="5dp"
             android:text="You have skipped this question.."
             android:textColor="@color/colorwhite"
+            android:layout_marginTop="5dp"
             android:textSize="@dimen/textsizenormal" />
 
 
