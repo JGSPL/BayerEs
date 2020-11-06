@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -65,7 +66,7 @@ public class SpotPollFragment extends Fragment {
     private APIService eventApi;
     ProgressBar progressBar,progressView;
     Agenda agenda;
-    CardView Pollcard;
+    LinearLayout Pollcard;
     TextView  tvPollTitle, tvPollEmpty;
     Button btnPollStart;
     List<LivePoll> PollLists;
