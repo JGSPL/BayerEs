@@ -129,6 +129,7 @@ public class AgendaDateWiseAdapter extends RecyclerView.Adapter<AgendaDateWiseAd
                 tv_description;
         public LinearLayout ll_main;
         public ImageView iv_next_arrow;
+        View view_divider;
 
         public MyViewHolder(View view) {
             super(view);
@@ -138,6 +139,7 @@ public class AgendaDateWiseAdapter extends RecyclerView.Adapter<AgendaDateWiseAd
             tv_session_name = view.findViewById(R.id.tv_session_name);
             iv_next_arrow = view.findViewById(R.id.iv_next_arrow);
             ll_main = view.findViewById(R.id.ll_main);
+            view_divider = view.findViewById(R.id.view_divider);
         }
     }
 
@@ -160,5 +162,6 @@ public class AgendaDateWiseAdapter extends RecyclerView.Adapter<AgendaDateWiseAd
         holder.tv_end_time.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         holder.ll_main.setBackgroundColor(Color.parseColor(eventColor2));
         holder.iv_next_arrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
+        holder.view_divider.setBackgroundColor(Color.parseColor("#8C" + eventColor3Opacity40));
     }
 }

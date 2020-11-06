@@ -269,7 +269,7 @@ public class CommonFunction {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        SimpleDateFormat targetFormat = new SimpleDateFormat("MMM dd, YYYY");
+        SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM, YYYY");
         //SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
         String targetdatevalue = targetFormat.format(sourceDate);
         return targetdatevalue;
