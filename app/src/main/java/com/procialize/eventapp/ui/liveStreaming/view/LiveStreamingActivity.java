@@ -157,14 +157,14 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         mPlayerView = findViewById(R.id.jwplayer);
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_view);
 
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
         fragInfo.setArguments(bundle);
         transaction.replace(R.id.fragment_frame, fragInfo);
         transaction.commit();
-
+*/
         if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
             // youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
             // Initializing video player with developer key
@@ -228,13 +228,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
-                    Bundle bundle = new Bundle();
+                   /* Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     SpotGroupChatFragment fragInfo = new SpotGroupChatFragment();
                     fragInfo.setArguments(bundle);
                     transaction.replace(R.id.fragment_frame, fragInfo);
-                    transaction.commit();
+                    transaction.commit();*/
                 } else if (tab.getPosition() == 1) {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
