@@ -97,25 +97,19 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
     //BottomNavigationView bottom_navigation;
     TabLayout tablayout;
     TabItem ti_spot_quiz;
-
+    String livestream_link;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_streaming);
 
-
         Intent intent = getIntent();
-        final String livestream_link = intent.getStringExtra("livestream_link");
+        livestream_link = intent.getStringExtra("livestream_link");
         agendaDetails = (Agenda) intent.getSerializableExtra("agendaDetails");
         sessionName = agendaDetails.getSession_name();
         sessionId = agendaDetails.getSession_id();
         sessionShortDescription = agendaDetails.getSession_short_description();
         sessionDescription = agendaDetails.getSession_description();
-
-        /*videoview = findViewById(R.id.videoview);
-        videoview.setUp(livestream_link, ""
-                , JzvdStd.SCREEN_NORMAL);
-        Jzvd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);*/
 
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -141,21 +135,16 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
             CommonFunction.makeTextViewResizable(tvDescription, 1, " View More", true);
         }
         setDynamicColor();
-       /* tvDescription.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvDescription.toggle();
-            }
-        });*/
-        /*getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_frame, SpotQnAFragment.newInstance(), "")
-                .commit();*/
 
 
         youtube_stream_url = livestream_link;
         mPlayerView = findViewById(R.id.jwplayer);
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getSupportFragmentManager().findFragmentById(R.id.youtube_view);
+
+
+    }
+
+    private void initView() {
 
         /*Bundle bundle = new Bundle();
         bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
@@ -166,7 +155,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         transaction.commit();
 */
         if (youtube_stream_url.contains("https://www.youtube.com/watch?v")) {
-            // youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
             // Initializing video player with developer key
             youTubePlayerFragment.initialize(getResources().getString(R.string.maps_api_key), new YouTubePlayer.OnInitializedListener() {
 
@@ -177,13 +165,11 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
 
                         // String youtube_stream_url = livestream_link;
                         YouvideoId = youtube_stream_url.substring(youtube_stream_url.lastIndexOf("=") + 1);
-
                         youTubePlayer = player;
                         //set the player style default
                         youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
                         //cue the 1st video by default
                         youTubePlayer.cueVideo(YouvideoId);
-
                     }
                 }
 
@@ -191,7 +177,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
                 public void onInitializationFailure(YouTubePlayer.Provider arg0, YouTubeInitializationResult arg1) {
                     youTubePlayer.play();
                     youTubePlayer.getFullscreenControlFlags();
-                    //print or show error if initialization failed
                     Log.e("", "Youtube Player View initialization failed");
                 }
             });
@@ -277,41 +262,6 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
         tablayout.getTabAt(1).getIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_IN);
         tablayout.getTabAt(2).getIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_IN);
         tablayout.getTabAt(3).getIcon().setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)), PorterDuff.Mode.SRC_IN);
-
-        //ti_spot_quiz.setItemIconTintList(iconsColorStates);
-
-      /*   bottom_navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment = null;
-                switch (item.getItemId()) {
-                    case R.id.navigation_comment:
-                        break;
-                    case R.id.navigation_livepoll:
-                        Bundle bundlePoll = new Bundle();
-                        bundlePoll.putSerializable("agendaDetails", (Serializable) agendaDetails);
-                        FragmentTransaction transactionPoll = getSupportFragmentManager().beginTransaction();
-                        SpotPollFragment pollFragment = new SpotPollFragment();
-                        pollFragment.setArguments(bundlePoll);
-                        transactionPoll.replace(R.id.fragment_frame, pollFragment);
-                        transactionPoll.commit();
-                        break;
-                    case R.id.navigation_quiz:
-                        break;
-                    case R.id.navigation_qna:
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("agendaDetails", (Serializable) agendaDetails);
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        SpotQnAFragment fragInfo = new SpotQnAFragment();
-                        fragInfo.setArguments(bundle);
-                        transaction.replace(R.id.fragment_frame, fragInfo);
-                        transaction.commit();
-                        break;
-                }
-
-                return true;
-            }
-        });*/
     }
 
     public static Bitmap retriveVideoFrameFromVideo(String videoPath)
@@ -360,13 +310,13 @@ public class LiveStreamingActivity extends AppCompatActivity implements VideoPla
     @Override
     protected void onStart() {
         super.onStart();
-        mPlayerView.onStart();
+        //mPlayerView.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mPlayerView.onResume();
+        //mPlayerView.onResume();
     }
 
     @Override
