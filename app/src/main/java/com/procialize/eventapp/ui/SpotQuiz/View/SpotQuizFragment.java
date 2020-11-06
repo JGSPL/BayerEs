@@ -35,7 +35,6 @@ import com.procialize.eventapp.Constants.APIService;
 import com.procialize.eventapp.Constants.ApiUtils;
 import com.procialize.eventapp.Constants.RefreashToken;
 import com.procialize.eventapp.R;
-import com.procialize.eventapp.Utility.CommonFunction;
 import com.procialize.eventapp.Utility.SharedPreference;
 import com.procialize.eventapp.Utility.Utility;
 import com.procialize.eventapp.ui.agenda.model.Agenda;
@@ -96,8 +95,8 @@ public class SpotQuizFragment extends Fragment {
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
         agenda = (Agenda) getArguments().getSerializable("agendaDetails");
 
-        CommonFunction.showBackgroundImage(getContext(), Quizcard);
-
+//        CommonFunction.showBackgroundImage(getContext(), Quizcard);
+        Quizcard.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
         btnQuizStart.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));
         btnQuizStart.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
         title.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4)));

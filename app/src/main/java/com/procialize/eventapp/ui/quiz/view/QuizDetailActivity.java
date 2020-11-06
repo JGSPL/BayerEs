@@ -124,6 +124,13 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
+        try {
+            if (timercountdown != null) {
+                timercountdown.cancel();
+            }
+        } catch (Exception e) {
+
+        }
         String eventColor3 = SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_3);
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
