@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -58,6 +59,7 @@ import com.procialize.eventapp.ui.attendeeChat.ChatActivity;
 import com.procialize.eventapp.ui.attendeeChat.activity.AttendeeChatDetail;
 import com.procialize.eventapp.ui.attendeeChat.model.Messages;
 import com.procialize.eventapp.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
+import com.procialize.eventapp.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.eventapp.ui.spotgroupChat.adapter.GroupMessageAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -75,6 +77,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.OkHttpClient;
 
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
+import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.eventapp.Utility.SharedPreferencesConstant.EVENT_ID;
 
 public class SpotGroupChatFragment extends Fragment {
@@ -144,7 +148,7 @@ public class SpotGroupChatFragment extends Fragment {
     String NOTIFICATION_MESSAGE;
     String TOPIC;
     ImageView backImage;
-
+    FrameLayout fl_post_comment;
     public static SpotGroupChatFragment newInstance() {
 
         return new SpotGroupChatFragment();
@@ -164,7 +168,7 @@ public class SpotGroupChatFragment extends Fragment {
         mMessageView = (EditText) root.findViewById(R.id.chatMessageView);
         progressBar = (ProgressBar) root.findViewById(R.id.progressBar);
         cd = ConnectionDetector.getInstance(getContext());
-
+        fl_post_comment = root.findViewById(R.id.fl_post_comment);
         agenda = (Agenda) getArguments().getSerializable("agendaDetails");
         sessionId = agenda.getSession_id();
 
@@ -199,7 +203,10 @@ public class SpotGroupChatFragment extends Fragment {
         LinearLayout linBack = actionBarView.findViewById(R.id.linBack);
         backImage = actionBarView.findViewById(R.id.backImage);
         backImage.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_ATOP);
+        fl_post_comment.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_2)));
 
+        int color4 = Color.parseColor(SharedPreference.getPref(getContext(), EVENT_COLOR_4));
+        mChatSendButton.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
         ImageView ivattDetail = actionBarView.findViewById(R.id.ivattDetail);
         mUserLastSeen.setText(designation + " - " + city);
 
@@ -283,7 +290,7 @@ public class SpotGroupChatFragment extends Fragment {
 
         //----SEND MESSAGE--BUTTON----
 
-        mChatSendButton.setOnClickListener(new View.OnClickListener() {
+        fl_post_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String message = mMessageView.getText().toString().trim();
