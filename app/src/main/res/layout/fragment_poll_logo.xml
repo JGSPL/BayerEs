@@ -61,6 +61,19 @@
 
         </com.procialize.eventapp.fonts.RobotoTextview>
 
+        <com.procialize.eventapp.fonts.RobotoTextview
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="Poll not available"
+            android:id="@+id/tvPollEmpty"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textsizenormal"
+            android:layout_marginTop="0dp">
+
+        </com.procialize.eventapp.fonts.RobotoTextview>
 
         <com.procialize.eventapp.fonts.RobotoButton
             android:id="@+id/btnPollStart"
@@ -72,7 +85,7 @@
             android:background="@color/activetab"
             android:gravity="center"
             android:textAllCaps="false"
-            android:text="start"
+            android:text="Start"
             android:textColor="@color/colorwhite">
 
         </com.procialize.eventapp.fonts.RobotoButton>

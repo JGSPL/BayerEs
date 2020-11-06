@@ -21,12 +21,14 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -96,7 +98,7 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
     LinearLayout linThankyou;
     Button ratebtn;
     TextView tvPollTitle, tvPollTitle2;
-
+    NestedScrollView ScrollMain;
 
     public static SpotPollFragment newInstance() {
 
@@ -129,6 +131,7 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
         linThankyou = root.findViewById(R.id.linThankyou);
         tvPollTitle = root.findViewById(R.id.tvPollTitle);
         tvPollTitle2 = root.findViewById(R.id.tvPollTitle2);
+        ScrollMain = root.findViewById(R.id.ScrollMain);
 
         subBtn.setOnClickListener(this);
         CommonFunction.showBackgroundImage(getContext(), relative);
@@ -156,6 +159,8 @@ public class SpotPolldetailFragment extends Fragment implements View.OnClickList
 
         questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_1)));
         relMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
+        ScrollMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
+
         subBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_1)));
         subBtn.setTextColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_2)));
         PollBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(getContext(),EVENT_COLOR_1)));

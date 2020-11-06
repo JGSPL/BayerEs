@@ -165,23 +165,27 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<GroupMessageAdapte
         String message_type = mes.getType();
         TableAttendee tableAttendees = EventAppDB.getDatabase(context).attendeeDao().getAttendeeDetailsFromFireId(from_user_id);
         final Attendee attendee = new Attendee();
+try {
+    // attendee.setFirebase_status(tableAttendees.getFirebase_status());
+    attendee.setMobile(tableAttendees.getMobile());
+    attendee.setEmail(tableAttendees.getEmail());
+    attendee.setFirebase_id(tableAttendees.getFirebase_id());
+    attendee.setFirebase_name(tableAttendees.getFirebase_name());
+    attendee.setFirebase_username(tableAttendees.getFirebase_username());
+    attendee.setAttendee_id(tableAttendees.getAttendee_id());
+    attendee.setFirst_name(tableAttendees.getFirst_name());
+    attendee.setLast_name(tableAttendees.getLast_name());
+    attendee.setCity(tableAttendees.getCity());
+    attendee.setDesignation(tableAttendees.getDesignation());
+    attendee.setCompany_name(tableAttendees.getCompany_name());
+    attendee.setAttendee_type(tableAttendees.getAttendee_type());
+    attendee.setTotal_sms(tableAttendees.getTotal_sms());
+    attendee.setProfile_picture(tableAttendees.getProfile_picture());
+  //  attendee.setFirebase_status(tableAttendees.getFirebase_status());
+}
+catch(Exception e){
 
-       // attendee.setFirebase_status(tableAttendees.getFirebase_status());
-        attendee.setMobile(tableAttendees.getMobile());
-        attendee.setEmail(tableAttendees.getEmail());
-        attendee.setFirebase_id(tableAttendees.getFirebase_id());
-        attendee.setFirebase_name(tableAttendees.getFirebase_name());
-        attendee.setFirebase_username(tableAttendees.getFirebase_username());
-        attendee.setAttendee_id(tableAttendees.getAttendee_id());
-        attendee.setFirst_name(tableAttendees.getFirst_name());
-        attendee.setLast_name(tableAttendees.getLast_name());
-        attendee.setCity(tableAttendees.getCity());
-        attendee.setDesignation(tableAttendees.getDesignation());
-        attendee.setCompany_name(tableAttendees.getCompany_name());
-        attendee.setAttendee_type(tableAttendees.getAttendee_type());
-        attendee.setTotal_sms(tableAttendees.getTotal_sms());
-        attendee.setProfile_picture(tableAttendees.getProfile_picture());
-        attendee.setFirebase_status(tableAttendees.getFirebase_status());
+}
 
 
         holder.innerRl2.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));

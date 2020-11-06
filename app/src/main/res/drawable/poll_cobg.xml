@@ -6,18 +6,18 @@
     // if you want clear round shape then make radius size is half of your button`s height.
 
 
-    <solid android:color="@android:color/transparent" />
+    <solid android:color="#4D4D4D" />
     // Button Colour
 
 
     <gradient
         android:angle="-90"
-        android:endColor="@android:color/transparent"
-        android:startColor="@android:color/transparent" />
+        android:endColor="#4D4D4D"
+        android:startColor="#4D4D4D" />
 
     <stroke
         android:width="1dp"
-        android:color="#e6e6e6" />
+        android:color="#4D4D4D" />
 
 
 </shape>
