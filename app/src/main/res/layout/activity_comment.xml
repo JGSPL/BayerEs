@@ -136,7 +136,7 @@
                             android:baselineAligned="false"
                             android:orientation="vertical">
 
-                            <com.procialize.eventapp.fonts.RobotoTextViewHeader
+                            <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                                 android:id="@+id/tv_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="0dp"
         android:orientation="vertical">
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             android:textColor="@color/black"
             android:gravity="center"/>
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

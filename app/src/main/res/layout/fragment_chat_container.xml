@@ -37,7 +37,7 @@
             android:src="@mipmap/ic_emoji"
              />
 
-        <com.procialize.eventapp.fonts.RobotoEditext
+        <com.procialize.bayer2020.fonts.RobotoEditext
             android:id="@+id/chatMessageView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

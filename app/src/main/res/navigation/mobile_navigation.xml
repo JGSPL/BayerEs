@@ -8,25 +8,25 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.procialize.eventapp.ui.home.view.HomeFragment"
+        android:name="com.procialize.bayer2020.ui.home.view.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_agenda"
-        android:name="com.procialize.eventapp.ui.dashboard.DashboardFragment"
+        android:name="com.procialize.bayer2020.ui.dashboard.DashboardFragment"
         android:label="@string/title_agend"
         tools:layout="@layout/fragment_agenda" />
 
     <fragment
         android:id="@+id/navigation_attendee"
-        android:name="com.procialize.eventapp.ui.notification.view.NotificationsFragment"
+        android:name="com.procialize.bayer2020.ui.notification.view.NotificationsFragment"
         android:label="@string/title_attendee"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_speaker"
-        android:name="com.procialize.eventapp.ui.notification.view.NotificationsFragment"
+        android:name="com.procialize.bayer2020.ui.notification.view.NotificationsFragment"
         android:label="@string/title_speaker"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

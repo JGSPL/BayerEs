@@ -1,66 +1,34 @@
 {
   "project_info": {
-    "project_number": "975378797158",
-    "firebase_url": "https://eventapp2020.firebaseio.com",
-    "project_id": "eventapp2020",
-    "storage_bucket": "eventapp2020.appspot.com"
+    "project_number": "984305293803",
+    "firebase_url": "https://bayer2020-ac7eb.firebaseio.com",
+    "project_id": "bayer2020-ac7eb",
+    "storage_bucket": "bayer2020-ac7eb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:975378797158:android:ccfd39f8bcefa531ed93a7",
+        "mobilesdk_app_id": "1:984305293803:android:7be674c6fd9ecad2c4a1ae",
         "android_client_info": {
-          "package_name": "com.procialize.eventapp"
+          "package_name": "com.procialize.bayer2020"
         }
       },
       "oauth_client": [
         {
-          "client_id": "975378797158-sdghqfqqmk2k1mei0sbvjo0ilo8cutcb.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.procialize.eventapp",
-            "certificate_hash": "572d59a9fb9e470d1599734f53857ca32aa0e821"
-          }
-        },
-        {
-          "client_id": "975378797158-rhc419i54p13k51q0ep9ttmsf9bme1ev.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.procialize.eventapp",
-            "certificate_hash": "de7d284f1606abadd5acbf7a3b7e95c908bffd49"
-          }
-        },
-        {
-          "client_id": "975378797158-opomoto49do9hv8ativ4mgaqbk5927ep.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.procialize.eventapp",
-            "certificate_hash": "272d5982c6e844ffd3c24060e23ea3ed687417b3"
-          }
-        },
-        {
-          "client_id": "975378797158-di7i9akqd9kf231g5a5ajm64ahpq1de8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.procialize.eventapp",
-            "certificate_hash": "960c09088ee4ef2795a6d5e41ff3a7ca3e78ac63"
-          }
-        },
-        {
-          "client_id": "975378797158-ri4i9o301leefud7bd7819jslbjs5jah.apps.googleusercontent.com",
+          "client_id": "984305293803-q97g4t8f1h14kcc6ie332ohp5r3ugrts.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCmc8lu_Yp2dWhpm3TLtGVTcZXJJHjHg5k"
+          "current_key": "AIzaSyB9ZtBfG65557F8n3hdEiWSTALZwZczl2k"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "975378797158-ri4i9o301leefud7bd7819jslbjs5jah.apps.googleusercontent.com",
+              "client_id": "984305293803-q97g4t8f1h14kcc6ie332ohp5r3ugrts.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

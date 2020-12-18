@@ -2,35 +2,43 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.procialize.eventapp.ui.login.viewmodel.LoginViewModel" />
+            type="com.procialize.bayer2020.ui.login.viewmodel.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/splash_logo"
+        android:background="@drawable/login_bg"
         android:keepScreenOn="true">
         <RelativeLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             android:orientation="vertical"
             android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/bayerlogo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/bayer" />
 
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="120dp"
                 android:layout_marginTop="70dp"
-                android:src="@drawable/login_logo" />
+                android:src="@drawable/logo" />
 
             <LinearLayout
                 android:id="@+id/linear_LoginView"
@@ -43,37 +51,38 @@
                 android:visibility="visible">
 
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/txt_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageView"
                     android:layout_marginTop="20dp"
                     android:gravity="center|top"
-                    android:text="LOGIN"
+                    android:text="Sign In"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/textsizenormal" />
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/txt_hint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txt_login"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="30dp"
                     android:gravity="left"
-                    android:text="Email ID/Mobile No."
+                    android:text="*Mobile No."
                     android:textColor="@color/txtcolor"
                     android:textSize="13dp" />
 
-                <com.procialize.eventapp.fonts.RobotoEditext
+                <com.procialize.bayer2020.fonts.RobotoEditext
                     android:id="@+id/inEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txt_hint"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:cursorVisible="true"
                     android:padding="10dp"
@@ -81,18 +90,19 @@
                     android:text="@={viewModel.userEmail}"
                     android:textCursorDrawable="@drawable/cursor_drawable"
                     android:textColor="@color/txtcolor"
-                    android:textSize="13dp" />
+                    android:textSize="13dp"
+                    android:inputType="number"/>
 
-                <com.procialize.eventapp.fonts.RobotoButton
+                <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/btn_submit"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/inEmail"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginTop="30dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/blue"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/login_drawable"
                     android:minHeight="0dp"
                     android:onClick="@{()-> viewModel.onLoginClicked()}"
                     android:padding="10dp"
@@ -101,7 +111,7 @@
                     android:textColor="@color/white"
                     bind:toastMessage="@{viewModel.toastMessage}" />
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/txt_mobileno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -146,7 +156,7 @@
                         android:onClick="@{()-> viewModel.onBackClicked()}"
                         android:src="@drawable/backarrow" />
 
-                    <com.procialize.eventapp.fonts.RobotoTextview
+                    <com.procialize.bayer2020.fonts.RobotoTextview
                         android:id="@+id/txt_headingOTP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -167,7 +177,7 @@
             android:visibility="visible"
            android:layout_below="@+id/imageView">
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/txt_otp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -178,7 +188,7 @@
                 android:textSize="13dp"
                 android:visibility="visible" />
 
-            <com.procialize.eventapp.fonts.RobotoEditext
+            <com.procialize.bayer2020.fonts.RobotoEditext
                 android:id="@+id/edit_otp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -203,7 +213,7 @@
                 android:visibility="visible"
                 android:layout_below="@+id/imageView">
 
-                <com.procialize.eventapp.fonts.RobotoButton
+                <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/btn_OTPSubmit"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
@@ -220,7 +230,7 @@
                     android:textColor="@color/white"
                     android:textSize="13dp" />
 
-                <com.procialize.eventapp.fonts.RobotoButton
+                <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/btn_resendOTP"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
@@ -240,7 +250,7 @@
         </LinearLayout>
             </LinearLayout>
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/txt_designdevelop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -251,7 +261,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:textSize="@dimen/textsizesmallest"
                 android:onClick="@{()-> viewModel.onTextDesignClicked()}"
-                android:textColor="@color/txtcolor" />
+                android:textColor="@color/white" />
 
 
         </RelativeLayout>

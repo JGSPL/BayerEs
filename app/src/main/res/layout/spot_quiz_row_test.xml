@@ -44,7 +44,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/textno1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

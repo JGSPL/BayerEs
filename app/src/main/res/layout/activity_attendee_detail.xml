@@ -155,7 +155,7 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <com.procialize.eventapp.fonts.RobotoTextViewHeader
+                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                     android:id="@+id/tv_attendee_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -171,7 +171,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/tv_attendee_designation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -188,7 +188,7 @@
                     android:background="@color/linecolor" />
 
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/tv_attendee_company_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/tv_attendee_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -220,7 +220,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/tv_mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -235,7 +235,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/linecolor" />
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/tv_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -288,7 +288,7 @@
                             android:src="@drawable/ic_email"
                             android:tint="@color/white" />
 
-                        <com.procialize.eventapp.fonts.RobotoButton
+                        <com.procialize.bayer2020.fonts.RobotoButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/tv_not_attempted"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             android:textSize="@dimen/textsizenormal" />
 
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/txt_question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

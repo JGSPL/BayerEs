@@ -39,7 +39,7 @@
                 android:src="@mipmap/ic_back"
                 android:visibility="visible" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/tv_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -138,7 +138,7 @@
                 android:layout_margin="10dp"
                 android:orientation="vertical">
 
-                <com.procialize.eventapp.fonts.RobotoTextViewHeader
+                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                     android:id="@+id/tv_event_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -149,7 +149,7 @@
                     android:textSize="@dimen/textsizebigger" />
 
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/tv_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
                     android:textSize="17dp" />
 
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/tv_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -170,7 +170,7 @@
                     android:textColor="@color/white"
                     android:textSize="19dp" />
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/tv_Description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

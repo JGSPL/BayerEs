@@ -29,6 +29,13 @@
         <item name="android:minHeight">20dip</item>
     </style>
 
+    <style name="MyCustomTabText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">Rotis-SansSerif-Std-Light_38712</item>
+    </style>
+
    <!-- <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
         <item name="colorPrimary">@color/activetab</item>

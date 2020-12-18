@@ -7,7 +7,7 @@
     android:id="@+id/linBox"
     android:orientation="vertical">
 
-    <com.procialize.eventapp.fonts.RobotoTextview
+    <com.procialize.bayer2020.fonts.RobotoTextview
         android:id="@+id/tv_pdf_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

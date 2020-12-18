@@ -50,7 +50,7 @@
                     android:src="@mipmap/ic_back"
                     android:contentDescription=" " />
 
-                <com.procialize.eventapp.fonts.RobotoTextViewHeader
+                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/txtTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                 android:textSize="@dimen/textsizenormal"
                 android:visibility="gone" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/questionTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -183,7 +183,7 @@
         android:layout_gravity="center"
         android:alpha="0.9"
         android:visibility="visible">
-        <com.procialize.eventapp.fonts.RobotoButton
+        <com.procialize.bayer2020.fonts.RobotoButton
             android:id="@+id/PollBtn"
             android:layout_width="200dp"
             android:layout_height="40dp"
@@ -205,7 +205,7 @@
         android:background="@color/colorwhite"
         android:alpha="0.9"
         android:visibility="visible">
-        <com.procialize.eventapp.fonts.RobotoButton
+        <com.procialize.bayer2020.fonts.RobotoButton
             android:id="@+id/subBtn"
             android:layout_width="200dp"
             android:layout_height="40dp"

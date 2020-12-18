@@ -6,24 +6,25 @@
         android:id="@+id/navigation_home"
         android:enabled="true"
         android:icon="@drawable/newsfeed_selector"
-        app:showAsAction="collapseActionView" />
+        app:showAsAction="withText"
+        android:title="Newsfeed" />
 
     <item
         android:id="@+id/navigation_agenda"
         android:enabled="true"
         android:icon="@drawable/agenda_selector"
-        app:showAsAction="collapseActionView" />
+        app:showAsAction="withText" />
 
     <item
         android:id="@+id/navigation_attendee"
         android:enabled="true"
         android:icon="@drawable/attendee_selector"
-        app:showAsAction="collapseActionView" />
+        app:showAsAction="withText" />
     <item
         android:id="@+id/navigation_speaker"
         android:enabled="true"
         android:icon="@drawable/speaker_selector"
-        app:showAsAction="collapseActionView" />
+        app:showAsAction="withText" />
 
 
 </menu>

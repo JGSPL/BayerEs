@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.procialize.eventapp.fonts.RobotoTextViewHeader
+                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

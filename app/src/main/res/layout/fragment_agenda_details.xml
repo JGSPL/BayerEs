@@ -224,7 +224,7 @@
 
             </LinearLayout>
 
-            <com.procialize.eventapp.fonts.RobotoTextViewHeader
+            <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                 android:id="@+id/tv_session_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -240,7 +240,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/linecolor" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/tv_short_session_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -256,7 +256,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/linecolor" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/tv_rate_this_session"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -329,7 +329,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/linecolor" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/tv_session_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

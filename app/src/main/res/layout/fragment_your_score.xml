@@ -22,7 +22,7 @@
                 android:layout_margin="5dp"
                 android:orientation="vertical">
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/questionTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                         android:visibility="gone" />
 
 
-                    <com.procialize.eventapp.fonts.RobotoButton
+                    <com.procialize.bayer2020.fonts.RobotoButton
                         android:id="@+id/btn_ok"
                         android:layout_width="150dp"
                         android:layout_height="40dp"
@@ -128,7 +128,7 @@
             android:visibility="gone">
 
 
-            <com.procialize.eventapp.fonts.RobotoButton
+            <com.procialize.bayer2020.fonts.RobotoButton
                 android:id="@+id/txt_title"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -152,7 +152,7 @@
         android:orientation="vertical">
 
 
-        <com.procialize.eventapp.fonts.RobotoTextViewHeader
+        <com.procialize.bayer2020.fonts.RobotoTextViewHeader
             android:id="@+id/tvPollTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -164,9 +164,9 @@
             android:textSize="@dimen/textsizenormal"
             android:textStyle="bold">
 
-        </com.procialize.eventapp.fonts.RobotoTextViewHeader>
+        </com.procialize.bayer2020.fonts.RobotoTextViewHeader>
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/tvPollTitle2"
 
             android:layout_width="match_parent"
@@ -178,7 +178,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/textsizenormal">
 
-        </com.procialize.eventapp.fonts.RobotoTextview>
+        </com.procialize.bayer2020.fonts.RobotoTextview>
 
         <TextView
             android:id="@+id/viewResult"

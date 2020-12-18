@@ -61,7 +61,7 @@
                 android:layout_margin="5dp"
                 android:orientation="vertical">
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/questionTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                         android:visibility="gone" />
 
 
-                    <com.procialize.eventapp.fonts.RobotoButton
+                    <com.procialize.bayer2020.fonts.RobotoButton
                         android:id="@+id/btn_ok"
                         android:layout_width="150dp"
                         android:layout_height="40dp"
@@ -177,7 +177,7 @@
                 android:textSize="@dimen/textsizesmall" />
 
 
-            <com.procialize.eventapp.fonts.RobotoButton
+            <com.procialize.bayer2020.fonts.RobotoButton
                 android:id="@+id/txt_title"
                 android:layout_width="0dp"
                 android:layout_height="40dp"

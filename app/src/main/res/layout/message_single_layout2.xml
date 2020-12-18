@@ -30,7 +30,7 @@
         android:src="@drawable/profilepic_placeholder"
         android:layout_marginRight="5dp"/>
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/name_text_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:textSize="14sp" />
 
 
-    <com.procialize.eventapp.fonts.RobotoTextview
+    <com.procialize.bayer2020.fonts.RobotoTextview
         android:id="@+id/message_text_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center" />
     </RelativeLayout>
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
         android:id="@+id/time_text_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
             android:src="@drawable/profilepic_placeholder"
             android:layout_marginRight="5dp"/>
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/name_text_layout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
             android:layout_toEndOf="@+id/message_profile_layout2" />
 
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/message_text_layout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
             android:layout_gravity="center" />
     </RelativeLayout>
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/time_text_layout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

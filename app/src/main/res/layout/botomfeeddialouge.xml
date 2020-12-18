@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"/>-->
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/deleteTv"
                 android:gravity="center"
                 android:padding="@dimen/padding"
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"/>
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/reportTv"
                 android:gravity="center"
                 android:padding="@dimen/padding"
@@ -58,7 +58,7 @@
                 android:layout_height="0.5dp"/>
 
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/hideTv"
                 android:gravity="center"
                 android:padding="@dimen/padding"
@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"/>
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/reportuserTv"
                 android:gravity="center"
                 android:padding="@dimen/padding"
@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"/>
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/blockuserTv"
                 android:gravity="center"
                 android:padding="@dimen/padding"
@@ -105,7 +105,7 @@
                 android:layout_height="0.5dp"
                 android:visibility="gone"/>
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/cancelTv"
                 android:gravity="center"
                 android:padding="@dimen/padding"

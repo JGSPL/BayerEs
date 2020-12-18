@@ -12,7 +12,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="@android:color/white"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:elevation="0dp">
 
@@ -41,7 +41,7 @@
                 android:src="@mipmap/ic_back"
                 android:visibility="visible" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/tv_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                         android:id="@+id/view_one"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/transperent" />
+                        android:background="@color/loginbutton" />
 
                     <View
                         android:id="@+id/view_down"
@@ -107,8 +107,8 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="145dp"
-                        android:layout_height="145dp"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
                         android:layout_centerInParent="true"
                         android:adjustViewBounds="true"
                         android:scaleType="fitXY"
@@ -121,19 +121,8 @@
                         android:layout_height="140dp"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/image_border"
-                        app:cardCornerRadius="70dp"
-                        app:cardElevation="@dimen/album_dp_0">
+                        android:background="@drawable/image_border">
 
-
-                        <ImageView
-                            android:id="@+id/iv_profile"
-                            android:layout_width="140dp"
-                            android:layout_height="140dp"
-                            android:layout_centerInParent="true"
-                            android:adjustViewBounds="true"
-                            android:contentDescription="TODO"
-                            android:scaleType="centerCrop"></ImageView>
 
                         <RelativeLayout
                             android:id="@+id/rl_update_pic"
@@ -153,6 +142,15 @@
                                 android:src="@drawable/ic_camera"
                                 android:tint="@color/white" />
                         </RelativeLayout>
+
+                        <ImageView
+                            android:id="@+id/iv_profile"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_centerInParent="true"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="TODO"
+                            android:scaleType="centerCrop" />
                     </androidx.cardview.widget.CardView>
 
                     <ProgressBar
@@ -177,6 +175,14 @@
                 android:paddingRight="20dp"
                 android:paddingBottom="180dp">
 
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="First Name"
+                    android:textColor="@color/textcolorLight" />
+
                 <LinearLayout
                     android:id="@+id/ll_name"
                     android:layout_width="match_parent"
@@ -192,24 +198,33 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_name"
-                        android:padding="3dp"/>
+                        android:padding="3dp"
+                        android:visibility="gone" />
 
-                    <com.procialize.eventapp.fonts.RobotoEditext
+                    <com.procialize.bayer2020.fonts.RobotoEditext
                         android:id="@+id/et_first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
-                        android:hint="Name"
                         android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
+
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Last Name"
+                    android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
                     android:id="@+id/ll_last_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
@@ -222,45 +237,55 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_name"
-                        android:padding="3dp"/>
+                        android:padding="3dp"
+                        android:visibility="gone" />
 
-                    <com.procialize.eventapp.fonts.RobotoEditext
+                    <com.procialize.bayer2020.fonts.RobotoEditext
                         android:id="@+id/et_last_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
-                        android:hint="Last Name"
                         android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_designation"
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Organization Name"
+                    android:textColor="@color/textcolorLight" />
+
+                <LinearLayout
+                    android:id="@+id/ll_organisation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:id="@+id/iv_designation"
+                        android:id="@+id/iv_org"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:padding="3dp"
-                        android:src="@drawable/ic_designation" />
+                        android:src="@drawable/ic_designation"
+                        android:visibility="gone" />
 
-                    <com.procialize.eventapp.fonts.RobotoEditext
-                        android:id="@+id/et_designation"
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_organisation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
-                        android:hint="Designation"
                         android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -283,7 +308,7 @@
                         android:padding="3dp"
                         android:src="@drawable/ic_designation" />
 
-                    <com.procialize.eventapp.fonts.RobotoEditext
+                    <com.procialize.bayer2020.fonts.RobotoEditext
                         android:id="@+id/et_company_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -291,59 +316,78 @@
                         android:background="@color/transperent"
                         android:hint="Company Name"
                         android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_city"
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Mobile Number"
+                    android:textColor="@color/textcolorLight" />
+
+                <LinearLayout
+                    android:id="@+id/ll_mobno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:id="@+id/iv_city"
+                        android:id="@+id/iv_mobno"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:padding="3dp"
-                        android:src="@drawable/ic_location" />
+                        android:src="@drawable/ic_location"
+                        android:visibility="gone" />
 
-                    <com.procialize.eventapp.fonts.RobotoEditext
-                        android:id="@+id/et_city"
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_mobno"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
-                        android:hint="City"
                         android:singleLine="true"
                         android:textSize="13dp"
-                        android:imeOptions="actionDone" />
+                        android:imeOptions="actionDone"
+                        android:textColor="@color/textcolorLight" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_email"
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Alternate mobile number"
+                    android:textColor="@color/textcolorLight" />
+
+                <LinearLayout
+                    android:id="@+id/ll_alternetmobno"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:id="@+id/iv_email"
+                        android:id="@+id/iv_alternetmobno"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:padding="3dp"
-                        android:src="@drawable/ic_email" />
+                        android:src="@drawable/ic_email"
+                        android:visibility="gone" />
 
-                    <com.procialize.eventapp.fonts.RobotoEditext
-                        android:id="@+id/et_email"
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_alternetmobno"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -352,49 +396,228 @@
                         android:editable="false"
                         android:clickable="false"
                         android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_mobile"
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Email Id"
+                    android:textColor="@color/textcolorLight" />
+
+                <LinearLayout
+                    android:id="@+id/ll_emailid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/profile_edit_text_bg"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center_vertical">
 
                     <ImageView
-                        android:id="@+id/iv_mobile"
+                        android:id="@+id/iv_emailid"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:padding="3dp"
-                        android:src="@drawable/ic_mobile" />
+                        android:src="@drawable/ic_mobile"
+                        android:visibility="gone" />
 
-                    <com.procialize.eventapp.fonts.RobotoEditext
-                        android:id="@+id/et_mobile"
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_emailid"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
-                        android:hint="Mobile"
-                        android:editable="false"
                         android:clickable="false"
+                        android:editable="false"
+                        android:hint="Email Id"
                         android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
 
-                <com.procialize.eventapp.fonts.RobotoButton
-                    android:id="@+id/btn_save"
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:background="@color/colorPrimary"
+                    android:layout_marginBottom="5dp"
+                    android:text="Location"
+                    android:textColor="@color/textcolorLight" />
+
+                <LinearLayout
+                    android:id="@+id/ll_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/profile_edit_text_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:background="@color/transperent"
+                        android:clickable="false"
+                        android:editable="false"
+                        android:hint="Location"
+                        android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
+                        android:textSize="13dp" />
+                </LinearLayout>
+
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="SAP Code"
+                    android:textColor="@color/textcolorLight" />
+
+                <LinearLayout
+                    android:id="@+id/ll_sapcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/profile_edit_text_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_sapcode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:background="@color/transperent"
+                        android:clickable="false"
+                        android:editable="false"
+                        android:hint="SAP Code"
+                        android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
+                        android:textSize="13dp" />
+                </LinearLayout>
+
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Associated with Bayer since"
+                    android:textColor="@color/textcolorLight" />
+
+                <LinearLayout
+                    android:id="@+id/ll_aspociated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/profile_edit_text_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_aspociated"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:background="@color/transperent"
+                        android:clickable="false"
+                        android:editable="false"
+                        android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
+                        android:textSize="13dp" />
+                </LinearLayout>
+
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Number of PCOs served"
+                    android:textColor="@color/textcolorLight" />
+
+                <RadioGroup
+                    android:id="@+id/radiogroupPCO"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radio1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:backgroundTint="@color/textcolorLight"
+                            android:buttonTint="@color/textcolorLight"
+                            android:text="Less than 50"
+                            android:textColor="@color/textcolorLight" />
+
+                        <RadioButton
+                            android:id="@+id/radio2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:backgroundTint="@color/textcolorLight"
+                            android:buttonTint="@color/textcolorLight"
+                            android:text="50-100"
+                            android:textColor="@color/textcolorLight" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radio3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:backgroundTint="@color/textcolorLight"
+                            android:buttonTint="@color/textcolorLight"
+                            android:text="101-200"
+                            android:textColor="@color/textcolorLight" />
+
+                        <RadioButton
+                            android:id="@+id/radio4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:backgroundTint="@color/textcolorLight"
+                            android:buttonTint="@color/textcolorLight"
+                            android:text="Above 200"
+                            android:textColor="@color/textcolorLight" />
+                    </LinearLayout>
+
+                </RadioGroup>
+
+
+                <com.procialize.bayer2020.fonts.RobotoButton
+                    android:id="@+id/btn_save"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
                     android:minHeight="0dp"
                     android:padding="10dp"
                     android:text="Save"
+                    android:background="@drawable/login_drawable"
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>

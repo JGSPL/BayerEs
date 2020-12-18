@@ -95,7 +95,7 @@
                     android:text=""
                     android:layout_marginLeft="10dp"/>
 
-                <com.procialize.eventapp.costumTools.CircleDisplay
+                <com.procialize.bayer2020.costumTools.CircleDisplay
                     android:id="@+id/progressbar"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -159,7 +159,7 @@
             </LinearLayout>
 
 
-            <com.procialize.eventapp.costumTools.CustomViewPager
+            <com.procialize.bayer2020.costumTools.CustomViewPager
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

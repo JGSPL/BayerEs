@@ -33,7 +33,7 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <com.procialize.eventapp.costumTools.TouchImageView
+    <com.procialize.bayer2020.costumTools.TouchImageView
         android:layout_below="@+id/toolbar"
         android:id="@+id/imageView"
         android:layout_width="match_parent"

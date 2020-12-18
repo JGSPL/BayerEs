@@ -4,7 +4,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.procialize.eventapp"
+        applicationId "com.procialize.bayer2020"
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1

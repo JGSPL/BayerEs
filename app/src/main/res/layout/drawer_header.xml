@@ -31,7 +31,7 @@
         android:orientation="vertical"
         android:layout_weight="1">
 
-        <com.procialize.eventapp.fonts.RobotoTextViewHeader
+        <com.procialize.bayer2020.fonts.RobotoTextViewHeader
             android:id="@+id/tv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:textSize="16dp"
             android:textColor="@android:color/black" />
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/tv_designation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:textSize="14dp"
             android:textColor="@android:color/black" />
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/tv_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

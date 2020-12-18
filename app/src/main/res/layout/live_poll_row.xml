@@ -36,7 +36,7 @@
                 android:orientation="vertical"
                 android:gravity="left|center">
 
-                <com.procialize.eventapp.fonts.RobotoTextViewHeader
+                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                     android:id="@+id/nameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/textsizesmall"/>
 
-                <com.procialize.eventapp.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/statusTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

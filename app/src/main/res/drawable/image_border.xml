@@ -1,21 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval" android:useLevel="true"
-    android:dither="true">>
-    <solid android:color="@android:color/transparent" />
-    <stroke android:width="90dp" android:color="@color/colorwhite" />
-    <padding android:left="3dp" android:top="3dp" android:right="3dp"
-        android:bottom="3dp" />
+    android:shape="rectangle" android:innerRadius="1dp">
+
+    <corners android:radius="0.5dp" />
+    // if you want clear round shape then make radius size is half of your button`s height.
+
+
+    <solid android:color="@color/white" />
+    // Button Colour
+
+
+    <gradient
+        android:angle="90"
+        android:endColor="@android:color/transparent"
+        android:startColor="@android:color/transparent" />
+
+    <stroke
+        android:width="30dp"
+        android:color="@color/white" />
+
 
 </shape>
-<!--
-<?xml version="1.0" encoding="UTF-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval" android:useLevel="true"
-    android:dither="true">
-    <solid android:color="@color/grey_light" />
-    <stroke android:width="90dp" android:color="@color/white" />
-    <padding android:left="3dp" android:top="3dp" android:right="3dp"
-        android:bottom="3dp" />
-
-</shape>-->

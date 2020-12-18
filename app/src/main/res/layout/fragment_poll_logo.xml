@@ -52,7 +52,7 @@
             android:visibility="gone" />
 
 
-        <com.procialize.eventapp.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -63,12 +63,12 @@
             android:textSize="@dimen/textsizenormal"
             android:layout_marginTop="20dp">
 
-        </com.procialize.eventapp.fonts.RobotoTextview>
+        </com.procialize.bayer2020.fonts.RobotoTextview>
 
 
 
 
-        <com.procialize.eventapp.fonts.RobotoButton
+        <com.procialize.bayer2020.fonts.RobotoButton
             android:id="@+id/btnPollStart"
             android:layout_width="180dp"
             android:layout_height="35dp"
@@ -82,12 +82,12 @@
             android:text="Start"
             android:textColor="@color/colorwhite">
 
-        </com.procialize.eventapp.fonts.RobotoButton>
+        </com.procialize.bayer2020.fonts.RobotoButton>
 
 
     </LinearLayout>
     </ScrollView>
-    <com.procialize.eventapp.fonts.RobotoTextview
+    <com.procialize.bayer2020.fonts.RobotoTextview
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

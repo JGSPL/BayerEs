@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.procialize.eventapp.ui.splash.viewmodel.SplashViewModel" />
+            type="com.procialize.bayer2020.ui.splash.viewmodel.SplashViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

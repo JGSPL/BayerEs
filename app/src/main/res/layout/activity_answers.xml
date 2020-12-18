@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/unchecked_radio" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/textno1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
                 android:textColor="@color/textcolorLight"
                 android:textStyle="bold" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/quiz_question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

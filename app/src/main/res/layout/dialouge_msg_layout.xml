@@ -25,7 +25,7 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             android:layout_margin="2dp"
             android:orientation="vertical">
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/nametv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:textColor="@color/activetab" />
 
 
-            <com.procialize.eventapp.fonts.RobotoEditext
+            <com.procialize.bayer2020.fonts.RobotoEditext
                 android:id="@+id/etmsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
-            <com.procialize.eventapp.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/counttv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <com.procialize.eventapp.fonts.RobotoButton
+                <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/ratebtn"
                     android:layout_width="0dp"
                     android:layout_height="35dp"
@@ -117,7 +117,7 @@
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
-                <com.procialize.eventapp.fonts.RobotoButton
+                <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/canclebtn"
                     android:layout_width="0dp"
                     android:layout_height="35dp"
