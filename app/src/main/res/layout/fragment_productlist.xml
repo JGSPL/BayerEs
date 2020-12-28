@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/linMain"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.procialize.bayer2020.fonts.RobotoTextview
+        android:id="@+id/pullrefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:alpha="0.8"
+        android:gravity="center"
+        android:text="Pull Down to Refresh"
+        android:textColor="@color/inactivetab"
+        android:textSize="10sp"
+        android:visibility="gone"
+        tools:ignore="MissingClass" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.procialize.bayer2020.fonts.RobotoTextview
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center|center_horizontal"
+            android:text="Product type not available"
+            android:visibility="gone"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/productrefresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/productTypeRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                tools:listitem="@layout/product_type_row"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

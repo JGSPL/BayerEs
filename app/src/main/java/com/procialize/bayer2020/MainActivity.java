@@ -69,6 +69,7 @@ import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.attendee.view.AttendeeFragment;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeViewModel;
+import com.procialize.bayer2020.ui.catalogue.view.CatalogueFragment;
 import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
 import com.procialize.bayer2020.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //Chat related process
-        if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
+        /*if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
             if (storeFireid.equalsIgnoreCase("0")) {
                 register_user(fName, fireEmail, "12345678");
 
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
             }
-        }
+        }*/
 
 
         Glide.with(MainActivity.this)
@@ -257,42 +258,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-       /* mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-                menuItem.setChecked(true);
-                switch (menuItem.getItemId()) {
-                    case R.id.navigation_home:
-
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_frame, HomeFragment.newInstance(), "")
-                                .commit();
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
-                        navView.setVisibility(View.VISIBLE);
-                        return true;
-
-                    case R.id.navigation_eventinfo:
-
-                        mDrawerLayout.closeDrawer(GravityCompat.START);
-                        return true;
-
-
-                    default:
-                        return true;
-                }
-            }
-        });*/
-
-        NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
+      /*  NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putString("isFrom", "MainActivity");
         newsFeedFragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_frame, newsFeedFragment, "")
-                .commit();
+                .commit();*/
 
         //To set icon on agenda when live streaming is going on
         /*BottomNavigationMenuView bottomNavigationMenuView =
@@ -325,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     .commit();
                         }
                         break;
-                    case R.id.navigation_agenda:
+                    case R.id.navigation_leap:
                         // Switch to page two
                         JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
@@ -333,15 +307,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 .replace(R.id.fragment_frame, AgendaFragment.newInstance(), "")
                                 .commit();
                         break;
-                    case R.id.navigation_attendee:
+                    case R.id.navigation_catalogue:
                         // Switch to page three
                         JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_frame, AttendeeFragment.newInstance(), "")
+                                .replace(R.id.fragment_frame, CatalogueFragment.newInstance(), "")
                                 .commit();
                         break;
-                    case R.id.navigation_speaker:
+                    case R.id.navigation_upskill:
                         // Switch to page four
                         JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()

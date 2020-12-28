@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -94,6 +96,44 @@ public class PostNewsFeedViewModel extends ViewModel {
                 })
                 .start();
     }
+
+    public void selectImage(Activity context) {
+        Album.image(context)
+                .multipleChoice()
+                .camera(true)
+                .columnCount(2)
+                .selectCount(10)
+                .checkedList(mAlbumFiles)
+                .widget(
+                        Widget.newDarkBuilder(context)
+                                .toolBarColor(context.getResources().getColor(R.color.colorPrimary))
+                                .statusBarColor(context.getResources().getColor(R.color.design_default_color_background))
+                                .title("Select Image")
+                                .mediaItemCheckSelector(context.getResources().getColor(R.color.white),
+                                        context.getResources().getColor(R.color.colorPrimary))
+                                //.bucketItemCheckSelector(getResources().getColor(R.color.white),getResources().getColor(R.color.active_menu))
+                                //.title(toolbar.getTitle().toString())
+                                .build()
+                )
+                .onResult(new Action<ArrayList<AlbumFile>>() {
+                    @Override
+                    public void onAction(@NonNull ArrayList<AlbumFile> result) {
+                        try {
+                            mAlbumFiles = result;
+                            mutableLiveData.postValue(mAlbumFiles);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .onCancel(new Action<String>() {
+                    @Override
+                    public void onAction(@NonNull String result) {
+                    }
+                })
+                .start();
+    }
+
 
     public void copyFile(String inputPath, String inputFile, String outputPath) {
         InputStream in = null;

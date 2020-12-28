@@ -131,9 +131,6 @@ public class ProfileDetails {
     @SerializedName("turnover")
     @Expose
     private String turnover;
-    @SerializedName("city")
-    @Expose
-    private String city;
 
     public String getAttendee_id() {
         return attendee_id;

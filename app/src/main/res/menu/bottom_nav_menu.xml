@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <item
+        android:id="@+id/navigation_leap"
+        android:enabled="true"
+        android:title="Loyality-LEAP"
+        android:icon="@drawable/agenda_selector"
+        app:showAsAction="withText" />
     <item
         android:id="@+id/navigation_home"
         android:enabled="true"
@@ -9,20 +16,19 @@
         app:showAsAction="withText"
         android:title="Newsfeed" />
 
-    <item
-        android:id="@+id/navigation_agenda"
-        android:enabled="true"
-        android:icon="@drawable/agenda_selector"
-        app:showAsAction="withText" />
 
     <item
-        android:id="@+id/navigation_attendee"
+        android:id="@+id/navigation_catalogue"
         android:enabled="true"
+        android:title="Catalogue"
+
         android:icon="@drawable/attendee_selector"
         app:showAsAction="withText" />
     <item
-        android:id="@+id/navigation_speaker"
+        android:id="@+id/navigation_upskill"
         android:enabled="true"
+        android:title="Upskill"
+
         android:icon="@drawable/speaker_selector"
         app:showAsAction="withText" />
 

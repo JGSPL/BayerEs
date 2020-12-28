@@ -222,7 +222,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         et_sapcode.setText(sap_code);
                         et_organisation.setText(company_name);
                         et_emailid.setText(email);
-                        et_location.setText(city);
+                       // et_location.setText(city);
 
 
                         if (profileDetails.get(0).getProfile_picture().trim() != null) {
@@ -334,7 +334,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             alternate_no,
                             user_type,
                             sap_code,
-                            associated_since, no_of_pco_served, no_of_technician, pincode, license, specialization, turnover);
+                            associated_since/*, no_of_pco_served, no_of_technician, pincode, license, specialization, turnover*/);
                 } else {
                     Utility.createShortSnackBar(ll_main, "No Internet connection");
                 }
@@ -695,8 +695,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 //                            sap_code,
 //                            associated_since, no_of_pco_served, no_of_technician, pincode, license, specialization, turnover
     public void updateProfile(final String first_name, final String last_name, final String designation,
-                              final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String mobile,
-                              final String profile_pic,final String alternate_no,final String user_type) {
+                              final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String dd,
+                              final String a,final String alternate_no,final String user_type) {
         profileActivityViewModel.validation(first_name, last_name, designation, company_name,city);
         profileActivityViewModel.getIsValid().observe(this, new Observer<String>() {
             @Override

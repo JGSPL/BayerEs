@@ -24,5 +24,7 @@
     <color name="colorwhite">#ffffff</color>
     <color name="colorBackground">#7E57C2</color>
     <color name="colorButton">#d67601</color>
+    <color name="colorPink">#e4004b</color>
+    <color name="ta">#e4004b</color>
 
 </resources>

@@ -6,6 +6,10 @@ import com.procialize.bayer2020.GetterSetter.resendOTP;
 import com.procialize.bayer2020.GetterSetter.validateOTP;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
+import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
+import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
+import com.procialize.bayer2020.ui.catalogue.model.FetchProductList;
+import com.procialize.bayer2020.ui.catalogue.model.FetchProductType;
 import com.procialize.bayer2020.ui.eventList.model.Event;
 import com.procialize.bayer2020.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.bayer2020.ui.eventinfo.model.EventInfo;
@@ -382,4 +386,38 @@ public interface APIService {
     @FormUrlEncoded
     Call<LoginOrganizer> PostQnASession(@Header("authorization") String authorization, @Field("event_id") String event_id
                                ,@Field("session_id") String session_id,@Field("question") String question);
+
+    //Bayer Es Api List
+    @POST("Catalogue_api/ProductTypeList")
+    @FormUrlEncoded
+    Call<FetchProductType> ProductTypeList(@Header("authorization") String authkey,
+                                           @Field("event_id") String event_id,
+                                           @Field("search_text") String search_text,
+                                           @Field("pageNumber") String pageNumber,
+                                           @Field("pageSize") String pageSize);
+
+    @POST("Catalogue_api/ProductList")
+    @FormUrlEncoded
+    Call<FetchProductList> ProductList(@Header("authorization") String authkey,
+                                       @Field("event_id") String event_id,
+                                       @Field("product_type_id") String product_type_id,
+                                       @Field("search_text") String search_text,
+                                       @Field("pageNumber") String pageNumber,
+                                       @Field("pageSize") String pageSize);
+
+    @POST("Catalogue_api/PestList")
+    @FormUrlEncoded
+    Call<FetchPestList> PestList(@Header("authorization") String authkey,
+                                 @Field("event_id") String event_id,
+                                 @Field("search_text") String search_text,
+                                 @Field("pageNumber") String pageNumber,
+                                 @Field("pageSize") String pageSize);
+
+    @POST("Catalogue_api/PestDetails")
+    @FormUrlEncoded
+    Call<FetchPestDetail> PestDetails(@Header("authorization") String authkey,
+                                      @Field("event_id") String event_id,
+                                      @Field("pest_id") String search_text);
+
+
 }

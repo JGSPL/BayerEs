@@ -347,7 +347,9 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                 onBackPressed();
                 break;
             case R.id.ll_upload_media:
-                postNewsFeedViewModel.selectAlbum(this);
+                //postNewsFeedViewModel.selectAlbum(this);
+                postNewsFeedViewModel.selectImage(this);
+
                 break;
             case R.id.btn_post:
                 Utility.hideKeyboard(v);
