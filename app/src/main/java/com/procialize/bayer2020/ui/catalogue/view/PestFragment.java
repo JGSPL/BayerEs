@@ -1,5 +1,6 @@
 package com.procialize.bayer2020.ui.catalogue.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 import com.procialize.bayer2020.ui.catalogue.model.ProductType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,8 +91,7 @@ public class PestFragment extends Fragment implements PestListAdapter.ProductAda
         }
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.PestList(token,eventid,"","1",""
-        )
+        eventApi.PestTypeList(token,eventid,"","1","")
                 .enqueue(new Callback<FetchPestList>() {
                     @Override
                     public void onResponse(Call<FetchPestList> call, Response<FetchPestList> response) {
@@ -174,6 +175,7 @@ public class PestFragment extends Fragment implements PestListAdapter.ProductAda
 
     @Override
     public void onContactSelected(Pest_item pollList) {
-
+        getActivity().startActivity(new Intent(getContext(), PestTypeActivity.class)
+                .putExtra("PestType", (Serializable) pollList));
     }
 }
