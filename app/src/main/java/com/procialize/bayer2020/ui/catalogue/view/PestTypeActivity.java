@@ -33,6 +33,7 @@ import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.catalogue.adapter.PestListAdapter;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
+import com.procialize.bayer2020.ui.catalogue.model.ProductType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
-public class PestTypeActivity extends AppCompatActivity {
+public class PestTypeActivity extends AppCompatActivity implements PestListAdapter.ProductAdapterListner{
     SwipeRefreshLayout productrefresh;
     RecyclerView productTypeRv;
     ProgressBar progressBar;
@@ -59,6 +60,7 @@ public class PestTypeActivity extends AppCompatActivity {
     private APIService eventApi;
     Toolbar mToolbar;
     ImageView headerlogoIv;
+    Pest_item pestType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,7 @@ public class PestTypeActivity extends AppCompatActivity {
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
         // eventid = "1";
+        pestType = (Pest_item) getIntent().getSerializableExtra("PestType");
 
         productTypeRv = findViewById(R.id.productTypeRv);
         productrefresh = findViewById(R.id.productrefresh);
@@ -94,7 +97,7 @@ public class PestTypeActivity extends AppCompatActivity {
         }
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.PestList(token,eventid,"","1",""
+        eventApi.PestList(token,eventid,pestType.getId(),"","1",""
         )
                 .enqueue(new Callback<FetchPestList>() {
                     @Override
@@ -119,7 +122,7 @@ public class PestTypeActivity extends AppCompatActivity {
 
 
 
-                                   // setupEventAdapter(eventLists);
+                                    setupEventAdapter(eventLists);
                                 }else{
                                     progressBar.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
@@ -144,8 +147,8 @@ public class PestTypeActivity extends AppCompatActivity {
     }
 
 
-   /* public void setupEventAdapter(List<Pest_item> productList) {
-        PestListAdapter productypeAdapter = new PestListAdapter(this, productList, PestTypeActivity.this, Imageurl);
+    public void setupEventAdapter(List<Pest_item> productList) {
+        PestListAdapter productypeAdapter = new PestListAdapter(this, productList, this, Imageurl);
         //productTypeRv.setLayoutManager(new LinearLayoutManager(getContext()));
         // use a linear layout manager
         int columns = 2;
@@ -153,7 +156,7 @@ public class PestTypeActivity extends AppCompatActivity {
 
         productTypeRv.setAdapter(productypeAdapter);
         productypeAdapter.notifyDataSetChanged();
-    }*/
+    }
 
 
     @Override
@@ -201,5 +204,9 @@ public class PestTypeActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onContactSelected(Pest_item pollList) {
+
+    }
 }
 
