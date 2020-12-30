@@ -127,6 +127,10 @@ public class PestFragment extends Fragment implements PestListAdapter.ProductAda
 
                             }
                         }
+                        else
+                        {
+                            FetchProductTypeList.setValue(null);
+                        }
                     }
 
                     @Override

@@ -1,37 +1,37 @@
 -- Merging decision tree log ---
 manifest
-ADDED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
 	package
-		ADDED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:3:11-54
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:3:11-54
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-		ADDED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
 	android:versionCode
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-		ADDED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:1-3:56
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml:2:11-69
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml:2:11-69
 uses-sdk
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-		ADDED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-		ADDED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
-		INJECTED from I:\BayerReward\BayerRewards\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml

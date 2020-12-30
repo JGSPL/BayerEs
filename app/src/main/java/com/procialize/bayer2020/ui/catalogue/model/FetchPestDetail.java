@@ -11,9 +11,6 @@ public class FetchPestDetail {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
-    @Expose
-    List<Product_detail> productList;
 
     @SerializedName("detail")
     @Expose
@@ -27,19 +24,9 @@ public class FetchPestDetail {
         this.header = header;
     }
 
-    public List<Product_detail> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product_detail> productList) {
-        this.productList = productList;
-    }
 
     public String getDetail() {
         return detail;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
 }

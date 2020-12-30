@@ -1,41 +1,41 @@
 -- Merging decision tree log ---
 manifest
-ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
 	package
-		ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:2:5-22
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:2:5-22
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-		ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
 	android:versionCode
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-		ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:1-6:12
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:1:11-69
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:1:11-69
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:4:5-79
+ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:4:5-79
 	android:name
-		ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml:4:22-76
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml:4:22-76
 uses-sdk
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-		ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-		ADDED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
-		INJECTED from I:\BayerReward\BayerRewards\jiaozivideoplayer\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+		ADDED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
+		INJECTED from F:\AndroidWorkspace\BayerEs\BayerEs\jiaozivideoplayer\src\main\AndroidManifest.xml
