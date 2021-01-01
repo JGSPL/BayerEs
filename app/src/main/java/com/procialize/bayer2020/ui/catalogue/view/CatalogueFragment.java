@@ -63,8 +63,8 @@ public class CatalogueFragment extends Fragment {
             mTabHostCel.addTab(
                     mTabHostCel.newTabSpec("Tab2")
                             .setIndicator(createTabView(getActivity(), "Pest")),
-                    //  PestFragment.class, null);
-                   PestProductDetailsFragment.class, null);
+                    PestFragment.class, null);
+                    // PestProductDetailsFragment.class, null);
     }
 
 

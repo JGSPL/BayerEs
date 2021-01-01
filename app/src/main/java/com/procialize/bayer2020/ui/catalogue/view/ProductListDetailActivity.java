@@ -48,7 +48,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
         mTabHostCel.addTab(
                 mTabHostCel.newTabSpec("Tab2")
                         .setIndicator(createTabView(this, "Downloads")),
-                PestProductDetailsFragment.class, null);
+                PestProductDetailsActivity.class, null);
                 //PestFragment.class, null);
 
 
