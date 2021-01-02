@@ -239,6 +239,21 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
+        <activity
+            android:name="com.procialize.bayer2020.ui.loyalityleap.view.ScheameOfferListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
+        <activity
+            android:name="com.procialize.bayer2020.ui.loyalityleap.view.ScheameOfferDetail_Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name="com.procialize.bayer2020.ui.loyalityleap.view.RedemptionHistoryList"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
+
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="com.jwplayer.opensourcedemo.CastOptionsProvider" /> <!-- TODO Set your license key -->

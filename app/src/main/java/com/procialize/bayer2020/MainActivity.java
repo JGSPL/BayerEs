@@ -74,6 +74,7 @@ import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
 import com.procialize.bayer2020.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.login.view.LoginActivity;
+import com.procialize.bayer2020.ui.loyalityleap.view.LoyalityLeapFragment;
 import com.procialize.bayer2020.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
@@ -259,14 +260,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-      /*  NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
+        LoyalityLeapFragment newsFeedFragment = LoyalityLeapFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putString("isFrom", "MainActivity");
         newsFeedFragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_frame, newsFeedFragment, "")
-                .commit();*/
+                .commit();
 
         //To set icon on agenda when live streaming is going on
         /*BottomNavigationMenuView bottomNavigationMenuView =
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_frame, AgendaFragment.newInstance(), "")
+                                .replace(R.id.fragment_frame, LoyalityLeapFragment.newInstance(), "")
                                 .commit();
                         break;
                     case R.id.navigation_catalogue:

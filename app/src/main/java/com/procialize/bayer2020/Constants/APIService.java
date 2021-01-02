@@ -14,6 +14,7 @@ import com.procialize.bayer2020.ui.eventList.model.Event;
 import com.procialize.bayer2020.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.bayer2020.ui.eventinfo.model.EventInfo;
 import com.procialize.bayer2020.ui.livepoll.model.FetchLivePoll;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchSchemeOffer;
 import com.procialize.bayer2020.ui.newsFeedComment.model.Comment;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
 import com.procialize.bayer2020.ui.newsFeedLike.model.Like;
@@ -428,6 +429,15 @@ public interface APIService {
     Call<FetchPestDetail> PestDetails(@Header("authorization") String authkey,
                                       @Field("event_id") String event_id,
                                       @Field("pest_id") String search_text);
+
+    @POST("Loyalty_api/SchemeAndOfferList")
+    @FormUrlEncoded
+    Call<FetchSchemeOffer> SchemeAndOfferList(@Header("authorization") String authkey,
+                                              @Field("event_id") String event_id,
+                                              @Field("search_text") String search_text,
+                                              @Field("pageNumber") String pageNumber,
+                                              @Field("pageSize") String pageSize);
+
 
 
 }

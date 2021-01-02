@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="2"
+                android:background="@color/colorwhite"
+                android:layout_height="wrap_content">
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="0dp"
+                    android:text="My Points"
+                    android:gravity="left"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                </com.procialize.bayer2020.fonts.RobotoTextview>
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="0dp"
+                    android:text="2060"
+                    android:gravity="right"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="22sp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                </com.procialize.bayer2020.fonts.RobotoTextview>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="2"
+                android:background="@color/colorwhite"
+                android:layout_height="wrap_content">
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="0dp"
+                    android:text="All India Ranking"
+                    android:gravity="left"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                </com.procialize.bayer2020.fonts.RobotoTextview>
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="0dp"
+                    android:text="2060"
+                    android:gravity="right"
+                    android:padding="5dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="22sp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+
+                </com.procialize.bayer2020.fonts.RobotoTextview>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="2"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:id="@+id/imgScheame"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/leap_scheame"
+                    android:layout_height="180dp">
+
+                </ImageView>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/leap_purchage"
+                    android:layout_height="180dp">
+
+                </ImageView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="2"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/leap_redeem"
+                    android:layout_height="180dp">
+
+                </ImageView>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/leap_calcu"
+                    android:layout_height="180dp">
+
+                </ImageView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="2"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/leap_history"
+                    android:layout_height="180dp">
+
+                </ImageView>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
