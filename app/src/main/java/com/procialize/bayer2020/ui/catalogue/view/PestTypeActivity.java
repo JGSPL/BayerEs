@@ -1,10 +1,10 @@
 package com.procialize.bayer2020.ui.catalogue.view;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -33,8 +33,8 @@ import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.catalogue.adapter.PestListAdapter;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
-import com.procialize.bayer2020.ui.catalogue.model.ProductType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,10 +170,9 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
                 productrefresh.setRefreshing(false);
             }
             Utility.createShortSnackBar(relative, "No internet connection");
-
-
         }
     }
+
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
@@ -206,7 +205,8 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
 
     @Override
     public void onContactSelected(Pest_item pollList) {
-
+       startActivity(new Intent(PestTypeActivity.this, PestProductDetailsActivity.class)
+                .putExtra("PestType", (Serializable) pollList));
     }
 }
 

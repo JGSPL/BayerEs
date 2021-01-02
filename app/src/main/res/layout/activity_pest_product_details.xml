@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linMain"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:weightSum="10"
+    android:layout_height="match_parent"
     android:orientation="vertical">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/appBarLayout"
         android:background="@android:color/white"
         app:elevation="0dp">
 
@@ -38,69 +39,40 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <com.procialize.bayer2020.fonts.RobotoTextview
+    <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/productTitle"
-        android:textSize="16sp"
-        android:textColor="@color/black">
-    </com.procialize.bayer2020.fonts.RobotoTextview>
+        android:gravity="center"
+        android:padding="10dp">
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingRight="10dp"
+
+            android:src="@mipmap/share" />
+    </TableRow>
+
     <ImageView
+        android:id="@+id/imageView4"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:src="@mipmap/ic_launcher"
-        ></ImageView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="3"
-        android:layout_margin="5dp"
-        android:orientation="horizontal">
-        <com.procialize.bayer2020.fonts.RobotoButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:textSize="8sp"
-            android:drawablePadding="5dp"
-
-            android:drawableTop="@drawable/ic_livepoll"
-            android:text="Buy Now"
-            ></com.procialize.bayer2020.fonts.RobotoButton>
-        <com.procialize.bayer2020.fonts.RobotoButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="8sp"
-            android:drawablePadding="5dp"
-
-            android:drawableTop="@drawable/ic_livepoll"
-            android:text="Dosage Calculator"
-            android:textAllCaps="false"
-            ></com.procialize.bayer2020.fonts.RobotoButton>
-
-        <com.procialize.bayer2020.fonts.RobotoButton
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:textSize="8sp"
-            android:drawablePadding="5dp"
-            android:drawableTop="@drawable/ic_share"
-            android:text="Share"
-            ></com.procialize.bayer2020.fonts.RobotoButton>
-
-    </LinearLayout>
-</LinearLayout>
+        android:layout_height="200dp"
+        android:background="@drawable/gallery_placeholder"
+        android:scaleType="centerCrop" />
 
     <androidx.fragment.app.FragmentTabHost
-        android:id="@android:id/tabhost"
+        android:id="@+id/tabhost"
         style="@style/MyCustomTabText"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -134,6 +106,5 @@
 
         </LinearLayout>
     </androidx.fragment.app.FragmentTabHost>
-
 
 </LinearLayout>

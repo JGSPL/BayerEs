@@ -66,7 +66,6 @@ import com.procialize.bayer2020.session.SessionManager;
 import com.procialize.bayer2020.ui.agenda.view.AgendaFragment;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
-import com.procialize.bayer2020.ui.attendee.view.AttendeeFragment;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.bayer2020.ui.catalogue.view.CatalogueFragment;
@@ -158,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
 
+        Log.e("token===>",api_token);
         CommonFirebase.crashlytics("MainActivity", api_token);
         CommonFirebase.firbaseAnalytics(this, "MainActivity", api_token);
 
@@ -291,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.navigation_home:
                         // Switch to page one
                         NewsFeedFragment myFragment = (NewsFeedFragment) getSupportFragmentManager().findFragmentByTag("NewsFeed");
+
                         if (myFragment != null && myFragment.isVisible()) {
                         } else {
                             JzvdStd.releaseAllVideos();
