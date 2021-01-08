@@ -219,6 +219,21 @@ public class CommonFunction {
         return targetdatevalue;
     }
 
+    public static String convertDateRedeem(String Date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.util.Date sourceDate = null;
+        try {
+            sourceDate = dateFormat.parse(Date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat targetFormat = new SimpleDateFormat("dd/MM/yyyy");
+        //SimpleDateFormat targetFormat = new SimpleDateFormat("dd MMM yyyy HH:mm aa");
+        String targetdatevalue = targetFormat.format(sourceDate);
+        return targetdatevalue;
+    }
+
+
     public static String convertDateToTime(String Date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         java.util.Date sourceDate = null;

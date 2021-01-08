@@ -14,6 +14,9 @@ import com.procialize.bayer2020.ui.eventList.model.Event;
 import com.procialize.bayer2020.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.bayer2020.ui.eventinfo.model.EventInfo;
 import com.procialize.bayer2020.ui.livepoll.model.FetchLivePoll;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemHistory;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemHistoryStatus;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchRequestToRedeem;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchSchemeOffer;
 import com.procialize.bayer2020.ui.newsFeedComment.model.Comment;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
@@ -42,18 +45,18 @@ public interface APIService {
 
 //    String HeaderToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYiLCJmaXJzdF9uYW1lIjoiQXBhcm5hIiwibWlkZGxlX25hbWUiOiIiLCJsYXN0X25hbWUiOiJCYWRoYW4iLCJtb2JpbGUiOiI4ODMwNDE2NzkwIiwiZW1haWwiOiJhcGFybmFAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIwNTE0M2JmOTI0NzcwYTk5MTdlZjNhMWU5MjY4MGE3NTU5M2M1NDZiIiwidXNlcl90eXBlIjoiQSIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9waWMiOiJodHRwczpcL1wvc3RhZ2UtYWRtaW4ucHJvY2lhbGl6ZS5saXZlXC9iYXNlYXBwXC91cGxvYWRzXC91c2VyXC8xNTk5NTczNjM0ODMzNC5qcGciLCJpc19nb2QiOiIwIiwidGltZSI6MTU5OTcyNzQ0MiwiZXhwaXJ5X3RpbWUiOjE1OTk3MzEwNDJ9.HcJDPuJMtS_o8Q6FrzUmHWNulrPzNcAzAhodkCa9E0M";
 
-    @POST("event_api_call/commonLogin")
+    @POST("login_api_call/commonLogin")
     @FormUrlEncoded
     Call<LoginOrganizer> LoginWithOrganizer(@Field("organizer_id") String organizer_id,
                                             @Field("username") String username);
 
-    @POST("event_api_call/resendOTP")
+    @POST("login_api_call/resendOTP")
     @FormUrlEncoded
     Call<resendOTP> ResendOTP(@Field("organizer_id") String organizer_id,
                               @Field("username") String username);
 
 
-    @POST("event_api_call/validateOTP")
+    @POST("login_api_call/validateOTP")
     @FormUrlEncoded
     Call<validateOTP> validateOTP(@Field("organizer_id") String organizer_id,
                                   @Field("username") String username,
@@ -439,5 +442,26 @@ public interface APIService {
                                               @Field("pageSize") String pageSize);
 
 
+    @POST("Loyalty_api/RedemptionHistory")
+    @FormUrlEncoded
+    Call<FetchRedeemHistory> RedemptionHistory(@Header("authorization") String authkey,
+                                                @Field("event_id") String event_id,
+                                                @Field("search_text") String search_text,
+                                                @Field("pageNumber") String pageNumber,
+                                                @Field("pageSize") String pageSize);
 
+    @POST("Loyalty_api/RedemptionHistoryDetails")
+    @FormUrlEncoded
+    Call<FetchRedeemHistoryStatus> RedemptionHistoryDetails(@Header("authorization") String authkey,
+                                                            @Field("event_id") String event_id,
+                                                            @Field("redemption_request_id") String search_text);
+
+    
+    @POST("Loyalty_api/RedeemRequestList")
+    @FormUrlEncoded
+    Call<FetchRequestToRedeem> RedeemRequestList(@Header("authorization") String authkey,
+                                                 @Field("event_id") String event_id,
+                                                 @Field("search_text") String search_text,
+                                                 @Field("pageNumber") String pageNumber,
+                                                 @Field("pageSize") String pageSize);
 }

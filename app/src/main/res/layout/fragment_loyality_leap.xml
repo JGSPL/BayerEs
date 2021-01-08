@@ -110,6 +110,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
+                    android:id="@+id/imgrequestRedeem"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="10dp"
                     android:src="@drawable/leap_redeem"
@@ -137,6 +138,7 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:id="@+id/imgredeemHistory"
                     android:scaleType="fitXY"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="10dp"
