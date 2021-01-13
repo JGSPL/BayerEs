@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.session.SessionManager;
 import com.procialize.bayer2020.ui.eventList.model.Event;
+import com.procialize.bayer2020.ui.eventList.model.EventList;
 import com.procialize.bayer2020.ui.eventList.model.LoginUserInfo;
 import com.procialize.bayer2020.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.bayer2020.ui.eventList.networking.EventRepository;
@@ -59,7 +60,7 @@ public class EventListViewModel extends ViewModel {
                 .putExtra("event_details", (Serializable) event)
                 .putExtra("position", "" + position));
     }*/
-    public void openProfilePage(Activity activity, List<LoginUserInfo> event, int position,String eventBg) {
+    /*public void openProfilePage(Activity activity, List<LoginUserInfo> event, int position,String eventBg) {
         activity.startActivity(new Intent(activity, ProfileActivity.class)
                 .putExtra("event_details", (Serializable) event)
                 .putExtra("position", "" + position)
@@ -72,6 +73,28 @@ public class EventListViewModel extends ViewModel {
         activity.startActivity(new Intent(activity, MainActivity.class));
         activity.finish();
     }
+*/
+    public void openProfilePage(Activity activity, List<LoginUserInfo> userInfo, int position, String eventBg,EventList event) {
+        //if (event.getEvent_type().equalsIgnoreCase("0")) {
+        activity.startActivity(new Intent(activity, ProfileActivity.class)
+                .putExtra("event_details", (Serializable) userInfo)
+                .putExtra("position", "" + position)
+                .putExtra("eventBg", "" + eventBg)
+        );
+        activity.finish();
+        /*} else {
+            activity.startActivity(new Intent(activity, LiveStreamingActivityForWebinar.class).putExtra("eventType", event.getEvent_type()));
+            activity.finish();
+        }*/
+    }
 
-
+    public void openMainPage(Activity activity, EventList event) {
+        //if (event.getEvent_type().equalsIgnoreCase("0")) {
+        activity.startActivity(new Intent(activity, MainActivity.class));
+        activity.finish();
+        /*} else {
+            activity.startActivity(new Intent(activity, LiveStreamingActivityForWebinar.class));
+            activity.finish();
+        }*/
+    }
 }

@@ -1,5 +1,6 @@
 package com.procialize.bayer2020.ui.eventList.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -293,13 +294,20 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                                     }
                                     EventAppDB eventAppDB = EventAppDB.getDatabase(EventListActivity.this);
                                     List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().getProfileWithEventId(eventId,userData.get(0).getAttendee_id());
-                                    if (profileDataUpdated.size() > 0) {
+                                    /*if (profileDataUpdated.size() > 0) {
                                         isClickable = true;
                                         eventListViewModel.openMainPage(EventListActivity.this);
                                     } else {
                                         isClickable = true;
                                         eventListViewModel.openProfilePage(EventListActivity.this, userData, position, eventBg);
-                                    }
+                                    }*/
+                                   /* if (profileDataUpdated.size() > 0) {
+                                        isClickable = true;
+                                        eventListViewModel.openMainPage(EventListActivity.this, eventLists.get(0));
+                                    } else {
+                                        isClickable = true;
+                                        eventListViewModel.openProfilePage(EventListActivity.this, userData, 0, eventBg, eventLists.get(0));
+                                    }*/
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

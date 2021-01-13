@@ -188,7 +188,7 @@ public interface APIService {
                         @Field("pageNumber") String pageNumber);
 
     // @Headers("authorization: " + HeaderToken)
-    @POST("event_api_call/refreshToken")
+    @POST("login_api_call/refreshToken")
     @FormUrlEncoded
     Call<validateOTP> getRefreashToken(@Field("organizer_id") String organizer_id,
                                        @Field("username") String username,
@@ -222,7 +222,8 @@ public interface APIService {
 
     @POST("event_api_call/updateDeviceInfo")
     @FormUrlEncoded
-    Call<UpdateDeviceInfo> updateDeviceInfo(@Header("authorization") String authorization, @Field("event_id") String event_id,
+    Call<UpdateDeviceInfo> updateDeviceInfo(@Header("authorization") String authorization,
+                                            @Field("event_id") String event_id,
                                             @Field("device_token") String device_token,
                                             @Field("platform") String platform,
                                             @Field("device") String device,
@@ -230,14 +231,14 @@ public interface APIService {
                                             @Field("app_version") String app_version);
 
     // @Headers("authorization: " + HeaderToken)
-    @POST("event_api_call/getProfileInfo")
+    @POST("login_api_call/getProfileInfo")
     @FormUrlEncoded
     Call<Profile> getProfile(@Header("authorization") String authorization, @Field("event_id") String event_id);
 
 
     @Multipart
     //@Headers("authorization: " + HeaderToken)
-    @POST("event_api_call/updateProfile")
+    @POST("login_api_call/updateProfile")
     Call<Profile> updateProfile(@Header("authorization") String authorization,
                                 @Part("event_id") RequestBody event_id,
                                 @Part("first_name") RequestBody first_name,
@@ -464,4 +465,15 @@ public interface APIService {
                                                  @Field("search_text") String search_text,
                                                  @Field("pageNumber") String pageNumber,
                                                  @Field("pageSize") String pageSize);
+
+    @POST("Loyalty_api/RedeemRequest")
+    @FormUrlEncoded
+    Call<LoginOrganizer> RedeemRequest(@Header("authorization") String authkey,
+                                      @Field("event_id") String event_id,
+                                      @Field("product_code") String product_code,
+                                      @Field("product_value") String product_name,
+                                      @Field("no_of_quantity") String no_of_quantity,
+                                      @Field("email") String email,
+                                      @Field("address") String address);
+
 }

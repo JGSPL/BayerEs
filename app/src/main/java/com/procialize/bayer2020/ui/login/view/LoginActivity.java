@@ -34,6 +34,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.BuildConfig;
+import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.Database.EventAppDB;
 import com.procialize.bayer2020.R;
@@ -56,6 +57,10 @@ import com.procialize.bayer2020.ui.profile.roomDB.ProfileEventId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
@@ -269,8 +274,118 @@ public class LoginActivity extends AppCompatActivity {
                 Settings.Secure.ANDROID_ID);
         final EventListViewModel eventListViewModel = ViewModelProviders.of((FragmentActivity) context).get(EventListViewModel.class);
         final String api_token = SharedPreference.getPref(context, SharedPreferencesConstant.AUTHERISATION_KEY);
-        eventListViewModel.getEvent(api_token, "0", "");
+        //eventListViewModel.getEvent(api_token, "1", "");
+        ApiUtils.getAPIService().getEventList(api_token, "1", "")
+                .enqueue(new Callback<Event>() {
+                    @Override
+                    public void onResponse(Call<Event> call, Response<Event> response) {
+                        if (response.isSuccessful()) {
+                            refreashToken = new RefreashToken(view.getContext());
+                            String decrypteventdetail = refreashToken.decryptedData(response.body().getDetail());
+                            String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(response.body().getFile_path()));
 
+                            Gson gson = new Gson();
+                            final List<EventList> eventLists = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<EventList>>() {
+                            }.getType());
+//                List<EventList> eventLists = event.getEventLists();
+                            HashMap<String, String> map1 = new HashMap<>();
+                            map1.put(EVENT_LIST_MEDIA_PATH, strFilePath.replace("\\/", "/"));
+                            SharedPreference.putPref(context, map1);
+                            final String eventId = eventLists.get(0).getEvent_id();
+                            final String eventBg = eventLists.get(0).getBackground_image();
+                            CommonFunction.saveBackgroundImage(context, eventBg);
+                            new SessionManager(context).saveCurrentEvent(eventLists.get(0));
+                            ApiUtils.getAPIService().updateDeviceInfo(api_token, eventId, device_token, platform, device, osVersion, appVersion)
+                                    .enqueue(new Callback<UpdateDeviceInfo>() {
+                                        @Override
+                                        public void onResponse(Call<UpdateDeviceInfo> call, Response<UpdateDeviceInfo> response) {
+                                            if (response.isSuccessful()) {
+                                                try {
+                                                    String decrypteventdetail = refreashToken.decryptedData(response.body().getDetail());
+
+                                                    Gson gson = new Gson();
+                                                    List<LoginUserInfo> userData = gson.fromJson(decrypteventdetail, new TypeToken<ArrayList<LoginUserInfo>>() {
+                                                    }.getType());
+//                        final List<LoginUserInfo> userData = updateDeviceInfo.getLoginUserInfoList();
+
+                                                    HashMap<String, String> map = new HashMap<>();
+                                                    map.put(KEY_FNAME, userData.get(0).getFirst_name());
+                                                    map.put(KEY_LNAME, userData.get(0).getLast_name());
+                                                    map.put(KEY_EMAIL, userData.get(0).getEmail());
+                                                    map.put(KEY_PASSWORD, "");
+                                                    map.put(KEY_DESIGNATION, userData.get(0).getDesignation());
+                                                    map.put(KEY_COMPANY, userData.get(0).getCompany_name());
+                                                    map.put(KEY_MOBILE, userData.get(0).getMobile());
+                                                    //map.put(KEY_TOKEN, "");
+                                                    map.put(KEY_CITY, userData.get(0).getCity());
+                                                    map.put(KEY_GCM_ID, device_token);
+                                                    map.put(KEY_PROFILE_PIC, userData.get(0).getProfile_picture());
+                                                    map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
+                                                    map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
+
+                                                    if (userData.get(0).getFirebase_id() == null) {
+                                                        map.put(FIREBASE_ID, "0");
+
+                                                    } else {
+                                                        map.put(FIREBASE_ID, userData.get(0).getFirebase_id());
+
+                                                    }
+                                                    if (userData.get(0).getFirebase_name() == null) {
+                                                        map.put(FIREBASE_NAME, "");
+
+                                                    } else {
+                                                        map.put(FIREBASE_NAME, userData.get(0).getFirebase_name());
+
+                                                    }
+                                                    if (userData.get(0).getFirebase_username() == null) {
+                                                        map.put(FIREBASEUSER_NAME, "");
+
+                                                    } else {
+                                                        map.put(FIREBASEUSER_NAME, userData.get(0).getFirebase_username());
+
+                                                    }
+
+                                                    //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
+
+                                                    map.put(IS_LOGIN, "true");
+                                                    map.put(EVENT_ID, eventId);
+                                                    SharedPreference.putPref(context, map);
+
+
+                                                    EventAppDB eventAppDB = EventAppDB.getDatabase(context);
+
+                                                    String strAttendeeId = userData.get(0).getAttendee_id();
+                                                    List<ProfileEventId> profileDataUpdated = eventAppDB.profileUpdateDao().
+                                                            getProfileWithEventId(eventId, strAttendeeId);
+                                                    if (profileDataUpdated.size() > 0) {
+                                                        isClickable = true;
+                                                        eventListViewModel.openMainPage((Activity) context, eventLists.get(0));
+                                                    } else {
+                                                        isClickable = true;
+                                                        eventListViewModel.openProfilePage((Activity) context, userData, 0, eventBg, eventLists.get(0));
+                                                    }
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<UpdateDeviceInfo> call, Throwable t) {
+                                            //updateLoginUserList.setValue(null);
+                                        }
+                                    });
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Event> call, Throwable t) {
+                        //eventList.setValue(null);
+                    }
+                });
+
+/*
         eventListViewModel.getEventList().observeForever( new Observer<Event>() {
             @Override
             public void onChanged(Event event) {
@@ -366,6 +481,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+*/
     }
 
     @Override

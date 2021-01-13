@@ -13,8 +13,10 @@ public final class SharedPreferencesConstant {
     public static final String EVENT_INFO_MEDIA_PATH = "eventInfoMediaPath";
     public static final String QUIZLOGO_MEDIA_PATH = "quizLogoMediaPath";
     public static final String QUIZSPOTLOGO_MEDIA_PATH = "quizSpotLogoMediaPath";
+    public static final String KEY_ID = "id";
 
     public static final String KEY_FNAME = "name";
+
     public static final String KEY_LNAME = "lname";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_MOBILE = "mobile";
@@ -27,6 +29,9 @@ public final class SharedPreferencesConstant {
     public static final String VERIFY_OTP = "verify_otp";
     public static final String OTP = "otp";
     public static final String TOTAL_EVENT = "total_event";
+    public static final String PROFILE_STATUS = "profile_status";
+    public static final String ENROLL_LEAP_FLAG = "enrollleapflag";
+    public static final String PROFILE_PIC = "profile_pic";
 
     public static final String KEY_TOKEN = "api_access_token";
 

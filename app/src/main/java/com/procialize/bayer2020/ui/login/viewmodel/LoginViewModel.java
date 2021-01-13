@@ -211,7 +211,7 @@ public class LoginViewModel extends BaseObservable {
     private void userLogin(String username) {
 
 
-        mApiService.LoginWithOrganizer("0", username).enqueue(new Callback<LoginOrganizer>() {
+        mApiService.LoginWithOrganizer("1", username).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
@@ -238,7 +238,7 @@ public class LoginViewModel extends BaseObservable {
 
     private void otpValidate(String username, final String otp) {
 
-        mApiService.validateOTP("0", username, otp).enqueue(new Callback<validateOTP>() {
+        mApiService.validateOTP("1", username, otp).enqueue(new Callback<validateOTP>() {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
@@ -271,7 +271,7 @@ public class LoginViewModel extends BaseObservable {
             @Override
             public void onFailure(Call<validateOTP> call, Throwable t) {
                 activityLoginBinding.btnOTPSubmit.setClickable(true);
-                setToastMessage(errorMessage);
+               // setToastMessage(errorMessage);
             }
         });
     }
@@ -287,7 +287,7 @@ public class LoginViewModel extends BaseObservable {
     }
 
     private void resendOtp(String username) {
-        mApiService.ResendOTP("0", username).enqueue(new Callback<resendOTP>() {
+        mApiService.ResendOTP("1", username).enqueue(new Callback<resendOTP>() {
             @Override
             public void onResponse(Call<resendOTP> call, Response<resendOTP> response) {
                 try {

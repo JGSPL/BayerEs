@@ -6,8 +6,8 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="16"
-8-->F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+8-->C:\Project2020\BayerEs\imagelibrary\src\main\AndroidManifest.xml
 9        android:targetSdkVersion="28" />
-9-->F:\AndroidWorkspace\BayerEs\BayerEs\imagelibrary\src\main\AndroidManifest.xml
+9-->C:\Project2020\BayerEs\imagelibrary\src\main\AndroidManifest.xml
 10
 11</manifest>

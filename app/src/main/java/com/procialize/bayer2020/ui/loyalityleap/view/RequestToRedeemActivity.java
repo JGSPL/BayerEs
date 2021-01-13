@@ -67,11 +67,13 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
     ImageView headerlogoIv;
     redeem_history_item pestType;
     Dialog myDialog;
+    public static TextView txtRedeemPoint;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.redeption_history_list);
+        setContentView(R.layout.request_to_redeemlist);
         cd = ConnectionDetector.getInstance(this);
 
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
@@ -82,6 +84,7 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
         recycler_mpointcalc = findViewById(R.id.recycler_mpointcalc);
         progressBar = findViewById(R.id.progressBar);
         relative = findViewById(R.id.relative);
+        txtRedeemPoint = findViewById(R.id.txtRedeemPoint);
         setUpToolbar();
         if (cd.isConnectingToInternet()) {
 
@@ -104,13 +107,15 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
                     public void onResponse(Call<FetchRequestToRedeem> call, Response<FetchRequestToRedeem> response) {
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
-                            Imageurl = response.body().getTotalRecords();
+                            Imageurl = response.body().getProduct_imagepath();
 
                             String strCommentList =response.body().getDetail();
                             RefreashToken refreashToken = new RefreashToken(RequestToRedeemActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
                             List<RequestToRedeem> eventLists = gson.fromJson(data, new TypeToken<ArrayList<RequestToRedeem>>() {}.getType());
+
+                            txtRedeemPoint.setText(response.body().getTotalRecords());
 
                             //Fetch Livepoll list
                             if(eventLists!=null) {

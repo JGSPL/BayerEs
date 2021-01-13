@@ -106,17 +106,19 @@
                 android:layout_marginTop="10dp"
                 android:weightSum="2"
                 android:layout_height="wrap_content">
+
                 <ImageView
+                    android:id="@+id/imgrequestRedeem"
                     android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
-                    android:id="@+id/imgrequestRedeem"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/leap_redeem"
-                    android:layout_height="180dp">
+                    android:src="@drawable/leap_redeem">
 
                 </ImageView>
+
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
