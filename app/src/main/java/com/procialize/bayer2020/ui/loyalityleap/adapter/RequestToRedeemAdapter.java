@@ -80,7 +80,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
     public void onBindViewHolder(@NonNull final RequestToRedeemAdapter.ProductViewHolder holder, final int position) {
 
         final RequestToRedeem redeemItem = productLists.get(position);
-        holder.txt_points.setText(redeemItem.getProduct_name());
+        holder.txt_rewardname.setText(redeemItem.getProduct_name());
 
         holder.txt_points.setText("Value =" + redeemItem.getProduct_value() + " Points");
 

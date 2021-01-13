@@ -395,7 +395,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new int[]{
                             //Color.parseColor(colorunselect),
                             Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)),
-                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
+                            Color.parseColor("#ffffff")
+
                     });
 
             ColorStateList textColorStates = new ColorStateList(
