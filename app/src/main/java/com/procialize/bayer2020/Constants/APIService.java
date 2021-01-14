@@ -14,6 +14,7 @@ import com.procialize.bayer2020.ui.eventList.model.Event;
 import com.procialize.bayer2020.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.bayer2020.ui.eventinfo.model.EventInfo;
 import com.procialize.bayer2020.ui.livepoll.model.FetchLivePoll;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchPurchageHistory;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemHistory;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemHistoryStatus;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchRequestToRedeem;
@@ -475,5 +476,10 @@ public interface APIService {
                                       @Field("no_of_quantity") String no_of_quantity,
                                       @Field("email") String email,
                                       @Field("address") String address);
+
+    @POST("Loyalty_api/PurchaseHistoryFetch")
+    @FormUrlEncoded
+    Call<FetchPurchageHistory> PurchaseHistoryFetch(@Header("authorization") String authkey,
+                                                    @Field("event_id") String event_id);
 
 }

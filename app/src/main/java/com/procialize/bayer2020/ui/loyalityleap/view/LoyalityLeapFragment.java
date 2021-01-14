@@ -12,7 +12,7 @@ import com.procialize.bayer2020.R;
 
 
 public class LoyalityLeapFragment  extends Fragment {
-    ImageView imgScheame,imgredeemHistory,imgrequestRedeem;
+    ImageView imgScheame,imgredeemHistory,imgrequestRedeem,imgPuchageHistory;
 
     public static LoyalityLeapFragment newInstance() {
 
@@ -25,6 +25,8 @@ public class LoyalityLeapFragment  extends Fragment {
         imgScheame = root.findViewById(R.id.imgScheame);
         imgredeemHistory = root.findViewById(R.id.imgredeemHistory);
         imgrequestRedeem = root.findViewById(R.id.imgrequestRedeem);
+        imgPuchageHistory = root.findViewById(R.id.imgPuchageHistory);
+
         imgScheame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,6 +47,14 @@ public class LoyalityLeapFragment  extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), RequestToRedeemActivity.class));
+
+            }
+        });
+
+        imgPuchageHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), PurchaseHistoryActivity.class));
 
             }
         });

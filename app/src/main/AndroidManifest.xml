@@ -261,6 +261,10 @@
             android:name="com.procialize.bayer2020.ui.loyalityleap.view.RequestToRedeemActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name="com.procialize.bayer2020.ui.loyalityleap.view.PurchaseHistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"

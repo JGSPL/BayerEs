@@ -31,12 +31,10 @@ import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
-import com.procialize.bayer2020.ui.loyalityleap.adapter.RedeemHistoryAdapter;
+import com.procialize.bayer2020.ui.loyalityleap.adapter.PurchageHistoryAdapter;
 import com.procialize.bayer2020.ui.loyalityleap.adapter.RedeemHistoryStatusAdapter;
-import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemHistory;
-import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemHistoryStatus;
-import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemStatusBasicData;
-import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_item;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchPurchageHistory;
+import com.procialize.bayer2020.ui.loyalityleap.model.PurchaseHistory_row;
 import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_status_item;
 
 import java.util.ArrayList;
@@ -51,12 +49,11 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
-public class PurchaseHistoryActivity extends AppCompatActivity implements RedeemHistoryAdapter.ProductAdapterListner, RedeemHistoryStatusAdapter.ProductAdapterListner{
+public class PurchaseHistoryActivity extends AppCompatActivity implements PurchageHistoryAdapter.ProductAdapterListner, RedeemHistoryStatusAdapter.ProductAdapterListner{
     RecyclerView recycler_mpointcalc,recycler_mpoinStatus;
     ProgressBar progressBar;
     private ConnectionDetector cd;
-    MutableLiveData<FetchRedeemHistory> FetchProductTypeList = new MutableLiveData<>();
-    MutableLiveData<FetchRedeemHistoryStatus> FetchRedeemStatusList = new MutableLiveData<>();
+    MutableLiveData<FetchPurchageHistory> FetchProductTypeList = new MutableLiveData<>();
 
 
     String eventid;
@@ -66,19 +63,19 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Redeem
     private APIService eventApi;
     Toolbar mToolbar;
     ImageView headerlogoIv;
-    redeem_history_item pestType;
+    PurchaseHistory_row pestType;
     Dialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.redeption_history_list);
+        setContentView(R.layout.purchage_history_list);
         cd = ConnectionDetector.getInstance(this);
 
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
         // eventid = "1";
-        //  pestType = (redeem_history_item) getIntent().getSerializableExtra("PestType");
+        //  pestType = (PurchaseHistory_row) getIntent().getSerializableExtra("PestType");
 
         recycler_mpointcalc = findViewById(R.id.recycler_mpointcalc);
         progressBar = findViewById(R.id.progressBar);
@@ -95,14 +92,14 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Redeem
 
     }
 
-    public MutableLiveData<FetchRedeemHistory> getProductType(String token, String eventid) {
+    public MutableLiveData<FetchPurchageHistory> getProductType(String token, String eventid) {
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.RedemptionHistory(token,eventid,"","1",""
+        eventApi.PurchaseHistoryFetch(token,eventid
         )
-                .enqueue(new Callback<FetchRedeemHistory>() {
+                .enqueue(new Callback<FetchPurchageHistory>() {
                     @Override
-                    public void onResponse(Call<FetchRedeemHistory> call, Response<FetchRedeemHistory> response) {
+                    public void onResponse(Call<FetchPurchageHistory> call, Response<FetchPurchageHistory> response) {
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
                             Imageurl = response.body().getTotalRecords();
@@ -111,7 +108,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Redeem
                             RefreashToken refreashToken = new RefreashToken(PurchaseHistoryActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
-                            List<redeem_history_item> eventLists = gson.fromJson(data, new TypeToken<ArrayList<redeem_history_item>>() {}.getType());
+                            List<PurchaseHistory_row> eventLists = gson.fromJson(data, new TypeToken<ArrayList<PurchaseHistory_row>>() {}.getType());
 
                             //Fetch Livepoll list
                             if(eventLists!=null) {
@@ -139,7 +136,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Redeem
                     }
 
                     @Override
-                    public void onFailure(Call<FetchRedeemHistory> call, Throwable t) {
+                    public void onFailure(Call<FetchPurchageHistory> call, Throwable t) {
                         FetchProductTypeList.setValue(null);
                     }
                 });
@@ -148,8 +145,8 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Redeem
     }
 
 
-    public void setupEventAdapter(List<redeem_history_item> productList) {
-        RedeemHistoryAdapter productypeAdapter = new RedeemHistoryAdapter(this, productList, this, Imageurl);
+    public void setupEventAdapter(List<PurchaseHistory_row> productList) {
+        PurchageHistoryAdapter productypeAdapter = new PurchageHistoryAdapter(this, productList, this, Imageurl);
         //recycler_mpointcalc.setLayoutManager(new LinearLayoutManager(getContext()));
         // use a linear layout manager
         int columns = 1;
@@ -203,115 +200,11 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Redeem
 
 
     @Override
-    public void onContactSelected(redeem_history_item redeemlList) {
-        showRedeemdialouge(redeemlList);
-    }
-    private void showRedeemdialouge(redeem_history_item redeemlList) {
-
-        myDialog = new Dialog(PurchaseHistoryActivity.this);
-        myDialog.setContentView(R.layout.dialog_redemption_history);
-        myDialog.setCancelable(false);
-
-
-        // LinearLayout diatitle = myDialog.findViewById(R.id.diatitle);
-        ImageView imgCancel = myDialog.findViewById(R.id.imgClose);
-        final TextView txt_Data = myDialog.findViewById(R.id.txt_Data);
-        final TextView txt_Data1 = myDialog.findViewById(R.id.txt_Data1);
-        final TextView txt_Data2= myDialog.findViewById(R.id.txt_Data2);
-        final TextView txt_Data3= myDialog.findViewById(R.id.txt_Data3);
-
-        txt_Data.setText ("Requested Data  : "+ CommonFunction.convertDateRedeem(redeemlList.getRedemption_date()));
-        txt_Data1.setText("Cataloged Name  : "+ redeemlList.getProduct_name());
-        txt_Data2.setText("Qty             : "+ redeemlList.getQuantity());
-        txt_Data3.setText("Points          : "+ redeemlList.getPoints());
-        recycler_mpoinStatus = myDialog.findViewById(R.id.recycler_mpoinStatus);
-
-        if (cd.isConnectingToInternet()) {
-
-            getRedeemStatus(token,eventid,redeemlList.getId());
-        } else {
-            Utility.createShortSnackBar(relative, "No internet connection");
-
-
-        }
-        imgCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-            }
-        });
-
-        imgCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myDialog.dismiss();
-            }
-        });
-
-        myDialog.show();
-
-    }
-
-    public MutableLiveData<FetchRedeemHistoryStatus> getRedeemStatus(String token, String eventid, String  id) {
-        eventApi = ApiUtils.getAPIService();
-
-        eventApi.RedemptionHistoryDetails(token,eventid,"1")
-                .enqueue(new Callback<FetchRedeemHistoryStatus>() {
-                    @Override
-                    public void onResponse(Call<FetchRedeemHistoryStatus> call, Response<FetchRedeemHistoryStatus> response) {
-                        if (response.isSuccessful()) {
-                            FetchRedeemStatusList.setValue(response.body());
-                            // Imageurl = response.body().get();
-
-                            String strCommentList =response.body().getDetail();
-                            RefreashToken refreashToken = new RefreashToken(PurchaseHistoryActivity.this);
-                            String data = refreashToken.decryptedData(strCommentList);
-                            Gson gson = new Gson();
-                            List<FetchRedeemStatusBasicData> eventLists = gson.fromJson(data, new TypeToken<ArrayList<FetchRedeemStatusBasicData>>() {}.getType());
-
-                            //Fetch Livepoll list
-                            if(eventLists!=null) {
-
-                                progressBar.setVisibility(View.GONE);
-
-
-                                if(eventLists.size()>0) {
-
-                                    List<redeem_history_status_item> productList = eventLists.get(0).getRedeemHistoryStatusList();
-
-                                    setupEventStatusAdapter(productList);
-                                }else{
-                                    progressBar.setVisibility(View.GONE);
-                                    progressBar.setVisibility(View.GONE);
-
-                                }
-
-                            }else{
-
-                                progressBar.setVisibility(View.GONE);
-
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<FetchRedeemHistoryStatus> call, Throwable t) {
-                        FetchRedeemStatusList.setValue(null);
-                    }
-                });
-
-        return FetchRedeemStatusList;
+    public void onContactSelected(PurchaseHistory_row redeemlList) {
     }
 
 
-    public void setupEventStatusAdapter(List<redeem_history_status_item> productList) {
-        RedeemHistoryStatusAdapter productypeAdapter = new RedeemHistoryStatusAdapter(this, productList, this );
-        int columns = 1;
-        recycler_mpoinStatus.setLayoutManager(new GridLayoutManager(this, columns));
 
-        recycler_mpoinStatus.setAdapter(productypeAdapter);
-        productypeAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onContactSelected(redeem_history_status_item pollList) {
