@@ -19,6 +19,7 @@ import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemHistory;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemHistoryStatus;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchRequestToRedeem;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchSchemeOffer;
+import com.procialize.bayer2020.ui.loyalityleap.model.Fetchm_Point;
 import com.procialize.bayer2020.ui.newsFeedComment.model.Comment;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
 import com.procialize.bayer2020.ui.newsFeedLike.model.Like;
@@ -481,5 +482,9 @@ public interface APIService {
     @FormUrlEncoded
     Call<FetchPurchageHistory> PurchaseHistoryFetch(@Header("authorization") String authkey,
                                                     @Field("event_id") String event_id);
+    @POST("Loyalty_api/MpointFetch")
+    @FormUrlEncoded
+    Call<Fetchm_Point> MpointFetch(@Header("authorization") String authkey,
+                                   @Field("event_id") String event_id);
 
 }

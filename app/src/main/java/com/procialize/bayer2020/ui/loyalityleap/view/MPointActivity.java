@@ -31,10 +31,12 @@ import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
-import com.procialize.bayer2020.ui.loyalityleap.adapter.PurchageHistoryAdapter;
+import com.procialize.bayer2020.ui.loyalityleap.adapter.MCalculatorAdapter;
 import com.procialize.bayer2020.ui.loyalityleap.adapter.RedeemHistoryStatusAdapter;
-import com.procialize.bayer2020.ui.loyalityleap.model.FetchPurchageHistory;
-import com.procialize.bayer2020.ui.loyalityleap.model.PurchaseHistory_row;
+import com.procialize.bayer2020.ui.loyalityleap.model.Fetchm_Point;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemStatusBasicData;
+import com.procialize.bayer2020.ui.loyalityleap.model.m_points_list;
+import com.procialize.bayer2020.ui.loyalityleap.model.m_points_list;
 import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_status_item;
 
 import java.util.ArrayList;
@@ -49,13 +51,13 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
-public class PurchaseHistoryActivity extends AppCompatActivity implements PurchageHistoryAdapter.ProductAdapterListner, RedeemHistoryStatusAdapter.ProductAdapterListner{
+
+public class MPointActivity extends AppCompatActivity implements MCalculatorAdapter.ProductAdapterListner{
     RecyclerView recycler_mpointcalc,recycler_mpoinStatus;
     ProgressBar progressBar;
     private ConnectionDetector cd;
-    MutableLiveData<FetchPurchageHistory> FetchProductTypeList = new MutableLiveData<>();
+    MutableLiveData<Fetchm_Point> FetchProductTypeList = new MutableLiveData<>();
 
-    TextView txtPurchagePoint;
     String eventid;
     String token;
     RelativeLayout relative;
@@ -63,24 +65,25 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
     private APIService eventApi;
     Toolbar mToolbar;
     ImageView headerlogoIv;
-    PurchaseHistory_row pestType;
+    m_points_list pestType;
     Dialog myDialog;
+    public static TextView txt_score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.purchage_history_list);
+        setContentView(R.layout.activity_mpoint_calc);
         cd = ConnectionDetector.getInstance(this);
 
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
         // eventid = "1";
-        //  pestType = (PurchaseHistory_row) getIntent().getSerializableExtra("PestType");
+        //  pestType = (m_points_list) getIntent().getSerializableExtra("PestType");
 
         recycler_mpointcalc = findViewById(R.id.recycler_mpointcalc);
         progressBar = findViewById(R.id.progressBar);
         relative = findViewById(R.id.relative);
-        txtPurchagePoint = findViewById(R.id.txtPurchagePoint);
+        txt_score = findViewById(R.id.txt_score);
 
         setUpToolbar();
         if (cd.isConnectingToInternet()) {
@@ -94,24 +97,24 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
 
     }
 
-    public MutableLiveData<FetchPurchageHistory> getProductType(String token, String eventid) {
+    public MutableLiveData<Fetchm_Point> getProductType(String token, String eventid) {
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.PurchaseHistoryFetch(token,eventid
+        eventApi.MpointFetch(token,eventid
         )
-                .enqueue(new Callback<FetchPurchageHistory>() {
+                .enqueue(new Callback<Fetchm_Point>() {
                     @Override
-                    public void onResponse(Call<FetchPurchageHistory> call, Response<FetchPurchageHistory> response) {
+                    public void onResponse(Call<Fetchm_Point> call, Response<Fetchm_Point> response) {
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
                             Imageurl = response.body().getTotalRecords();
 
                             String strCommentList =response.body().getDetail();
-                            RefreashToken refreashToken = new RefreashToken(PurchaseHistoryActivity.this);
+                            RefreashToken refreashToken = new RefreashToken(MPointActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
-                            List<PurchaseHistory_row> eventLists = gson.fromJson(data, new TypeToken<ArrayList<PurchaseHistory_row>>() {}.getType());
-                            txtPurchagePoint.setText(response.body().getTotalRecords());
+                            List<m_points_list> eventLists = gson.fromJson(data, new TypeToken<ArrayList<m_points_list>>() {}.getType());
+
                             //Fetch Livepoll list
                             if(eventLists!=null) {
 
@@ -138,7 +141,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
                     }
 
                     @Override
-                    public void onFailure(Call<FetchPurchageHistory> call, Throwable t) {
+                    public void onFailure(Call<Fetchm_Point> call, Throwable t) {
                         FetchProductTypeList.setValue(null);
                     }
                 });
@@ -147,8 +150,8 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
     }
 
 
-    public void setupEventAdapter(List<PurchaseHistory_row> productList) {
-        PurchageHistoryAdapter productypeAdapter = new PurchageHistoryAdapter(this, productList, this, Imageurl);
+    public void setupEventAdapter(List<m_points_list> productList) {
+        MCalculatorAdapter productypeAdapter = new MCalculatorAdapter(this, productList, this, Imageurl);
         //recycler_mpointcalc.setLayoutManager(new LinearLayoutManager(getContext()));
         // use a linear layout manager
         int columns = 1;
@@ -181,9 +184,9 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
             mToolbar.showOverflowMenu();
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
-            String eventLogo = SharedPreference.getPref(PurchaseHistoryActivity.this, EVENT_LOGO);
-            String eventListMediaPath = SharedPreference.getPref(PurchaseHistoryActivity.this, EVENT_LIST_MEDIA_PATH);
-            Glide.with(PurchaseHistoryActivity.this)
+            String eventLogo = SharedPreference.getPref(MPointActivity.this, EVENT_LOGO);
+            String eventListMediaPath = SharedPreference.getPref(MPointActivity.this, EVENT_LIST_MEDIA_PATH);
+            Glide.with(MPointActivity.this)
                     .load(eventListMediaPath + eventLogo)
                     .listener(new RequestListener<Drawable>() {
                         @Override
@@ -197,19 +200,19 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
                         }
                     }).into(headerlogoIv);
 
+            mToolbar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+
         }
     }
 
 
     @Override
-    public void onContactSelected(PurchaseHistory_row redeemlList) {
-    }
-
-
-
-
-    @Override
-    public void onContactSelected(redeem_history_status_item pollList) {
-
+    public void onContactSelected(m_points_list pollList) {
+        
     }
 }

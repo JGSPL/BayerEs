@@ -3,40 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#f1f1f1"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".Activity.MpointCalc">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/appBarLayout"
-        android:background="@android:color/white"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_back"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:elevation="0dp">
+            android:background="@color/colorwhite"
+            android:contentInsetStart="0dp"
+            android:contentInsetLeft="0dp"
+            android:contentInsetEnd="0dp"
+            android:contentInsetRight="0dp"
+            android:minHeight="?attr/actionBarSize"
+            app:contentInsetEnd="0dp"
+            app:navigationIcon="@drawable/backarrow"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp">
 
             <ImageView
                 android:id="@+id/headerlogoIv"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription=" " />
-
-            <ImageView
-                android:id="@+id/headerlogoIv2"
-                android:layout_width="50dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="-10dp"
                 android:contentDescription=" " />
 
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:layout_margin="5dp"
+                android:contentDescription=" "
+                android:src="@drawable/bayer" />
+
         </androidx.appcompat.widget.Toolbar>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/linecolor"
+            android:visibility="gone" />
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -47,53 +65,55 @@
         android:layout_below="@+id/appBarLayout"
         android:layout_margin="10dp"
         android:gravity="left"
-        android:textStyle="bold"
-        android:textSize="16dp"
-        android:text="Purchase history"
-        android:textColor="@color/black" />
+        android:text="Calculator"
+        android:textColor="@color/blue" />
 
     <LinearLayout
         android:id="@+id/linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_below="@+id/txt_title"
-        android:layout_marginTop="5dp"
-        android:weightSum="10"
-        android:layout_marginBottom="5dp"
         android:background="@color/colorwhite"
         android:orientation="horizontal">
+
         <com.procialize.bayer2020.fonts.RobotoTextview
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
             android:layout_weight="5"
-            android:gravity="left"
-            android:text="Total:"
-            android:textSize="18sp"
-            android:padding="5dp">
+            android:gravity="center"
+            android:text="Total mPoints :"
+            android:textColor="@color/loginbutton" />
 
-        </com.procialize.bayer2020.fonts.RobotoTextview>
         <com.procialize.bayer2020.fonts.RobotoTextview
+            android:id="@+id/txt_score"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
             android:layout_weight="5"
-            android:gravity="right"
-            android:id="@+id/txtPurchagePoint"
-            android:text=""
-            android:textStyle="bold"
-            android:textColor="@color/blue"
-            android:textSize="18sp"
-            android:padding="5dp">
-
-        </com.procialize.bayer2020.fonts.RobotoTextview>
+            android:gravity="center"
+            android:textColor="@color/activetab" />
 
     </LinearLayout>
 
+    <com.procialize.bayer2020.fonts.RobotoTextview
+        android:id="@+id/txt_msg"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:gravity="left"
+        android:text="Instructions:\nInsert numeric value under No. of mPins .\nOnce entered, tap next to calculate value ." />
 
     <LinearLayout
         android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linear"
+        android:layout_below="@+id/txt_msg"
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
@@ -102,18 +122,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_weight="1.25"
-            android:background="@color/Darkblue"
-            android:gravity="center"
-            android:text="Sr. No."
-            android:textColor="@color/colorwhite" />
-
-        <com.procialize.bayer2020.fonts.RobotoTextview
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="2dp"
-            android:layout_weight="3.75"
+            android:layout_weight="3"
             android:background="@color/Darkblue"
             android:gravity="center"
             android:text="Product"
@@ -124,10 +133,21 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginLeft="2dp"
+            android:layout_weight="2"
+            android:background="@color/Darkblue"
+            android:gravity="top|center"
+            android:text="PUnit"
+            android:textColor="@color/colorwhite" />
+
+        <com.procialize.bayer2020.fonts.RobotoTextview
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="2dp"
             android:layout_weight="3"
             android:background="@color/Darkblue"
             android:gravity="center"
-            android:text="Year"
+            android:text="mPoints/ unit 2020"
             android:textColor="@color/colorwhite" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
@@ -138,7 +158,7 @@
             android:layout_weight="2"
             android:background="@color/Darkblue"
             android:gravity="center"
-            android:text="Volume"
+            android:text="Enter Quntity"
             android:textColor="@color/colorwhite" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
@@ -147,9 +167,9 @@
             android:layout_gravity="center"
             android:layout_marginLeft="2dp"
             android:layout_weight="3"
-            android:background="@color/Darkblue"
+            android:background="@color/activetab"
             android:gravity="center"
-            android:text="Total mPoints"
+            android:text="Total \n mPoints"
             android:textColor="@color/colorwhite" />
 
     </LinearLayout>

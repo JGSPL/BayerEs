@@ -123,6 +123,7 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:id="@+id/imgCalc"
                     android:scaleType="fitXY"
                     android:layout_marginRight="10dp"
                     android:layout_marginLeft="5dp"
