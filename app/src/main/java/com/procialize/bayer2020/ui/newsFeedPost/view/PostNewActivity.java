@@ -134,7 +134,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         imguploadimg = findViewById(R.id.imguploadimg);
         iv_back.setOnClickListener(this);
 
-        setDynamicColor();
+      //  setDynamicColor();
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);

@@ -116,6 +116,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
+    
     String api_token, first_name, last_name, designation, company_name, city, email, mobile, is_god, alternate_no, turnover, specialization, license, pincode,
             no_of_technician, no_of_pco_served, associated_since, sap_code, attendee_id, user_type;
 
@@ -209,7 +210,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         no_of_pco_served = profileDetails.get(0).getNo_of_pco_served();
                         no_of_technician = profileDetails.get(0).getNo_of_technician();
                         pincode = profileDetails.get(0).getPincode();
-                        license = profileDetails.get(0).getLicense();
+                     //   license = profileDetails.get(0).getLicense();
                         specialization = profileDetails.get(0).getSpecialization();
                         turnover = profileDetails.get(0).getTurnover();
                         is_god = profileDetails.get(0).getIs_god();
