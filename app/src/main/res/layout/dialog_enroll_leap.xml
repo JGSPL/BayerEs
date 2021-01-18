@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_gravity="center"
+    android:gravity="left"
+    android:layout_height="200dp">
+    <CheckBox
+        android:id="@+id/enrollCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:buttonTint="@color/colorPink"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Enroll in leap now"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_below="@+id/enrollCheckBox"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <com.procialize.bayer2020.fonts.RobotoButton
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:text="Submit"
+                android:layout_marginRight="10dp"
+                android:id="@+id/btnSubmit"
+                android:background="@drawable/btn_submit"
+                android:textColor="@color/colorwhite">
+
+            </com.procialize.bayer2020.fonts.RobotoButton>
+            <com.procialize.bayer2020.fonts.RobotoButton
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:text="Cancel"
+                android:id="@+id/btnCancel"
+                android:textColor="@color/black"
+                android:background="@drawable/edittexthmbg">
+
+            </com.procialize.bayer2020.fonts.RobotoButton>
+
+        </LinearLayout>
+</RelativeLayout>

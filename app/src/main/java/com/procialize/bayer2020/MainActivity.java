@@ -1,5 +1,6 @@
 package com.procialize.bayer2020;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -73,7 +76,11 @@ import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
 import com.procialize.bayer2020.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.login.view.LoginActivity;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemStatusBasicData;
+import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_item;
+import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_status_item;
 import com.procialize.bayer2020.ui.loyalityleap.view.LoyalityLeapFragment;
+import com.procialize.bayer2020.ui.loyalityleap.view.RedemptionHistoryList;
 import com.procialize.bayer2020.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
@@ -138,6 +145,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MenuItem menuItem;
     String storeFireid, storeFirename, stoeUsername;
     Menu mMenu;
+    Dialog myDialog;
+    MutableLiveData<LoginOrganizer> FetchenleepStatusList = new MutableLiveData<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +226,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }*/
+
+        showLeepdialouge();
 
 
         Glide.with(MainActivity.this)
@@ -790,6 +802,68 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
         return (BaseFragment) getSupportFragmentManager().findFragmentByTag(tag);
+    }
+
+    private void showLeepdialouge() {
+
+        myDialog = new Dialog(MainActivity.this);
+        myDialog.setContentView(R.layout.dialog_enroll_leap);
+        myDialog.setCancelable(false);
+
+
+        Button btnSubmit = myDialog.findViewById(R.id.btnSubmit);
+        Button btnCancel = myDialog.findViewById(R.id.btnCancel);
+        final CheckBox enrollBox = myDialog.findViewById(R.id.enrollCheckBox);
+
+
+
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+                JzvdStd.releaseAllVideos();
+               navView.setSelectedItemId(R.id.navigation_home);
+
+            }
+        });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(enrollBox.isChecked()){
+                    getEnleepStatus(api_token,eventid,"1","");
+                }else{
+                    Utility.createShortSnackBar(mDrawerLayout, "Please checked this box");
+
+                }
+                myDialog.dismiss();
+            }
+        });
+
+        myDialog.show();
+
+    }
+
+    public MutableLiveData<LoginOrganizer> getEnleepStatus(String token, String eventid, String  id, String text) {
+        updateApi = ApiUtils.getAPIService();
+
+        updateApi.enrollLeapFlag(token,eventid,"1","")
+                .enqueue(new Callback<LoginOrganizer>() {
+                    @Override
+                    public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
+                        if (response.isSuccessful()) {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                        FetchenleepStatusList.setValue(null);
+                    }
+                });
+
+        return FetchenleepStatusList;
     }
 
 }
