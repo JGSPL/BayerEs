@@ -63,6 +63,9 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.SharedPreferencesConstant;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.session.SessionManager;
+import com.procialize.bayer2020.ui.Contactus.ContactUsActivity;
+import com.procialize.bayer2020.ui.EULA.EulaActivity;
+import com.procialize.bayer2020.ui.Privacypolicy.PrivacypolicyActivity;
 import com.procialize.bayer2020.ui.agenda.view.AgendaFragment;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
@@ -81,6 +84,7 @@ import com.procialize.bayer2020.ui.profile.view.ProfileActivity;
 import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
+import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
 import com.yanzhenjie.album.mvp.BaseFragment;
 
 import java.io.File;
@@ -124,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView headerlogoIv;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
-    TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll;
+    TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
+            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -157,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
 
-        Log.e("token===>",api_token);
+        Log.e("token===>", api_token);
         CommonFirebase.crashlytics("MainActivity", api_token);
         CommonFirebase.firbaseAnalytics(this, "MainActivity", api_token);
 
@@ -242,6 +247,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txt_version = findViewById(R.id.txt_version);
         tr_live_poll = findViewById(R.id.tr_live_poll);
         tr_quiz = findViewById(R.id.tr_quiz);
+        tr_contact_us = findViewById(R.id.tr_contact_us);
+        tr_survey = findViewById(R.id.tr_survey);
+        tr_eula = findViewById(R.id.tr_eula);
+        tr_privacy_policy = findViewById(R.id.tr_privacy_policy);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -251,13 +260,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_logout.setOnClickListener(this);
         tr_live_poll.setOnClickListener(this);
         tr_quiz.setOnClickListener(this);
+        tr_contact_us.setOnClickListener(this);
+        tr_survey.setOnClickListener(this);
+        tr_eula.setOnClickListener(this);
+        tr_privacy_policy.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
         } else {
             tr_switch_event.setVisibility(View.VISIBLE);
         }
-
 
 
         LoyalityLeapFragment newsFeedFragment = LoyalityLeapFragment.newInstance();
@@ -478,6 +490,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_home:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
+                break;
+            case R.id.tr_contact_us:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+                break;
+            case R.id.tr_survey:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, SurveyActivity.class));
+                break;
+            case R.id.tr_eula:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, EulaActivity.class));
+                break;
+            case R.id.tr_privacy_policy:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, PrivacypolicyActivity.class));
                 break;
             case R.id.tr_profile:
                 JzvdStd.releaseAllVideos();

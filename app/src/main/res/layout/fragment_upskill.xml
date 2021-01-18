@@ -7,24 +7,25 @@
     tools:context=".ui.upskill.UpskillFragment">
 
     <ImageView
+        android:id="@+id/iv_banner"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="@drawable/gallery_placeholder" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="TextView" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/pollrefresh"
+        android:id="@+id/srl_upskill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/pollRv"
+            android:id="@+id/rv_upskill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"

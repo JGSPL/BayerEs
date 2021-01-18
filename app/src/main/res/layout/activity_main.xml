@@ -163,6 +163,7 @@
                     android:textSize="15dp" />
 
             </TableRow>
+
             <TableRow
                 android:id="@+id/tr_live_poll"
                 android:layout_width="fill_parent"
@@ -186,7 +187,6 @@
                     android:textSize="15dp" />
 
             </TableRow>
-
 
             <TableRow
                 android:id="@+id/tr_quiz"
@@ -212,19 +212,72 @@
 
             </TableRow>
 
+
+
+            <TableRow
+                android:id="@+id/tr_contact_us"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_privacy"
+                    android:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_contact_us"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="Contact Us"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tr_survey"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_privacy"
+                    android:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_survey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="Survey"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+            </TableRow>
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_side_menu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:listitem="@layout/recycler_item_side_menu" />
 
-
             <TableRow
                 android:id="@+id/tr_eula"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:padding="10dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="25dp"
@@ -250,7 +303,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:padding="10dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="25dp"
