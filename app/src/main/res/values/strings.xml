@@ -43,6 +43,10 @@
     <string name="attendeedetail">Attendee details</string>
     <string name="speakerdetail">Speaker Detail</string>
     <string name="quizlistingtitle">Quiz</string>
+    <string name="eulatitle">EULA</string>
+    <string name="privacypolicytitle">Privacy Policy</string>
+    <string name="contactustitle">Contact Us</string>
+    <string name="title_survey">Survey</string>
 
     <string name="maps_api_key">AIzaSyCmc8lu_Yp2dWhpm3TLtGVTcZXJJHjHg5k</string>
     <string name="designandeveloped"><u>Design &amp; Developed by Procialize</u></string>

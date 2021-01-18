@@ -37,6 +37,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -441,7 +442,7 @@ public interface APIService {
     @POST("QA_api/QASessionPost")
     @FormUrlEncoded
     Call<LoginOrganizer> PostQnASession(@Header("authorization") String authorization, @Field("event_id") String event_id
-                               ,@Field("session_id") String session_id,@Field("question") String question);
+            , @Field("session_id") String session_id, @Field("question") String question);
 
     //Bayer Es Api List
     @POST("Catalogue_api/ProductTypeList")
@@ -464,10 +465,10 @@ public interface APIService {
     @POST("Catalogue_api/PestTypeList")
     @FormUrlEncoded
     Call<FetchPestList> PestTypeList(@Header("authorization") String authkey,
-                                 @Field("event_id") String event_id,
+                                     @Field("event_id") String event_id,
                                      @Field("search_text") String search_text,
-                                 @Field("pageNumber") String pageNumber,
-                                 @Field("pageSize") String pageSize);
+                                     @Field("pageNumber") String pageNumber,
+                                     @Field("pageSize") String pageSize);
 
     @POST("Catalogue_api/PestList")
     @FormUrlEncoded
@@ -497,10 +498,10 @@ public interface APIService {
     @POST("Loyalty_api/RedemptionHistory")
     @FormUrlEncoded
     Call<FetchRedeemHistory> RedemptionHistory(@Header("authorization") String authkey,
-                                                @Field("event_id") String event_id,
-                                                @Field("search_text") String search_text,
-                                                @Field("pageNumber") String pageNumber,
-                                                @Field("pageSize") String pageSize);
+                                               @Field("event_id") String event_id,
+                                               @Field("search_text") String search_text,
+                                               @Field("pageNumber") String pageNumber,
+                                               @Field("pageSize") String pageSize);
 
     @POST("Loyalty_api/RedemptionHistoryDetails")
     @FormUrlEncoded
@@ -508,7 +509,7 @@ public interface APIService {
                                                             @Field("event_id") String event_id,
                                                             @Field("redemption_request_id") String search_text);
 
-    
+
     @POST("Loyalty_api/RedeemRequestList")
     @FormUrlEncoded
     Call<FetchRequestToRedeem> RedeemRequestList(@Header("authorization") String authkey,
@@ -520,12 +521,12 @@ public interface APIService {
     @POST("Loyalty_api/RedeemRequest")
     @FormUrlEncoded
     Call<LoginOrganizer> RedeemRequest(@Header("authorization") String authkey,
-                                      @Field("event_id") String event_id,
-                                      @Field("product_code") String product_code,
-                                      @Field("product_value") String product_name,
-                                      @Field("no_of_quantity") String no_of_quantity,
-                                      @Field("email") String email,
-                                      @Field("address") String address);
+                                       @Field("event_id") String event_id,
+                                       @Field("product_code") String product_code,
+                                       @Field("product_value") String product_name,
+                                       @Field("no_of_quantity") String no_of_quantity,
+                                       @Field("email") String email,
+                                       @Field("address") String address);
 
     @POST("Loyalty_api/PurchaseHistoryFetch")
     @FormUrlEncoded
@@ -535,5 +536,30 @@ public interface APIService {
     @FormUrlEncoded
     Call<Fetchm_Point> MpointFetch(@Header("authorization") String authkey,
                                    @Field("event_id") String event_id);
+
+    @POST("upskill_api/UpskillList")
+    @FormUrlEncoded
+    Call<FetchPurchageHistory> UpskillList(@Header("authorization") String authkey,
+                                           @Field("event_id") String event_id,
+                                           @Field("pageSize") String pageSize,
+                                           @Field("pageNumber") String pageNumber,
+                                           @Field("search_text") String search_text);
+    @GET("Event_api_call/Eula")
+    Call<FetchAgenda> getEula();
+
+    @GET("Event_api_call/PrivacyPolicy")
+    Call<FetchAgenda> getPrivacyPolicy();
+
+    @POST("Event_api_call/ContactUs")
+    @FormUrlEncoded
+    Call<FetchAgenda> getContactUs(@Header("authorization") String auth,
+                                   @Field("event_id") String event_id);
+
+    @POST("Event_api_call/SurveyList")
+    @FormUrlEncoded
+    Call<FetchAgenda> getSurvey(@Header("authorization") String auth,
+                                @Field("event_id") String event_id,
+                                @Field("pageSize") String pageSize,
+                                @Field("pageNumber") String pageNumber);
 
 }
