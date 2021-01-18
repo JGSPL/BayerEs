@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -14,7 +15,7 @@
         android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/bg_1"
+        android:background="@color/background"
         android:orientation="vertical"
         tools:context=".ui.newsFeedPost.view.PostNewActivity">
 
@@ -22,7 +23,8 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
+            android:elevation="3dp"
+            android:background="@color/colorwhite"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:elevation="0dp">
 
@@ -47,6 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:contentDescription=" "
+                    android:tint="@color/colorPink"
                     android:padding="10dp"
                     android:src="@mipmap/ic_back"
                     android:visibility="visible" />
@@ -83,6 +86,7 @@
                     <View
                         android:id="@+id/view_left"
                         android:layout_width="1dp"
+                        android:visibility="gone"
                         android:layout_height="match_parent"
                         android:background="@color/activetab"/>
                     <TextView
@@ -90,17 +94,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:background="@color/transperent"
+                        android:background="@drawable/edit_button_bg"
                         android:gravity="center"
+
                         android:paddingLeft="20dp"
                         android:paddingTop="5dp"
                         android:paddingRight="20dp"
                         android:paddingBottom="5dp"
                         android:text="Post"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/colorwhite" />
                     <View
                         android:id="@+id/view_right"
                         android:layout_width="1dp"
+                        android:visibility="gone"
                         android:layout_height="match_parent"
                         android:background="@color/activetab"/>
 
@@ -180,7 +186,7 @@
                             android:layout_height="40dp"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            app:cardCornerRadius="20dp"
+                            app:cardCornerRadius="5dp"
                             app:cardElevation="0dp">
 
                             <ImageView
@@ -230,13 +236,13 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="10dp"
-                        android:background="@color/black">
+                        android:background="@drawable/edit_box"
+                        >
                     <EditText
                         android:id="@+id/et_post"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:background="@color/white"
                         android:gravity="top|left"
                         android:hint="@string/typeMessage"
                         android:imeOptions="actionSend|flagNoEnterAction"
@@ -244,6 +250,7 @@
                         android:maxLength="500"
                         android:maxLines="5"
                         android:minHeight="80dp"
+                        android:background="@color/colorwhite"
                         android:minLines="4"
                         android:padding="10dp"
                         android:scrollbars="vertical"
@@ -303,7 +310,7 @@
                         android:layout_marginRight="10dp"
                         android:layout_marginBottom="10dp"
                         android:layout_weight="1"
-                        android:background="@color/black"
+                        android:background="@color/colorwhite"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -313,7 +320,7 @@
                             android:layout_height="match_parent"
                             android:layout_margin="1.5dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@color/white"
+                            android:background="@drawable/edittexthmbg"
                             android:gravity="center"
                             android:orientation="horizontal">
 
@@ -325,15 +332,15 @@
                                 android:contentDescription="TODO"
                                 android:padding="2dp"
                                 android:src="@mipmap/upload_icon"
-                                android:tint="@color/black" />
+                                android:tint="@color/colorPink" />
 
                             <TextView
                                 android:id="@+id/txtUploadImg"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
-                                android:text="Upload Image/Video"
-                                android:textColor="@color/black"></TextView>
+                                android:text="Upload Media"
+                                android:textColor="@color/colorPink"></TextView>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

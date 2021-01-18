@@ -44,11 +44,15 @@ public class PurchageHistoryAdapter extends RecyclerView.Adapter<PurchageHistory
 
         final PurchaseHistory_row redeemItem = productLists.get(position);
         holder.txt_product_name.setText(redeemItem.getProduct_name());
-        holder.txtyear.setText(redeemItem.getYear());
         holder.txt_volume.setText(redeemItem.getVolume());
         holder.txt_mPoint.setText(redeemItem.getMpoint());
-        holder.txt_srno.setText(position++);
-
+        int i = position+1;
+        holder.txt_srno.setText(String.valueOf(i));
+        String dateTime = redeemItem.getYear();
+        if (!dateTime.isEmpty()) {
+            String convertedDate = CommonFunction.convertYear(dateTime);
+            holder.txtyear.setText(convertedDate);
+        }
 
 
     }

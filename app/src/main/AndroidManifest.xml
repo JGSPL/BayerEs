@@ -273,6 +273,10 @@
             android:name=".ui.Contactus.ContactUsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name="com.procialize.bayer2020.ui.loyalityleap.view.MPointActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
         <activity
             android:name=".ui.survey.view.SurveyActivity"

@@ -23,6 +23,15 @@ public class ProfileDetails {
     @SerializedName("mobile")
     @Expose
     private String mobile;
+    @SerializedName("alternate_no")
+    @Expose
+    private String alternate_no;
+    @SerializedName("alternate_no_2")
+    @Expose
+    private String alternate_no_2;
+    @SerializedName("alternate_no_3")
+    @Expose
+    private String alternate_no_3;
     @SerializedName("email")
     @Expose
     private String email;
@@ -32,12 +41,155 @@ public class ProfileDetails {
     @SerializedName("designation")
     @Expose
     private String designation;
+    @SerializedName("sap_code")
+    @Expose
+    private String sap_code;
+    @SerializedName("associated_since")
+    @Expose
+    private String associated_since;
+    @SerializedName("no_of_pco_served")
+    @Expose
+    private String no_of_pco_served;
+    @SerializedName("no_of_technician")
+    @Expose
+    private String no_of_technician;
+    @SerializedName("pincode")
+    @Expose
+    private String pincode;
+    @SerializedName("specialization")
+    @Expose
+    private String specialization;
+    @SerializedName("turnover")
+    @Expose
+    private String turnover;
     @SerializedName("city")
     @Expose
     private String city;
+    @SerializedName("state")
+    @Expose
+    private String state;
     @SerializedName("is_god")
     @Expose
     private String is_god;
+
+
+    @SerializedName("user_type")
+    @Expose
+    private String user_type;
+
+    @SerializedName("profile_status")
+    @Expose
+    private String profile_status;
+    @SerializedName("enrollleapflag")
+    @Expose
+    private String enrollleapflag;
+    @SerializedName("access_token")
+    @Expose
+    private String access_token;
+
+    public void setAttendee_id(String attendee_id) {
+        this.attendee_id = attendee_id;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public void setMiddle_name(String middle_name) {
+        this.middle_name = middle_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getAlternate_no() {
+        return alternate_no;
+    }
+
+    public void setAlternate_no(String alternate_no) {
+        this.alternate_no = alternate_no;
+    }
+
+    public String getAlternate_no_2() {
+        return alternate_no_2;
+    }
+
+    public void setAlternate_no_2(String alternate_no_2) {
+        this.alternate_no_2 = alternate_no_2;
+    }
+
+    public String getAlternate_no_3() {
+        return alternate_no_3;
+    }
+
+    public void setAlternate_no_3(String alternate_no_3) {
+        this.alternate_no_3 = alternate_no_3;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setIs_god(String is_god) {
+        this.is_god = is_god;
+    }
+
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public String getProfile_status() {
+        return profile_status;
+    }
+
+    public void setProfile_status(String profile_status) {
+        this.profile_status = profile_status;
+    }
+
+    public String getEnrollleapflag() {
+        return enrollleapflag;
+    }
+
+    public void setEnrollleapflag(String enrollleapflag) {
+        this.enrollleapflag = enrollleapflag;
+    }
+
+    public String getAccess_token() {
+        return access_token;
+    }
+
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
+    }
 
     public String getSap_code() {
         return sap_code;
@@ -79,13 +231,7 @@ public class ProfileDetails {
         this.pincode = pincode;
     }
 
-    public String getLicense() {
-        return license;
-    }
 
-    public void setLicense(String license) {
-        this.license = license;
-    }
 
     public String getSpecialization() {
         return specialization;
@@ -107,30 +253,7 @@ public class ProfileDetails {
         this.city = city;
     }
 
-    @SerializedName("sap_code")
-    @Expose
-    private String sap_code;
-    @SerializedName("associated_since")
-    @Expose
-    private String associated_since;
-    @SerializedName("no_of_pco_served")
-    @Expose
-    private String no_of_pco_served;
-    @SerializedName("no_of_technician")
-    @Expose
-    private String no_of_technician;
-    @SerializedName("pincode")
-    @Expose
-    private String pincode;
-    @SerializedName("license")
-    @Expose
-    private String license;
-    @SerializedName("specialization")
-    @Expose
-    private String specialization;
-    @SerializedName("turnover")
-    @Expose
-    private String turnover;
+
 
     public String getAttendee_id() {
         return attendee_id;
