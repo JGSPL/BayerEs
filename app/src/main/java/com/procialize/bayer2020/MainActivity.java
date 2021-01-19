@@ -85,6 +85,7 @@ import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
 import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
+import com.procialize.bayer2020.ui.upskill.UpskillFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
 
 import java.io.File;
@@ -334,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_frame, SpeakerFragment.newInstance(), "")
+                                .replace(R.id.fragment_frame, UpskillFragment.newInstance(), "")
                                 .commit();
                         break;
                     case R.id.navigation_logout:

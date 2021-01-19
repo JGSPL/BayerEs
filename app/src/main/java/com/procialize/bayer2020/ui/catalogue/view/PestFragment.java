@@ -2,6 +2,7 @@ package com.procialize.bayer2020.ui.catalogue.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.procialize.bayer2020.ui.catalogue.adapter.PestListAdapter;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 import com.procialize.bayer2020.ui.catalogue.model.ProductType;
+import com.procialize.bayer2020.ui.loyalityleap.view.ScheameOfferDetail_Activity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -61,11 +63,11 @@ public class PestFragment extends Fragment implements PestListAdapter.ProductAda
         rootView = inflater.inflate(R.layout.fragment_pestlist,
                 container, false);
         cd = ConnectionDetector.getInstance(getContext());
-
+        new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
         token = SharedPreference.getPref(getContext(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getContext(), EVENT_ID);
         // eventid = "1";
-
+        Log.e("token===>", token);
         productTypeRv = rootView.findViewById(R.id.productTypeRv);
         productrefresh = rootView.findViewById(R.id.productrefresh);
         progressBar = rootView.findViewById(R.id.progressBar);
