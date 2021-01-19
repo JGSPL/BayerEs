@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.procialize.mrgeApp20.Activity.PollDetailActivity">
@@ -12,7 +13,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="@color/colorwhite"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:elevation="0dp">
 
@@ -46,6 +47,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="left|center"
                     android:paddingRight="10dp"
+                    android:tint="@color/colorPink"
                     android:paddingLeft="15dp"
                     android:src="@mipmap/ic_back"
                     android:contentDescription=" " />
@@ -57,6 +59,7 @@
                     android:layout_margin="0dp"
                     android:gravity="left"
                     android:text="Live Poll"
+                    android:visibility="gone"
                     android:textColor="@color/activetab"
                     android:textFontWeight="1"
                     android:textSize="@dimen/textsizenormal"
@@ -69,7 +72,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="-10dp"
                     android:contentDescription=" "
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </LinearLayout>
 
@@ -85,7 +88,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/appBarLayout"
         android:id="@+id/relMain"
-        android:background="@color/colorwhite"
 
         android:orientation="vertical">
         <ProgressBar
@@ -210,7 +212,7 @@
             android:layout_width="200dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:background="@color/activetab"
+            android:background="@drawable/btn_submit"
             android:text="Submit"
             android:gravity="center"
             android:paddingTop="2dp"

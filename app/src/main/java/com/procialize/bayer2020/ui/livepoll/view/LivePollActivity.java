@@ -129,12 +129,12 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
             }
         });
 
-        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+       // iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
 
 
-        CommonFunction.showBackgroundImage(LivePollActivity.this, linear);
-        title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
-        bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        //CommonFunction.showBackgroundImage(LivePollActivity.this, linear);
+      //  title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+       // bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
 
 
          token = SharedPreference.getPref(this, AUTHERISATION_KEY);

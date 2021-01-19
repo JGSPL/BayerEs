@@ -92,7 +92,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         eventid = SharedPreference.getPref(this, EVENT_ID);
-        colorActive = SharedPreference.getPref(this, EVENT_COLOR_3);
+        colorActive = "#e4004b";
 
        /* Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -129,11 +129,11 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
 
 
-        CommonFunction.showBackgroundImage(PollDetailActivity.this, relative);
+       // CommonFunction.showBackgroundImage(PollDetailActivity.this, relative);
 
 
         TextView title = findViewById(R.id.title);
-        title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+       // title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         pollGraph.setLayoutManager(mLayoutManager);
@@ -149,17 +149,17 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
         relMain = findViewById(R.id.relMain);
         subBtn = findViewById(R.id.subBtn);
         subBtn.setOnClickListener(this);
-        questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
+        /*questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
 
         relMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
         subBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
 
-        subBtn.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        subBtn.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));*/
 
 
         PollBtn = findViewById(R.id.PollBtn);
-        PollBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
-        PollBtn.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        /*PollBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
+        PollBtn.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));*/
 
 //        questionTv.setTextColor(Color.parseColor(colorActive));
         progressBar = findViewById(R.id.progressBar);
@@ -411,7 +411,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
                     RadioButton rdbtn = new RadioButton(this);
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(optionLists.get(i - 1).getOption()));
-                    rdbtn.setTextColor(Color.parseColor("#898989"));
+                    rdbtn.setTextColor(Color.parseColor("#000000"));
                     rdbtn.setOnClickListener(this);
 
                     radios.add(rdbtn);

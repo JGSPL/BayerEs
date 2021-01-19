@@ -89,8 +89,8 @@ public class PollGraphAdapter extends RecyclerView.Adapter<PollGraphAdapter.MyVi
         // ll2.setBackgroundResource(R.drawable.poll_cobg);
 
         GradientDrawable gradientDrawable   =   new GradientDrawable();
-       // gradientDrawable.setCornerRadii(new float[]{20, 20, 20, 20, 20, 20, 20, 20});
-        //gradientDrawable.setColor(Color.parseColor(color[position]));
+        gradientDrawable.setCornerRadii(new float[]{20, 20, 20, 20, 20, 20, 20, 20});
+        gradientDrawable.setColor(Color.parseColor(color[position]));
         gradientDrawable.setColor(Color.parseColor(activeBarColor));
         ll2.setBackground(gradientDrawable);
         ll2.setMinimumHeight(15);
@@ -110,7 +110,7 @@ public class PollGraphAdapter extends RecyclerView.Adapter<PollGraphAdapter.MyVi
 
         holder.txtOptMessage.setText(StringEscapeUtils.unescapeJava(pollList.getOption()));
         holder.txtper.setText(num + "%");
-        // holder.linGraph.setBackgroundColor(Color.parseColor(color[position]));
+         holder.linGraph.setBackgroundColor(Color.parseColor(color[position]));
 
         l3.addView(ll2, rpms2);
         holder.linGraph.addView(l3);

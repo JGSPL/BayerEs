@@ -46,7 +46,7 @@
         android:gravity="center"
         android:minHeight="15dp"
 
-        android:background="@drawable/poll_cobg"
+        android:background="@col"
         android:id="@+id/linGraph"
         android:orientation="vertical">
     </LinearLayout>

@@ -60,12 +60,12 @@ public class LivePollAdapter extends RecyclerView.Adapter<LivePollAdapter.NewsVi
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
 
-        holder.nameTv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
-        holder.statusTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
+      //  holder.nameTv.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
+      //  holder.statusTv.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
 
-        holder.ic_rightarrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
+       // holder.ic_rightarrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
 
-        if(pollList.getStatus().equalsIgnoreCase("Tap To Participate")){
+       /* if(pollList.getStatus().equalsIgnoreCase("Tap To Participate")){
             holder.statusTv.setVisibility(View.VISIBLE);
             holder.statusTv.setText("Tap To Participate");
             holder.ivewComplete.setBackgroundColor(Color.parseColor("#898989"));
@@ -77,7 +77,7 @@ public class LivePollAdapter extends RecyclerView.Adapter<LivePollAdapter.NewsVi
             holder.ivewComplete.setVisibility(View.VISIBLE);
 
             holder.ivewComplete.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,EVENT_COLOR_1)));
-        }
+        }*/
         try{
             holder.nameTv.setText(StringEscapeUtils.unescapeJava(pollList.getQuestion()));
         }catch (IllegalArgumentException e){

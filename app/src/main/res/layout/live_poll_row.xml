@@ -2,23 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="65dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/mainLL"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="0dp"
+        android:background="@color/colorwhite"
+
+        android:minHeight="60dp"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:layout_marginRight="0dp"
         android:layout_marginTop="5dp"
         android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        android:background="@color/colorwhite"
         android:orientation="horizontal">
 
 
@@ -36,7 +41,7 @@
                 android:orientation="vertical"
                 android:gravity="left|center">
 
-                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+                <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/nameTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,9 +51,9 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
-                    android:text="="
+                    android:text=""
                     android:textColor="@color/black"
-                    android:textSize="@dimen/textsizesmall"/>
+                    android:textSize="18sp"/>
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/statusTv"
@@ -78,7 +83,7 @@
                     android:id="@+id/ic_rightarrow"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:tint="@color/colorAccent"
+                    android:tint="@color/colorPink"
                     android:contentDescription="TODO"
                     android:src="@drawable/ic_rightarrow" />
 
@@ -91,7 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:id="@+id/ivewComplete"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
