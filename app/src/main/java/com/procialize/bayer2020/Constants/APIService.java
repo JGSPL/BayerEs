@@ -537,9 +537,9 @@ public interface APIService {
     Call<Fetchm_Point> MpointFetch(@Header("authorization") String authkey,
                                    @Field("event_id") String event_id);
 
-    @POST("upskill_api/UpskillList")
+    @POST("training/UpskillList")
     @FormUrlEncoded
-    Call<FetchPurchageHistory> UpskillList(@Header("authorization") String authkey,
+    Call<FetchAgenda> UpskillList(@Header("authorization") String authkey,
                                            @Field("event_id") String event_id,
                                            @Field("pageSize") String pageSize,
                                            @Field("pageNumber") String pageNumber,
