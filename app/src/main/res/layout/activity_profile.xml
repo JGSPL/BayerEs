@@ -548,63 +548,48 @@
                     android:textColor="@color/textcolorLight" />
 
                 <RadioGroup
-                    android:id="@+id/radiogroupPCO"
-                    android:layout_width="match_parent"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_below="@+id/imageView"
+                    android:layout_marginTop="58dp"
+                    android:weightSum="1"
+                    android:id="@+id/radiogroupPCO">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <RadioButton
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:id="@+id/radioButton1"
+                        android:backgroundTint="@color/textcolorLight"
+                        android:buttonTint="@color/textcolorLight"
+                        android:text="Less than 50"
+                        android:textColor="@color/textcolorLight"  />
 
-                        <RadioButton
-                            android:id="@+id/radio1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:backgroundTint="@color/textcolorLight"
-                            android:buttonTint="@color/textcolorLight"
-                            android:text="Less than 50"
-                            android:textColor="@color/textcolorLight" />
-
-                        <RadioButton
-                            android:id="@+id/radio2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:backgroundTint="@color/textcolorLight"
-                            android:buttonTint="@color/textcolorLight"
-                            android:text="50-100"
-                            android:textColor="@color/textcolorLight" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <RadioButton
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:id="@+id/radioButton2"
+                        android:backgroundTint="@color/textcolorLight"
+                        android:buttonTint="@color/textcolorLight"
+                        android:text="101-200"
+                        android:textColor="@color/textcolorLight"  />
 
-                        <RadioButton
-                            android:id="@+id/radio3"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:backgroundTint="@color/textcolorLight"
-                            android:buttonTint="@color/textcolorLight"
-                            android:text="101-200"
-                            android:textColor="@color/textcolorLight" />
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioButton3"
+                        android:backgroundTint="@color/textcolorLight"
+                        android:buttonTint="@color/textcolorLight"
+                        android:text="50-100"
+                        android:textColor="@color/textcolorLight"  />
 
-                        <RadioButton
-                            android:id="@+id/radio4"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="5"
-                            android:backgroundTint="@color/textcolorLight"
-                            android:buttonTint="@color/textcolorLight"
-                            android:text="Above 200"
-                            android:textColor="@color/textcolorLight" />
-                    </LinearLayout>
-
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioButton4"
+                        android:backgroundTint="@color/textcolorLight"
+                        android:buttonTint="@color/textcolorLight"
+                        android:text="Above 200"
+                        android:textColor="@color/textcolorLight"  />
                 </RadioGroup>
 
 

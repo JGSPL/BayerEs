@@ -116,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
-    
+
     String api_token, first_name, last_name, designation, company_name, city, email, mobile, is_god, alternate_no, turnover, specialization, license, pincode,
             no_of_technician, no_of_pco_served, associated_since, sap_code, attendee_id, user_type;
 

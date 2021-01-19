@@ -65,6 +65,14 @@ public interface APIService {
                                   @Field("username") String username,
                                   @Field("otp") String otp);
 
+    @POST("login_api_call/enrollLeapFlag")
+    @FormUrlEncoded
+    Call<LoginOrganizer> enrollLeapFlag(@Field("organizer_id") String organizer_id,
+                                  @Field("event_id") String event_id,
+                                  @Field("enrollleapflag") String enrollleapflag,
+                                        @Field("enroll_reason") String enroll_reason);
+
+
 
     //@Headers("authorization: " + HeaderToken)
     @POST("NewsFeed_api/NewsFeedFetch")
@@ -265,6 +273,47 @@ public interface APIService {
                                 @Part("email") RequestBody email,
                                 @Part("mobile") RequestBody mobile,
                                 @Part("company_name") RequestBody company_name);
+
+    @Multipart
+    //@Headers("authorization: " + HeaderToken)
+    @POST("event_api_call/updateProfile")
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
+                                @Part("event_id") RequestBody event_id,
+                                @Part("user_type") RequestBody user_type,
+                                @Part("associated_since") RequestBody associated_since,
+                                @Part("no_of_pco_served") RequestBody no_of_pco_served);
+    @Multipart
+    @POST("event_api_call/updateProfile")
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
+                                @Part("event_id") RequestBody event_id,
+                                @Part("user_type") RequestBody user_type,
+                                @Part("first_name") RequestBody first_name,
+                                @Part("last_name") RequestBody last_name,
+                                @Part("designation") RequestBody designation,
+                                @Part("city") RequestBody city,
+                                @Part("email") RequestBody email,
+                                @Part("mobile") RequestBody mobile,
+                                @Part("alternate_no") RequestBody alternate_no,
+                                @Part("alternate_no_2") RequestBody alternate_no_2,
+                                @Part("alternate_no_3") RequestBody alternate_no_3,
+                                @Part("company_name") RequestBody company_name,
+                                @Part("state") RequestBody state,
+                                @Part("no_of_technician") RequestBody no_of_technician,
+                                @Part("specialization") RequestBody specialization,
+                                @Part("turnover") RequestBody turnover);
+
+    @Multipart
+    @POST("event_api_call/updateProfile")
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
+                                @Part("event_id") RequestBody event_id,
+                                @Part("user_type") RequestBody user_type,
+                                @Part("first_name") RequestBody first_name,
+                                @Part("last_name") RequestBody last_name,
+                                @Part("email") RequestBody email,
+                                @Part("mobile") RequestBody mobile,
+                                @Part("pincode") RequestBody pincode,
+                                @Part("city") RequestBody city,
+                                @Part("state") RequestBody state);
 
     //Attendee Api
     // @Headers("authorization: " + HeaderToken)
