@@ -53,7 +53,7 @@ public class PollGraphAdapter extends RecyclerView.Adapter<PollGraphAdapter.MyVi
         String[] color = {"#C4A5C6", "#F99EAF", "#95C4D6", "#CCD883", "#C4A5C6", "#F99EAF", "#95C4D6", "#CCD883", "#C4A5C6", "#F99EAF", "#95C4D6", "#CCD883",
                 "#C4A5C6", "#F99EAF", "#95C4D6", "#CCD883", "#C4A5C6", "#F99EAF", "#95C4D6", "#CCD883","#C4A5C6", "#F99EAF", "#95C4D6", "#CCD883"};
 
-        String activeBarColor = SharedPreference.getPref(context, SharedPreferencesConstant.EVENT_COLOR_1);
+      //  String activeBarColor = SharedPreference.getPref(context, SharedPreferencesConstant.EVENT_COLOR_1);
 
         Float totalUser = 0.0f;
 
@@ -89,9 +89,10 @@ public class PollGraphAdapter extends RecyclerView.Adapter<PollGraphAdapter.MyVi
         // ll2.setBackgroundResource(R.drawable.poll_cobg);
 
         GradientDrawable gradientDrawable   =   new GradientDrawable();
-       // gradientDrawable.setCornerRadii(new float[]{20, 20, 20, 20, 20, 20, 20, 20});
-        //gradientDrawable.setColor(Color.parseColor(color[position]));
-        gradientDrawable.setColor(Color.parseColor(activeBarColor));
+        gradientDrawable.setCornerRadii(new float[]{20, 20, 20, 20, 20, 20, 20, 20});
+        gradientDrawable.setColor(Color.parseColor(color[position]));
+
+        //ll2.setBackgroundColor(Color.parseColor(color[position]));
         ll2.setBackground(gradientDrawable);
         ll2.setMinimumHeight(15);
 
@@ -114,6 +115,46 @@ public class PollGraphAdapter extends RecyclerView.Adapter<PollGraphAdapter.MyVi
 
         l3.addView(ll2, rpms2);
         holder.linGraph.addView(l3);
+
+      /*  weight = ((Float.parseFloat(optionLists.get(position)
+                .getTotal_user()) / totalUser) * 100);
+
+
+        int num = Math.round(weight);
+
+
+        LinearLayout ll2 = new LinearLayout(context);
+        ll2.setOrientation(LinearLayout.HORIZONTAL);
+        ll2.setPadding(10, 10, 10, 10);
+
+        // ll2.setBackgroundResource(R.drawable.poll_cobg);
+
+        GradientDrawable gradientDrawable   =   new GradientDrawable();
+        gradientDrawable.setCornerRadii(new float[]{20, 20, 20, 20, 20, 20, 20, 20});
+        gradientDrawable.setColor(Color.parseColor(color[position]));
+      //  gradientDrawable.setColor(Color.parseColor(activeBarColor));
+        ll2.setBackground(gradientDrawable);
+        ll2.setMinimumHeight(15);
+
+        rprms = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        rprms.setMargins(0, 0, 0, 0);
+
+
+        rpms2 = new LinearLayout.LayoutParams(0,
+                ViewGroup.LayoutParams.MATCH_PARENT, weight);
+        rpms2.setMargins(0, 0, 0, 0);
+
+        l3.setLayoutParams(rprms);
+        l3.setWeightSum(100);
+        l3.setMinimumHeight(40);
+
+        holder.txtOptMessage.setText(StringEscapeUtils.unescapeJava(pollList.getOption()));
+        holder.txtper.setText(num + "%");
+         holder.linGraph.setBackgroundColor(Color.parseColor(color[position]));
+
+        l3.addView(ll2, rpms2);
+        holder.linGraph.addView(l3);*/
 
     }
 
@@ -145,9 +186,9 @@ public class PollGraphAdapter extends RecyclerView.Adapter<PollGraphAdapter.MyVi
 
             linGraph = view.findViewById(R.id.linGraph);
             linMainGraph = view.findViewById(R.id.linMainGraph);
-            linMainGraph.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,SharedPreferencesConstant.EVENT_COLOR_2)));
+            /*linMainGraph.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context,SharedPreferencesConstant.EVENT_COLOR_2)));
             txtOptMessage.setTextColor(Color.parseColor(SharedPreference.getPref(context,SharedPreferencesConstant.EVENT_COLOR_3)));
-            txtper.setTextColor(Color.parseColor(SharedPreference.getPref(context,SharedPreferencesConstant.EVENT_COLOR_3)));
+            txtper.setTextColor(Color.parseColor(SharedPreference.getPref(context,SharedPreferencesConstant.EVENT_COLOR_3)));*/
 
 
         }

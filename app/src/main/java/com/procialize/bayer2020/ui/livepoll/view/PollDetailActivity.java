@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,11 +24,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.Constants.APIService;
@@ -57,6 +64,8 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_C
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
 
 public class PollDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -92,7 +101,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         eventid = SharedPreference.getPref(this, EVENT_ID);
-        colorActive = SharedPreference.getPref(this, EVENT_COLOR_3);
+        colorActive = "#e4004b";
 
        /* Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -112,6 +121,21 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
 
         headerlogoIv = findViewById(R.id.headerlogoIv);
 
+        String eventLogo = SharedPreference.getPref(PollDetailActivity.this, EVENT_LOGO);
+        String eventListMediaPath = SharedPreference.getPref(PollDetailActivity.this, EVENT_LIST_MEDIA_PATH);
+        Glide.with(PollDetailActivity.this)
+                .load(eventListMediaPath + eventLogo)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(headerlogoIv);
 
         pollGraph = findViewById(R.id.pollGraph);
         relative = findViewById(R.id.relative);
@@ -129,11 +153,11 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
 
 
-        CommonFunction.showBackgroundImage(PollDetailActivity.this, relative);
+       // CommonFunction.showBackgroundImage(PollDetailActivity.this, relative);
 
 
         TextView title = findViewById(R.id.title);
-        title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+       // title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         pollGraph.setLayoutManager(mLayoutManager);
@@ -149,17 +173,17 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
         relMain = findViewById(R.id.relMain);
         subBtn = findViewById(R.id.subBtn);
         subBtn.setOnClickListener(this);
-        questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
+        /*questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
 
         relMain.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
         subBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
 
-        subBtn.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        subBtn.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));*/
 
 
         PollBtn = findViewById(R.id.PollBtn);
-        PollBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
-        PollBtn.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        /*PollBtn.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_1)));
+        PollBtn.setTextColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));*/
 
 //        questionTv.setTextColor(Color.parseColor(colorActive));
         progressBar = findViewById(R.id.progressBar);
@@ -411,7 +435,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
                     RadioButton rdbtn = new RadioButton(this);
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(optionLists.get(i - 1).getOption()));
-                    rdbtn.setTextColor(Color.parseColor("#898989"));
+                    rdbtn.setTextColor(Color.parseColor("#000000"));
                     rdbtn.setOnClickListener(this);
 
                     radios.add(rdbtn);
@@ -483,6 +507,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
                     }
 //                    rdbtn.setButtonDrawable(R.drawable.radio_buttontoggle_first);
                     rdbtn.setBackgroundResource(R.drawable.livepollback);
+
                     l3.addView(ll2, rpms2);
 
 

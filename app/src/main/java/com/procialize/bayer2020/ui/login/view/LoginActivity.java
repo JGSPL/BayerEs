@@ -63,6 +63,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.FIREBASEUSER_NAME;
@@ -80,6 +81,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_LNA
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_MOBILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.USER_TYPE;
 import static com.procialize.bayer2020.ui.eventList.adapter.EventAdapter.isClickable;
 
 public class LoginActivity extends AppCompatActivity {
@@ -323,29 +325,6 @@ public class LoginActivity extends AppCompatActivity {
                                                     map.put(KEY_ATTENDEE_ID, userData.get(0).getAttendee_id());
                                                     map.put(ATTENDEE_STATUS, userData.get(0).getIs_god());
 
-                                                    if (userData.get(0).getFirebase_id() == null) {
-                                                        map.put(FIREBASE_ID, "0");
-
-                                                    } else {
-                                                        map.put(FIREBASE_ID, userData.get(0).getFirebase_id());
-
-                                                    }
-                                                    if (userData.get(0).getFirebase_name() == null) {
-                                                        map.put(FIREBASE_NAME, "");
-
-                                                    } else {
-                                                        map.put(FIREBASE_NAME, userData.get(0).getFirebase_name());
-
-                                                    }
-                                                    if (userData.get(0).getFirebase_username() == null) {
-                                                        map.put(FIREBASEUSER_NAME, "");
-
-                                                    } else {
-                                                        map.put(FIREBASEUSER_NAME, userData.get(0).getFirebase_username());
-
-                                                    }
-
-                                                    //  map.put(FIREBASE_STATUS, userData.get(0).getFirebase_status());
 
                                                     map.put(IS_LOGIN, "true");
                                                     map.put(EVENT_ID, eventId);
@@ -362,7 +341,10 @@ public class LoginActivity extends AppCompatActivity {
                                                         eventListViewModel.openMainPage((Activity) context, eventLists.get(0));
                                                     } else {
                                                         isClickable = true;
-                                                        eventListViewModel.openProfilePage((Activity) context, userData, 0, eventBg, eventLists.get(0));
+                                                        String userType = SharedPreference.getPref(context, USER_TYPE);
+                                                        if(userType.equalsIgnoreCase("D")) {
+                                                            eventListViewModel.openProfilePage((Activity) context, userData, 0, eventBg, eventLists.get(0));
+                                                        }
                                                     }
                                                 } catch (Exception e) {
                                                     e.printStackTrace();

@@ -264,7 +264,7 @@ public interface APIService {
 
     @Multipart
     //@Headers("authorization: " + HeaderToken)
-    @POST("event_api_call/updateProfile")
+    @POST("login_api_call/updateProfile")
     Call<Profile> updateProfile(@Header("authorization") String authorization,
                                 @Part("event_id") RequestBody event_id,
                                 @Part("first_name") RequestBody first_name,
@@ -277,14 +277,26 @@ public interface APIService {
 
     @Multipart
     //@Headers("authorization: " + HeaderToken)
-    @POST("event_api_call/updateProfile")
+    @POST("login_api_call/updateProfile")
     Call<Profile> updateProfile(@Header("authorization") String authorization,
                                 @Part("event_id") RequestBody event_id,
                                 @Part("user_type") RequestBody user_type,
                                 @Part("associated_since") RequestBody associated_since,
-                                @Part("no_of_pco_served") RequestBody no_of_pco_served);
+                                @Part("no_of_pco_served") RequestBody no_of_pco_served,
+                                @Part MultipartBody.Part filename);
+
     @Multipart
-    @POST("event_api_call/updateProfile")
+    //@Headers("authorization: " + HeaderToken)
+    @POST("login_api_call/updateProfile")
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
+                                @Part("event_id") RequestBody event_id,
+                                @Part("user_type") RequestBody user_type,
+                                @Part("associated_since") RequestBody associated_since,
+                                @Part("no_of_pco_served") RequestBody no_of_pco_served
+                               );
+
+    @Multipart
+    @POST("login_api_call/updateProfile")
     Call<Profile> updateProfile(@Header("authorization") String authorization,
                                 @Part("event_id") RequestBody event_id,
                                 @Part("user_type") RequestBody user_type,
@@ -301,10 +313,37 @@ public interface APIService {
                                 @Part("state") RequestBody state,
                                 @Part("no_of_technician") RequestBody no_of_technician,
                                 @Part("specialization") RequestBody specialization,
-                                @Part("turnover") RequestBody turnover);
+                                @Part("turnover") RequestBody turnover,
+                                @Part("pincode") RequestBody pincode,
+                                @Part("associated_since") RequestBody associated_since,
+                                @Part("no_of_pco_served") RequestBody no_of_pco_served);
+    @Multipart
+    @POST("login_api_call/updateProfile")
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
+                                @Part("event_id") RequestBody event_id,
+                                @Part("user_type") RequestBody user_type,
+                                @Part("first_name") RequestBody first_name,
+                                @Part("last_name") RequestBody last_name,
+                                @Part("designation") RequestBody designation,
+                                @Part("city") RequestBody city,
+                                @Part("email") RequestBody email,
+                                @Part("mobile") RequestBody mobile,
+                                @Part("alternate_no") RequestBody alternate_no,
+                                @Part("alternate_no_2") RequestBody alternate_no_2,
+                                @Part("alternate_no_3") RequestBody alternate_no_3,
+                                @Part("company_name") RequestBody company_name,
+                                @Part("state") RequestBody state,
+                                @Part("no_of_technician") RequestBody no_of_technician,
+                                @Part("specialization") RequestBody specialization,
+                                @Part("turnover") RequestBody turnover,
+                                @Part("pincode") RequestBody pincode,
+                                @Part("associated_since") RequestBody associated_since,
+                                @Part("no_of_pco_served") RequestBody no_of_pco_served,
+                                @Part MultipartBody.Part filename);
+
 
     @Multipart
-    @POST("event_api_call/updateProfile")
+    @POST("login_api_call/updateProfile")
     Call<Profile> updateProfile(@Header("authorization") String authorization,
                                 @Part("event_id") RequestBody event_id,
                                 @Part("user_type") RequestBody user_type,
