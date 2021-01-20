@@ -915,35 +915,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
         }
 
-        if (file != null) {
-
-            if (!file.equals("")) {
-                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
-                body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
-                SharedPreferences.Editor editor = getSharedPreferences("PROFILE_PICTURE", MODE_PRIVATE).edit();
-                editor.putString("profile", String.valueOf(file)).commit();
-//          editor.putString("loginfirst","1");
-                editor.apply();
-            }
-        } else {
-            SharedPreferences pref = getSharedPreferences("PROFILE_PICTURE", MODE_PRIVATE);
-            String prof_pic = pref.getString("profile", "");
-            // String prof_pic = user.get(SessionManager.KEY_PIC);
-
-            if (prof_pic != null) {
-                if (!prof_pic.equals("")) {
-                    file = new File(prof_pic);
-                    RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
-                    body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
-                }
-            } else {
-//                file = new File(profilepic);
-//                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profilepic);
-//                body = MultipartBody.Part.createFormData("profile_pic", profilepic, reqFile);
-            }
-//            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profilepic);
-//            body = MultipartBody.Part.createFormData("profile_pic", profilepic, reqFile);
-        }
 
         RequestBody mEvent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
         RequestBody mFirst_name = RequestBody.create(MediaType.parse("text/plain"), first_name);
@@ -953,7 +924,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         RequestBody mEmail = RequestBody.create(MediaType.parse("text/plain"), email);
         RequestBody mMobile = RequestBody.create(MediaType.parse("text/plain"), mobile);
         RequestBody mCompany_name = RequestBody.create(MediaType.parse("text/plain"), company_name);
-        RequestBody user_type = RequestBody.create(MediaType.parse("text/plain"), userType);
+        RequestBody muser_type = RequestBody.create(MediaType.parse("text/plain"), userType);
         RequestBody mno_of_pco = RequestBody.create(MediaType.parse("text/plain"), no_of_pco);
         RequestBody massociated = RequestBody.create(MediaType.parse("text/plain"), associated);
 
@@ -968,7 +939,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if (body == null) {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,user_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode, massociated, mno_of_pco).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode, massociated, mno_of_pco,body).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
@@ -1029,7 +1000,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         } else {
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,user_type/*,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode*/, massociated, mno_of_pco,body).enqueue(new Callback<Profile>() {
+            
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode, massociated, mno_of_pco).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
