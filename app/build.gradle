@@ -221,6 +221,10 @@ dependencies {
 
     implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.15.0'
     implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.15.0'
+    //Multiline Radiogroup
+    compile 'com.github.Gavras:MultiLineRadioGroup:v1.0.0.6'
+
+
     /*implementation 'com.google.android.exoplayer:exoplayer-core:2.10.6'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.6'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.10.6'

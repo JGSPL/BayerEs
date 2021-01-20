@@ -2,6 +2,7 @@ package com.procialize.bayer2020.ui.profile.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,6 +21,8 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +53,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
+import com.procialize.bayer2020.Constants.APIService;
+import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.R;
@@ -70,6 +76,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Part;
+
 import static com.procialize.bayer2020.Constants.Constant.REQUEST_CAMERA;
 import static com.procialize.bayer2020.Constants.Constant.SELECT_FILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
@@ -90,6 +104,8 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_LNA
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_MOBILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.PROFILE_PIC;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.USER_TYPE;
 import static com.procialize.bayer2020.Utility.Utility.MY_PERMISSIONS_REQUEST_CAMERA;
 import static com.procialize.bayer2020.Utility.Utility.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static com.procialize.bayer2020.Utility.Utility.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
@@ -97,15 +113,16 @@ import static com.procialize.bayer2020.Utility.Utility.getImageUri;
 import static com.procialize.bayer2020.Utility.Utility.getRealPathFromURI;
 import static com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel.mCurrentPhotoPath;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     public static final int RequestPermissionCode = 101;
     RelativeLayout ll_main;
     LinearLayout ll_aspociated, ll_sapcode, ll_location, ll_emailid, ll_alternetmobno, ll_organisation, ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobno, ll_bg;
-    EditText et_aspociated, et_sapcode, et_location, et_emailid, et_alternetmobno, et_mobno, et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile;
+    EditText et_aspociated, et_sapcode, et_pincode, et_emailid, et_alternetmobno, et_mobno, et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile,
+    et_state ;
     ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
     RadioGroup radiogroupPCO;
-    RadioButton radio4, radio3, radio2, radio1;
+    RadioButton radioButton4, radioButton3, radioButton2, radioButton1;
     View view_down;
     TextView tv_profile_pic, tv_header;
     Button btn_save;
@@ -116,9 +133,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
+    Spinner spinner;
+    String api_token, first_name, last_name, designation, company_name, city, email, mobile, is_god, alternate_no, turnover, specialization, license, pincode="",
+            no_of_technician="", no_of_pco_served="", associated_since="", sap_code="", attendee_id="", user_type="", state="";
+    String year[] = {"1950","1951","1952","1953","1954","1955","1956","1957","1958","1959","1960","1961","1962","1963","1964","1965","1966","1967","1968","1969","1970","1971","1972","1973",
+    "1974","1975","1976","1977","1978","1979","1980","1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000",
+    "2001","2002","2003","2004","2005","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"};
 
-    String api_token, first_name, last_name, designation, company_name, city, email, mobile, is_god, alternate_no, turnover, specialization, license, pincode,
-            no_of_technician, no_of_pco_served, associated_since, sap_code, attendee_id, user_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +187,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         et_mobno = findViewById(R.id.et_mobno);
         et_emailid = findViewById(R.id.et_emailid);
         et_sapcode = findViewById(R.id.et_sapcode);
+        tv_profile_pic = findViewById(R.id.tv_profile_pic);
+        radioButton4 = findViewById(R.id.radioButton4);
+        radioButton3 = findViewById(R.id.radioButton3);
+        radioButton2 = findViewById(R.id.radioButton2);
+        radioButton1 = findViewById(R.id.radioButton1);
+
         et_aspociated = findViewById(R.id.et_aspociated);
+        et_state = findViewById(R.id.et_state);
+        et_alternetmobno = findViewById(R.id.et_alternetmobno);
+        et_pincode = findViewById(R.id.et_pincode);
+        spinner = findViewById(R.id.spinner);
+        ArrayAdapter<String>adapter = new ArrayAdapter<String>(ProfileActivity.this,
+                android.R.layout.simple_spinner_item,year);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
 
         btn_save = findViewById(R.id.btn_save);
@@ -183,8 +220,91 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 
         if (connectionDetector.isConnectingToInternet()) {
+            ApiUtils.getAPIService().getProfile(api_token, event_id).enqueue(new Callback<Profile>() {
+                @Override
+                public void onResponse(Call<Profile> call, Response<Profile> response) {
+                    if (response.isSuccessful()) {
+                        String strEventList = response.body().getProfileDetailsEncrypted();
+                        RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
+                        String data = refreashToken.decryptedData(strEventList);
+                        JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                        ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
 
-            profileActivityViewModel.getProfile(api_token, event_id);
+                        // List<ProfileDetails> profileDetails = profile.getProfileDetails();
+                        if (profileDetails.size() > 0) {
+                            first_name = profileDetails.get(0).getFirst_name();
+                            last_name = profileDetails.get(0).getLast_name();
+                            designation = profileDetails.get(0).getDesignation();
+                            company_name = profileDetails.get(0).getCompany_name();
+                            city = profileDetails.get(0).getCity();
+                            email = profileDetails.get(0).getEmail();
+                            mobile = profileDetails.get(0).getMobile();
+                            sap_code = profileDetails.get(0).getSap_code();
+                            associated_since = profileDetails.get(0).getAssociated_since();
+                            no_of_pco_served = profileDetails.get(0).getNo_of_pco_served();
+                            no_of_technician = profileDetails.get(0).getNo_of_technician();
+                            pincode = profileDetails.get(0).getPincode();
+                            //   license = profileDetails.get(0).getLicense();
+                            specialization = profileDetails.get(0).getSpecialization();
+                            turnover = profileDetails.get(0).getTurnover();
+                            is_god = profileDetails.get(0).getIs_god();
+                            alternate_no = profileDetails.get(0).getAlternate_no();
+                            state = profileDetails.get(0).getState();
+                            pincode = profileDetails.get(0).getPincode();
+                            user_type = profileDetails.get(0).getUser_type();
+                            tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
+
+
+                            et_first_name.setText(first_name);
+                            et_last_name.setText(last_name);
+                            et_mobno.setText(mobile);
+                            et_aspociated.setText(associated_since);
+                            et_sapcode.setText(sap_code);
+                            et_organisation.setText(company_name);
+                            et_emailid.setText(email);
+                            if(alternate_no!=null) {
+                                et_alternetmobno.setText(alternate_no);
+                            }
+                            et_pincode.setText(pincode);
+                            et_state.setText(state);
+
+
+                            if (profileDetails.get(0).getProfile_picture().trim() != null) {
+                                Glide.with(getApplicationContext())
+                                        .load(profileDetails.get(0).getProfile_picture().trim())
+                                        .listener(new RequestListener<Drawable>() {
+                                            @Override
+                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                progressView.setVisibility(View.GONE);
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                progressView.setVisibility(View.GONE);
+                                                return false;
+                                            }
+                                        }).into(iv_profile);
+                            }
+
+                        }
+
+                    }else
+                    {
+                        Toast.makeText(ProfileActivity.this,"Internal server error", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Profile> call, Throwable t) {
+                    try {
+                        Toast.makeText(ProfileActivity.this,"Failure", Toast.LENGTH_SHORT).show();
+                    }catch (Exception e)
+                    {}
+                }
+            });
+
+          /*  profileActivityViewModel.getProfile(api_token, event_id);
             profileActivityViewModel.getProfileDetails().observeForever(new Observer<Profile>() {
                 @Override
                 public void onChanged(Profile profile) {
@@ -214,6 +334,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         specialization = profileDetails.get(0).getSpecialization();
                         turnover = profileDetails.get(0).getTurnover();
                         is_god = profileDetails.get(0).getIs_god();
+                        alternate_no = profileDetails.get(0).getAlternate_no();
+                        state = profileDetails.get(0).getState();
+                        pincode = profileDetails.get(0).getPincode();
+                        user_type = profileDetails.get(0).getUser_type();
+                        tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
 
 
                         et_first_name.setText(first_name);
@@ -223,7 +348,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         et_sapcode.setText(sap_code);
                         et_organisation.setText(company_name);
                         et_emailid.setText(email);
-                       // et_location.setText(city);
+                        if(alternate_no!=null) {
+                            et_alternetmobno.setText(alternate_no);
+                        }
+                        et_pincode.setText(pincode);
+                        et_state.setText(state);
 
 
                         if (profileDetails.get(0).getProfile_picture().trim() != null) {
@@ -250,7 +379,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         profileActivityViewModel.getProfileDetails().removeObservers(ProfileActivity.this);
                     }
                 }
-            });
+            });*/
         }
         else
         {
@@ -261,6 +390,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             city = SharedPreference.getPref(getApplicationContext(), KEY_CITY);
             email = SharedPreference.getPref(getApplicationContext(), KEY_EMAIL);
             mobile = SharedPreference.getPref(getApplicationContext(), KEY_MOBILE);
+            user_type = SharedPreference.getPref(getApplicationContext(), USER_TYPE);
+
+            tv_profile_pic.setText(SharedPreference.getPref(getApplicationContext(), PROFILE_PIC));
+
 
             et_first_name.setText(first_name);
             et_last_name.setText(last_name);
@@ -299,20 +432,23 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 last_name = et_last_name.getText().toString().trim();
                 designation = "";
                 company_name = et_organisation.getText().toString().trim();
-                city = et_location.getText().toString().trim();
+                city = et_pincode.getText().toString().trim();
                 email = et_emailid.getText().toString().trim();
                 mobile = et_mobno.getText().toString().trim();
                 profile_pic = tv_profile_pic.getText().toString();
+
                 sap_code = et_sapcode.getText().toString();
                 associated_since = et_aspociated.getText().toString();
-                if (radio1.isSelected()) {
+                if (radioButton1.isSelected()) {
                     no_of_pco_served = "0";
-                } else if (radio2.isSelected()) {
+                } else if (radioButton2.isSelected()) {
                     no_of_pco_served = "1";
-                } else if (radio3.isSelected()) {
+                } else if (radioButton3.isSelected()) {
                     no_of_pco_served = "2";
-                } else if (radio4.isSelected()) {
+                } else if (radioButton4.isSelected()) {
                     no_of_pco_served = "3";
+                }else{
+                    no_of_pco_served = "";
                 }
 
                 no_of_technician = "";
@@ -323,7 +459,20 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 alternate_no = "";
 
                 if (connectionDetector.isConnectingToInternet()) {
-                    updateProfile(
+                    saveProfile(first_name,
+                            last_name,
+                            designation,
+                            company_name,
+                            city,
+                            email,
+                            mobile,
+                            profile_pic,
+                            alternate_no,
+                            user_type,
+                            sap_code,
+                            associated_since,
+                            no_of_pco_served);
+                   /* updateProfile(
                             first_name,
                             last_name,
                             designation,
@@ -335,7 +484,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             alternate_no,
                             user_type,
                             sap_code,
-                            associated_since/*, no_of_pco_served, no_of_technician, pincode, license, specialization, turnover*/);
+                            associated_since,
+                            no_of_pco_served*//*, no_of_pco_served, no_of_technician, pincode, license, specialization, turnover*//*);*/
                 } else {
                     Utility.createShortSnackBar(ll_main, "No Internet connection");
                 }
@@ -683,21 +833,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         finish();
     }
 
-//       first_name,
-//                            last_name,
-//                            designation,
-//                            company_name,
-//                            city,
-//                            email,
-//                            mobile,
-//                            profile_pic,
-//                            alternate_no,
-//                            user_type,
-//                            sap_code,
-//                            associated_since, no_of_pco_served, no_of_technician, pincode, license, specialization, turnover
+
     public void updateProfile(final String first_name, final String last_name, final String designation,
-                              final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String dd,
-                              final String a,final String alternate_no,final String user_type) {
+                              final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String alternate_no,
+                              final String user_type,final String sap_code,final String associated_since, final String no_of_pco_served) {
         profileActivityViewModel.validation(first_name, last_name, designation, company_name,city);
         profileActivityViewModel.getIsValid().observe(this, new Observer<String>() {
             @Override
@@ -706,7 +845,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     btn_save.setClickable(false);
                     btn_save.setEnabled(false);
                     profileActivityViewModel.updateProfile(api_token, event_id, first_name, last_name, designation, city,
-                            email, mobile, company_name, profile_pic);
+                            email, mobile, company_name, profile_pic,user_type, no_of_pco_served,associated_since);
                     profileActivityViewModel.UpdateProfileDetails().observe(ProfileActivity.this, new Observer<Profile>() {
                         @Override
                         public void onChanged(final Profile profile) {
@@ -765,6 +904,194 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
     }
+
+    public void saveProfile(String token,String event_id, String first_name, String last_name, String
+            designation, String city, String email, String mobile, String company_name, String profile_pic, String userType, String no_of_pco, String associated) {
+        MultipartBody.Part body = null;
+
+        if(!profile_pic.isEmpty()) {
+            File file = new File(profile_pic);
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/png"), file);
+            body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
+        }
+
+        if (file != null) {
+
+            if (!file.equals("")) {
+                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+                body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
+                SharedPreferences.Editor editor = getSharedPreferences("PROFILE_PICTURE", MODE_PRIVATE).edit();
+                editor.putString("profile", String.valueOf(file)).commit();
+//          editor.putString("loginfirst","1");
+                editor.apply();
+            }
+        } else {
+            SharedPreferences pref = getSharedPreferences("PROFILE_PICTURE", MODE_PRIVATE);
+            String prof_pic = pref.getString("profile", "");
+            // String prof_pic = user.get(SessionManager.KEY_PIC);
+
+            if (prof_pic != null) {
+                if (!prof_pic.equals("")) {
+                    file = new File(prof_pic);
+                    RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+                    body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
+                }
+            } else {
+//                file = new File(profilepic);
+//                RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profilepic);
+//                body = MultipartBody.Part.createFormData("profile_pic", profilepic, reqFile);
+            }
+//            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), profilepic);
+//            body = MultipartBody.Part.createFormData("profile_pic", profilepic, reqFile);
+        }
+
+        RequestBody mEvent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
+        RequestBody mFirst_name = RequestBody.create(MediaType.parse("text/plain"), first_name);
+        RequestBody mLast_name = RequestBody.create(MediaType.parse("text/plain"), last_name);
+        RequestBody mDesignation = RequestBody.create(MediaType.parse("text/plain"), designation);
+        RequestBody mCity = RequestBody.create(MediaType.parse("text/plain"), city);
+        RequestBody mEmail = RequestBody.create(MediaType.parse("text/plain"), email);
+        RequestBody mMobile = RequestBody.create(MediaType.parse("text/plain"), mobile);
+        RequestBody mCompany_name = RequestBody.create(MediaType.parse("text/plain"), company_name);
+        RequestBody user_type = RequestBody.create(MediaType.parse("text/plain"), userType);
+        RequestBody mno_of_pco = RequestBody.create(MediaType.parse("text/plain"), no_of_pco);
+        RequestBody massociated = RequestBody.create(MediaType.parse("text/plain"), associated);
+
+        RequestBody altno1 = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody altno2 = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody altno3 = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody mstate = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody mnooftect = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody mspecilization = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody mturnOver = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody mPincode = RequestBody.create(MediaType.parse("text/plain"), "");
+
+        if (body == null) {
+
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,user_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode, massociated, mno_of_pco).enqueue(new Callback<Profile>() {
+                @Override
+                public void onResponse(Call<Profile> call, Response<Profile> response) {
+                    try {
+
+                        if (response != null) {
+                            if ( response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+
+                                String strEventList = response.body().getProfileDetailsEncrypted();
+                                RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
+                                String data = refreashToken.decryptedData(strEventList);
+                                JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
+                                map.put(KEY_LNAME, profileDetails.get(0).getLast_name());
+                                map.put(KEY_EMAIL, profileDetails.get(0).getEmail());
+                                map.put(KEY_PASSWORD, "");
+                                map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
+                                map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
+                                map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
+                                //map.put(KEY_TOKEN, "");
+                                map.put(KEY_CITY, profileDetails.get(0).getCity());
+                                //map.put(KEY_GCM_ID, "");
+                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
+                                map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                                map.put(IS_LOGIN, "true");
+                                SharedPreference.putPref(ProfileActivity.this, map);
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        profileActivityViewModel.openMainActivity(ProfileActivity.this);
+                                        profileActivityViewModel.updateProfileFlag(ProfileActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                    }
+                                }, 500);
+
+                            } else {
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+                            }
+                        } else {
+                            Utility.createShortSnackBar(ll_main, "failure..!");
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Profile> call, Throwable t) {
+                    Log.e("hit", "Low network or no network");
+                    // Toast.makeText(getApplicationContext(), "Unable to process", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,user_type/*,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode*/, massociated, mno_of_pco,body).enqueue(new Callback<Profile>() {
+                @Override
+                public void onResponse(Call<Profile> call, Response<Profile> response) {
+                    try {
+
+                        if (response.body() != null) {
+                            if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+
+                                String strEventList = response.body().getProfileDetailsEncrypted();
+                                RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
+                                String data = refreashToken.decryptedData(strEventList);
+                                JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
+                                map.put(KEY_LNAME, profileDetails.get(0).getLast_name());
+                                map.put(KEY_EMAIL, profileDetails.get(0).getEmail());
+                                map.put(KEY_PASSWORD, "");
+                                map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
+                                map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
+                                map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
+                                //map.put(KEY_TOKEN, "");
+                                map.put(KEY_CITY, profileDetails.get(0).getCity());
+                                //map.put(KEY_GCM_ID, "");
+                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
+                                map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                                map.put(IS_LOGIN, "true");
+                                SharedPreference.putPref(ProfileActivity.this, map);
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        profileActivityViewModel.openMainActivity(ProfileActivity.this);
+                                        profileActivityViewModel.updateProfileFlag(ProfileActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                    }
+                                }, 500);
+
+                            } else {
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+                            }
+                        } else {
+                            Utility.createShortSnackBar(ll_main, "failure..!");
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Profile> call, Throwable t) {
+                    Log.e("hit", "Low network or no network");
+                    // Toast.makeText(getApplicationContext(), "Unable to process", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
 
     private String getRealPathFromURIgallery(String contentURI) {
         Uri contentUri = Uri.parse(contentURI);
@@ -969,6 +1296,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         et_city.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
         et_email.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
         et_mobile.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_3)));
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        associated_since = parent.getItemAtPosition(position).toString();
+        Toast.makeText(this, "YOUR SELECTION IS : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 }

@@ -62,9 +62,8 @@ public class ProfileActivityViewModel extends ViewModel {
      * @param company_name
      * @param profile_pic
      */
-
     public void updateProfile(String token, String event_id, String first_name, String last_name, String
-            designation, String city, String email, String mobile, String company_name, String profile_pic) {
+            designation, String city, String email, String mobile, String company_name, String profile_pic,String userType , String pco_served, String associated) {
         profileRepository = ProfileRepository.getInstance();
         updateProfile = profileRepository.updateProfile(token,
                 event_id,
@@ -74,7 +73,7 @@ public class ProfileActivityViewModel extends ViewModel {
                 city,
                 email,
                 mobile, company_name,
-                profile_pic
+                profile_pic,userType,pco_served,associated
         );
     }
 
@@ -147,18 +146,18 @@ public class ProfileActivityViewModel extends ViewModel {
     }
 
     public void validation(String first_name, String last_name, String designation, String company_name, String city) {
-        if (first_name.isEmpty()) {
+       /* if (first_name.isEmpty()) {
             message.setValue("Please Enter First Name");
-        } /*else if (last_name.isEmpty()) {
+        } *//*else if (last_name.isEmpty()) {
             message.setValue("Please Enter Last Name");
-        } */else if (designation.isEmpty()) {
+        } *//*else if (designation.isEmpty()) {
             message.setValue("Please Enter Designation");
-        } /*else if (company_name.isEmpty()) {
+        } *//*else if (company_name.isEmpty()) {
             message.setValue("Please Enter Company Name");
-        }*/ else if (city.isEmpty()) {
+        }*//* else if (city.isEmpty()) {
             message.setValue("Please Enter City");
         }
-        else {message.setValue("");}
+        else*/ {message.setValue("");}
     }
 
     public MutableLiveData<String> getIsValid() {

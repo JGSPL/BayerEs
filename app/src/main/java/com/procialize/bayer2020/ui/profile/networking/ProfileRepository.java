@@ -62,8 +62,9 @@ public class ProfileRepository {
      * @param event_id
      * @return
      */
+
     public MutableLiveData<Profile> updateProfile(String token,String event_id, String first_name, String last_name, String
-            designation, String city, String email, String mobile, String company_name, String profile_pic) {
+            designation, String city, String email, String mobile, String company_name, String profile_pic, String userType, String no_of_pco, String associated) {
         RequestBody mEvent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
         RequestBody mFirst_name = RequestBody.create(MediaType.parse("text/plain"), first_name);
         RequestBody mLast_name = RequestBody.create(MediaType.parse("text/plain"), last_name);
@@ -72,41 +73,79 @@ public class ProfileRepository {
         RequestBody mEmail = RequestBody.create(MediaType.parse("text/plain"), email);
         RequestBody mMobile = RequestBody.create(MediaType.parse("text/plain"), mobile);
         RequestBody mCompany_name = RequestBody.create(MediaType.parse("text/plain"), company_name);
+        RequestBody user_type = RequestBody.create(MediaType.parse("text/plain"), userType);
+        RequestBody mno_of_pco = RequestBody.create(MediaType.parse("text/plain"), no_of_pco);
+        RequestBody massociated = RequestBody.create(MediaType.parse("text/plain"), associated);
+
 
         profileApi = ApiUtils.getAPIService();
         if(!profile_pic.isEmpty()) {
             File file = new File(profile_pic);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/png"), file);
             body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
-            profileApi.updateProfile(token,mEvent_id, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile,mCompany_name,body).enqueue(new Callback<Profile>() {
-                @Override
-                public void onResponse(Call<Profile> call, Response<Profile> response) {
-                    if (response.isSuccessful()) {
-                        profileMutableLiveData.postValue (response.body());
+            if(userType.equalsIgnoreCase("D")){
+                profileApi.updateProfile(token, mEvent_id,user_type,massociated, mno_of_pco,body).enqueue(new Callback<Profile>() {
+                    @Override
+                    public void onResponse(Call<Profile> call, Response<Profile> response) {
+                        if (response.isSuccessful()) {
+                            profileMutableLiveData.setValue(response.body());
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Profile> call, Throwable t) {
-                    profileMutableLiveData.postValue (null);
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Profile> call, Throwable t) {
+                        profileMutableLiveData.setValue(null);
+                    }
+                });
+
+            }else {
+                profileApi.updateProfile(token, mEvent_id, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile, mCompany_name, body).enqueue(new Callback<Profile>() {
+                    @Override
+                    public void onResponse(Call<Profile> call, Response<Profile> response) {
+                        if (response.isSuccessful()) {
+                            profileMutableLiveData.postValue(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Profile> call, Throwable t) {
+                        profileMutableLiveData.postValue(null);
+                    }
+                });
+            }
         }
         else
         {
-            profileApi.updateProfile(token,mEvent_id, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile,mCompany_name).enqueue(new Callback<Profile>() {
-                @Override
-                public void onResponse(Call<Profile> call, Response<Profile> response) {
-                    if (response.isSuccessful()) {
-                        profileMutableLiveData.setValue(response.body());
+            if(userType.equalsIgnoreCase("D")){
+                profileApi.updateProfile(token, mEvent_id,user_type,massociated, mno_of_pco).enqueue(new Callback<Profile>() {
+                    @Override
+                    public void onResponse(Call<Profile> call, Response<Profile> response) {
+                        if (response.isSuccessful()) {
+                            profileMutableLiveData.setValue(response.body());
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<Profile> call, Throwable t) {
-                    profileMutableLiveData.setValue(null);
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Profile> call, Throwable t) {
+                        profileMutableLiveData.setValue(null);
+                    }
+                });
+
+            }else {
+                profileApi.updateProfile(token, mEvent_id, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile, mCompany_name).enqueue(new Callback<Profile>() {
+                    @Override
+                    public void onResponse(Call<Profile> call, Response<Profile> response) {
+                        if (response.isSuccessful()) {
+                            profileMutableLiveData.setValue(response.body());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Profile> call, Throwable t) {
+                        profileMutableLiveData.setValue(null);
+                    }
+                });
+            }
         }
 
 

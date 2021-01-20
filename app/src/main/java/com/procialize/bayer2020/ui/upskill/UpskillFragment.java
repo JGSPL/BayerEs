@@ -21,6 +21,7 @@ import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
+import com.procialize.bayer2020.ui.livepoll.model.Logo;
 import com.procialize.bayer2020.ui.upskill.adapter.UpskillAdapter;
 import com.procialize.bayer2020.ui.upskill.model.UpSkill;
 import com.procialize.bayer2020.ui.upskill.model.UpskillList;
@@ -84,6 +85,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
                             RefreashToken refreashToken = new RefreashToken(getActivity());
                             String data = refreashToken.decryptedData(strUpskillList);
                             try {
+
                                 Gson gson = new Gson();
                                 List<UpSkill> upskillLists = gson.fromJson(data, new TypeToken<ArrayList<UpSkill>>() {
                                 }.getType());
