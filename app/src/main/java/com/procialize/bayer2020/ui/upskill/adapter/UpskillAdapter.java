@@ -26,11 +26,11 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_C
 public class UpskillAdapter extends RecyclerView.Adapter<UpskillAdapter.MyViewHolder> {
 
     private Context context;
-    private List<UpSkill> UpskillListList;
+    private List<UpskillList> UpskillListList;
     private UpskillAdapter.UpskillListAdapterListner listener;
 
 
-    public UpskillAdapter(Context context, List<UpSkill> UpskillListList, UpskillAdapter.UpskillListAdapterListner listener) {
+    public UpskillAdapter(Context context, List<UpskillList> UpskillListList, UpskillAdapter.UpskillListAdapterListner listener) {
         //UpskillListListFiltered = new ArrayList<>();
         this.UpskillListList = UpskillListList;
         this.listener = listener;
@@ -49,16 +49,16 @@ public class UpskillAdapter extends RecyclerView.Adapter<UpskillAdapter.MyViewHo
     public void onBindViewHolder(final UpskillAdapter.MyViewHolder holder, int position) {
 
         try {
-            List<UpskillList> upskillList = UpskillListList.get(position).getTrainingList();
+            UpskillList upskillList = UpskillListList.get(position);
 
-            String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+         /*   String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
             String eventColor3Opacity40 = eventColor3.replace("#", "");
             holder.tv_title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
             holder.iv_right_arrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
-            holder.ll_row.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
+            holder.ll_row.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));*/
 
-            holder.tv_title.setText(upskillList.get(position).getName());
+            holder.tv_title.setText(upskillList.getName());
 
 
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class UpskillAdapter extends RecyclerView.Adapter<UpskillAdapter.MyViewHo
                 @Override
                 public void onClick(View view) {
                     // send selected contact in callback
-                    //listener.onContactSelected(UpskillListList.get(getAdapterPosition()));
+                    listener.onContactSelected(UpskillListList.get(getAdapterPosition()));
                 }
             });
         }

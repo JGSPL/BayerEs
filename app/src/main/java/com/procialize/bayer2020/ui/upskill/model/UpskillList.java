@@ -3,7 +3,9 @@ package com.procialize.bayer2020.ui.upskill.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UpskillList {
+import java.io.Serializable;
+
+public class UpskillList implements Serializable {
 
     @SerializedName("id")
     @Expose

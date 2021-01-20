@@ -75,6 +75,7 @@ import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.bayer2020.ui.catalogue.view.CatalogueFragment;
+import com.procialize.bayer2020.ui.document.view.DocumentActivity;
 import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
 import com.procialize.bayer2020.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
-            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy;
+            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy, tr_downloads;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 fireEmail = fName + "_" + attendee_id + "_" + event_id + "@procialize.in";
             } else {
                 String[] domains = email.split("@");
-                fireEmail = fName + "_" + attendee_id + "_" + event_id + "@" + domains[1];
+                //fireEmail = fName + "_" + attendee_id + "_" + event_id + "@" + domains[1];
 
             }
         }
@@ -264,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_survey = findViewById(R.id.tr_survey);
         tr_eula = findViewById(R.id.tr_eula);
         tr_privacy_policy = findViewById(R.id.tr_privacy_policy);
+        tr_downloads = findViewById(R.id.tr_downloads);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -277,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_survey.setOnClickListener(this);
         tr_eula.setOnClickListener(this);
         tr_privacy_policy.setOnClickListener(this);
+        tr_downloads.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -519,6 +522,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_privacy_policy:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, PrivacypolicyActivity.class));
+                break;
+            case R.id.tr_downloads:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, DocumentActivity.class));
                 break;
             case R.id.tr_profile:
                 JzvdStd.releaseAllVideos();
@@ -845,14 +852,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final CheckBox enrollBox = myDialog.findViewById(R.id.enrollCheckBox);
 
 
-
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 myDialog.dismiss();
                 JzvdStd.releaseAllVideos();
-               navView.setSelectedItemId(R.id.navigation_home);
+                navView.setSelectedItemId(R.id.navigation_home);
 
             }
         });
@@ -860,9 +865,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(enrollBox.isChecked()){
-                    getEnleepStatus(api_token,eventid,"1","");
-                }else{
+                if (enrollBox.isChecked()) {
+                    getEnleepStatus(api_token, eventid, "1", "");
+                } else {
                     Utility.createShortSnackBar(mDrawerLayout, "Please checked this box");
 
                 }
@@ -874,10 +879,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public MutableLiveData<LoginOrganizer> getEnleepStatus(String token, String eventid, String  id, String text) {
+    public MutableLiveData<LoginOrganizer> getEnleepStatus(String token, String eventid, String id, String text) {
         updateApi = ApiUtils.getAPIService();
 
-        updateApi.enrollLeapFlag(token,eventid,"1","")
+        updateApi.enrollLeapFlag(token, eventid, "1", "")
                 .enqueue(new Callback<LoginOrganizer>() {
                     @Override
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {

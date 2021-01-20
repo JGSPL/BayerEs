@@ -42,8 +42,30 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.upskill.UpskillSurveyActivity"></activity>
-        <activity android:name=".ui.upskill.UpskillDetailsFirstActivity" />
+        <activity
+            android:name=".ui.upskill.UpskillSurveyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+        <activity
+            android:name=".ui.document.view.DocumentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+        <activity
+            android:name=".ui.document.view.DocumentDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+        <activity
+            android:name=".ui.upskill.UpskillDetailsFirstActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".ui.upskill.UpskillDetailsSecondActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".ui.upskill.UpskillDetailsThirdActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".ui.quiz.view.YourScoreActivity"
             android:screenOrientation="portrait"

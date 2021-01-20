@@ -8,11 +8,11 @@ import java.util.List;
 
 public class UpSkill {
 
-    @SerializedName("trainingList")
+    @SerializedName("app_upskill_logo")
     @Expose
     String app_upskill_logo;
 
-    @SerializedName("trainingList")
+    @SerializedName("app_upskill_description")
     @Expose
     String app_upskill_description;
 

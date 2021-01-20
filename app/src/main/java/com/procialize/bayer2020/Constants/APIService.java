@@ -10,6 +10,7 @@ import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductType;
+import com.procialize.bayer2020.ui.document.model.Document;
 import com.procialize.bayer2020.ui.eventList.model.Event;
 import com.procialize.bayer2020.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.bayer2020.ui.eventinfo.model.EventInfo;
@@ -561,5 +562,12 @@ public interface APIService {
                                 @Field("event_id") String event_id,
                                 @Field("pageSize") String pageSize,
                                 @Field("pageNumber") String pageNumber);
+
+    @POST("Document_api/DocumentList")
+    @FormUrlEncoded
+    Call<Document> getDocumentList(@Header("authorization") String auth,
+                                   @Field("event_id") String event_id,
+                                   @Field("pageSize") String pageSize,
+                                   @Field("pageNumber") String pageNumber);
 
 }

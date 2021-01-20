@@ -9,13 +9,13 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/productrefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/productTypeRv"
+            android:id="@+id/rv_recommended_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             tools:listitem="@layout/product_type_row" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

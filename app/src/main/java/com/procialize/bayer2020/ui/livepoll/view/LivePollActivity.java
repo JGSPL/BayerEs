@@ -62,19 +62,20 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 public class LivePollActivity extends AppCompatActivity implements LivePollAdapter.PollAdapterListner {
     SwipeRefreshLayout pollrefresh;
     RecyclerView pollRv;
-    ProgressBar progressBar,progressView;
+    ProgressBar progressBar, progressView;
     List<LivePoll_option> optionLists;
     String eventid;
     ImageView headerlogoIv;
     private ConnectionDetector cd;
-    TextView empty, pullrefresh,title;
+    TextView empty, pullrefresh, title;
     LinearLayout linear;
     LivePollViewModel livePollViewModel;
     ImageView iv_profile, iv_back;
-     String token;
-     View bgView;
+    String token;
+    View bgView;
     MutableLiveData<FetchLivePoll> FetchLivePollList = new MutableLiveData<>();
     private APIService eventApi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +108,6 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         cd = ConnectionDetector.getInstance(this);
 
 
-
         pollRv = findViewById(R.id.pollRv);
         pollrefresh = findViewById(R.id.pollrefresh);
         progressBar = findViewById(R.id.progressBar);
@@ -134,11 +134,11 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
 
         CommonFunction.showBackgroundImage(LivePollActivity.this, linear);
         title.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
-        bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this,EVENT_COLOR_2)));
+        bgView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
 
 
-         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
-        crashlytics("Live Poll",token);
+        token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        crashlytics("Live Poll", token);
         firbaseAnalytics(this, "Live Poll", token);
 
 
@@ -147,14 +147,13 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                 livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
             }
 
-            getLivepoll(token,eventid);
+            getLivepoll(token, eventid);
         } else {
 
             Utility.createShortSnackBar(linear, "No internet connection");
 
 
         }
-
 
 
         pollrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -165,7 +164,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                         livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
                     }
 
-                    getLivepoll(token,eventid);
+                    getLivepoll(token, eventid);
 
                 } else {
                     if (pollrefresh.isRefreshing()) {
@@ -185,28 +184,29 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
         }
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.livePollFetch(token,eventid
+        eventApi.livePollFetch(token, eventid
         )
                 .enqueue(new Callback<FetchLivePoll>() {
                     @Override
                     public void onResponse(Call<FetchLivePoll> call, Response<FetchLivePoll> response) {
                         if (response.isSuccessful()) {
                             FetchLivePollList.setValue(response.body());
-                            String strCommentList =response.body().getDetail();
+                            String strCommentList = response.body().getDetail();
                             RefreashToken refreashToken = new RefreashToken(LivePollActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
-                            List<Logo> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Logo>>() {}.getType());
+                            List<Logo> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Logo>>() {
+                            }.getType());
 
                             //Fetch Livepoll list
-                            if(eventLists!=null) {
+                            if (eventLists != null) {
 
                                 progressBar.setVisibility(View.GONE);
                                 empty.setVisibility(View.GONE);
 
                                 List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
 
-                                if(PollLists.size()>0) {
+                                if (PollLists.size() > 0) {
 
                                     Glide.with(LivePollActivity.this)
                                             .load(eventLists.get(0).getLogo_url_path() + eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
@@ -227,20 +227,16 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
 
 
                                     setupEventAdapter(PollLists);
-                                }else{
+                                } else {
                                     progressBar.setVisibility(View.GONE);
                                     empty.setVisibility(View.VISIBLE);
                                     progressView.setVisibility(View.GONE);
                                     empty.setTextColor(Color.parseColor(SharedPreference.getPref(LivePollActivity.this, EVENT_COLOR_4)));
 
                                 }
-
-
-                            }else{
-
+                            } else {
                                 progressBar.setVisibility(View.GONE);
                                 empty.setVisibility(View.VISIBLE);
-
                             }
                         }
                     }
@@ -271,7 +267,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                 livePollViewModel.getLivePollList().removeObservers(LivePollActivity.this);
             }
 
-            getLivepoll(token,eventid);
+            getLivepoll(token, eventid);
         } else {
             if (pollrefresh.isRefreshing()) {
                 pollrefresh.setRefreshing(false);
@@ -286,7 +282,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
     @Override
     public void onContactSelected(LivePoll pollList) {
         optionLists = pollList.getLive_poll_option_list();
-        if(pollList.getHide_result().equalsIgnoreCase("0")|| pollList.getReplied().equalsIgnoreCase("0")) {
+        if (pollList.getHide_result().equalsIgnoreCase("0") || pollList.getReplied().equalsIgnoreCase("0")) {
             Intent polldetail = new Intent(getApplicationContext(), PollDetailActivity.class);
             polldetail.putExtra("id", pollList.getId());
             polldetail.putExtra("question", pollList.getQuestion());
@@ -294,7 +290,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
             polldetail.putExtra("optionlist", (Serializable) optionLists);
             polldetail.putExtra("show_result", pollList.getHide_result());
             startActivity(polldetail);
-        }else{
+        } else {
             Utility.createShortSnackBar(linear, "Answer hide from admin");
 
         }
@@ -309,5 +305,5 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
 
     }
 
-   
+
 }

@@ -42,21 +42,21 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.procialize.bayer2020.fonts.RobotoTextview
-        android:id="@+id/textView2"
+        android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:text="TextView" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/iv_banner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
     <com.procialize.bayer2020.fonts.RobotoTextview
-        android:id="@+id/textView4"
+        android:id="@+id/tv_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
