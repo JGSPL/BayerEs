@@ -81,7 +81,7 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <com.procialize.eventapp.fonts.RobotoButton
+        <com.procialize.bayer2020.fonts.RobotoButton
             android:id="@+id/btn_share"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             android:textAllCaps="false"
             android:textColor="@color/colorwhite"/>
 
-        <com.procialize.eventapp.fonts.RobotoButton
+        <com.procialize.bayer2020.fonts.RobotoButton
             android:id="@+id/btn_save"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

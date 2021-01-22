@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.upskill.UpskillDetailsFirstActivity">
+    tools:context=".ui.upskill.view.UpskillDetailsFirstActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -41,29 +41,45 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <ImageView
-        android:id="@+id/imageView5"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-    <com.procialize.bayer2020.fonts.RobotoTextview
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="TextView" />
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp"
+            tools:ignore="WebViewLayout">
+
+        </WebView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimary"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="visible" />
+    </RelativeLayout>
 
     <com.procialize.bayer2020.fonts.RobotoButton
-        android:id="@+id/button2"
+        android:id="@+id/btn_next"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="Next" />
-
+        android:background="@drawable/btn_submit"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="10dp"
+        android:text="Next"
+        android:textColor="@color/white" />
 
 </LinearLayout>

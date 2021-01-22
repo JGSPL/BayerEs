@@ -77,20 +77,20 @@ public class DocumentActivity extends AppCompatActivity {
         image_grid = findViewById(R.id.image_grid);
         image_list = findViewById(R.id.image_list);
 
-        CommonFunction.showBackgroundImage(DocumentActivity.this, constraint_main);
-        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(DocumentActivity.this, EVENT_COLOR_1)));
+        //CommonFunction.showBackgroundImage(DocumentActivity.this, constraint_main);
+        /*tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(DocumentActivity.this, EVENT_COLOR_1)));
         color = Color.parseColor(SharedPreference.getPref(DocumentActivity.this, EVENT_COLOR_1));
         color2 = Color.parseColor(SharedPreference.getPref(DocumentActivity.this, EVENT_COLOR_2));
 
         image_grid.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        image_list.setColorFilter(color2, PorterDuff.Mode.SRC_ATOP);
+        image_list.setColorFilter(color2, PorterDuff.Mode.SRC_ATOP);*/
         session = new SessionManager(getApplicationContext());
 
 
         api_token = SharedPreference.getPref(DocumentActivity.this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(DocumentActivity.this, EVENT_ID);
 
-        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        /*iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);*/
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

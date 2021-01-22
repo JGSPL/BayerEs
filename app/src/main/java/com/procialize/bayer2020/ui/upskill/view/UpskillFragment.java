@@ -1,4 +1,4 @@
-package com.procialize.bayer2020.ui.upskill;
+package com.procialize.bayer2020.ui.upskill.view;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -26,17 +26,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
-import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
-import com.procialize.bayer2020.ui.livepoll.model.Logo;
 import com.procialize.bayer2020.ui.upskill.adapter.UpskillAdapter;
 import com.procialize.bayer2020.ui.upskill.model.UpSkill;
 import com.procialize.bayer2020.ui.upskill.model.UpskillList;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
