@@ -16,6 +16,7 @@ import com.procialize.bayer2020.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.bayer2020.ui.eventList.networking.EventRepository;
 import com.procialize.bayer2020.ui.profile.roomDB.ProfileEventId;
 import com.procialize.bayer2020.ui.profile.view.ProfileActivity;
+import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -87,6 +88,16 @@ public class EventListViewModel extends ViewModel {
             activity.finish();
         }*/
     }
+
+    public void openProfilePCOPage(Activity activity, List<LoginUserInfo> userInfo, int position, String eventBg,EventList event) {
+        activity.startActivity(new Intent(activity, ProfilePCOActivity .class)
+                .putExtra("event_details", (Serializable) userInfo)
+                .putExtra("position", "" + position)
+                .putExtra("eventBg", "" + eventBg)
+        );
+        activity.finish();
+    }
+
 
     public void openMainPage(Activity activity, EventList event) {
         //if (event.getEvent_type().equalsIgnoreCase("0")) {

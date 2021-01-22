@@ -24,6 +24,7 @@ import com.procialize.bayer2020.ui.newsFeedComment.model.Comment;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
 import com.procialize.bayer2020.ui.newsFeedLike.model.Like;
 import com.procialize.bayer2020.ui.newsfeed.model.FetchNewsfeedMultiple;
+import com.procialize.bayer2020.ui.profile.model.FetchPincode;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.quiz.model.QuizListing;
 import com.procialize.bayer2020.ui.quiz.model.QuizSubmit;
@@ -352,7 +353,23 @@ public interface APIService {
                                 @Part("mobile") RequestBody mobile,
                                 @Part("pincode") RequestBody pincode,
                                 @Part("city") RequestBody city,
-                                @Part("state") RequestBody state);
+                                @Part("state") RequestBody state,
+                                @Part("designation") RequestBody designation);
+
+    @Multipart
+    @POST("login_api_call/updateProfile")
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
+                                @Part("event_id") RequestBody event_id,
+                                @Part("user_type") RequestBody user_type,
+                                @Part("first_name") RequestBody first_name,
+                                @Part("last_name") RequestBody last_name,
+                                @Part("email") RequestBody email,
+                                @Part("mobile") RequestBody mobile,
+                                @Part("pincode") RequestBody pincode,
+                                @Part("city") RequestBody city,
+                                @Part("state") RequestBody state,
+                                @Part("designation") RequestBody designation,
+                                @Part MultipartBody.Part filename);
 
     //Attendee Api
     // @Headers("authorization: " + HeaderToken)
@@ -600,5 +617,15 @@ public interface APIService {
                                 @Field("event_id") String event_id,
                                 @Field("pageSize") String pageSize,
                                 @Field("pageNumber") String pageNumber);
+    @POST("login_api_call/PincodeList")
+    @FormUrlEncoded
+    Call<FetchPincode> PincodeList(@Header("authorization") String auth,
+                                   @Field("event_id") String event_id,
+                                   @Field("search_text") String search_text);
 
+    @POST("login_api_call/CityState")
+    @FormUrlEncoded
+    Call<FetchPincode> CityState(@Header("authorization") String auth,
+                                   @Field("event_id") String event_id,
+                                 @Field("pincode") String pincode);
 }

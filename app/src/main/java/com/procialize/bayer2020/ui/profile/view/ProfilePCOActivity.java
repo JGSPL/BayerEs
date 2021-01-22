@@ -2,7 +2,6 @@ package com.procialize.bayer2020.ui.profile.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,11 +18,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +35,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,12 +53,12 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
-import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.MainActivity;
@@ -62,6 +67,9 @@ import com.procialize.bayer2020.Utility.CommonFirebase;
 import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.costumTools.CustomAutoCompleteTextView;
+import com.procialize.bayer2020.ui.profile.model.FetchPincode;
+import com.procialize.bayer2020.ui.profile.model.Pincode_item;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
 import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
@@ -82,6 +90,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Header;
 import retrofit2.http.Part;
 
 import static com.procialize.bayer2020.Constants.Constant.REQUEST_CAMERA;
@@ -113,18 +122,20 @@ import static com.procialize.bayer2020.Utility.Utility.getImageUri;
 import static com.procialize.bayer2020.Utility.Utility.getRealPathFromURI;
 import static com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel.mCurrentPhotoPath;
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class ProfilePCOActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int RequestPermissionCode = 101;
     RelativeLayout ll_main;
-    LinearLayout ll_aspociated, ll_sapcode, ll_location, ll_emailid, ll_alternetmobno, ll_organisation, ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobno, ll_bg;
+    LinearLayout ll_aspociated, ll_sapcode, ll_location, ll_emailid,ll_alternetmobno2,ll_alternetmobno3,
+            ll_alternetmobno, ll_organisation, ll_name, ll_last_name, ll_designation, ll_company_name,
+            ll_city, ll_email, ll_mobno, ll_bg;
     EditText et_aspociated, et_sapcode, et_pincode, et_emailid, et_alternetmobno, et_mobno, et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile,
-    et_state ;
+            et_state ;
     ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
     RadioGroup radiogroupPCO;
     RadioButton radioButton4, radioButton3, radioButton2, radioButton1;
     View view_down;
-    TextView tv_profile_pic, tv_header;
+    TextView tv_profile_pic, tv_header,txtaltno;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
     String event_id, profile_pic = "";
@@ -133,23 +144,28 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
-
     Spinner spinner;
-    String api_token, first_name, last_name, designation, company_name, city, email, mobile, is_god, alternate_no, turnover, specialization, license, pincode="",
+    String api_token, first_name, last_name, designation, company_name, city, email,
+            mobile, is_god, alternate_no, turnover, license, pincode="",
             no_of_technician="", no_of_pco_served="", associated_since="", sap_code="", attendee_id="", user_type="", state="";
-    String year[] = {"1950","1951","1952","1953","1954","1955","1956","1957","1958","1959","1960","1961","1962","1963","1964","1965","1966","1967","1968","1969","1970","1971","1972","1973",
-    "1974","1975","1976","1977","1978","1979","1980","1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000",
-    "2001","2002","2003","2004","2005","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"};
+    ArrayList pincodeData = new ArrayList();
     MultipartBody.Part body;
+    RadioGroup radiogroupPCOType,radiogroupDesig;
+    RadioButton radioPCO,radioOwer, radioother, radioOwner, radioTech,radioManager;
+    AutoCompleteTextView atv_pincode;
+    TextView txtAnnualOrg,txtDomain, txttectcount;
+    CheckBox checkResPest, checkcomPest, checkTermite,checkMosquito;
+
+    ArrayList specializtion = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile_pco);
 
         try {
             Intent intent = getIntent();
-            CommonFunction.saveBackgroundImage(ProfileActivity.this, intent.getStringExtra("eventBg"));
+            CommonFunction.saveBackgroundImage(ProfilePCOActivity.this, intent.getStringExtra("eventBg"));
         } catch (Exception e) {
 
         }
@@ -176,7 +192,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         ll_location = findViewById(R.id.ll_location);
         ll_sapcode = findViewById(R.id.ll_sapcode);
         ll_aspociated = findViewById(R.id.ll_aspociated);
-
+        ll_alternetmobno = findViewById(R.id.ll_alternetmobno);
+        txtaltno = findViewById(R.id.txtaltno);
+        ll_alternetmobno2 = findViewById(R.id.ll_alternetmobno2);
+        ll_alternetmobno3 = findViewById(R.id.ll_alternetmobno3);
+        txtAnnualOrg = findViewById(R.id.txtAnnualOrg);
+        txtDomain = findViewById(R.id.txtDomain);
+        txttectcount = findViewById(R.id.txttectcount);
         iv_back = findViewById(R.id.iv_back);
         view_down = findViewById(R.id.view_down);
 
@@ -193,18 +215,111 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         radioButton3 = findViewById(R.id.radioButton3);
         radioButton2 = findViewById(R.id.radioButton2);
         radioButton1 = findViewById(R.id.radioButton1);
-
+        radiogroupPCOType = findViewById(R.id.radiogroupPCOType);
+        radioPCO = findViewById(R.id.radioPCO);
+        radioOwer = findViewById(R.id.radioOwer);
+        radioother = findViewById(R.id.radioother);
+        radiogroupPCO = findViewById(R.id.radiogroupPCO);
         et_aspociated = findViewById(R.id.et_aspociated);
         et_state = findViewById(R.id.et_state);
         et_alternetmobno = findViewById(R.id.et_alternetmobno);
         et_pincode = findViewById(R.id.et_pincode);
-        spinner = findViewById(R.id.spinner);
-        ArrayAdapter<String>adapter = new ArrayAdapter<String>(ProfileActivity.this,
-                android.R.layout.simple_spinner_item,year);
+        et_city = findViewById(R.id.et_city);
+        checkResPest = findViewById(R.id.checkResPest);
+        checkcomPest = findViewById(R.id.checkcomPest);
+        checkTermite = findViewById(R.id.checkTermite);
+        checkMosquito = findViewById(R.id.checkMosquito);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        radiogroupDesig = findViewById(R.id.radiogroupDesig);
+        radioOwner = findViewById(R.id.radioOwner);
+        radioTech = findViewById(R.id.radioTech);
+        radioManager = findViewById(R.id.radioManager);
+
+        btn_save = findViewById(R.id.btn_save);
+        btn_save.setOnClickListener(this);
+        iv_change_profile.setOnClickListener(this);
+        iv_back.setOnClickListener(this);
+        atv_pincode = findViewById(R.id.atv_pincode);
+        atv_pincode.setThreshold(0);
+
+        checkMosquito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                String mosquito;
+
+                // Check which checkbox was clicked
+                if (checked){
+                    // Do your coding
+                    mosquito = (String)checkMosquito.getTag();
+                    specializtion.add("0");
+                }
+                else{
+                    // Do your coding
+                    mosquito = (String)checkMosquito.getTag();
+                    specializtion.remove("0");
+                }
+            }
+        });
+        checkResPest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                String mosquito;
+
+                // Check which checkbox was clicked
+                if (checked){
+                    // Do your coding
+                    mosquito = (String)checkResPest.getTag();
+                    specializtion.add("1");
+                }
+                else{
+                    // Do your coding
+                    mosquito = (String)checkResPest.getTag();
+                    specializtion.remove("1");
+                }
+            }
+        });
+
+        checkTermite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                String mosquito;
+
+                // Check which checkbox was clicked
+                if (checked){
+                    // Do your coding
+                    mosquito = (String)checkTermite.getTag();
+                    specializtion.add("3");
+                }
+                else{
+                    // Do your coding
+                    mosquito = (String)checkMosquito.getTag();
+                    specializtion.remove("3");
+                }
+            }
+        });
+
+        checkcomPest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                String mosquito;
+
+                // Check which checkbox was clicked
+                if (checked){
+                    // Do your coding
+                    mosquito = (String)checkMosquito.getTag();
+                    specializtion.add("2");
+                }
+                else{
+                    // Do your coding
+                    mosquito = (String)checkMosquito.getTag();
+                    specializtion.remove("2");
+                }
+            }
+        });
 
 
         radiogroupPCO.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
@@ -219,28 +334,130 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 if (isChecked)
                 {
                     // Changes the textview's text to "Checked: example radiobutton text"
-                    String dataRad = checkedRadioButton.getText().toString();
-                    if (dataRad.equalsIgnoreCase("Less than 50")) {
-                        no_of_pco_served = "0";
-                    } else if (dataRad.equalsIgnoreCase("50-100")) {
-                        no_of_pco_served = "1";
-                    } else if (dataRad.equalsIgnoreCase("101-200")) {
-                        no_of_pco_served = "2";
-                    } else if (dataRad.equalsIgnoreCase("Above 200")) {
-                        no_of_pco_served = "3";
-                    }else{
-                        no_of_pco_served = "";
-                    }
+                    no_of_pco_served = checkedRadioButton.getText().toString();
 
                 }
             }
         });
 
+        radiogroupDesig.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                // This will get the radiobutton that has changed in its check state
+                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                // This puts the value (true/false) into the variable
+                boolean isChecked = checkedRadioButton.isChecked();
+                // If the radiobutton that has changed in check state is now checked...
+                if (isChecked)
+                {
+                    // Changes the textview's text to "Checked: example radiobutton text"
+                    designation = checkedRadioButton.getText().toString();
 
-        btn_save = findViewById(R.id.btn_save);
-        btn_save.setOnClickListener(this);
-        iv_change_profile.setOnClickListener(this);
-        iv_back.setOnClickListener(this);
+                }
+            }
+        });
+
+        radiogroupPCOType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                // This will get the radiobutton that has changed in its check state
+                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                // This puts the value (true/false) into the variable
+                boolean isChecked = checkedRadioButton.isChecked();
+                // If the radiobutton that has changed in check state is now checked...
+                if (isChecked)
+                {
+                    // Changes the textview's text to "Checked: example radiobutton text"
+                    String user_typeText = checkedRadioButton.getText().toString();
+                    if(user_typeText.equalsIgnoreCase("Pest Control Operator")){
+                        ll_alternetmobno.setVisibility(View.VISIBLE);
+
+                        ll_alternetmobno2.setVisibility(View.VISIBLE);
+                        ll_alternetmobno3.setVisibility(View.VISIBLE);
+                        ll_organisation.setVisibility(View.VISIBLE);
+                        txtaltno.setVisibility(View.VISIBLE);
+                        ll_aspociated.setVisibility(View.VISIBLE);
+                        radiogroupPCO.setVisibility(View.VISIBLE);
+                        txtAnnualOrg.setVisibility(View.VISIBLE);
+                        txtDomain.setVisibility(View.VISIBLE);
+                        ll_sapcode.setVisibility(View.VISIBLE);
+                        txttectcount.setVisibility(View.VISIBLE);
+                        radiogroupDesig.setVisibility(View.VISIBLE);
+                        user_type = "PO";
+
+                    }else if(user_typeText.equalsIgnoreCase("Home/office owner")){
+                        ll_alternetmobno.setVisibility(View.GONE);
+
+                        ll_alternetmobno2.setVisibility(View.GONE);
+                        ll_alternetmobno3.setVisibility(View.GONE);
+                        txtaltno.setVisibility(View.GONE);
+                        ll_aspociated.setVisibility(View.GONE);
+                        radiogroupPCO.setVisibility(View.GONE);
+                        txtAnnualOrg.setVisibility(View.GONE);
+                        txtDomain.setVisibility(View.GONE);
+                        ll_sapcode.setVisibility(View.GONE);
+                        txttectcount.setVisibility(View.GONE);
+                        ll_organisation.setVisibility(View.GONE);
+
+                        radiogroupDesig.setVisibility(View.GONE);
+                        user_type = "HO";
+
+                    }else{
+                        ll_organisation.setVisibility(View.GONE);
+
+                        ll_alternetmobno.setVisibility(View.GONE);
+                        ll_alternetmobno2.setVisibility(View.GONE);
+                        ll_alternetmobno3.setVisibility(View.GONE);
+                        txtaltno.setVisibility(View.GONE);
+                        ll_aspociated.setVisibility(View.GONE);
+                        radiogroupPCO.setVisibility(View.GONE);
+                        txtAnnualOrg.setVisibility(View.GONE);
+                        txtDomain.setVisibility(View.GONE);
+                        ll_sapcode.setVisibility(View.GONE);
+                        txttectcount.setVisibility(View.GONE);
+                        radiogroupDesig.setVisibility(View.GONE);
+                        user_type = "O";
+
+
+                    }
+                }
+            }
+        });
+
+
+
+
+        atv_pincode.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String searchString = atv_pincode.getText().toString();
+
+                if (!(searchString.equalsIgnoreCase("") || searchString.equalsIgnoreCase(null))) {
+
+                    getPincode(searchString);
+                }
+
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+
+
 
 
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
@@ -256,7 +473,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     if (response.isSuccessful()) {
                         String strEventList = response.body().getProfileDetailsEncrypted();
-                        RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
+                        RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                         String data = refreashToken.decryptedData(strEventList);
                         JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
                         ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
@@ -276,7 +493,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             no_of_technician = profileDetails.get(0).getNo_of_technician();
                             pincode = profileDetails.get(0).getPincode();
                             //   license = profileDetails.get(0).getLicense();
-                            specialization = profileDetails.get(0).getSpecialization();
+                            //specialization = profileDetails.get(0).getSpecialization();
                             turnover = profileDetails.get(0).getTurnover();
                             is_god = profileDetails.get(0).getIs_god();
                             alternate_no = profileDetails.get(0).getAlternate_no();
@@ -297,7 +514,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 et_alternetmobno.setText(alternate_no);
                             }
                             et_pincode.setText(pincode);
-                            et_state.setText(state);
+                           // et_state.setText(state);
 
 
                             if (profileDetails.get(0).getProfile_picture().trim() != null) {
@@ -322,95 +539,19 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                     }else
                     {
-                        Toast.makeText(ProfileActivity.this,"Internal server error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfilePCOActivity.this,"Internal server error", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Profile> call, Throwable t) {
                     try {
-                        Toast.makeText(ProfileActivity.this,"Failure", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfilePCOActivity.this,"Failure", Toast.LENGTH_SHORT).show();
                     }catch (Exception e)
                     {}
                 }
             });
 
-          /*  profileActivityViewModel.getProfile(api_token, event_id);
-            profileActivityViewModel.getProfileDetails().observeForever(new Observer<Profile>() {
-                @Override
-                public void onChanged(Profile profile) {
-
-                    String strEventList = profile.getProfileDetailsEncrypted();
-                    RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
-                    String data = refreashToken.decryptedData(strEventList);
-                    JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                    ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
-
-                   // List<ProfileDetails> profileDetails = profile.getProfileDetails();
-                    if (profileDetails.size() > 0) {
-                        attendee_id = profileDetails.get(0).getAttendee_id();
-                        first_name = profileDetails.get(0).getFirst_name();
-                        last_name = profileDetails.get(0).getLast_name();
-                        designation = profileDetails.get(0).getDesignation();
-                        company_name = profileDetails.get(0).getCompany_name();
-                        city = profileDetails.get(0).getCity();
-                        email = profileDetails.get(0).getEmail();
-                        mobile = profileDetails.get(0).getMobile();
-                        sap_code = profileDetails.get(0).getSap_code();
-                        associated_since = profileDetails.get(0).getAssociated_since();
-                        no_of_pco_served = profileDetails.get(0).getNo_of_pco_served();
-                        no_of_technician = profileDetails.get(0).getNo_of_technician();
-                        pincode = profileDetails.get(0).getPincode();
-                     //   license = profileDetails.get(0).getLicense();
-                        specialization = profileDetails.get(0).getSpecialization();
-                        turnover = profileDetails.get(0).getTurnover();
-                        is_god = profileDetails.get(0).getIs_god();
-                        alternate_no = profileDetails.get(0).getAlternate_no();
-                        state = profileDetails.get(0).getState();
-                        pincode = profileDetails.get(0).getPincode();
-                        user_type = profileDetails.get(0).getUser_type();
-                        tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
-
-
-                        et_first_name.setText(first_name);
-                        et_last_name.setText(last_name);
-                        et_mobno.setText(mobile);
-                        et_aspociated.setText(associated_since);
-                        et_sapcode.setText(sap_code);
-                        et_organisation.setText(company_name);
-                        et_emailid.setText(email);
-                        if(alternate_no!=null) {
-                            et_alternetmobno.setText(alternate_no);
-                        }
-                        et_pincode.setText(pincode);
-                        et_state.setText(state);
-
-
-                        if (profileDetails.get(0).getProfile_picture().trim() != null) {
-                            Glide.with(getApplicationContext())
-                                    .load(profileDetails.get(0).getProfile_picture().trim())
-                                    .listener(new RequestListener<Drawable>() {
-                                        @Override
-                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                            progressView.setVisibility(View.GONE);
-                                            return false;
-                                        }
-
-                                        @Override
-                                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                            progressView.setVisibility(View.GONE);
-                                            return false;
-                                        }
-                                    }).into(iv_profile);
-                        }
-
-                    }
-
-                    if (profileActivityViewModel != null && profileActivityViewModel.getProfileDetails().hasObservers()) {
-                        profileActivityViewModel.getProfileDetails().removeObservers(ProfileActivity.this);
-                    }
-                }
-            });*/
         }
         else
         {
@@ -463,50 +604,25 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 last_name = et_last_name.getText().toString().trim();
                 designation = "";
                 company_name = et_organisation.getText().toString().trim();
-                city = et_pincode.getText().toString().trim();
+                //city = et_pincode.getText().toString().trim();
                 email = et_emailid.getText().toString().trim();
                 mobile = et_mobno.getText().toString().trim();
                 profile_pic = tv_profile_pic.getText().toString();
 
-                sap_code = et_sapcode.getText().toString();
-               // associated_since = et_aspociated.getText().toString();
-
-
-                no_of_technician = "";
-                pincode = "";
-                license = "";
-                specialization = "";
-                turnover = "";
-                alternate_no = "";
 
                 if (connectionDetector.isConnectingToInternet()) {
-                    saveProfile(first_name,
-                            last_name,
-                            designation,
-                            company_name,
-                            city,
-                            email,
-                            mobile,
-                            profile_pic,
-                            alternate_no,
-                            user_type,
-                            sap_code,
-                            associated_since,
-                            no_of_pco_served);
-                   /* updateProfile(
-                            first_name,
-                            last_name,
-                            designation,
-                            company_name,
-                            city,
-                            email,
-                            mobile,
-                            profile_pic,
-                            alternate_no,
-                            user_type,
-                            sap_code,
-                            associated_since,
-                            no_of_pco_served*//*, no_of_pco_served, no_of_technician, pincode, license, specialization, turnover*//*);*/
+                    if(user_type.equalsIgnoreCase("PO")){
+
+
+                    }else if(user_type.equalsIgnoreCase("HO")){
+                        saveProfileHO(first_name,last_name,mobile,email,pincode,city,state,profile_pic,user_type);
+
+                    }else{
+                        saveProfileHO(first_name,last_name,mobile,email,pincode,city,state,profile_pic,user_type);
+
+                    }
+
+
                 } else {
                     Utility.createShortSnackBar(ll_main, "No Internet connection");
                 }
@@ -531,21 +647,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = Utility.checkPermission(ProfileActivity.this);
+                boolean result = Utility.checkPermission(ProfilePCOActivity.this);
 
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask = "Take Photo";
                     if (result) {
-                        boolean cameraResult = Utility.checkCameraPermission(ProfileActivity.this);
+                        boolean cameraResult = Utility.checkCameraPermission(ProfilePCOActivity.this);
                         if (cameraResult) {
-                            profileActivityViewModel.cameraIntent(ProfileActivity.this);
+                            profileActivityViewModel.cameraIntent(ProfilePCOActivity.this);
                         }
                     }
 
                 } else if (items[item].equals("Choose from Gallery")) {
                     userChoosenTask = "Choose from Gallery";
                     if (result) {
-                        profileActivityViewModel.galleryIntent(ProfileActivity.this);
+                        profileActivityViewModel.galleryIntent(ProfilePCOActivity.this);
                     }
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -583,7 +699,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                 tv_profile_pic.setText(file.getAbsolutePath());
 
-                Toast.makeText(ProfileActivity.this, "Image selected",
+                Toast.makeText(ProfilePCOActivity.this, "Image selected",
                         Toast.LENGTH_SHORT).show();
 
                 cursor.close();
@@ -728,7 +844,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             .start(this);
 
                     // CALL THIS METHOD TO GET THE ACTUAL PATH
-                    file = new File(getRealPathFromURI(ProfileActivity.this, tempUri));
+                    file = new File(getRealPathFromURI(ProfilePCOActivity.this, tempUri));
                     tv_profile_pic.setText(tempUri.getPath());
                 } else {
                     file = new File(mCurrentPhotoPath);
@@ -811,7 +927,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    profileActivityViewModel.cameraIntent(ProfileActivity.this);
+                    profileActivityViewModel.cameraIntent(ProfilePCOActivity.this);
                 } else {
                     Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                 }
@@ -821,7 +937,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //profileActivityViewModel.cameraIntent(ProfileActivity.this);
+                    //profileActivityViewModel.cameraIntent(ProfilePCOActivity.this);
                 } else {
                     Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                 }
@@ -831,10 +947,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //profileActivityViewModel.cameraIntent(ProfileActivity.this);
+                    //profileActivityViewModel.cameraIntent(ProfilePCOActivity.this);
                     try {
                         Intent intent = getIntent();
-                        CommonFunction.saveBackgroundImage(ProfileActivity.this, intent.getStringExtra("eventBg"));
+                        CommonFunction.saveBackgroundImage(ProfilePCOActivity.this, intent.getStringExtra("eventBg"));
 //                        CommonFunction.showBackgroundImage(this, ll_main);
                     } catch (Exception e) {
                     }
@@ -850,81 +966,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     public void onBackPressed() {
         //super.onBackPressed();
 
-        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+        startActivity(new Intent(ProfilePCOActivity.this, MainActivity.class));
         finish();
     }
 
 
-    public void updateProfile(final String first_name, final String last_name, final String designation,
-                              final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String alternate_no,
-                              final String user_type,final String sap_code,final String associated_since, final String no_of_pco_served) {
-        profileActivityViewModel.validation(first_name, last_name, designation, company_name,city);
-        profileActivityViewModel.getIsValid().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                if(s.isEmpty()) {
-                    btn_save.setClickable(false);
-                    btn_save.setEnabled(false);
-                    profileActivityViewModel.updateProfile(api_token, event_id, first_name, last_name, designation, city,
-                            email, mobile, company_name, profile_pic,user_type, no_of_pco_served,associated_since);
-                    profileActivityViewModel.UpdateProfileDetails().observe(ProfileActivity.this, new Observer<Profile>() {
-                        @Override
-                        public void onChanged(final Profile profile) {
-                            if (profile != null) {
-                                if (profile.getHeader().get(0).getType().equalsIgnoreCase("success")) {
-
-                                    Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
-
-                                    String strEventList = profile.getProfileDetailsEncrypted();
-                                    RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
-                                    String data = refreashToken.decryptedData(strEventList);
-                                    JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                                    final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
-
-                                    HashMap<String, String> map = new HashMap<>();
-                                    map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
-                                    map.put(KEY_LNAME, profileDetails.get(0).getLast_name());
-                                    map.put(KEY_EMAIL, profileDetails.get(0).getEmail());
-                                    map.put(KEY_PASSWORD, "");
-                                    map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
-                                    map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
-                                    map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
-                                    //map.put(KEY_TOKEN, "");
-                                    map.put(KEY_CITY, profileDetails.get(0).getCity());
-                                    //map.put(KEY_GCM_ID, "");
-                                    map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
-                                    map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
-                                    map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
-                                    map.put(IS_LOGIN, "true");
-                                    SharedPreference.putPref(ProfileActivity.this, map);
-                                    final Handler handler = new Handler();
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-                                            profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                                            profileActivityViewModel.updateProfileFlag(ProfileActivity.this, event_id, profileDetails.get(0).getAttendee_id());
-                                        }
-                                    }, 500);
-
-                                } else {
-                                    Utility.createShortSnackBar(ll_main, profile.getHeader().get(0).getMsg());
-                                }
-                            } else {
-                                Utility.createShortSnackBar(ll_main, "failure..!");
-                            }
-
-                            if (profileActivityViewModel != null && profileActivityViewModel.UpdateProfileDetails().hasObservers()) {
-                                profileActivityViewModel.UpdateProfileDetails().removeObservers(ProfileActivity.this);
-                            }
-                        }
-                    });
-                } else {
-                    Utility.createShortSnackBar(ll_main, s);
-                }
-            }
-        });
-    }
 
     public void saveProfile(final String first_name, final String last_name, final String designation,
                             final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String alternate_no,
@@ -971,7 +1017,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
                                 String strEventList = response.body().getProfileDetailsEncrypted();
-                                RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
+                                RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                                 String data = refreashToken.decryptedData(strEventList);
                                 JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
                                 final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
@@ -991,14 +1037,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
-                                SharedPreference.putPref(ProfileActivity.this, map);
+                                SharedPreference.putPref(ProfilePCOActivity.this, map);
                                 final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
 
-                                        profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                                        profileActivityViewModel.updateProfileFlag(ProfileActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                        profileActivityViewModel.openMainActivity(ProfilePCOActivity.this);
+                                        profileActivityViewModel.updateProfileFlag(ProfilePCOActivity.this, "1", profileDetails.get(0).getAttendee_id());
                                     }
                                 }, 500);
 
@@ -1038,7 +1084,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
                                 String strEventList = response.body().getProfileDetailsEncrypted();
-                                RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
+                                RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                                 String data = refreashToken.decryptedData(strEventList);
                                 JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
                                 final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
@@ -1058,14 +1104,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
-                                SharedPreference.putPref(ProfileActivity.this, map);
+                                SharedPreference.putPref(ProfilePCOActivity.this, map);
                                 final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
 
-                                        profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                                        profileActivityViewModel.updateProfileFlag(ProfileActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                        profileActivityViewModel.openMainActivity(ProfilePCOActivity.this);
+                                        profileActivityViewModel.updateProfileFlag(ProfilePCOActivity.this, "1", profileDetails.get(0).getAttendee_id());
                                     }
                                 }, 500);
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
@@ -1092,6 +1138,156 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public void saveProfileHO(final String first_name, final String last_name, final String mobile,final String email,
+                              final String pincode  ,final String city,final String state,  final String profile_pic,
+                            final String user_type) {
+
+        if(!profile_pic.isEmpty()) {
+            File file = new File(profile_pic);
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/png"), file);
+            body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
+        }
+
+
+        RequestBody mEvent_id = RequestBody.create(MediaType.parse("text/plain"), "1");
+        RequestBody mFirst_name = RequestBody.create(MediaType.parse("text/plain"), first_name);
+        RequestBody mLast_name = RequestBody.create(MediaType.parse("text/plain"), last_name);
+        RequestBody mCity = RequestBody.create(MediaType.parse("text/plain"), city);
+        RequestBody mEmail = RequestBody.create(MediaType.parse("text/plain"), email);
+        RequestBody mMobile = RequestBody.create(MediaType.parse("text/plain"), mobile);
+        RequestBody muser_type = RequestBody.create(MediaType.parse("text/plain"), user_type);
+        RequestBody mstate = RequestBody.create(MediaType.parse("text/plain"), state);
+        RequestBody mpincode = RequestBody.create(MediaType.parse("text/plain"), pincode);
+        RequestBody mdes = RequestBody.create(MediaType.parse("text/plain"), "");
+
+        if (body == null) {
+
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mEmail,mMobile,mpincode,mCity,mstate,mdes).enqueue(new Callback<Profile>() {
+                @Override
+                public void onResponse(Call<Profile> call, Response<Profile> response) {
+                    try {
+
+                        if (response != null) {
+                            if ( response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+
+                                String strEventList = response.body().getProfileDetailsEncrypted();
+                                RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
+                                String data = refreashToken.decryptedData(strEventList);
+                                JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
+                                map.put(KEY_LNAME, profileDetails.get(0).getLast_name());
+                                map.put(KEY_EMAIL, profileDetails.get(0).getEmail());
+                                map.put(KEY_PASSWORD, "");
+                                map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
+                                map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
+                                map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
+                                //map.put(KEY_TOKEN, "");
+                                map.put(KEY_CITY, profileDetails.get(0).getCity());
+                                //map.put(KEY_GCM_ID, "");
+                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
+                                map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                                map.put(IS_LOGIN, "true");
+                                SharedPreference.putPref(ProfilePCOActivity.this, map);
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        profileActivityViewModel.openMainActivity(ProfilePCOActivity.this);
+                                        profileActivityViewModel.updateProfileFlag(ProfilePCOActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                    }
+                                }, 500);
+
+                            } else {
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+                            }
+                        } else {
+                            Utility.createShortSnackBar(ll_main, "failure..!");
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Profile> call, Throwable t) {
+                    Log.e("hit", "Low network or no network");
+                    // Toast.makeText(getApplicationContext(), "Unable to process", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mEmail,mMobile,mpincode,mCity,mstate,mdes,body).enqueue(new Callback<Profile>() {
+                @Override
+                public void onResponse(Call<Profile> call, Response<Profile> response) {
+                    try {
+
+                        if (response.body() != null) {
+                            if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+
+                                String strEventList = response.body().getProfileDetailsEncrypted();
+                                RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
+                                String data = refreashToken.decryptedData(strEventList);
+                                JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
+                                map.put(KEY_LNAME, profileDetails.get(0).getLast_name());
+                                map.put(KEY_EMAIL, profileDetails.get(0).getEmail());
+                                map.put(KEY_PASSWORD, "");
+                                map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
+                                map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
+                                map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
+                                //map.put(KEY_TOKEN, "");
+                                map.put(KEY_CITY, profileDetails.get(0).getCity());
+                                //map.put(KEY_GCM_ID, "");
+                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
+                                map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                                map.put(IS_LOGIN, "true");
+                                SharedPreference.putPref(ProfilePCOActivity.this, map);
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        profileActivityViewModel.openMainActivity(ProfilePCOActivity.this);
+                                        profileActivityViewModel.updateProfileFlag(ProfilePCOActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                    }
+                                }, 500);
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+
+
+                            } else {
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+                            }
+                        } else {
+                            Utility.createShortSnackBar(ll_main, "failure..!");
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Profile> call, Throwable t) {
+                    Log.e("hit", "Low network or no network");
+                    // Toast.makeText(getApplicationContext(), "Unable to process", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 
     private String getRealPathFromURIgallery(String contentURI) {
         Uri contentUri = Uri.parse(contentURI);
@@ -1299,15 +1495,112 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        associated_since = parent.getItemAtPosition(position).toString();
-      //  Toast.makeText(this, "YOUR SELECTION IS : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+void getPincode( String pin) {
+    ApiUtils.getAPIService().PincodeList(api_token, event_id, pin).enqueue(new Callback<FetchPincode>() {
+        @Override
+        public void onResponse(Call<FetchPincode> call, Response<FetchPincode> response) {
+            if (response.isSuccessful()) {
+                String strEventList = response.body().getDetail();
+                RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
+                String data = refreashToken.decryptedData(strEventList);
+                JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                ArrayList<Pincode_item> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<Pincode_item>>() {
+                }.getType());
 
+                // List<ProfileDetails> profileDetails = profile.getProfileDetails();
+
+                if (profileDetails.size() > 0) {
+
+                    for(int i = 0; i<profileDetails.size();i++){
+                        pincodeData.add(profileDetails.get(i).getPincode());
+
+                    }
+                    //Creating the instance of ArrayAdapter containing list of language names
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                            (ProfilePCOActivity.this, android.R.layout.select_dialog_item, pincodeData);
+
+                    atv_pincode.setAdapter(adapter);
+
+                    atv_pincode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                                long id) {
+                            Toast.makeText(ProfilePCOActivity.this," selected", Toast.LENGTH_LONG).show();
+                            pincode = atv_pincode.getText().toString();
+                            getState(atv_pincode.getText().toString());
+                        }
+                    });
+
+                }
+
+            } else {
+                Toast.makeText(ProfilePCOActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FetchPincode> call, Throwable t) {
+            try {
+                Toast.makeText(ProfilePCOActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+            }
+        }
+    });
+}
+
+    void getState( String pin) {
+        ApiUtils.getAPIService().CityState(api_token, event_id, pin).enqueue(new Callback<FetchPincode>() {
+            @Override
+            public void onResponse(Call<FetchPincode> call, Response<FetchPincode> response) {
+                if (response.isSuccessful()) {
+                    String strEventList = response.body().getDetail();
+                    RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
+                    String data = refreashToken.decryptedData(strEventList);
+                 //   JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                   /* ArrayList<Pincode_item> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<Pincode_item>>() {
+                    }.getType());*/
+                    Pincode_item pincodeLists = new Gson().fromJson(data, new TypeToken<Pincode_item>() {
+                    }.getType());
+                    if(pincodeLists!=null){
+                        et_city.setText(pincodeLists.getCity());
+                        et_state.setText(pincodeLists.getState());
+
+                        city = et_city.getText().toString();
+                        state = et_state.getText().toString();
+                    }
+
+                    /*if (pincodeLists.size() > 0) {
+                        ArrayList stateData = new ArrayList();
+                        ArrayList cityData = new ArrayList();
+
+                        for(int i = 0; i<profileDetails.size();i++){
+                            stateData.add(profileDetails.get(i).getState());
+                            cityData.add(profileDetails.get(i).getCity());
+
+
+                        }
+                        et_city.setText(cityData.get(0).toString());
+                        et_state.setText(stateData.get(0).toString());
+
+
+
+                    }*/
+
+                } else {
+                    Toast.makeText(ProfilePCOActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FetchPincode> call, Throwable t) {
+                try {
+                    Toast.makeText(ProfilePCOActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                }
+            }
+        });
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
 
-    }
 }

@@ -88,6 +88,7 @@ import com.procialize.bayer2020.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
 import com.procialize.bayer2020.ui.profile.view.ProfileActivity;
+import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
 import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
@@ -447,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.iv_edit:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
                 break;
             case R.id.tr_switch_event:
                 String root = Environment.getExternalStorageDirectory().toString();
@@ -497,7 +498,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_profile:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
                 break;
             case R.id.tr_event_info:
                 JzvdStd.releaseAllVideos();

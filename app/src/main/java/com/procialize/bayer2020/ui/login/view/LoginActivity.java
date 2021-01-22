@@ -53,7 +53,10 @@ import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
 import com.procialize.bayer2020.ui.eventList.viewModel.EventListViewModel;
 import com.procialize.bayer2020.ui.login.viewmodel.LoginViewModel;
 import com.procialize.bayer2020.ui.profile.roomDB.ProfileEventId;
+import com.procialize.bayer2020.ui.profile.view.ProfileActivity;
+import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -344,6 +347,9 @@ public class LoginActivity extends AppCompatActivity {
                                                         String userType = SharedPreference.getPref(context, USER_TYPE);
                                                         if(userType.equalsIgnoreCase("D")) {
                                                             eventListViewModel.openProfilePage((Activity) context, userData, 0, eventBg, eventLists.get(0));
+                                                        }else{
+                                                            eventListViewModel.openProfilePCOPage((Activity) context, userData, 0, eventBg, eventLists.get(0));
+
                                                         }
                                                     }
                                                 } catch (Exception e) {
