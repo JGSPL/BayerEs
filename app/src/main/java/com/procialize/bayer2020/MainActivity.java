@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -75,6 +74,7 @@ import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeViewModel;
 import com.procialize.bayer2020.ui.catalogue.view.CatalogueFragment;
+import com.procialize.bayer2020.ui.document.view.DocumentActivity;
 import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
 import com.procialize.bayer2020.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
@@ -93,7 +93,7 @@ import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
 import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
-import com.procialize.bayer2020.ui.upskill.UpskillFragment;
+import com.procialize.bayer2020.ui.upskill.view.UpskillFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
 
 import java.io.File;
