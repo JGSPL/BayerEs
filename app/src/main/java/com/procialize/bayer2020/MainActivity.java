@@ -110,6 +110,7 @@ import retrofit2.Response;
 import static com.procialize.bayer2020.Constants.Constant.FOLDER_DIRECTORY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ENROLL_LEAP_FLAG;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String fName;
     String fireEmail;
     MenuItem menuItem;
-    String storeFireid, storeFirename, stoeUsername;
+    String storeFireid, storeFirename, stoeUsername,enrollleapFlag;
     Menu mMenu;
     Dialog myDialog;
     MutableLiveData<LoginOrganizer> FetchenleepStatusList = new MutableLiveData<>();
@@ -190,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         storeFireid = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_ID);
         storeFirename = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_NAME);
         stoeUsername = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASEUSER_NAME);
+        enrollleapFlag = SharedPreference.getPref(this, SharedPreferencesConstant.ENROLL_LEAP_FLAG);
 
 
         getProfileDetails();
@@ -207,8 +209,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+        if(enrollleapFlag.equalsIgnoreCase("1")) {
 
-        showLeepdialouge();
+        }else{
+            showLeepdialouge();
+        }
 
 
         Glide.with(MainActivity.this)
@@ -504,7 +509,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_profile:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
                 break;
             case R.id.tr_event_info:
                 JzvdStd.releaseAllVideos();
@@ -613,6 +618,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                             map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                             map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                            map.put(ENROLL_LEAP_FLAG,profileDetails.get(0).getEnrollleapflag());
                             map.put(IS_LOGIN, "true");
 
                             SharedPreference.putPref(MainActivity.this, map);

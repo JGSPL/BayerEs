@@ -53,20 +53,26 @@ public class ScheameOfferAdapter extends RecyclerView.Adapter<ScheameOfferAdapte
 
         final Scheme_offer_item productType = productLists.get(position);
 
-        Glide.with(holder.imageIv)
-                .load(imageurl+productType.getTile_images())
-                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).centerCrop()
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
+        if(productType.getTile_images()!=null) {
+            Glide.with(holder.imageIv)
+                    .load(imageurl + productType.getTile_images())
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).centerCrop()
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            holder.progressBar.setVisibility(View.GONE);
+                            return false;
+                        }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(holder.imageIv);
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            holder.progressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    }).into(holder.imageIv);
+        }else{
+            holder.progressBar.setVisibility(View.GONE);
+        }
 
         holder.mainLL.setOnClickListener(new View.OnClickListener() {
             @Override

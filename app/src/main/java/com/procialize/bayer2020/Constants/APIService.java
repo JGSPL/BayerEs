@@ -545,6 +545,12 @@ public interface APIService {
                                       @Field("event_id") String event_id,
                                       @Field("pest_id") String search_text);
 
+    //Loyality Leap
+    @POST("Loyalty_api/MyPointFetch")
+    @FormUrlEncoded
+    Call<FetchAgenda> MyPointFetch(@Header("authorization") String authkey,
+                                              @Field("event_id") String event_id);
+
     @POST("Loyalty_api/SchemeAndOfferList")
     @FormUrlEncoded
     Call<FetchSchemeOffer> SchemeAndOfferList(@Header("authorization") String authkey,

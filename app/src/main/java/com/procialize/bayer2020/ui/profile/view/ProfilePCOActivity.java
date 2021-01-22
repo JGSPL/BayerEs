@@ -500,7 +500,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             state = profileDetails.get(0).getState();
                             pincode = profileDetails.get(0).getPincode();
                             user_type = profileDetails.get(0).getUser_type();
-                            tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
+                           // tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
 
 
                             et_first_name.setText(first_name);

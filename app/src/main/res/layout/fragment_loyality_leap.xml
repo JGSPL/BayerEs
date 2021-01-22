@@ -29,9 +29,10 @@
                 </com.procialize.bayer2020.fonts.RobotoTextview>
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="0dp"
-                    android:text="2060"
+                    android:text=""
                     android:gravity="right"
                     android:padding="5dp"
+                    android:id="@+id/txtMyPoint"
                     android:layout_marginRight="10dp"
                     android:textSize="22sp"
                     android:layout_weight="1"
@@ -60,9 +61,10 @@
                 </com.procialize.bayer2020.fonts.RobotoTextview>
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="0dp"
-                    android:text="2060"
+                    android:text=""
                     android:gravity="right"
                     android:padding="5dp"
+                    android:id="@+id/txtMyRank"
                     android:layout_marginRight="10dp"
                     android:textSize="22sp"
                     android:layout_weight="1"
@@ -77,6 +79,13 @@
                 android:layout_marginTop="10dp"
                 android:weightSum="2"
                 android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:id="@+id/relScheame"
+                    android:layout_weight="1"
+                    android:background="@drawable/leap_scheame"
+                    >
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -84,10 +93,22 @@
                     android:id="@+id/imgScheame"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/leap_scheame"
                     android:layout_height="180dp">
 
                 </ImageView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="right"
+                        android:id="@+id/txtUnreadCount"
+                        android:textColor="@color/colorPink"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="">
+
+                    </TextView>
+                </RelativeLayout>
                 <ImageView
                     android:id="@+id/imgPuchageHistory"
                     android:layout_width="0dp"
