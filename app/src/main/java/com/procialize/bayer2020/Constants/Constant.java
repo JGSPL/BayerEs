@@ -10,7 +10,7 @@ public class Constant {
     public static final int REQUEST_VIDEO = 3;
     public static final int SELECT_FILE = 4;
     public static final int REQUEST_CAMERA = 1;
-    public static final String FOLDER_DIRECTORY = "/EventApp";
+    public static final String FOLDER_DIRECTORY = "/BayerEs";
     public static final String IMAGE_DIRECTORY = "/Images";
     public static final String VIDEO_DIRECTORY = "/Video";
     public static final String BROADCAST_UPLOAD_MULTIMEDIA_ACTION = "com.procialize.eventsapp.UPLOAD_MULTIMEDIA";

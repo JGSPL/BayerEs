@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.Constants.ApiUtils;
@@ -27,7 +28,15 @@ import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.ui.catalogue.model.CataloguePestDetails;
+import com.procialize.bayer2020.ui.catalogue.model.CataloguePestRecommendedProducts;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
+import com.procialize.bayer2020.ui.catalogue.model.Pest_detail;
+import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,28 +59,36 @@ public class PestProductDetailsActivity extends AppCompatActivity {
 
     ImageView headerlogoIv;
     Toolbar mToolbar;
+    Pest_item pest_item;
+    TextView tv_title;
+    ImageView iv_cover;
+    List<CataloguePestRecommendedProducts> recommendedeProductList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pest_product_details);
 
         cd = ConnectionDetector.getInstance(this);
-
+        tv_title = findViewById(R.id.tv_title);
         linMain = findViewById(R.id.linMain);
+        iv_cover = findViewById(R.id.iv_cover);
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
 
         mTabHostCel = (FragmentTabHost) findViewById(R.id.tabhost);
         mTabHostCel.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
+        pest_item = (Pest_item) getIntent().getSerializableExtra("PestType");
+
+        Bundle b = new Bundle();
+        b.putSerializable("PestType", (Serializable) pest_item);
+        b.putSerializable("recommendedeProductList", (Serializable) recommendedeProductList);
         mTabHostCel.addTab(
                 mTabHostCel.newTabSpec("Tab1")
                         .setIndicator(createTabView(this, "Details")),
-                ProductDetailsFragment.class, null);
-        mTabHostCel.addTab(
-                mTabHostCel.newTabSpec("Tab2")
-                        .setIndicator(createTabView(this, "Recommended products")),
-                RecommendedProductFragment.class, null);
+                ProductDetailsFragment.class, b);
+
         setUpToolbar();
         getDataFromApi(token, eventid);
 
@@ -91,19 +108,36 @@ public class PestProductDetailsActivity extends AppCompatActivity {
                             RefreashToken refreashToken = new RefreashToken(PestProductDetailsActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
-                            /*List<Pest_item> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Pest_item>>() {
+                            CataloguePestDetails eventLists = gson.fromJson(data, new TypeToken<CataloguePestDetails>() {
                             }.getType());
 
                             //Fetch Livepoll list
                             if (eventLists != null) {
-                                if (eventLists.size() > 0) {
-                                    Utility.createShortSnackBar(linMain, "eventLists");
-                                } else {
-                                    Utility.createShortSnackBar(linMain, "Failure11");
-                                }
+                                recommendedeProductList = eventLists.getPest_recommended_product();
+                                Bundle b = new Bundle();
+                                b.putSerializable("PestType", (Serializable) pest_item);
+                                b.putSerializable("recommendedeProductList", (Serializable) recommendedeProductList);
+                                mTabHostCel.addTab(
+                                        mTabHostCel.newTabSpec("Tab2")
+                                                .setIndicator(createTabView(PestProductDetailsActivity.this, "Recommended products")),
+                                        RecommendedProductFragment.class, b);
+                                tv_title.setText(pest_item.getPest_short_description());
+                                Glide.with(PestProductDetailsActivity.this)
+                                        .load(pest_item.getPest_image())
+                                        .listener(new RequestListener<Drawable>() {
+                                            @Override
+                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                return false;
+                                            }
+                                        }).into(iv_cover);
                             } else {
                                 Utility.createShortSnackBar(linMain, "Failure22");
-                            }*/
+                            }
                         }
                     }
 

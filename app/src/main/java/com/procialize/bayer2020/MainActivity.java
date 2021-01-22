@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
-            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy;
+            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy , tr_downloads;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_survey = findViewById(R.id.tr_survey);
         tr_eula = findViewById(R.id.tr_eula);
         tr_privacy_policy = findViewById(R.id.tr_privacy_policy);
+        tr_downloads = findViewById(R.id.tr_downloads);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -252,6 +253,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_survey.setOnClickListener(this);
         tr_eula.setOnClickListener(this);
         tr_privacy_policy.setOnClickListener(this);
+        tr_downloads.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -495,10 +497,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, PrivacypolicyActivity.class));
                 break;
+            case R.id.tr_downloads:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, DocumentActivity.class));
+                break;
             case R.id.tr_profile:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
             case R.id.tr_event_info:
                 JzvdStd.releaseAllVideos();

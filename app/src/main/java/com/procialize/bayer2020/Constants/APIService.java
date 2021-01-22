@@ -10,6 +10,7 @@ import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductType;
+import com.procialize.bayer2020.ui.document.model.Document;
 import com.procialize.bayer2020.ui.eventList.model.Event;
 import com.procialize.bayer2020.ui.eventList.model.UpdateDeviceInfo;
 import com.procialize.bayer2020.ui.eventinfo.model.EventInfo;
@@ -30,6 +31,8 @@ import com.procialize.bayer2020.ui.quiz.model.QuizListing;
 import com.procialize.bayer2020.ui.quiz.model.QuizSubmit;
 import com.procialize.bayer2020.ui.speaker.model.FetchSpeaker;
 import com.procialize.bayer2020.ui.spotQnA.model.FetchSpotQnA;
+import com.procialize.bayer2020.ui.profile.model.FetchPincode;
+import com.procialize.bayer2020.ui.upskill.model.UpskillContent;
 
 import java.util.List;
 
@@ -617,6 +620,21 @@ public interface APIService {
                                 @Field("event_id") String event_id,
                                 @Field("pageSize") String pageSize,
                                 @Field("pageNumber") String pageNumber);
+
+    @POST("training/getUpskillContent")
+    @FormUrlEncoded
+    Call<UpskillContent> UpskillContent(@Header("authorization") String authkey,
+                                        @Field("event_id") String event_id,
+                                        @Field("training_id") String training_id);
+
+
+    @POST("Document_api/DocumentList")
+    @FormUrlEncoded
+    Call<Document> getDocumentList(@Header("authorization") String auth,
+                                   @Field("event_id") String event_id,
+                                   @Field("pageSize") String pageSize,
+                                   @Field("pageNumber") String pageNumber);
+
     @POST("login_api_call/PincodeList")
     @FormUrlEncoded
     Call<FetchPincode> PincodeList(@Header("authorization") String auth,
@@ -626,6 +644,6 @@ public interface APIService {
     @POST("login_api_call/CityState")
     @FormUrlEncoded
     Call<FetchPincode> CityState(@Header("authorization") String auth,
-                                   @Field("event_id") String event_id,
+                                 @Field("event_id") String event_id,
                                  @Field("pincode") String pincode);
 }

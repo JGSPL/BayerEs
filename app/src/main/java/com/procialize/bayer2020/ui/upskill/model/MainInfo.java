@@ -5,29 +5,41 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class UpskillList implements Serializable {
+public class MainInfo implements Serializable {
 
     @SerializedName("id")
     @Expose
-    private String id;
+    String id;
     @SerializedName("name")
     @Expose
-    private String name;
+    String name;
     @SerializedName("cover_img")
     @Expose
-    private String cover_img;
+    String cover_img;
     @SerializedName("description")
     @Expose
-    private String description;
+    String description;
     @SerializedName("multiple_attempts")
     @Expose
-    private String multiple_attempts;
+    String multiple_attempts;
+    @SerializedName("all_employee")
+    @Expose
+    String all_employee;
     @SerializedName("external_link")
     @Expose
-    private String external_link;
-    @SerializedName("attended")
+    String external_link;
+    @SerializedName("status")
     @Expose
-    private String attended;
+    String status;
+    @SerializedName("active_once")
+    @Expose
+    String active_once;
+    @SerializedName("created_at")
+    @Expose
+    String created_at;
+    @SerializedName("updated_at")
+    @Expose
+    String updated_at;
 
     public String getId() {
         return id;
@@ -49,11 +61,27 @@ public class UpskillList implements Serializable {
         return multiple_attempts;
     }
 
+    public String getAll_employee() {
+        return all_employee;
+    }
+
     public String getExternal_link() {
         return external_link;
     }
 
-    public String getAttended() {
-        return attended;
+    public String getStatus() {
+        return status;
+    }
+
+    public String getActive_once() {
+        return active_once;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
     }
 }

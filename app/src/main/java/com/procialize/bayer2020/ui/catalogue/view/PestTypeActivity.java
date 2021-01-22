@@ -204,9 +204,9 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
 
 
     @Override
-    public void onContactSelected(Pest_item pollList) {
+    public void onContactSelected(Pest_item pest_item) {
        startActivity(new Intent(PestTypeActivity.this, PestProductDetailsActivity.class)
-                .putExtra("PestType", (Serializable) pollList));
+                .putExtra("PestType", (Serializable) pest_item));
     }
 }
 
