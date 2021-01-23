@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+   >
+    <!--<androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">-->
+    <com.procialize.bayer2020.fonts.RobotoTextview
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:scrollbars="vertical"
+        android:padding="10dp"
+        android:id="@+id/txtDescription">
+
+    </com.procialize.bayer2020.fonts.RobotoTextview>
+
+   <!-- <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/productrefresh"
+        android:layout_below="@+id/txtDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_recommended_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/product_subpoint_row" />
+   <!-- </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+        <!--</RelativeLayout>
+    </androidx.core.widget.NestedScrollView>-->
+</LinearLayout>
+</androidx.core.widget.NestedScrollView>

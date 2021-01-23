@@ -193,6 +193,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         radioButton3 = findViewById(R.id.radioButton3);
         radioButton2 = findViewById(R.id.radioButton2);
         radioButton1 = findViewById(R.id.radioButton1);
+        radiogroupPCO = findViewById(R.id.radiogroupPCO);
 
         et_aspociated = findViewById(R.id.et_aspociated);
         et_state = findViewById(R.id.et_state);

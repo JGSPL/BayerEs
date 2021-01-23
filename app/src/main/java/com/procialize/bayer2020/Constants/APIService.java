@@ -8,6 +8,7 @@ import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
+import com.procialize.bayer2020.ui.catalogue.model.FetchProductDetail;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductType;
 import com.procialize.bayer2020.ui.document.model.Document;
@@ -520,6 +521,12 @@ public interface APIService {
                                        @Field("search_text") String search_text,
                                        @Field("pageNumber") String pageNumber,
                                        @Field("pageSize") String pageSize);
+
+    @POST("Catalogue_api/ProductDetails")
+    @FormUrlEncoded
+    Call<FetchProductDetail> ProductDetails(@Header("authorization") String authkey,
+                                            @Field("event_id") String event_id,
+                                            @Field("product_id") String search_text);
 
     @POST("Catalogue_api/PestTypeList")
     @FormUrlEncoded

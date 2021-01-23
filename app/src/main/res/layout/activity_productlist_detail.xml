@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:weightSum="10"
+    android:id="@+id/linMain"
     android:orientation="vertical">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -47,11 +48,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/productTitle"
         android:textSize="16sp"
+        android:padding="5dp"
         android:textColor="@color/black">
     </com.procialize.bayer2020.fonts.RobotoTextview>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:id="@+id/imgCover"
         android:src="@mipmap/ic_launcher"
         ></ImageView>
     <LinearLayout
@@ -66,8 +69,9 @@
             android:layout_weight="1"
             android:textAllCaps="false"
             android:textSize="8sp"
+            android:layout_margin="5dp"
             android:drawablePadding="5dp"
-
+            android:background="@color/colorwhite"
             android:drawableTop="@drawable/ic_livepoll"
             android:text="Buy Now"
             ></com.procialize.bayer2020.fonts.RobotoButton>
@@ -77,8 +81,10 @@
             android:layout_weight="1"
             android:textSize="8sp"
             android:drawablePadding="5dp"
+            android:background="@color/colorwhite"
+            android:layout_margin="5dp"
 
-            android:drawableTop="@drawable/ic_livepoll"
+            android:drawableTop="@drawable/ic_dosage"
             android:text="Dosage Calculator"
             android:textAllCaps="false"
             ></com.procialize.bayer2020.fonts.RobotoButton>
@@ -89,6 +95,9 @@
             android:layout_weight="1"
             android:textAllCaps="false"
             android:textSize="8sp"
+            android:background="@color/colorwhite"
+            android:layout_margin="5dp"
+
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/ic_share"
             android:text="Share"

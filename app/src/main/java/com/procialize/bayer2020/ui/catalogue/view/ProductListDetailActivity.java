@@ -19,10 +19,33 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.Constants.APIService;
+import com.procialize.bayer2020.Constants.ApiUtils;
+import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.ui.catalogue.model.CataloguePestDetails;
+import com.procialize.bayer2020.ui.catalogue.model.CataloguePestRecommendedProducts;
+import com.procialize.bayer2020.ui.catalogue.model.FetchProductDetail;
+import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
+import com.procialize.bayer2020.ui.catalogue.model.Product_detail;
+import com.procialize.bayer2020.ui.catalogue.model.Product_document_detail;
+import com.procialize.bayer2020.ui.catalogue.model.Product_item;
+import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
@@ -32,6 +55,13 @@ public class ProductListDetailActivity extends AppCompatActivity {
     private FragmentTabHost mTabHostCel;
     Toolbar mToolbar;
     ImageView headerlogoIv;
+    String token, eventid, imageurl, productId = "1";
+    List<product_subpoint_detail> product_subpoint_detailList = new ArrayList<>();
+    List<Product_document_detail> Product_document_detailList = new ArrayList<>();
+    LinearLayout linMain;
+    ImageView imgCover;
+    TextView productTitle;
+    Product_item product_item;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,19 +71,104 @@ public class ProductListDetailActivity extends AppCompatActivity {
         mTabHostCel = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHostCel.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
-        mTabHostCel.addTab(
+        token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(this, EVENT_ID);
+        product_item = (Product_item) getIntent().getSerializableExtra("Product");
+        productId = product_item.getId();
+
+        linMain = findViewById(R.id.linMain);
+        imgCover = findViewById(R.id.imgCover);
+        productTitle= findViewById(R.id.productTitle);
+       /* mTabHostCel.addTab(
                 mTabHostCel.newTabSpec("Tab1")
                         .setIndicator(createTabView(this, "Details")),
-                ProductFragment.class, null);
-        mTabHostCel.addTab(
+                ProductFragment.class, null);*/
+       /* mTabHostCel.addTab(
                 mTabHostCel.newTabSpec("Tab2")
                         .setIndicator(createTabView(this, "Downloads")),
-                PestProductDetailsActivity.class, null);
+                ProductListDetailActivity.class, null);*/
                 //PestFragment.class, null);
 
 
+        getDataFromApi(token,eventid);
+
 
     }
+
+    public void getDataFromApi(String token, String eventid) {
+
+        eventApi = ApiUtils.getAPIService();
+
+        eventApi.ProductDetails(token, "1", productId)
+                .enqueue(new Callback<FetchProductDetail>() {
+                    @Override
+                    public void onResponse(Call<FetchProductDetail> call, Response<FetchProductDetail> response) {
+                        if (response.isSuccessful()) {
+
+                            String strCommentList = response.body().getDetail();
+                            RefreashToken refreashToken = new RefreashToken(ProductListDetailActivity.this);
+                            String data = refreashToken.decryptedData(strCommentList);
+                            Gson gson = new Gson();
+                            Product_detail eventLists = gson.fromJson(data, new TypeToken<Product_detail>() {
+                            }.getType());
+                           // List<Product_detail> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Product_detail>>() {}.getType());
+
+                            //Fetch Livepoll list
+                            if (eventLists != null) {
+                                product_subpoint_detailList = eventLists.getProduct_subpoints_detail();
+                                Product_document_detailList = eventLists.getProductDocumentList();
+                                String DocumentPath = eventLists.getProduct_documentpath();
+                                Bundle bb = new Bundle();
+                                bb.putSerializable("ProductType", (Serializable) product_item);
+                                bb.putString("DocumentPath", DocumentPath);
+
+                                bb.putSerializable("productSubPoint", (Serializable) product_subpoint_detailList);
+                                mTabHostCel.addTab(
+                                        mTabHostCel.newTabSpec("Tab1")
+                                                .setIndicator(createTabView(ProductListDetailActivity.this, "Details")),
+                                        ProductSubPointFragment.class, bb);
+
+
+                                Bundle b = new Bundle();
+                                b.putSerializable("ProductType", (Serializable) product_item);
+                                b.putString("DocumentPath", DocumentPath);
+
+                                b.putSerializable("productDocumentList", (Serializable) Product_document_detailList);
+                                mTabHostCel.addTab(
+                                        mTabHostCel.newTabSpec("Tab2")
+                                                .setIndicator(createTabView(ProductListDetailActivity.this, "Downloads")),
+                                        ProductDocumentFragment.class, b);
+
+
+                                productTitle.setText(product_item.getProduct_name());
+                                Glide.with(ProductListDetailActivity.this)
+                                        .load(product_item.getProduct_image())
+                                        .listener(new RequestListener<Drawable>() {
+                                            @Override
+                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                return false;
+                                            }
+                                        }).into(imgCover);
+                            } else {
+                                Utility.createShortSnackBar(linMain, "Failure22");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<FetchProductDetail> call, Throwable t) {
+                        Utility.createShortSnackBar(linMain, "Failure");
+                    }
+                });
+
+
+    }
+
 
     private static View createTabView(final Context context, final String text) {
         View view = LayoutInflater.from(context).inflate(R.layout.catalogue_tab_bg, null);

@@ -11,9 +11,9 @@ public class FetchProductDetail {
     @Expose
     List<Header> header;
 
-    @SerializedName("detailpreencrypt")
+   /* @SerializedName("detailpreencrypt")
     @Expose
-    List<Product_detail> productList;
+    List<Product_detail> productList;*/
 
     @SerializedName("detail")
     @Expose
@@ -27,13 +27,13 @@ public class FetchProductDetail {
         this.header = header;
     }
 
-    public List<Product_detail> getProductList() {
+  /*  public List<Product_detail> getProductList() {
         return productList;
     }
 
     public void setProductList(List<Product_detail> productList) {
         this.productList = productList;
-    }
+    }*/
 
     public String getDetail() {
         return detail;

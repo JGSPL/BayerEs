@@ -176,9 +176,9 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
     }
 
     @Override
-    public void onContactSelected(Product_item pollList) {
+    public void onContactSelected(Product_item product_item) {
         startActivity(new Intent(this, ProductListDetailActivity.class)
-                .putExtra("Product", (Serializable) pollList));
+                .putExtra("Product", (Serializable) product_item));
     }
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
