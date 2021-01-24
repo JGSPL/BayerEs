@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String fName;
     String fireEmail;
     MenuItem menuItem;
-    String storeFireid, storeFirename, stoeUsername,enrollleapFlag;
+    String storeFireid, storeFirename, stoeUsername,enrollleapFlag, company, userType;
     Menu mMenu;
     Dialog myDialog;
     MutableLiveData<LoginOrganizer> FetchenleepStatusList = new MutableLiveData<>();
@@ -188,10 +188,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String event_id = SharedPreference.getPref(this, EVENT_ID);
         String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
         String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
-        storeFireid = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_ID);
-        storeFirename = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_NAME);
-        stoeUsername = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASEUSER_NAME);
-        enrollleapFlag = SharedPreference.getPref(this, SharedPreferencesConstant.ENROLL_LEAP_FLAG);
+        company = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_COMPANY);
+        userType = SharedPreference.getPref(this, SharedPreferencesConstant.USER_TYPE);
 
 
         getProfileDetails();

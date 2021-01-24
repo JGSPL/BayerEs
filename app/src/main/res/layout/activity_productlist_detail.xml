@@ -63,45 +63,75 @@
         android:weightSum="3"
         android:layout_margin="5dp"
         android:orientation="horizontal">
-        <com.procialize.bayer2020.fonts.RobotoButton
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:id="@+id/linBuyNow"
+            android:layout_gravity="center"
+            android:background="@color/colorwhite"
+            android:layout_weight="1">
+        <com.procialize.bayer2020.fonts.RobotoButton
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:textAllCaps="false"
             android:textSize="8sp"
-            android:layout_margin="5dp"
+            android:stateListAnimator="@null"
+
             android:drawablePadding="5dp"
             android:background="@color/colorwhite"
             android:drawableTop="@drawable/ic_livepoll"
             android:text="Buy Now"
             ></com.procialize.bayer2020.fonts.RobotoButton>
-        <com.procialize.bayer2020.fonts.RobotoButton
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:id="@+id/linCalc"
+            android:layout_gravity="center"
+            android:background="@color/colorwhite"
+            android:layout_weight="1">
+            <com.procialize.bayer2020.fonts.RobotoButton
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
             android:textSize="8sp"
             android:drawablePadding="5dp"
             android:background="@color/colorwhite"
             android:layout_margin="5dp"
-
+                android:stateListAnimator="@null"
+            android:id="@+id/imgCalc"
             android:drawableTop="@drawable/ic_dosage"
             android:text="Dosage Calculator"
             android:textAllCaps="false"
             ></com.procialize.bayer2020.fonts.RobotoButton>
+        </LinearLayout>
 
-        <com.procialize.bayer2020.fonts.RobotoButton
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:layout_margin="5dp"
+            android:id="@+id/linShare"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@color/colorwhite"
+            android:layout_weight="1">
+            <com.procialize.bayer2020.fonts.RobotoButton
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
             android:textAllCaps="false"
             android:textSize="8sp"
             android:background="@color/colorwhite"
             android:layout_margin="5dp"
+            android:stateListAnimator="@null"
 
             android:drawablePadding="5dp"
             android:drawableTop="@drawable/ic_share"
             android:text="Share"
             ></com.procialize.bayer2020.fonts.RobotoButton>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

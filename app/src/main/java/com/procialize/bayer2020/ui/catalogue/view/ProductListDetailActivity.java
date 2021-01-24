@@ -1,10 +1,13 @@
 package com.procialize.bayer2020.ui.catalogue.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
+import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
@@ -35,6 +39,7 @@ import com.procialize.bayer2020.ui.catalogue.model.Product_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Product_document_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Product_item;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
+import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -62,6 +67,9 @@ public class ProductListDetailActivity extends AppCompatActivity {
     ImageView imgCover;
     TextView productTitle;
     Product_item product_item;
+    LinearLayout linCalc,linShare, linBuyNow;
+    Button imgCalc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +84,21 @@ public class ProductListDetailActivity extends AppCompatActivity {
         product_item = (Product_item) getIntent().getSerializableExtra("Product");
         productId = product_item.getId();
 
+        mToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         linMain = findViewById(R.id.linMain);
         imgCover = findViewById(R.id.imgCover);
         productTitle= findViewById(R.id.productTitle);
+        linCalc = findViewById(R.id.linCalc);
+        linShare = findViewById(R.id.linShare);
+        linBuyNow = findViewById(R.id.linBuyNow);
+        imgCalc = findViewById(R.id.imgCalc);
+
        /* mTabHostCel.addTab(
                 mTabHostCel.newTabSpec("Tab1")
                         .setIndicator(createTabView(this, "Details")),
@@ -88,6 +108,21 @@ public class ProductListDetailActivity extends AppCompatActivity {
                         .setIndicator(createTabView(this, "Downloads")),
                 ProductListDetailActivity.class, null);*/
                 //PestFragment.class, null);
+
+        linCalc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class));
+
+            }
+        });
+        imgCalc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class));
+
+            }
+        });
 
 
         getDataFromApi(token,eventid);
@@ -119,7 +154,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                 Product_document_detailList = eventLists.getProductDocumentList();
                                 String DocumentPath = eventLists.getProduct_documentpath();
                                 Bundle bb = new Bundle();
-                                bb.putSerializable("ProductType", (Serializable) product_item);
+                            bb.putSerializable("ProductType", (Serializable) product_item);
                                 bb.putString("DocumentPath", DocumentPath);
 
                                 bb.putSerializable("productSubPoint", (Serializable) product_subpoint_detailList);

@@ -23,6 +23,7 @@ public class ProductSubPointAdapter extends RecyclerView.Adapter<ProductSubPoint
     private ProductSubPointAdapter.ProductAdapterListner listener;
     private LayoutInflater inflater;
     String imageurl;
+    int i = 0;
 
     public ProductSubPointAdapter(Context context, List<product_subpoint_detail> productLists,
                                   ProductSubPointAdapter.ProductAdapterListner listener, String imageurl) {
@@ -44,7 +45,21 @@ public class ProductSubPointAdapter extends RecyclerView.Adapter<ProductSubPoint
     public void onBindViewHolder(@NonNull final ProductSubPointAdapter.ProductViewHolder holder, final int position) {
 
         final product_subpoint_detail productType = productLists.get(position);
-        holder.tv_title.setText(productType.getDescription());
+        holder.tv_title.setText(productType.getTitle());
+        holder.tv_desc.setText(productType.getDescription());
+
+        holder.iv_right_arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(i==0){
+                    holder.tv_desc.setVisibility(View.VISIBLE);
+                    i =1;
+                }else if(i==1){
+                    holder.tv_desc.setVisibility(View.GONE);
+                    i = 0;
+                }
+            }
+        });
 
         holder.ll_row.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,12 +84,14 @@ public class ProductSubPointAdapter extends RecyclerView.Adapter<ProductSubPoint
 
         public ImageView iv_right_arrow ;
         public LinearLayout ll_row;
-        TextView tv_title;
+        TextView tv_title, tv_desc;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             ll_row = itemView.findViewById(R.id.ll_row);
             iv_right_arrow = itemView.findViewById(R.id.iv_right_arrow);
             tv_title = itemView.findViewById(R.id.tv_title);
+            tv_desc = itemView.findViewById(R.id.tv_desc);
+
         }
     }
 }
