@@ -77,6 +77,7 @@ import com.procialize.bayer2020.ui.catalogue.view.CatalogueFragment;
 import com.procialize.bayer2020.ui.document.view.DocumentActivity;
 import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
 import com.procialize.bayer2020.ui.eventinfo.view.EventInfoActivity;
+import com.procialize.bayer2020.ui.faq.view.FAQActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.login.view.LoginActivity;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemStatusBasicData;
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
-            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy , tr_downloads;
+            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy , tr_downloads, tr_faq;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -190,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
         company = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_COMPANY);
         userType = SharedPreference.getPref(this, SharedPreferencesConstant.USER_TYPE);
+        enrollleapFlag = SharedPreference.getPref(this, ENROLL_LEAP_FLAG);
 
 
         getProfileDetails();
@@ -243,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_eula = findViewById(R.id.tr_eula);
         tr_privacy_policy = findViewById(R.id.tr_privacy_policy);
         tr_downloads = findViewById(R.id.tr_downloads);
+        tr_faq= findViewById(R.id.tr_faq);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -257,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_eula.setOnClickListener(this);
         tr_privacy_policy.setOnClickListener(this);
         tr_downloads.setOnClickListener(this);
+        tr_faq.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -453,7 +457,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.iv_edit:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+                if(userType.equalsIgnoreCase("D")) {
+                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                }else{
+                    startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+
+                }
                 break;
             case R.id.tr_switch_event:
                 String root = Environment.getExternalStorageDirectory().toString();
@@ -503,6 +512,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_downloads:
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, DocumentActivity.class));
+                break;
+            case R.id.tr_faq:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, FAQActivity.class));
                 break;
             case R.id.tr_profile:
                 JzvdStd.releaseAllVideos();
@@ -757,12 +770,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if(enrollBox.isChecked()){
-                    getEnleepStatus(api_token,eventid,"1","");
+                    getEnleepStatus(api_token,"1","1","");
+                    myDialog.dismiss();
+
                 }else{
                     Utility.createShortSnackBar(mDrawerLayout, "Please checked this box");
 
                 }
-                myDialog.dismiss();
             }
         });
 
@@ -778,6 +792,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                         if (response.isSuccessful()) {
+                            HashMap<String, String> map = new HashMap<>();
+
+                            map.put(ENROLL_LEAP_FLAG,"1");
+                            Utility.createShortSnackBar(mDrawerLayout, response.body().getHeader().get(0).getMsg());
 
                         }
                     }

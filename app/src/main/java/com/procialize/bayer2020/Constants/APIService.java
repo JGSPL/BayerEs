@@ -72,7 +72,7 @@ public interface APIService {
 
     @POST("login_api_call/enrollLeapFlag")
     @FormUrlEncoded
-    Call<LoginOrganizer> enrollLeapFlag(@Field("organizer_id") String organizer_id,
+    Call<LoginOrganizer> enrollLeapFlag(@Header("authorization") String organizer_id,
                                   @Field("event_id") String event_id,
                                   @Field("enrollleapflag") String enrollleapflag,
                                         @Field("enroll_reason") String enroll_reason);
@@ -659,4 +659,9 @@ public interface APIService {
     Call<FetchPincode> CityState(@Header("authorization") String auth,
                                  @Field("event_id") String event_id,
                                  @Field("pincode") String pincode);
+
+    @POST("event_api_call/FAQFetch")
+    @FormUrlEncoded
+    Call<FetchAgenda> FAQFetch(@Header("authorization") String auth,
+                                 @Field("event_id") String event_id);
 }

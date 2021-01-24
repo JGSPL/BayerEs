@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
+    android:orientation="vertical"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,7 +12,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/appBarLayout"
+        android:id="@+id/app_bar_layout"
         android:background="@android:color/white"
         app:elevation="0dp">
 
@@ -32,6 +34,7 @@
             <ImageView
                 android:id="@+id/headerlogoIv2"
                 android:layout_width="50dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="-10dp"
@@ -76,27 +79,25 @@
                 </LinearLayout>
             </RelativeLayout>
 
+
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
-    <com.procialize.bayer2020.fonts.RobotoTextview
-        android:layout_width="match_parent"
-        android:id="@+id/txtTitle"
-        android:layout_below="@+id/appBarLayout"
-        android:text="Schemes and offers"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:padding="5dp"
-        android:layout_height="wrap_content"></com.procialize.bayer2020.fonts.RobotoTextview>
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/tv_faq"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtTitle"
-        android:id="@+id/relMain"
-        android:background="@color/colorwhite"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:text="FAQ"
+        android:padding="10dp"
+        android:layout_below="@+id/app_bar_layout"
+        android:textColor="@color/black"
+        android:textSize="18dp" />
 
-        android:orientation="vertical">
+
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="20dp"
@@ -107,6 +108,7 @@
             android:visibility="gone" />
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/productrefresh"
+            android:layout_below="@+id/tv_faq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
@@ -116,10 +118,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                tools:listitem="@layout/product_type_row"/>
+                tools:listitem="@layout/product_subpoint_row"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-    </RelativeLayout>
 
 </RelativeLayout>

@@ -88,6 +88,7 @@ import static com.procialize.bayer2020.Constants.Constant.REQUEST_CAMERA;
 import static com.procialize.bayer2020.Constants.Constant.SELECT_FILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ENROLL_LEAP_FLAG;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
@@ -284,7 +285,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             state = profileDetails.get(0).getState();
                             pincode = profileDetails.get(0).getPincode();
                             user_type = profileDetails.get(0).getUser_type();
-                            tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
+                            //tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
 
 
                             et_first_name.setText(first_name);
@@ -424,7 +425,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             mobile = SharedPreference.getPref(getApplicationContext(), KEY_MOBILE);
             user_type = SharedPreference.getPref(getApplicationContext(), USER_TYPE);
 
-            tv_profile_pic.setText(SharedPreference.getPref(getApplicationContext(), PROFILE_PIC));
+           // tv_profile_pic.setText(SharedPreference.getPref(getApplicationContext(), PROFILE_PIC));
 
 
             et_first_name.setText(first_name);
@@ -947,8 +948,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         RequestBody mMobile = RequestBody.create(MediaType.parse("text/plain"), mobile);
         RequestBody mCompany_name = RequestBody.create(MediaType.parse("text/plain"), company_name);
         RequestBody muser_type = RequestBody.create(MediaType.parse("text/plain"), user_type);
-        RequestBody mno_of_pco = RequestBody.create(MediaType.parse("text/plain"), "1");
-        RequestBody massociated = RequestBody.create(MediaType.parse("text/plain"), "1950");
+        RequestBody mno_of_pco = RequestBody.create(MediaType.parse("text/plain"), no_of_pco_served);
+        RequestBody massociated = RequestBody.create(MediaType.parse("text/plain"), associated_since);
 
         RequestBody altno1 = RequestBody.create(MediaType.parse("text/plain"), "");
         RequestBody altno2 = RequestBody.create(MediaType.parse("text/plain"), "");
@@ -991,6 +992,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                                map.put(ENROLL_LEAP_FLAG, profileDetails.get(0).getEnrollleapflag());
+
                                 map.put(IS_LOGIN, "true");
                                 SharedPreference.putPref(ProfileActivity.this, map);
                                 final Handler handler = new Handler();
@@ -1027,8 +1030,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     mEvent_id,
                     muser_type/*,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode*/,
                     massociated,
-                    mno_of_pco/*,
-                    body*/).enqueue(new Callback<Profile>() {
+                    mno_of_pco,
+                    body).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
