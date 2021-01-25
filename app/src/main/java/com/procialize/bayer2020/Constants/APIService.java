@@ -318,9 +318,8 @@ public interface APIService {
                                 @Part("no_of_technician") RequestBody no_of_technician,
                                 @Part("specialization") RequestBody specialization,
                                 @Part("turnover") RequestBody turnover,
-                                @Part("pincode") RequestBody pincode,
-                                @Part("associated_since") RequestBody associated_since,
-                                @Part("no_of_pco_served") RequestBody no_of_pco_served);
+                                @Part("pincode") RequestBody pincode
+                               );
     @Multipart
     @POST("login_api_call/updateProfile")
     Call<Profile> updateProfile(@Header("authorization") String authorization,
@@ -341,8 +340,6 @@ public interface APIService {
                                 @Part("specialization") RequestBody specialization,
                                 @Part("turnover") RequestBody turnover,
                                 @Part("pincode") RequestBody pincode,
-                                @Part("associated_since") RequestBody associated_since,
-                                @Part("no_of_pco_served") RequestBody no_of_pco_served,
                                 @Part MultipartBody.Part filename);
 
 

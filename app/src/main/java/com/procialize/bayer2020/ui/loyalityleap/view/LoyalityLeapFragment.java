@@ -130,7 +130,7 @@ public class LoyalityLeapFragment  extends Fragment {
             @Override
             public void onFailure(Call<FetchAgenda> call, Throwable t) {
                 try {
-                    Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                 }
             }
