@@ -32,4 +32,11 @@ public class Document {
     @Expose
     private String detail;
 
+    @SerializedName("document_path")
+    @Expose
+    private String document_path;
+
+    public String getDocument_path() {
+        return document_path;
+    }
 }

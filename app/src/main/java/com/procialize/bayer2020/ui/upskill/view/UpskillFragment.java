@@ -15,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -27,7 +29,9 @@ import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
+import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.upskill.adapter.UpskillAdapter;
 import com.procialize.bayer2020.ui.upskill.model.UpSkill;
@@ -36,6 +40,7 @@ import com.procialize.bayer2020.ui.upskill.model.UpskillList;
 import java.io.Serializable;
 import java.util.List;
 
+import io.fabric.sdk.android.services.common.CommonUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +57,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
     RecyclerView rv_upskill;
     String api_token, eventid;
     UpskillAdapter upskillAdapter;
+    LinearLayout ll_main;
 
     public static UpskillFragment newInstance() {
         return new UpskillFragment();
@@ -70,7 +76,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_upskill, container, false);
 
-        iv_banner = rootView.findViewById(R.id.iv_banner);
+        /*iv_banner = rootView.findViewById(R.id.iv_banner);
         tv_info = rootView.findViewById(R.id.tv_info);
         srl_upskill = rootView.findViewById(R.id.srl_upskill);
         rv_upskill = rootView.findViewById(R.id.rv_upskill);
@@ -78,8 +84,11 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
 
-        //api_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIiLCJmaXJzdF9uYW1lIjoiUHJlZXRpIiwibGFzdF9uYW1lIjoiU2luZ2giLCJtb2JpbGUiOiI5OTg3MzE1NjgyIiwiZW1haWwiOiJwcmVldGlAcHJvY2lhbGl6ZS5pbiIsInJlZnJlc2hfdG9rZW4iOiIzNjQwNDlmNzcwNzJlZGM0MWI0M2IxZmM3NjIwZGU5ODU3ZDJiOTM4IiwidXNlcl90eXBlIjoiRCIsInZlcmlmeV9vdHAiOiIxIiwicHJvZmlsZV9zdGF0dXMiOiIwIiwiZW5yb2xsbGVhcGZsYWciOiIwIiwiZXZlbnRfaWQiOiIxIiwiYWNjZXNzX3Rva2VuIjoiMzY0MDQ5Zjc3MDcyZWRjNDFiNDNiMWZjNzYyMGRlOTg1N2QyYjkzOCIsInByb2ZpbGVfcGljIjoiaHR0cHM6XC9cL2JheWVyLWVzLnMzLmFtYXpvbmF3cy5jb21cL3VwbG9hZHNcL3VzZXJcL2RlZmF1bHQucG5nIiwiaXNfZ29kIjoiMCIsInRvdGFsX2V2ZW50IjoxLCJ0aW1lIjoxNjEwOTY1NzE2LCJleHBpcnlfdGltZSI6MTYxMDk2OTMxNn0.9BsbzdnaRX8eVI9lcrUZZwTzHQhsJl-1aKg2Gaiio3o";
-        getDataFromApi();
+        getDataFromApi();*/
+        ll_main = rootView.findViewById(R.id.ll_main);
+        Toast.makeText(getActivity(), "Coming Soon....", Toast.LENGTH_SHORT).show();
+
+
         return rootView;
     }
 

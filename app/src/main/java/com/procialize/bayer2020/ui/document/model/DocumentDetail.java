@@ -29,15 +29,15 @@ public class DocumentDetail {
         this.document_file_name = document_file_name;
     }
 
-    @SerializedName("doc_id")
+    @SerializedName("id")
     @Expose
     String doc_id;
 
-    @SerializedName("document_name")
+    @SerializedName("title")
     @Expose
     String document_name;
 
-    @SerializedName("document_file_name")
+    @SerializedName("file_name")
     @Expose
     String document_file_name;
 }

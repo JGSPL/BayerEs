@@ -191,7 +191,7 @@ public class PostNewsFeedViewModel extends ViewModel {
     }
 
     public void startNewsFeedFragment(Activity activity) {
-        activity.startActivity(new Intent(activity, MainActivity.class));
+        activity.startActivity(new Intent(activity, MainActivity.class).putExtra("from","postNewsFeed"));
     }
 
     public void validation(String postStatus) {
