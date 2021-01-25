@@ -528,7 +528,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             is_god = profileDetails.get(0).getIs_god();
                             alternate_no = profileDetails.get(0).getAlternate_no();
                             state = profileDetails.get(0).getState();
-                            pincode = profileDetails.get(0).getPincode();
+                           // pincode = profileDetails.get(0).getPincode();
                             user_type = profileDetails.get(0).getUser_type();
                            // tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
 
@@ -654,21 +654,50 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 altno2 = et_alternetmobno2.getText().toString();
                 altNO3 = et_alternetmobno3.getText().toString();
                 no_of_technician = et_sapcode.getText().toString();
-                pincode = et_pincode.getText().toString();
+                pincode = atv_pincode.getText().toString();
                 city = et_city.getText().toString();
                 state = et_state.getText().toString();
 
                 if (connectionDetector.isConnectingToInternet()) {
                     if(user_type.equalsIgnoreCase("PO")){
 
-                        saveProfilePCO(first_name,last_name,designation,company_name,city,email,mobile,profile_pic,alternate_no,
-                                user_type,state, no_of_technician,specializtion.toString(),"1",pincode,"","");
+                            saveProfilePCO(first_name, last_name, designation, company_name, city, email, mobile, profile_pic, alternate_no,
+                                    user_type, state, no_of_technician, specializtion.toString(), "1", pincode, "", "");
+
 
                     }else if(user_type.equalsIgnoreCase("HO")){
-                        saveProfileHO(first_name,last_name,mobile,email,pincode,city,state,profile_pic,user_type);
+                        if (et_first_name.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
+
+                        }else if (et_last_name.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
+
+                        }else if (atv_pincode.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter pincode for proceed", Toast.LENGTH_SHORT).show();
+
+                        }else if (et_emailid.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter emailId for proceed", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            saveProfileHO(first_name, last_name, mobile, email, pincode, city, state, profile_pic, user_type);
+                        }
 
                     }else{
-                        saveProfileHO(first_name,last_name,mobile,email,pincode,city,state,profile_pic,user_type);
+                        if (et_first_name.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
+
+                        }else if (et_last_name.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
+
+                        }else if (atv_pincode.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter pincode for proceed", Toast.LENGTH_SHORT).show();
+
+                        }else if (et_emailid.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter emailId for proceed", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            saveProfileHO(first_name, last_name, mobile, email, pincode, city, state, profile_pic, user_type);
+                        }
 
                     }
 
@@ -1211,7 +1240,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
         if (body == null) {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mEmail,mMobile,mpincode,mCity,mstate,mdes).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mEmail,mMobile,mpincode,mCity,mstate).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
@@ -1273,7 +1302,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             });
         } else {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mEmail,mMobile,mpincode,mCity,mstate,mdes,body).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mEmail,mMobile,mpincode,mCity,mstate,body).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
@@ -1549,37 +1578,44 @@ void getPincode( String pin) {
         @Override
         public void onResponse(Call<FetchPincode> call, Response<FetchPincode> response) {
             if (response.isSuccessful()) {
+                try {
                 String strEventList = response.body().getDetail();
                 RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                 String data = refreashToken.decryptedData(strEventList);
-                JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                ArrayList<Pincode_item> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<Pincode_item>>() {
-                }.getType());
 
-                // List<ProfileDetails> profileDetails = profile.getProfileDetails();
+                    JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                    ArrayList<Pincode_item> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<Pincode_item>>() {
+                    }.getType());
 
-                if (profileDetails.size() > 0) {
+                    // List<ProfileDetails> profileDetails = profile.getProfileDetails();
 
-                    for(int i = 0; i<profileDetails.size();i++){
-                        pincodeData.add(profileDetails.get(i).getPincode());
+                    if (profileDetails.size() > 0) {
+
+                        for (int i = 0; i < profileDetails.size(); i++) {
+                            pincodeData.add(profileDetails.get(i).getPincode());
+
+                        }
+                        //Creating the instance of ArrayAdapter containing list of language names
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                                (ProfilePCOActivity.this, android.R.layout.select_dialog_item, pincodeData);
+
+                        atv_pincode.setAdapter(adapter);
+
+                        atv_pincode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                                    long id) {
+                                Toast.makeText(ProfilePCOActivity.this, " selected", Toast.LENGTH_LONG).show();
+                                pincode = atv_pincode.getText().toString();
+                                getState(atv_pincode.getText().toString());
+                            }
+                        });
 
                     }
-                    //Creating the instance of ArrayAdapter containing list of language names
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                            (ProfilePCOActivity.this, android.R.layout.select_dialog_item, pincodeData);
-
-                    atv_pincode.setAdapter(adapter);
-
-                    atv_pincode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View arg1, int pos,
-                                                long id) {
-                            Toast.makeText(ProfilePCOActivity.this," selected", Toast.LENGTH_LONG).show();
-                            pincode = atv_pincode.getText().toString();
-                            getState(atv_pincode.getText().toString());
-                        }
-                    });
+                }catch (Exception e){
+                    Toast.makeText(ProfilePCOActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                    atv_pincode.setText("");
 
                 }
 

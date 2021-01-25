@@ -355,8 +355,7 @@ public interface APIService {
                                 @Part("mobile") RequestBody mobile,
                                 @Part("pincode") RequestBody pincode,
                                 @Part("city") RequestBody city,
-                                @Part("state") RequestBody state,
-                                @Part("designation") RequestBody designation);
+                                @Part("state") RequestBody state);
 
     @Multipart
     @POST("login_api_call/updateProfile")
@@ -370,7 +369,6 @@ public interface APIService {
                                 @Part("pincode") RequestBody pincode,
                                 @Part("city") RequestBody city,
                                 @Part("state") RequestBody state,
-                                @Part("designation") RequestBody designation,
                                 @Part MultipartBody.Part filename);
 
     //Attendee Api
