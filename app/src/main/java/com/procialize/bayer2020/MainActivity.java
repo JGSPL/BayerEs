@@ -204,8 +204,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView iv_edit = outer.findViewById(R.id.iv_edit);
         iv_edit.setOnClickListener(this);
         TextView tv_designation = outer.findViewById(R.id.tv_designation);
+        TextView tv_city = outer.findViewById(R.id.tv_city);
         tv_name.setText(fName + " " + lName);
-        tv_designation.setText(designation + " - " + city);
+        tv_designation.setText(designation);
+        tv_designation.setText(company);
 
 
 

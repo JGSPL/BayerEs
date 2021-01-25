@@ -269,11 +269,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="right"
-
-                android:drawablePadding="5dp"
-                android:drawableRight="@drawable/ic_like"
                 android:padding="3dp"
                 android:text="0 Like"
+                android:layout_marginRight="5dp"
                 android:textColor="@color/inactivetab"
                 android:textSize="13dp" />
             <ImageView
@@ -281,12 +279,19 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:gravity="left"
-                android:layout_weight="1"
 
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:padding="3dp"
                 android:src="@drawable/ic_like" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:padding="3dp"
+                android:src="@drawable/ic_comment"
+                android:visibility="invisible"/>
 
 
             <ImageView

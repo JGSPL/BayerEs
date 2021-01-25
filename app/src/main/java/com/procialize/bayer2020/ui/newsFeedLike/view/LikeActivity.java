@@ -91,8 +91,8 @@ public class LikeActivity extends AppCompatActivity implements View.OnClickListe
         }
         CommonFirebase.crashlytics("Like", api_token);
         CommonFirebase.firbaseAnalytics(this, "Like", api_token);
-        setDynamicColor();
-        CommonFunction.showBackgroundImage(this, ll_main);
+       // setDynamicColor();
+       // CommonFunction.showBackgroundImage(this, ll_main);
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(LikeActivity.this);
         rv_like.setLayoutManager(mLayoutManager);

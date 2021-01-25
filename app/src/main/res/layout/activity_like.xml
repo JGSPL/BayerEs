@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background"
     android:id="@+id/ll_main"
     tools:context=".ui.newsFeedLike.view.LikeActivity">
 
@@ -12,7 +13,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="@color/colorwhite"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:elevation="0dp">
 
@@ -38,6 +39,7 @@
                 android:layout_gravity="left"
                 android:contentDescription=" "
                 android:padding="10dp"
+                android:tint="@color/colorPink"
                 android:src="@mipmap/ic_back"
                 android:visibility="visible" />
 
