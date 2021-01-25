@@ -21,7 +21,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="You have skipped this question.."
-            android:textColor="@color/colorwhite"
+            android:textColor="@color/black"
             android:layout_marginTop="5dp"
             android:textSize="@dimen/textsizenormal" />
 
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text=""
-            android:textColor="@color/colorwhite"
+            android:textColor="@color/black"
             android:textSize="@dimen/textsizenormal" />
 
         <LinearLayout

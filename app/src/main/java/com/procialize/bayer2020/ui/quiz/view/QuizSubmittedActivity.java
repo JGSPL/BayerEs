@@ -2,17 +2,20 @@ package com.procialize.bayer2020.ui.quiz.view;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -20,6 +23,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -47,6 +55,8 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_C
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.QUIZLOGO_MEDIA_PATH;
 
 public class QuizSubmittedActivity extends AppCompatActivity implements View.OnClickListener {
@@ -66,7 +76,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
     LinearLayoutManager llm;
     int count = 1;
     RelativeLayout relative,relative_main;
-
+    ImageView iv_back,headerlogoIv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +103,31 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
 */
+        iv_back = findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        headerlogoIv = findViewById(R.id.headerlogoIv);
+
+        String eventLogo = SharedPreference.getPref(this, EVENT_LOGO);
+        String eventListMediaPath = SharedPreference.getPref(this, EVENT_LIST_MEDIA_PATH);
+        Glide.with(this)
+                .load(eventListMediaPath + eventLogo)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(headerlogoIv);
+
         relative = findViewById(R.id.relative);
         txt_count = findViewById(R.id.txt_count);
         questionTv = findViewById(R.id.questionTv);
