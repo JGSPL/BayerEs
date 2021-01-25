@@ -76,6 +76,17 @@ public class ProductListDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_productlist_detail);
 
         setUpToolbar();
+
+        ImageView iv_back = findViewById(R.id.iv_back);
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
         mTabHostCel = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHostCel.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
@@ -220,11 +231,11 @@ public class ProductListDetailActivity extends AppCompatActivity {
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
+           /* setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            mToolbar.showOverflowMenu();
+            mToolbar.showOverflowMenu();*/
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
             String eventLogo = SharedPreference.getPref(ProductListDetailActivity.this, EVENT_LOGO);

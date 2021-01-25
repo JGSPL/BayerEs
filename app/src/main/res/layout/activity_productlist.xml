@@ -19,9 +19,18 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_back"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:elevation="0dp">
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:contentDescription=" "
+                android:padding="10dp"
+                android:tint="@color/colorPink"
+                android:src="@mipmap/ic_back"
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/headerlogoIv"

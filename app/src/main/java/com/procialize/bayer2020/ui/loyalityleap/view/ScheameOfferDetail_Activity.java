@@ -48,6 +48,15 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
 
         final WebView webView = (WebView) findViewById(R.id.webview_scheame);
         setUpToolbar();
+        ImageView iv_back = findViewById(R.id.iv_back);
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         String eulaLink = ScheameList.getDescription() ;
         WebSettings webSettings = webView.getSettings();
@@ -60,11 +69,11 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
+           /* setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            mToolbar.showOverflowMenu();
+            mToolbar.showOverflowMenu();*/
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
             String eventLogo = SharedPreference.getPref(ScheameOfferDetail_Activity.this, EVENT_LOGO);

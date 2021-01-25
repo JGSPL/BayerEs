@@ -74,21 +74,24 @@ public class FAQActivity extends AppCompatActivity implements FAQAdapter.Product
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
         // eventid = "1";
-        Intent intent = getIntent();
-        productType = (ProductType) getIntent().getSerializableExtra("ProductType");
+      /*  Intent intent = getIntent();
+        productType = (ProductType) getIntent().getSerializableExtra("ProductType");*/
 
         productTypeRv = findViewById(R.id.productTypeRv);
         productrefresh = findViewById(R.id.productrefresh);
         progressBar = findViewById(R.id.progressBar);
         relative = findViewById(R.id.relative);
         setUpToolbar();
+        ImageView iv_back = findViewById(R.id.iv_back);
 
-        mToolbar.setOnClickListener(new View.OnClickListener() {
+        iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               finish();
+                finish();
             }
         });
+
+
 
         if (cd.isConnectingToInternet()) {
 
@@ -187,11 +190,11 @@ public class FAQActivity extends AppCompatActivity implements FAQAdapter.Product
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
+           /* setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            mToolbar.showOverflowMenu();
+            mToolbar.showOverflowMenu();*/
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
             String eventLogo = SharedPreference.getPref(FAQActivity.this, EVENT_LOGO);

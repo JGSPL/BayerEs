@@ -86,6 +86,17 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
         relative = findViewById(R.id.relative);
         txtRedeemPoint = findViewById(R.id.txtRedeemPoint);
         setUpToolbar();
+
+        ImageView iv_back = findViewById(R.id.iv_back);
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
         if (cd.isConnectingToInternet()) {
 
             getProductType(token,eventid);
@@ -179,11 +190,11 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
+           /* setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            mToolbar.showOverflowMenu();
+            mToolbar.showOverflowMenu();*/
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
             String eventLogo = SharedPreference.getPref(RequestToRedeemActivity.this, EVENT_LOGO);

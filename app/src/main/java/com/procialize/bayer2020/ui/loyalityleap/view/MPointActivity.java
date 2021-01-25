@@ -86,6 +86,16 @@ public class MPointActivity extends AppCompatActivity implements MCalculatorAdap
         txt_score = findViewById(R.id.txt_score);
 
         setUpToolbar();
+        ImageView iv_back = findViewById(R.id.iv_back);
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
         if (cd.isConnectingToInternet()) {
 
             getProductType(token,eventid);
@@ -177,11 +187,11 @@ public class MPointActivity extends AppCompatActivity implements MCalculatorAdap
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
+            /*setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            mToolbar.showOverflowMenu();
+            mToolbar.showOverflowMenu();*/
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
             String eventLogo = SharedPreference.getPref(MPointActivity.this, EVENT_LOGO);

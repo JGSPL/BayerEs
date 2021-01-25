@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
-            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy , tr_downloads, tr_faq;
+            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy , tr_downloads, tr_faq, tr_storeLocator;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -246,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_privacy_policy = findViewById(R.id.tr_privacy_policy);
         tr_downloads = findViewById(R.id.tr_downloads);
         tr_faq= findViewById(R.id.tr_faq);
+        tr_storeLocator = findViewById(R.id.tr_storeLocator);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -261,6 +262,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_privacy_policy.setOnClickListener(this);
         tr_downloads.setOnClickListener(this);
         tr_faq.setOnClickListener(this);
+        tr_storeLocator.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -522,6 +524,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
                 break;
+            case R.id.tr_storeLocator:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                Utility.createShortSnackBar(mDrawerLayout, "Coming soon");
+
+                //startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+                break;
+
             case R.id.tr_event_info:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
