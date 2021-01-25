@@ -94,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:background="@drawable/edit_button_bg"
+                        android:background="@drawable/btn_submit"
                         android:gravity="center"
 
                         android:paddingLeft="20dp"
