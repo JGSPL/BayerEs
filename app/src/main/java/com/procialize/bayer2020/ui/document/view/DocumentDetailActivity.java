@@ -42,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.DOCUMENT_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
@@ -75,7 +76,7 @@ public class DocumentDetailActivity extends AppCompatActivity {
         url = getIntent().getStringExtra("url");
         url1 = getIntent().getStringExtra("url1");
 
-        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+      /*  iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);*/
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,11 +85,11 @@ public class DocumentDetailActivity extends AppCompatActivity {
         });
 
         tv_header = findViewById(R.id.tv_header);
-        CommonFunction.showBackgroundImage(DocumentDetailActivity.this, linear);
+       /* CommonFunction.showBackgroundImage(DocumentDetailActivity.this, linear);
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(DocumentDetailActivity.this, EVENT_COLOR_3)));
         session = new SessionManager(getApplicationContext());
         btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(DocumentDetailActivity.this, EVENT_COLOR_2)));
-        btn_share.setBackgroundColor(Color.parseColor(SharedPreference.getPref(DocumentDetailActivity.this, EVENT_COLOR_2)));
+        btn_share.setBackgroundColor(Color.parseColor(SharedPreference.getPref(DocumentDetailActivity.this, EVENT_COLOR_2)));*/
         api_token = SharedPreference.getPref(DocumentDetailActivity.this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(DocumentDetailActivity.this, EVENT_ID);
 
@@ -124,8 +125,8 @@ public class DocumentDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
-        webview.loadUrl(url);
+        String path = SharedPreference.getPref(this, DOCUMENT_MEDIA_PATH);
+        webview.loadUrl(path+url);
 
         btn_share.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -641,7 +641,7 @@ public interface APIService {
                                         @Field("training_id") String training_id);
 
 
-    @POST("Document_api/DocumentList")
+    @POST("download_api/DocumentsFetch")
     @FormUrlEncoded
     Call<Document> getDocumentList(@Header("authorization") String auth,
                                    @Field("event_id") String event_id,

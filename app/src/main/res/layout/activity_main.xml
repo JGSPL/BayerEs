@@ -212,7 +212,7 @@
             <TableRow
                 android:id="@+id/tr_downloads"
                 android:layout_width="fill_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_height="fill_parent"
                 android:padding="10dp">
 

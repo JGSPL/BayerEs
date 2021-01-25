@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,9 +33,10 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
     DocumentListAdapter.DocumentListAdapterListner listener;
     public static boolean isClickable = true;
 
-    public DocumentListAdapter(Context context, List<DocumentDetail> docList) {
+    public DocumentListAdapter(Context context, List<DocumentDetail> docList,DocumentListAdapterListner listener) {
         this.context = context;
         this.docList = docList;
+        this.listener = listener;
 
     }
 
@@ -50,7 +52,7 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
         //Newsfeed_detail feedData = feed_detail.get(position);
         final DocumentDetail doc = docList.get(position);
 
-        String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+     /*   String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
         String eventColor = SharedPreference.getPref(context, EVENT_COLOR_1);
         int color = Color.parseColor(eventColor);
         String eventColor3Opacity40 = eventColor3.replace("#", "");
@@ -58,7 +60,7 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
         holder.doc_list_layout.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
         holder.quiz_title_txt.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
         holder.img_pdf.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        holder.img_dwnload.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        holder.img_dwnload.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);*/
         holder.quiz_title_txt.setText(doc.getDocument_name());
 
         holder.doc_list_layout.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +72,13 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
                 pdfview.putExtra("url", "https://docs.google.com/gview?embedded=true&url=" + doc.getDocument_file_name());
                 pdfview.putExtra("url1", doc.getDocument_file_name());
                 context.startActivity(pdfview);
+            }
+        });
+
+        holder.rl_download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onMoreSelected(doc,position);
             }
         });
     }
@@ -86,6 +95,7 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
         public TextView quiz_title_txt;
         LinearLayout doc_list_layout;
         ImageView img_pdf, img_dwnload;
+        RelativeLayout rl_download;
 
         public DocumentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,6 +103,7 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
             doc_list_layout = itemView.findViewById(R.id.doc_list_layout);
             img_dwnload = itemView.findViewById(R.id.img_dwnload);
             img_pdf = itemView.findViewById(R.id.img_pdf);
+            rl_download = itemView.findViewById(R.id.rl_download);
 
 
         }
@@ -101,4 +112,5 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
     public interface DocumentListAdapterListner {
         void onMoreSelected(DocumentDetail event, int position);
     }
+
 }
