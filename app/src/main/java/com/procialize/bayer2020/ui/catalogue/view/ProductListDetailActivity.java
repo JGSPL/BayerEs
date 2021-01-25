@@ -165,7 +165,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                 Product_document_detailList = eventLists.getProductDocumentList();
                                 String DocumentPath = eventLists.getProduct_documentpath();
                                 Bundle bb = new Bundle();
-                            bb.putSerializable("ProductType", (Serializable) product_item);
+                                bb.putSerializable("ProductType", (Serializable) product_item);
                                 bb.putString("DocumentPath", DocumentPath);
 
                                 bb.putSerializable("productSubPoint", (Serializable) product_subpoint_detailList);
@@ -173,7 +173,6 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                         mTabHostCel.newTabSpec("Tab1")
                                                 .setIndicator(createTabView(ProductListDetailActivity.this, "Details")),
                                         ProductSubPointFragment.class, bb);
-
 
                                 Bundle b = new Bundle();
                                 b.putSerializable("ProductType", (Serializable) product_item);
@@ -184,7 +183,6 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                         mTabHostCel.newTabSpec("Tab2")
                                                 .setIndicator(createTabView(ProductListDetailActivity.this, "Downloads")),
                                         ProductDocumentFragment.class, b);
-
 
                                 productTitle.setText(product_item.getProduct_name());
                                 Glide.with(ProductListDetailActivity.this)
