@@ -78,6 +78,17 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
         progressBar = findViewById(R.id.progressBar);
         relative = findViewById(R.id.relative);
         setUpToolbar();
+
+        ImageView iv_back = findViewById(R.id.iv_back);
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
         if (cd.isConnectingToInternet()) {
 
             getProductType(token,eventid);
@@ -178,11 +189,11 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
+           /* setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            mToolbar.showOverflowMenu();
+            mToolbar.showOverflowMenu();*/
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
             String eventLogo = SharedPreference.getPref(ScheameOfferListActivity.this, EVENT_LOGO);

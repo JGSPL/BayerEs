@@ -50,6 +50,45 @@
                 android:text="Edit Profile"
                 android:textSize="16dp" />
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/notificationlogoIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_notification" />
+
+                <LinearLayout
+                    android:id="@+id/ll_notification_count"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/count_circle"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tv_notification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="15dp"
+                        android:gravity="top|center"
+                        android:text="50"
+                        android:textColor="@color/colorwhite"
+                        android:textSize="8dp" />
+                </LinearLayout>
+            </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -68,6 +107,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
+                android:background="@drawable/backdrop"
                 android:layout_gravity="center">
 
                 <LinearLayout
@@ -80,14 +120,14 @@
                         android:id="@+id/view_one"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/loginbutton" />
+                         />
 
                     <View
                         android:id="@+id/view_down"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/white" />
+                         />
                 </LinearLayout>
 
                 <TextView
@@ -174,20 +214,62 @@
                 android:paddingTop="20dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="180dp">
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text=" I am a*"
+                    android:textColor="@color/textcolorLight" />
+
+                <RadioGroup
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="1"
+                    android:id="@+id/radiogroupPCOType">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioPCO"
+                    android:backgroundTint="@color/textcolorLight"
+                    android:buttonTint="@color/textcolorLight"
+                    android:text="Pest Control Operator"
+                    android:textColor="@color/textcolorLight"  />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioOwer"
+                    android:backgroundTint="@color/textcolorLight"
+                    android:buttonTint="@color/textcolorLight"
+                    android:text="Home/office owner"
+                    android:textColor="@color/textcolorLight"  />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioother"
+                    android:backgroundTint="@color/textcolorLight"
+                    android:buttonTint="@color/textcolorLight"
+                    android:text="Other"
+                    android:textColor="@color/textcolorLight"  />
+                </RadioGroup>
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:text="First Name"
+                    android:text="First Name*"
                     android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
                     android:id="@+id/ll_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@drawable/edt_profile_white"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center_vertical">
@@ -217,7 +299,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Last Name"
+                    android:text="Last Name*"
                     android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
@@ -225,7 +307,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@drawable/edt_profile_white"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="10dp"
@@ -256,7 +338,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Organization Name"
+                    android:text="Organization Name*"
                     android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
@@ -264,7 +346,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@drawable/edt_profile_white"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center_vertical">
@@ -294,7 +376,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@drawable/edt_profile_white"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center_vertical"
@@ -363,8 +445,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:id="@+id/txtaltno"
                     android:layout_marginBottom="5dp"
-                    android:text="Alternate mobile number"
+                    android:text="Alternate mobile number(Up to 3)"
                     android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
@@ -372,9 +455,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@color/transperent"
                     android:orientation="horizontal"
-                    android:padding="10dp"
+                    android:weightSum="10"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -388,24 +471,100 @@
 
                     <com.procialize.bayer2020.fonts.RobotoEditext
                         android:id="@+id/et_alternetmobno"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:background="@color/transperent"
-                        android:hint="Email"
-                        android:editable="false"
-                        android:clickable="false"
+                        android:layout_marginLeft="0dp"
+                        android:padding="10dp"
+                        android:background="@drawable/edt_profile_white"
+                        android:layout_weight="9"
                         android:singleLine="true"
                         android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
+                    <ImageView
+                        android:id="@+id/iv_plus"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:padding="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/add_icon"
+                        android:visibility="visible" />
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_alternetmobno2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/transperent"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    android:gravity="center_vertical">
+
+
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_alternetmobno2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:padding="10dp"
+                        android:background="@drawable/edt_profile_white"
+                        android:layout_weight="9"
+                        android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
+                        android:textSize="13dp" />
+                    <ImageView
+                        android:id="@+id/iv_plus2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:padding="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/add_icon"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_alternetmobno3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/transperent"
+                    android:orientation="horizontal"
+                    android:weightSum="10"
+                    android:gravity="center_vertical">
+
+
+                    <com.procialize.bayer2020.fonts.RobotoEditext
+                        android:id="@+id/et_alternetmobno3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:padding="10dp"
+                        android:background="@drawable/edt_profile_white"
+                        android:layout_weight="9"
+                        android:singleLine="true"
+                        android:textColor="@color/textcolorLight"
+                        android:textSize="13dp" />
+
+                    <ImageView
+                        android:id="@+id/iv_plus3"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:padding="3dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/add_icon"
+                        android:visibility="invisible" />
+
+                </LinearLayout>
+
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Email Id"
+                    android:text="Email Id*"
                     android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
@@ -413,7 +572,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@drawable/edt_profile_white"
                     android:orientation="horizontal"
                     android:padding="10dp"
                     android:gravity="center_vertical">
@@ -433,20 +592,60 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
-                        android:clickable="false"
-                        android:editable="false"
+
                         android:hint="Email Id"
                         android:singleLine="true"
                         android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Designation"
+                    android:textColor="@color/textcolorLight" />
+                <RadioGroup
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="1"
+                    android:id="@+id/radiogroupDesig">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioOwner"
+                    android:backgroundTint="@color/textcolorLight"
+                    android:buttonTint="@color/textcolorLight"
+                    android:text="Owner"
+                    android:textColor="@color/textcolorLight"  />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioTech"
+                    android:backgroundTint="@color/textcolorLight"
+                    android:buttonTint="@color/textcolorLight"
+                    android:text="Technician"
+                    android:textColor="@color/textcolorLight"  />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioManager"
+                    android:backgroundTint="@color/textcolorLight"
+                    android:buttonTint="@color/textcolorLight"
+                    android:text="Manager/Admin/Other"
+                    android:textColor="@color/textcolorLight"  />
+                </RadioGroup>
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Pincode"
+                    android:text="Area Pincode*"
                     android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
@@ -454,10 +653,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@drawable/edt_profile_white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="10dp">
+                    <AutoCompleteTextView
+                        android:id="@+id/atv_pincode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter Pincode"
+                        android:layout_marginBottom="0dp"
+                        android:layout_marginTop="0dp"
+                        android:visibility="visible"
+                        android:textSize="13dp"
+                        android:background="@color/transperent"
+                        android:inputType="number"
+                        android:padding="0dp"
+                        android:ems="10" />
+<!--
+                    <com.procialize.bayer2020.costumTools.CustomAutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:id="@+id/atv_pincode"
+                        android:hint="Enter Pincode"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="visible"
+                        android:background="@color/transperent"
+                        android:inputType="number"
+                        android:padding="0dp"
+                        />
+-->
+
 
 
                     <com.procialize.bayer2020.fonts.RobotoEditext
@@ -469,9 +697,11 @@
                         android:clickable="false"
                         android:editable="false"
                         android:hint=""
+                        android:visibility="gone"
                         android:singleLine="true"
                         android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
+
                 </LinearLayout>
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
@@ -543,8 +773,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:id="@+id/txttectcount"
                     android:layout_marginBottom="5dp"
-                    android:text="SAP Code"
+                    android:text="How many technicians work in your organization?"
                     android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
@@ -552,7 +783,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@drawable/edt_profile_white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:padding="10dp">
@@ -564,9 +795,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
-                        android:clickable="false"
-                        android:editable="false"
-                        android:hint="SAP Code"
                         android:singleLine="true"
                         android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
@@ -577,7 +805,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Associated with Bayer since"
+                    android:id="@+id/txtDomain"
+                    android:text="Domain specialization*"
                     android:textColor="@color/textcolorLight" />
 
                 <LinearLayout
@@ -585,10 +814,48 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/profile_edit_text_bg"
+                    android:background="@android:color/transparent"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="10dp">
+                    <CheckBox
+                        android:id="@+id/checkMosquito"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Mosquito Control"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <CheckBox
+                        android:id="@+id/checkResPest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Residential Pest Control"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+
+                    <CheckBox
+                        android:id="@+id/checkcomPest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Termite Control"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
+                    <CheckBox
+                        android:id="@+id/checkTermite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Commercial Pest Control"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
 
 
                     <com.procialize.bayer2020.fonts.RobotoEditext
@@ -598,8 +865,8 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:clickable="false"
-                        android:editable="false"
-                        android:singleLine="true"
+                        android:visibility="gone"
+
                         android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
@@ -609,7 +876,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Number of PCOs served"
+                    android:id="@+id/txtAnnualOrg"
+                    android:text="Annual organization turnover"
                     android:textColor="@color/textcolorLight" />
 
                 <com.whygraphics.multilineradiogroup.MultiLineRadioGroup xmlns:multi_line_radio_group="http://schemas.android.com/apk/res-auto"
@@ -617,14 +885,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/radiogroupPCO"
                     multi_line_radio_group:default_button="button_2"
-                    multi_line_radio_group:max_in_row="2">
+                    multi_line_radio_group:max_in_row="1">
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton1"
                         android:backgroundTint="@color/textcolorLight"
                         android:buttonTint="@color/textcolorLight"
-                        android:text="Less than 50"
+                        android:text="Less than Rs. 10 lacs"
                         android:textColor="@color/textcolorLight"  />
 
                     <RadioButton
@@ -633,7 +901,7 @@
                         android:id="@+id/radioButton2"
                         android:backgroundTint="@color/textcolorLight"
                         android:buttonTint="@color/textcolorLight"
-                        android:text="101-200"
+                        android:text="Rs. 10 to 25 lacs"
                         android:textColor="@color/textcolorLight"  />
 
                     <RadioButton
@@ -642,7 +910,7 @@
                         android:id="@+id/radioButton3"
                         android:backgroundTint="@color/textcolorLight"
                         android:buttonTint="@color/textcolorLight"
-                        android:text="50-100"
+                        android:text="Rs. 25 to 50 lacs"
                         android:textColor="@color/textcolorLight"  />
 
                     <RadioButton
@@ -651,8 +919,25 @@
                         android:id="@+id/radioButton4"
                         android:backgroundTint="@color/textcolorLight"
                         android:buttonTint="@color/textcolorLight"
-                        android:text="Above 200"
+                        android:text="Rs. 50 lacs to 1 crore"
                         android:textColor="@color/textcolorLight"  />
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioButton5"
+                        android:backgroundTint="@color/textcolorLight"
+                        android:buttonTint="@color/textcolorLight"
+                        android:text="Rs. 1 crore to 1.5 crore"
+                        android:textColor="@color/textcolorLight"  />
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioButton6"
+                        android:backgroundTint="@color/textcolorLight"
+                        android:buttonTint="@color/textcolorLight"
+                        android:text="Above Rs. 2 crore"
+                        android:textColor="@color/textcolorLight"  />
+
                     />
                 </com.whygraphics.multilineradiogroup.MultiLineRadioGroup>
 

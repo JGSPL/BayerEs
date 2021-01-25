@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:padding="20dp"
-    android:background="@color/linecolor"
+    android:background="@color/colorPink"
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
@@ -12,7 +12,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        app:cardCornerRadius="25dp">
+        app:cardCornerRadius="5dp">
 
         <ImageView
             android:id="@+id/iv_profile"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="16dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/colorwhite" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/tv_designation"
@@ -46,7 +46,7 @@
             android:layout_marginTop="3dp"
             android:text=""
             android:textSize="14dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/colorwhite" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/tv_city"
@@ -55,7 +55,7 @@
             android:layout_marginTop="1dp"
             android:text=""
             android:textSize="14dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/colorwhite" />
     </LinearLayout>
 
     <ImageView
@@ -65,5 +65,5 @@
         android:layout_gravity="bottom"
         android:src="@drawable/ic_edit_profile"
         android:tint="@color/white"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 </LinearLayout>

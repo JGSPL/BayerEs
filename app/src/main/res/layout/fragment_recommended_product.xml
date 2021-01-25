@@ -16,6 +16,6 @@
             android:id="@+id/rv_recommended_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/product_type_row" />
+            tools:listitem="@layout/product_download_row" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

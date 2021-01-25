@@ -38,10 +38,51 @@
                 <ImageView
                     android:id="@+id/headerlogoIv2"
                     android:layout_width="50dp"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="-10dp"
                     android:contentDescription=" " />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/notificationlogoIv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:foregroundGravity="center"
+                        android:src="@drawable/ic_notification" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_notification_count"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/count_circle"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/tv_notification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="15dp"
+                            android:gravity="top|center"
+                            android:text="0"
+                            android:textColor="@color/colorwhite"
+                            android:textSize="8dp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -77,6 +118,9 @@
         android:background="@color/white"
         android:fitsSystemWindows="false">
         <!-- app:menu="@menu/drawer" -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -119,6 +163,7 @@
             <TableRow
                 android:id="@+id/tr_profile"
                 android:layout_width="fill_parent"
+                android:visibility="gone"
                 android:layout_height="fill_parent"
                 android:padding="10dp">
 
@@ -143,6 +188,7 @@
             <TableRow
                 android:id="@+id/tr_event_info"
                 android:layout_width="fill_parent"
+                android:visibility="gone"
                 android:layout_height="fill_parent"
                 android:padding="10dp">
 
@@ -163,6 +209,79 @@
                     android:textSize="15dp" />
 
             </TableRow>
+            <TableRow
+                android:id="@+id/tr_downloads"
+                android:layout_width="fill_parent"
+                android:visibility="gone"
+                android:layout_height="fill_parent"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@mipmap/ic_event_info"
+                    android:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_downloads"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="Downloads"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+            </TableRow>
+            <TableRow
+                android:id="@+id/tr_storeLocator"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_storelocat"
+                    android:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_storeLocator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="Store Locator"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+            </TableRow>
+            <TableRow
+                android:id="@+id/tr_faq"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_faq"
+                    android:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_faq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="FAQ"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+            </TableRow>
+
 
             <TableRow
                 android:id="@+id/tr_live_poll"
@@ -212,30 +331,6 @@
 
             </TableRow>
 
-            <TableRow
-                android:id="@+id/tr_downloads"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="10dp"
-                android:visibility="visible">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_livepoll"
-                    android:tint="@color/black" />
-
-                <TextView
-                    android:id="@+id/tv_downloads"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
-                    android:text="Downloads"
-                    android:textColor="@color/black"
-                    android:textSize="15dp" />
-
-            </TableRow>
 
             <TableRow
                 android:id="@+id/tr_contact_us"
@@ -414,6 +509,7 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

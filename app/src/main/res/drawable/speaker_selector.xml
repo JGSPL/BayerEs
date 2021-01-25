@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/active_speaker" android:state_selected="true"/>
-    <item android:drawable="@drawable/inactive_speaker"/> <!-- default -->
+    <item android:drawable="@drawable/ic_upskill" android:state_selected="true"/>
+    <item android:drawable="@drawable/ic_upskill"/> <!-- default -->
 </selector>

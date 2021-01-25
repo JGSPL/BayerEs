@@ -9,11 +9,14 @@ public class Product_detail {
 
     @SerializedName("product_detail")
     @Expose
-    List<Product_item> productList;
+    Product_item productList;
 
     @SerializedName("product_document_detail")
     @Expose
     List<Product_document_detail> productDocumentList;
+    @SerializedName("product_subpoints_detail")
+    @Expose
+    List<product_subpoint_detail> product_subpoints_detail;
 
 
     @SerializedName("total_document_count")
@@ -26,11 +29,11 @@ public class Product_detail {
     @Expose
     private String product_documentpath;
 
-    public List<Product_item> getProductList() {
+    public Product_item getProductList() {
         return productList;
     }
 
-    public void setProductList(List<Product_item> productList) {
+    public void setProductList(Product_item productList) {
         this.productList = productList;
     }
 
@@ -64,5 +67,13 @@ public class Product_detail {
 
     public void setProduct_documentpath(String product_documentpath) {
         this.product_documentpath = product_documentpath;
+    }
+
+    public List<product_subpoint_detail> getProduct_subpoints_detail() {
+        return product_subpoints_detail;
+    }
+
+    public void setProduct_subpoints_detail(List<product_subpoint_detail> product_subpoints_detail) {
+        this.product_subpoints_detail = product_subpoints_detail;
     }
 }

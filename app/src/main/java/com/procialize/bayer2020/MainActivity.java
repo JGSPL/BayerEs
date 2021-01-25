@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,11 +39,17 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -62,6 +68,7 @@ import com.procialize.bayer2020.session.SessionManager;
 import com.procialize.bayer2020.ui.Contactus.ContactUsActivity;
 import com.procialize.bayer2020.ui.EULA.EulaActivity;
 import com.procialize.bayer2020.ui.Privacypolicy.PrivacypolicyActivity;
+import com.procialize.bayer2020.ui.agenda.view.AgendaFragment;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
@@ -70,14 +77,22 @@ import com.procialize.bayer2020.ui.catalogue.view.CatalogueFragment;
 import com.procialize.bayer2020.ui.document.view.DocumentActivity;
 import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
 import com.procialize.bayer2020.ui.eventinfo.view.EventInfoActivity;
+import com.procialize.bayer2020.ui.faq.view.FAQActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.login.view.LoginActivity;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemStatusBasicData;
+import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_item;
+import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_status_item;
 import com.procialize.bayer2020.ui.loyalityleap.view.LoyalityLeapFragment;
+import com.procialize.bayer2020.ui.loyalityleap.view.RedemptionHistoryList;
 import com.procialize.bayer2020.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
 import com.procialize.bayer2020.ui.profile.view.ProfileActivity;
+import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
+import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
+import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
 import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
 import com.procialize.bayer2020.ui.upskill.view.UpskillFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
@@ -86,6 +101,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.jzvd.JzvdStd;
 import retrofit2.Call;
@@ -95,6 +111,7 @@ import retrofit2.Response;
 import static com.procialize.bayer2020.Constants.Constant.FOLDER_DIRECTORY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ENROLL_LEAP_FLAG;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
@@ -123,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
-            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy, tr_downloads;
+            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy , tr_downloads, tr_faq, tr_storeLocator;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -135,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String fName;
     String fireEmail;
     MenuItem menuItem;
-    String storeFireid, storeFirename, stoeUsername;
+    String storeFireid, storeFirename, stoeUsername,enrollleapFlag, company, userType;
     Menu mMenu;
     Dialog myDialog;
     MutableLiveData<LoginOrganizer> FetchenleepStatusList = new MutableLiveData<>();
@@ -172,9 +189,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String event_id = SharedPreference.getPref(this, EVENT_ID);
         String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
         String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
-        storeFireid = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_ID);
-        storeFirename = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_NAME);
-        stoeUsername = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASEUSER_NAME);
+        company = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_COMPANY);
+        userType = SharedPreference.getPref(this, SharedPreferencesConstant.USER_TYPE);
+        enrollleapFlag = SharedPreference.getPref(this, ENROLL_LEAP_FLAG);
 
 
         getProfileDetails();
@@ -192,8 +209,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+        if(enrollleapFlag.equalsIgnoreCase("1")) {
 
-        showLeepdialouge();
+        }else{
+            showLeepdialouge();
+        }
 
 
         Glide.with(MainActivity.this)
@@ -225,6 +245,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_eula = findViewById(R.id.tr_eula);
         tr_privacy_policy = findViewById(R.id.tr_privacy_policy);
         tr_downloads = findViewById(R.id.tr_downloads);
+        tr_faq= findViewById(R.id.tr_faq);
+        tr_storeLocator = findViewById(R.id.tr_storeLocator);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -239,6 +261,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_eula.setOnClickListener(this);
         tr_privacy_policy.setOnClickListener(this);
         tr_downloads.setOnClickListener(this);
+        tr_faq.setOnClickListener(this);
+        tr_storeLocator.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -435,7 +459,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.iv_edit:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                if(userType.equalsIgnoreCase("D")) {
+                    startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                }else{
+                    startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+
+                }
                 break;
             case R.id.tr_switch_event:
                 String root = Environment.getExternalStorageDirectory().toString();
@@ -486,11 +515,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, DocumentActivity.class));
                 break;
+            case R.id.tr_faq:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, FAQActivity.class));
+                break;
             case R.id.tr_profile:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
                 break;
+            case R.id.tr_storeLocator:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                Utility.createShortSnackBar(mDrawerLayout, "Coming soon");
+
+                //startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+                break;
+
             case R.id.tr_event_info:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -598,6 +639,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                             map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                             map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                            map.put(ENROLL_LEAP_FLAG,profileDetails.get(0).getEnrollleapflag());
                             map.put(IS_LOGIN, "true");
 
                             SharedPreference.putPref(MainActivity.this, map);
@@ -738,12 +780,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if(enrollBox.isChecked()){
-                    getEnleepStatus(api_token,eventid,"1","");
+                    getEnleepStatus(api_token,"1","1","");
+                    myDialog.dismiss();
+
                 }else{
                     Utility.createShortSnackBar(mDrawerLayout, "Please checked this box");
 
                 }
-                myDialog.dismiss();
             }
         });
 
@@ -759,6 +802,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                         if (response.isSuccessful()) {
+                            HashMap<String, String> map = new HashMap<>();
+
+                            map.put(ENROLL_LEAP_FLAG,"1");
+                            Utility.createShortSnackBar(mDrawerLayout, response.body().getHeader().get(0).getMsg());
 
                         }
                     }

@@ -8,6 +8,7 @@ import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
+import com.procialize.bayer2020.ui.catalogue.model.FetchProductDetail;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductType;
 import com.procialize.bayer2020.ui.document.model.Document;
@@ -25,11 +26,13 @@ import com.procialize.bayer2020.ui.newsFeedComment.model.Comment;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
 import com.procialize.bayer2020.ui.newsFeedLike.model.Like;
 import com.procialize.bayer2020.ui.newsfeed.model.FetchNewsfeedMultiple;
+import com.procialize.bayer2020.ui.profile.model.FetchPincode;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.quiz.model.QuizListing;
 import com.procialize.bayer2020.ui.quiz.model.QuizSubmit;
 import com.procialize.bayer2020.ui.speaker.model.FetchSpeaker;
 import com.procialize.bayer2020.ui.spotQnA.model.FetchSpotQnA;
+import com.procialize.bayer2020.ui.profile.model.FetchPincode;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContent;
 
 import java.util.List;
@@ -69,10 +72,11 @@ public interface APIService {
 
     @POST("login_api_call/enrollLeapFlag")
     @FormUrlEncoded
-    Call<LoginOrganizer> enrollLeapFlag(@Field("organizer_id") String organizer_id,
-                                        @Field("event_id") String event_id,
-                                        @Field("enrollleapflag") String enrollleapflag,
+    Call<LoginOrganizer> enrollLeapFlag(@Header("authorization") String organizer_id,
+                                  @Field("event_id") String event_id,
+                                  @Field("enrollleapflag") String enrollleapflag,
                                         @Field("enroll_reason") String enroll_reason);
+
 
 
     //@Headers("authorization: " + HeaderToken)
@@ -293,7 +297,7 @@ public interface APIService {
                                 @Part("user_type") RequestBody user_type,
                                 @Part("associated_since") RequestBody associated_since,
                                 @Part("no_of_pco_served") RequestBody no_of_pco_served
-    );
+                               );
 
     @Multipart
     @POST("login_api_call/updateProfile")
@@ -317,7 +321,6 @@ public interface APIService {
                                 @Part("pincode") RequestBody pincode,
                                 @Part("associated_since") RequestBody associated_since,
                                 @Part("no_of_pco_served") RequestBody no_of_pco_served);
-
     @Multipart
     @POST("login_api_call/updateProfile")
     Call<Profile> updateProfile(@Header("authorization") String authorization,
@@ -354,7 +357,23 @@ public interface APIService {
                                 @Part("mobile") RequestBody mobile,
                                 @Part("pincode") RequestBody pincode,
                                 @Part("city") RequestBody city,
-                                @Part("state") RequestBody state);
+                                @Part("state") RequestBody state,
+                                @Part("designation") RequestBody designation);
+
+    @Multipart
+    @POST("login_api_call/updateProfile")
+    Call<Profile> updateProfile(@Header("authorization") String authorization,
+                                @Part("event_id") RequestBody event_id,
+                                @Part("user_type") RequestBody user_type,
+                                @Part("first_name") RequestBody first_name,
+                                @Part("last_name") RequestBody last_name,
+                                @Part("email") RequestBody email,
+                                @Part("mobile") RequestBody mobile,
+                                @Part("pincode") RequestBody pincode,
+                                @Part("city") RequestBody city,
+                                @Part("state") RequestBody state,
+                                @Part("designation") RequestBody designation,
+                                @Part MultipartBody.Part filename);
 
     //Attendee Api
     // @Headers("authorization: " + HeaderToken)
@@ -503,6 +522,12 @@ public interface APIService {
                                        @Field("pageNumber") String pageNumber,
                                        @Field("pageSize") String pageSize);
 
+    @POST("Catalogue_api/ProductDetails")
+    @FormUrlEncoded
+    Call<FetchProductDetail> ProductDetails(@Header("authorization") String authkey,
+                                            @Field("event_id") String event_id,
+                                            @Field("product_id") String search_text);
+
     @POST("Catalogue_api/PestTypeList")
     @FormUrlEncoded
     Call<FetchPestList> PestTypeList(@Header("authorization") String authkey,
@@ -526,6 +551,12 @@ public interface APIService {
     Call<FetchPestDetail> PestDetails(@Header("authorization") String authkey,
                                       @Field("event_id") String event_id,
                                       @Field("pest_id") String search_text);
+
+    //Loyality Leap
+    @POST("Loyalty_api/MyPointFetch")
+    @FormUrlEncoded
+    Call<FetchAgenda> MyPointFetch(@Header("authorization") String authkey,
+                                              @Field("event_id") String event_id);
 
     @POST("Loyalty_api/SchemeAndOfferList")
     @FormUrlEncoded
@@ -573,7 +604,6 @@ public interface APIService {
     @FormUrlEncoded
     Call<FetchPurchageHistory> PurchaseHistoryFetch(@Header("authorization") String authkey,
                                                     @Field("event_id") String event_id);
-
     @POST("Loyalty_api/MpointFetch")
     @FormUrlEncoded
     Call<Fetchm_Point> MpointFetch(@Header("authorization") String authkey,
@@ -582,17 +612,10 @@ public interface APIService {
     @POST("training/UpskillList")
     @FormUrlEncoded
     Call<FetchAgenda> UpskillList(@Header("authorization") String authkey,
-                                  @Field("event_id") String event_id,
-                                  @Field("pageSize") String pageSize,
-                                  @Field("pageNumber") String pageNumber,
-                                  @Field("search_text") String search_text);
-    @POST("training/getUpskillContent")
-    @FormUrlEncoded
-    Call<UpskillContent> UpskillContent(@Header("authorization") String authkey,
-                                        @Field("event_id") String event_id,
-                                        @Field("training_id") String training_id);
-
-
+                                           @Field("event_id") String event_id,
+                                           @Field("pageSize") String pageSize,
+                                           @Field("pageNumber") String pageNumber,
+                                           @Field("search_text") String search_text);
     @GET("Event_api_call/Eula")
     Call<FetchAgenda> getEula();
 
@@ -611,6 +634,13 @@ public interface APIService {
                                 @Field("pageSize") String pageSize,
                                 @Field("pageNumber") String pageNumber);
 
+    @POST("training/getUpskillContent")
+    @FormUrlEncoded
+    Call<UpskillContent> UpskillContent(@Header("authorization") String authkey,
+                                        @Field("event_id") String event_id,
+                                        @Field("training_id") String training_id);
+
+
     @POST("Document_api/DocumentList")
     @FormUrlEncoded
     Call<Document> getDocumentList(@Header("authorization") String auth,
@@ -618,4 +648,20 @@ public interface APIService {
                                    @Field("pageSize") String pageSize,
                                    @Field("pageNumber") String pageNumber);
 
+    @POST("login_api_call/PincodeList")
+    @FormUrlEncoded
+    Call<FetchPincode> PincodeList(@Header("authorization") String auth,
+                                   @Field("event_id") String event_id,
+                                   @Field("search_text") String search_text);
+
+    @POST("login_api_call/CityState")
+    @FormUrlEncoded
+    Call<FetchPincode> CityState(@Header("authorization") String auth,
+                                 @Field("event_id") String event_id,
+                                 @Field("pincode") String pincode);
+
+    @POST("event_api_call/FAQFetch")
+    @FormUrlEncoded
+    Call<FetchAgenda> FAQFetch(@Header("authorization") String auth,
+                                 @Field("event_id") String event_id);
 }

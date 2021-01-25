@@ -88,6 +88,7 @@ import static com.procialize.bayer2020.Constants.Constant.REQUEST_CAMERA;
 import static com.procialize.bayer2020.Constants.Constant.SELECT_FILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ENROLL_LEAP_FLAG;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
@@ -133,13 +134,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
+
     Spinner spinner;
     String api_token, first_name, last_name, designation, company_name, city, email, mobile, is_god, alternate_no, turnover, specialization, license, pincode="",
             no_of_technician="", no_of_pco_served="", associated_since="", sap_code="", attendee_id="", user_type="", state="";
     String year[] = {"1950","1951","1952","1953","1954","1955","1956","1957","1958","1959","1960","1961","1962","1963","1964","1965","1966","1967","1968","1969","1970","1971","1972","1973",
     "1974","1975","1976","1977","1978","1979","1980","1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000",
     "2001","2002","2003","2004","2005","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"};
-
+    MultipartBody.Part body;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +194,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         radioButton3 = findViewById(R.id.radioButton3);
         radioButton2 = findViewById(R.id.radioButton2);
         radioButton1 = findViewById(R.id.radioButton1);
+        radiogroupPCO = findViewById(R.id.radiogroupPCO);
 
         et_aspociated = findViewById(R.id.et_aspociated);
         et_state = findViewById(R.id.et_state);
@@ -204,6 +207,36 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
+
+        radiogroupPCO.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                // This will get the radiobutton that has changed in its check state
+                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                // This puts the value (true/false) into the variable
+                boolean isChecked = checkedRadioButton.isChecked();
+                // If the radiobutton that has changed in check state is now checked...
+                if (isChecked)
+                {
+                    // Changes the textview's text to "Checked: example radiobutton text"
+                    String dataRad = checkedRadioButton.getText().toString();
+                    if (dataRad.equalsIgnoreCase("Less than 50")) {
+                        no_of_pco_served = "0";
+                    } else if (dataRad.equalsIgnoreCase("50-100")) {
+                        no_of_pco_served = "1";
+                    } else if (dataRad.equalsIgnoreCase("101-200")) {
+                        no_of_pco_served = "2";
+                    } else if (dataRad.equalsIgnoreCase("Above 200")) {
+                        no_of_pco_served = "3";
+                    }else{
+                        no_of_pco_served = "";
+                    }
+
+                }
+            }
+        });
 
 
         btn_save = findViewById(R.id.btn_save);
@@ -252,7 +285,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             state = profileDetails.get(0).getState();
                             pincode = profileDetails.get(0).getPincode();
                             user_type = profileDetails.get(0).getUser_type();
-                            tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
+                            //tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
 
 
                             et_first_name.setText(first_name);
@@ -392,7 +425,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             mobile = SharedPreference.getPref(getApplicationContext(), KEY_MOBILE);
             user_type = SharedPreference.getPref(getApplicationContext(), USER_TYPE);
 
-            tv_profile_pic.setText(SharedPreference.getPref(getApplicationContext(), PROFILE_PIC));
+           // tv_profile_pic.setText(SharedPreference.getPref(getApplicationContext(), PROFILE_PIC));
 
 
             et_first_name.setText(first_name);
@@ -438,18 +471,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 profile_pic = tv_profile_pic.getText().toString();
 
                 sap_code = et_sapcode.getText().toString();
-                associated_since = et_aspociated.getText().toString();
-                if (radioButton1.isSelected()) {
-                    no_of_pco_served = "0";
-                } else if (radioButton2.isSelected()) {
-                    no_of_pco_served = "1";
-                } else if (radioButton3.isSelected()) {
-                    no_of_pco_served = "2";
-                } else if (radioButton4.isSelected()) {
-                    no_of_pco_served = "3";
-                }else{
-                    no_of_pco_served = "";
-                }
+               // associated_since = et_aspociated.getText().toString();
+
 
                 no_of_technician = "";
                 pincode = "";
@@ -905,9 +928,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    public void saveProfile(String token,String event_id, String first_name, String last_name, String
-            designation, String city, String email, String mobile, String company_name, String profile_pic, String userType, String no_of_pco, String associated) {
-        MultipartBody.Part body = null;
+    public void saveProfile(final String first_name, final String last_name, final String designation,
+                            final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String alternate_no,
+                            final String user_type,final String sap_code,final String associated_since, final String no_of_pco_served) {
 
         if(!profile_pic.isEmpty()) {
             File file = new File(profile_pic);
@@ -916,7 +939,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
 
 
-        RequestBody mEvent_id = RequestBody.create(MediaType.parse("text/plain"), "1");//event_id);
+        RequestBody mEvent_id = RequestBody.create(MediaType.parse("text/plain"), "1");
         RequestBody mFirst_name = RequestBody.create(MediaType.parse("text/plain"), first_name);
         RequestBody mLast_name = RequestBody.create(MediaType.parse("text/plain"), last_name);
         RequestBody mDesignation = RequestBody.create(MediaType.parse("text/plain"), designation);
@@ -924,9 +947,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         RequestBody mEmail = RequestBody.create(MediaType.parse("text/plain"), email);
         RequestBody mMobile = RequestBody.create(MediaType.parse("text/plain"), mobile);
         RequestBody mCompany_name = RequestBody.create(MediaType.parse("text/plain"), company_name);
-        RequestBody muser_type = RequestBody.create(MediaType.parse("text/plain"), userType);
-        RequestBody mno_of_pco = RequestBody.create(MediaType.parse("text/plain"), no_of_pco);
-        RequestBody massociated = RequestBody.create(MediaType.parse("text/plain"), associated);
+        RequestBody muser_type = RequestBody.create(MediaType.parse("text/plain"), user_type);
+        RequestBody mno_of_pco = RequestBody.create(MediaType.parse("text/plain"), no_of_pco_served);
+        RequestBody massociated = RequestBody.create(MediaType.parse("text/plain"), associated_since);
 
         RequestBody altno1 = RequestBody.create(MediaType.parse("text/plain"), "");
         RequestBody altno2 = RequestBody.create(MediaType.parse("text/plain"), "");
@@ -939,7 +962,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if (body == null) {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode, massociated, mno_of_pco,body).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,/*mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode,*/ massociated, mno_of_pco).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
@@ -969,6 +992,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                                map.put(ENROLL_LEAP_FLAG, profileDetails.get(0).getEnrollleapflag());
+
                                 map.put(IS_LOGIN, "true");
                                 SharedPreference.putPref(ProfileActivity.this, map);
                                 final Handler handler = new Handler();
@@ -1000,8 +1025,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         } else {
-            
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode, massociated, mno_of_pco).enqueue(new Callback<Profile>() {
+
+            ApiUtils.getAPIService().updateProfile(api_token,
+                    mEvent_id,
+                    muser_type/*,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode*/,
+                    massociated,
+                    mno_of_pco,
+                    body).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
@@ -1042,6 +1072,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                         profileActivityViewModel.updateProfileFlag(ProfileActivity.this, "1", profileDetails.get(0).getAttendee_id());
                                     }
                                 }, 500);
+                                Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
+
 
                             } else {
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
@@ -1274,7 +1306,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         associated_since = parent.getItemAtPosition(position).toString();
-        Toast.makeText(this, "YOUR SELECTION IS : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(this, "YOUR SELECTION IS : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
 
     }
 
