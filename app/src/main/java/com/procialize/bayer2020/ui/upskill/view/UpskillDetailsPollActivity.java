@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +31,13 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.livepoll.adapter.PollGraphAdapter;
 import com.procialize.bayer2020.ui.upskill.model.LivePollOption;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContentSubArray;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jsoup.Jsoup;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -67,7 +71,23 @@ public class UpskillDetailsPollActivity extends AppCompatActivity implements Vie
         btn_next = findViewById(R.id.btn_next);
         questionTv = findViewById(R.id.questionTv);
         String strQuestion = upskillContentSubArray.getContentInfo().get(0).getContent_desc_poll().get(0).getQuestion();
-        questionTv.setText(strQuestion);
+
+        if (strQuestion.contains("\n")) {
+            strQuestion = strQuestion.trim().replace("\n", "<br/>");
+        } else {
+            strQuestion = strQuestion.trim();
+        }
+        String spannedString = String.valueOf(Jsoup.parse(strQuestion)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            questionTv.setText(Utility.trimTrailingWhitespace(strPost));
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            questionTv.setText(Utility.trimTrailingWhitespace(strPost));
+        }
+
+        //questionTv.setText(strQuestion);
         optionLists = (ArrayList<LivePollOption>) upskillContentSubArray.getContentInfo().get(0).getContent_desc_poll().get(0).getOption();
         btn_next.setOnClickListener(this);
         if (optionLists.size() != 0) {

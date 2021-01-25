@@ -20,12 +20,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:gravity="right" />
+        android:gravity="right"
+        android:visibility="gone"
+        android:textColor="@color/black"/>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="0dp">
 
         <LinearLayout
             android:id="@+id/raiolayout"
@@ -38,7 +40,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -58,6 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text=""
+                    android:textColor="@color/black"
                     android:textSize="@dimen/textsizenormal"
                     android:textStyle="bold" />
 

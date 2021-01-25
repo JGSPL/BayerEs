@@ -63,7 +63,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
         //Newsfeed_detail feedData = feed_detail.get(position);
         final QuizList quiz = quizList.get(position);
 
-        String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+        /*String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
 
@@ -73,8 +73,8 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
         holder.quiz_status.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         holder.textViewTime.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         holder.right_arrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
-
-        if (logoUrl != null) {
+*/
+        /*if (logoUrl != null) {
             holder.progressBar.setVisibility(View.GONE);
 
             Glide.with(context).load(logoUrl)
@@ -104,7 +104,7 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
             holder.rl_bg_image.setVisibility(View.VISIBLE);
         } else {
             holder.rl_bg_image.setVisibility(View.GONE);
-        }
+        }*/
 
         if(quizList.get(position).getQuiz_question().get(0).getReplied().equalsIgnoreCase("0")){
             holder.progressBarCircle.setVisibility(View.INVISIBLE);
@@ -160,24 +160,24 @@ public class QuizListAdapter extends RecyclerView.Adapter<QuizListAdapter.QuizVi
 
 
         public TextView quiz_title_txt, quiz_status, textViewTime;
-        RelativeLayout rl_bg_image;
-        ImageView profileIV,right_arrow;
-        ProgressBar progressBar, progressBarCircle;
+        //RelativeLayout rl_bg_image;
+        ImageView right_arrow;
+        ProgressBar  progressBarCircle;
         LinearLayout quiz_list_layout,linQuiz;
-        RelativeLayout layoutBottom;
+        //RelativeLayout layoutBottom;
 
         public QuizViewHolder(@NonNull View itemView) {
             super(itemView);
             quiz_title_txt = itemView.findViewById(R.id.quiz_title_txt);
-            rl_bg_image = itemView.findViewById(R.id.rl_bg_image);
+            /*rl_bg_image = itemView.findViewById(R.id.rl_bg_image);
             progressBar = itemView.findViewById(R.id.progressBar);
-            profileIV = itemView.findViewById(R.id.profileIV);
+            profileIV = itemView.findViewById(R.id.profileIV);*/
             quiz_status = itemView.findViewById(R.id.quiz_status);
             progressBarCircle = itemView.findViewById(R.id.progressBarCircle);
             textViewTime = itemView.findViewById(R.id.textViewTime);
             quiz_list_layout = itemView.findViewById(R.id.quiz_list_layout);
             linQuiz = itemView.findViewById(R.id.linQuiz);
-            layoutBottom = itemView.findViewById(R.id.layoutBottom);
+            //layoutBottom = itemView.findViewById(R.id.layoutBottom);
             right_arrow = itemView.findViewById(R.id.right_arrow);
 
 

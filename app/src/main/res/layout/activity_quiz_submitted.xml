@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:gravity="left"
+                    android:gravity="center"
                     android:paddingLeft="10dp"
                     android:text=""
                     android:textSize="16dp" />
@@ -134,41 +134,39 @@
 
             <com.procialize.bayer2020.fonts.RobotoButton
                 android:id="@+id/submit"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_weight="5"
                 android:gravity="center"
-                android:paddingLeft="40dp"
+                android:paddingLeft="60dp"
                 android:paddingTop="10dp"
-                android:paddingRight="40dp"
+                android:paddingRight="60dp"
                 android:paddingBottom="10dp"
                 android:text="Submit"
                 android:textAllCaps="false"
                 android:textColor="@color/colorwhite"
-                android:visibility="invisible" />
+                android:background="@drawable/btn_submit"
+                android:visibility="gone" />
 
             <com.procialize.bayer2020.fonts.RobotoButton
                 android:id="@+id/btnNext"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="5"
                 android:gravity="center"
-                android:paddingLeft="40dp"
+                android:paddingLeft="60dp"
                 android:paddingTop="10dp"
-                android:paddingRight="40dp"
+                android:paddingRight="60dp"
                 android:paddingBottom="10dp"
                 android:text="Next"
                 android:textAllCaps="false"
-                android:textColor="@color/colorwhite"
-                android:visibility="invisible" />
+                android:textColor="@color/white"
+                android:background="@drawable/btn_submit"
+                android:visibility="visible" />
         </LinearLayout>
     </RelativeLayout>
 

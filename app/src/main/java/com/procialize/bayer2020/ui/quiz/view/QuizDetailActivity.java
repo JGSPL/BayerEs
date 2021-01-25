@@ -3,6 +3,7 @@ package com.procialize.bayer2020.ui.quiz.view;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,18 +12,25 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -38,6 +46,7 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.costumTools.CustomViewPager;
 import com.procialize.bayer2020.session.SessionManager;
+import com.procialize.bayer2020.ui.livepoll.view.PollDetailActivity;
 import com.procialize.bayer2020.ui.quiz.adapter.QuizPagerAdapter;
 import com.procialize.bayer2020.ui.quiz.model.QuizList;
 import com.procialize.bayer2020.ui.quiz.model.QuizListing;
@@ -56,6 +65,8 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_C
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.QUIZLOGO_MEDIA_PATH;
 
 public class QuizDetailActivity extends AppCompatActivity implements View.OnClickListener {
@@ -91,6 +102,8 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
     boolean flag1 = true;
     boolean flag2 = true;
     RelativeLayout relative_main;
+    ImageView headerlogoIv;
+    ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +112,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
 
         new RefreashToken(QuizDetailActivity.this).callGetRefreashToken(QuizDetailActivity.this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -122,16 +135,16 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                 onBackPressed();
 
             }
-        });
+        });*/
 
         try {
                 timercountdown.cancel();
         } catch (Exception e) {
 
         }
-        String eventColor3 = SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_3);
+       /* String eventColor3 = SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_3);
 
-        String eventColor3Opacity40 = eventColor3.replace("#", "");
+        String eventColor3Opacity40 = eventColor3.replace("#", "");*/
 
         app = (App) getApplicationContext();
         foldername = getIntent().getExtras().getString("folder_name");
@@ -148,6 +161,13 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         time = timerForQuiz;
         time = Integer.parseInt(strTimer);
 
+        iv_back = findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         ll_main = findViewById(R.id.relative);
         submit = (Button) findViewById(R.id.submit);
         btnNext = (Button) findViewById(R.id.btnNext);
@@ -157,7 +177,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         tv_header = (TextView) findViewById(R.id.tv_header);
         relative_main = findViewById(R.id.relative_main);
         questionTv = findViewById(R.id.questionTv);
-        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1)));
+        /*tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1)));
         questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1)));
         txt_count.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         btnNext.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
@@ -173,7 +193,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
             txtSkip.setBackgroundDrawable(border);
         } else {
             txtSkip.setBackground(border);
-        }
+        }*/
         questionTv.setText(StringEscapeUtils.unescapeJava(foldername));
         pager = findViewById(R.id.pager);
         progressBarCircle = (ProgressBar) findViewById(R.id.progressBarCircle);
@@ -362,7 +382,25 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
 
         CommonFirebase.crashlytics("QuizDetail", api_token);
         CommonFirebase.firbaseAnalytics(this, "QuizDetail", api_token);
-        CommonFunction.showBackgroundImage(QuizDetailActivity.this, ll_main);
+        //CommonFunction.showBackgroundImage(QuizDetailActivity.this, ll_main);
+
+        headerlogoIv = findViewById(R.id.headerlogoIv);
+
+        String eventLogo = SharedPreference.getPref(this, EVENT_LOGO);
+        String eventListMediaPath = SharedPreference.getPref(this, EVENT_LIST_MEDIA_PATH);
+        Glide.with(this)
+                .load(eventListMediaPath + eventLogo)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(headerlogoIv);
     }
 
     public String checkdigit(int number) {

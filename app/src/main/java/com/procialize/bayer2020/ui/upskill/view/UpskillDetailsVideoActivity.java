@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,7 +27,10 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContentSubArray;
+
+import org.jsoup.Jsoup;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -56,7 +61,21 @@ public class UpskillDetailsVideoActivity extends AppCompatActivity implements Vi
         btn_next.setOnClickListener(this);
 
         tv_Description.setText(upskillContentSubArray.getContentInfo().get(0).getContent_desc());
+        String contentDesc = upskillContentSubArray.getContentInfo().get(0).getContent_desc();
+        if (contentDesc.contains("\n")) {
+            contentDesc = contentDesc.trim().replace("\n", "<br/>");
+        } else {
+            contentDesc = contentDesc.trim();
+        }
+        String spannedString = String.valueOf(Jsoup.parse(contentDesc)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            tv_Description.setText(Utility.trimTrailingWhitespace(strPost));
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            tv_Description.setText(Utility.trimTrailingWhitespace(strPost));
+        }
         try {
             Bitmap bitmap = retriveVideoFrameFromVideo(upskillContentSubArray.getContentInfo().get(0).getContent_url().trim());
             filePath = CommonFunction.saveImage(this, bitmap, "upskillthumb");
