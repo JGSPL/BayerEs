@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
-            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy , tr_downloads, tr_faq, tr_storeLocator;
+            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy, tr_downloads, tr_faq, tr_storeLocator;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String fName;
     String fireEmail;
     MenuItem menuItem;
-    String storeFireid, storeFirename, stoeUsername,enrollleapFlag, company, userType;
+    String storeFireid, storeFirename, stoeUsername, enrollleapFlag, company, userType;
     Menu mMenu;
     Dialog myDialog;
     MutableLiveData<LoginOrganizer> FetchenleepStatusList = new MutableLiveData<>();
@@ -163,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         navView = findViewById(R.id.bottom_navigation);
+
+
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.nav_drawer);
         mNavigationView = findViewById(R.id.nav_view);
@@ -210,10 +213,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_designation.setText(company);
 
 
+        if (enrollleapFlag.equalsIgnoreCase("1")) {
 
-        if(enrollleapFlag.equalsIgnoreCase("1")) {
-
-        }else{
+        } else {
             showLeepdialouge();
         }
 
@@ -247,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_eula = findViewById(R.id.tr_eula);
         tr_privacy_policy = findViewById(R.id.tr_privacy_policy);
         tr_downloads = findViewById(R.id.tr_downloads);
-        tr_faq= findViewById(R.id.tr_faq);
+        tr_faq = findViewById(R.id.tr_faq);
         tr_storeLocator = findViewById(R.id.tr_storeLocator);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
@@ -273,14 +275,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        LoyalityLeapFragment newsFeedFragment = LoyalityLeapFragment.newInstance();
-        Bundle bundle = new Bundle();
-        bundle.putString("isFrom", "MainActivity");
-        newsFeedFragment.setArguments(bundle);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_frame, newsFeedFragment, "")
-                .commit();
+
+
+        try {
+            String from = getIntent().getStringExtra("from");
+            if(from.equalsIgnoreCase("postNewsFeed")){
+                NewsFeedFragment newsFeedFragment = NewsFeedFragment.newInstance();
+                Bundle bundle = new Bundle();
+                bundle.putString("isFrom", "MainActivity");
+                newsFeedFragment.setArguments(bundle);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_frame, newsFeedFragment, "")
+                        .commit();
+                navView.setSelectedItemId(R.id.navigation_home);
+            }
+            else {
+                LoyalityLeapFragment newsFeedFragment = LoyalityLeapFragment.newInstance();
+                Bundle bundle = new Bundle();
+                bundle.putString("isFrom", "MainActivity");
+                newsFeedFragment.setArguments(bundle);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_frame, newsFeedFragment, "")
+                        .commit();
+
+                navView.setSelectedItemId(R.id.navigation_leap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LoyalityLeapFragment newsFeedFragment = LoyalityLeapFragment.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putString("isFrom", "MainActivity");
+            newsFeedFragment.setArguments(bundle);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_frame, newsFeedFragment, "")
+                    .commit();
+
+            navView.setSelectedItemId(R.id.navigation_leap);
+        }
 
         //To set icon on agenda when live streaming is going on
         /*BottomNavigationMenuView bottomNavigationMenuView =
@@ -461,9 +495,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.iv_edit:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                if(userType.equalsIgnoreCase("D")) {
+                if (userType.equalsIgnoreCase("D")) {
                     startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-                }else{
+                } else {
                     startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
 
                 }
@@ -574,7 +608,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
     private void getAttendeeAndInsertIntoDB() {
         try {
             final AttendeeDatabaseViewModel attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
@@ -611,6 +644,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
     }
+
     private void getProfileDetails() {
         if (ConnectionDetector.getInstance(MainActivity.this).isConnectingToInternet()) {
             ApiUtils.getAPIService().getProfile(api_token, eventid).enqueue(new Callback<Profile>() {
@@ -641,12 +675,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                             map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                             map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
-                            map.put(ENROLL_LEAP_FLAG,profileDetails.get(0).getEnrollleapflag());
+                            map.put(ENROLL_LEAP_FLAG, profileDetails.get(0).getEnrollleapflag());
                             map.put(IS_LOGIN, "true");
 
                             SharedPreference.putPref(MainActivity.this, map);
 
-                          //  tv_name.setText(profileDetails.get(0).getFirst_name() + " " + profileDetails.get(0).getLast_name());
+                            //  tv_name.setText(profileDetails.get(0).getFirst_name() + " " + profileDetails.get(0).getLast_name());
                             //tv_designation.setText(profileDetails.get(0).getDesignation() + " - " + profileDetails.get(0).getCity());
                            /* Glide.with(getApplicationContext())
                                     .load(profileDetails.get(0).getProfile_picture())
@@ -766,14 +800,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final CheckBox enrollBox = myDialog.findViewById(R.id.enrollCheckBox);
 
 
-
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 myDialog.dismiss();
                 JzvdStd.releaseAllVideos();
-               navView.setSelectedItemId(R.id.navigation_home);
+                navView.setSelectedItemId(R.id.navigation_home);
 
             }
         });
@@ -781,11 +813,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(enrollBox.isChecked()){
-                    getEnleepStatus(api_token,"1","1","");
+                if (enrollBox.isChecked()) {
+                    getEnleepStatus(api_token, "1", "1", "");
                     myDialog.dismiss();
 
-                }else{
+                } else {
                     Utility.createShortSnackBar(mDrawerLayout, "Please checked this box");
 
                 }
@@ -796,17 +828,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public MutableLiveData<LoginOrganizer> getEnleepStatus(String token, String eventid, String  id, String text) {
+    public MutableLiveData<LoginOrganizer> getEnleepStatus(String token, String eventid, String id, String text) {
         updateApi = ApiUtils.getAPIService();
 
-        updateApi.enrollLeapFlag(token,eventid,"1","")
+        updateApi.enrollLeapFlag(token, eventid, "1", "")
                 .enqueue(new Callback<LoginOrganizer>() {
                     @Override
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                         if (response.isSuccessful()) {
                             HashMap<String, String> map = new HashMap<>();
 
-                            map.put(ENROLL_LEAP_FLAG,"1");
+                            map.put(ENROLL_LEAP_FLAG, "1");
                             Utility.createShortSnackBar(mDrawerLayout, response.body().getHeader().get(0).getMsg());
 
                         }
