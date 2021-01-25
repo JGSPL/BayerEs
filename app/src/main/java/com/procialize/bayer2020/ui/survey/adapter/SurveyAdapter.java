@@ -50,13 +50,13 @@ public class SurveyAdapter extends RecyclerView.Adapter<SurveyAdapter.MyViewHold
         try {
             final Survey survey = surveyList.get(position);
 
-            String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
+          /*  String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
 
             String eventColor3Opacity40 = eventColor3.replace("#", "");
             holder.tv_title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
             holder.iv_right_arrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
             holder.ll_row.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
-
+*/
             holder.tv_title.setText(survey.getSurvey_name());
 
 
