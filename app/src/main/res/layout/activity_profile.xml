@@ -40,20 +40,19 @@
                 android:padding="10dp"
                 android:src="@mipmap/ic_back"
                 android:visibility="visible" />
-
-            <com.procialize.bayer2020.fonts.RobotoTextview
-                android:id="@+id/tv_header"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/headerlogoIv"
+                android:layout_width="150dp"
+                android:src="@drawable/header_logo"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="10dp"
-                android:text="Edit Profile"
-                android:textSize="16dp" />
+                android:layout_gravity="center"
+                android:contentDescription=" " />
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-
+                android:visibility="invisible"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:gravity="center">
@@ -103,6 +102,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <com.procialize.bayer2020.fonts.RobotoTextview
+                android:id="@+id/tv_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Edit Profile"
+                android:textSize="16dp" />
 
             <FrameLayout
                 android:layout_width="match_parent"

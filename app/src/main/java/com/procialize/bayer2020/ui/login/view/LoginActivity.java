@@ -132,7 +132,12 @@ public class LoginActivity extends AppCompatActivity {
 //                activityLoginBinding.linearLoginView.setVisibility(View.GONE);
 //                activityLoginBinding.linearOTPView.setVisibility(View.VISIBLE);
                 passcodeDialog(view.getContext());
-            } else if (message.equalsIgnoreCase("back")) {
+            }else if (message.equalsIgnoreCase("user added")) {
+                    Utility.hideKeyboard(view);
+//                activityLoginBinding.linearLoginView.setVisibility(View.GONE);
+//                activityLoginBinding.linearOTPView.setVisibility(View.VISIBLE);
+                    passcodeDialog(view.getContext());
+                }  else if (message.equalsIgnoreCase("back")) {
                 Utility.hideKeyboard(view);
                 activityLoginBinding.editOtp.setText("");
                 activityLoginBinding.linearLoginView.setVisibility(View.VISIBLE);

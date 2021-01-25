@@ -543,7 +543,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             if(alternate_no!=null) {
                                 et_alternetmobno.setText(alternate_no);
                             }
-                            et_pincode.setText(pincode);
+                            atv_pincode.setText(pincode);
+                            if(pincode!=null || pincode!="") {
+                                getState(atv_pincode.getText().toString());
+                            }
+
                            // et_state.setText(state);
                             if(user_type.equalsIgnoreCase("PO")){
                                 ((RadioButton)radiogroupPCOType.getChildAt(0)).setChecked(true);
