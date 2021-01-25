@@ -6,14 +6,14 @@ import com.procialize.bayer2020.GetterSetter.Header;
 
 import java.util.List;
 
-public class FetchPestList {
+public class FetchPestTypeList {
     @SerializedName("header")
     @Expose
     List<Header> header;
 
     @SerializedName("detailpreencrypt")
     @Expose
-    List<Product_item> productList;
+    List<PestTypeItem> productList;
 
     @SerializedName("detail")
     @Expose
@@ -21,7 +21,7 @@ public class FetchPestList {
     @SerializedName("totalRecords")
     @Expose
     private String totalRecords;
-    @SerializedName("pest_type_imagepath")
+    @SerializedName("pest_imagepath")
     @Expose
     private String pest_imagepath;
 
@@ -33,11 +33,11 @@ public class FetchPestList {
         this.header = header;
     }
 
-    public List<Product_item> getProductList() {
+    public List<PestTypeItem> getProductList() {
         return productList;
     }
 
-    public void setProductList(List<Product_item> productList) {
+    public void setProductList(List<PestTypeItem> productList) {
         this.productList = productList;
     }
 

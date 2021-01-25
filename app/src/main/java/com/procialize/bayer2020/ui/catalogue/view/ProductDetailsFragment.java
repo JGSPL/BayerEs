@@ -26,6 +26,7 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.catalogue.model.CataloguePestDetails;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
+import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 
 import retrofit2.Call;
@@ -43,11 +44,12 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 public class ProductDetailsFragment extends Fragment {
 
     View rootView;
-    private Pest_item pest_item;
+    private PestTypeItem pest_item;
     TextView tv_details;
     APIService eventApi;
     String token, eventid, imageurl, pestId = "1";
-LinearLayout linMain;
+    LinearLayout linMain;
+
     public ProductDetailsFragment() {
         // Required empty public constructor
     }
@@ -71,15 +73,15 @@ LinearLayout linMain;
         rootView = inflater.inflate(R.layout.fragment_product_details, container, false);
 
 
-        pest_item = (Pest_item) getArguments().getSerializable("PestType");
+        pest_item = (PestTypeItem) getArguments().getSerializable("PestType");
         token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
         tv_details = rootView.findViewById(R.id.tv_details);
         linMain = rootView.findViewById(R.id.linMain);
-        tv_details.setText(pest_item.getPest_long_description());
+        tv_details.setText(pest_item.getProduct_long_description());
 
-        getDataFromApi(token,eventid);
+        getDataFromApi(token, eventid);
         return rootView;
     }
 
@@ -87,7 +89,7 @@ LinearLayout linMain;
 
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.PestDetails(token, "1"/*eventid*/, pestId)
+        eventApi.PestDetails(token, eventid, pestId)
                 .enqueue(new Callback<FetchPestDetail>() {
                     @Override
                     public void onResponse(Call<FetchPestDetail> call, Response<FetchPestDetail> response) {
@@ -113,8 +115,5 @@ LinearLayout linMain;
                         Utility.createShortSnackBar(linMain, "Failure");
                     }
                 });
-
-
     }
-
 }

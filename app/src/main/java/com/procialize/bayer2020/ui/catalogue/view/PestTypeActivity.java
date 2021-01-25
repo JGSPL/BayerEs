@@ -30,8 +30,10 @@ import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
-import com.procialize.bayer2020.ui.catalogue.adapter.PestListAdapter;
+import com.procialize.bayer2020.ui.catalogue.adapter.PestTypeAdapter;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
+import com.procialize.bayer2020.ui.catalogue.model.FetchPestTypeList;
+import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 
 import java.io.Serializable;
@@ -47,12 +49,12 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
-public class PestTypeActivity extends AppCompatActivity implements PestListAdapter.ProductAdapterListner{
+public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapter.ProductAdapterListner{
     SwipeRefreshLayout productrefresh;
     RecyclerView productTypeRv;
     ProgressBar progressBar;
     private ConnectionDetector cd;
-    MutableLiveData<FetchPestList> FetchProductTypeList = new MutableLiveData<>();
+    MutableLiveData<FetchPestTypeList> FetchProductTypeList = new MutableLiveData<>();
     String eventid;
     String token;
     RelativeLayout relative;
@@ -78,7 +80,6 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
         relative = findViewById(R.id.relative);
         setUpToolbar();
         if (cd.isConnectingToInternet()) {
-
             getProductType(token,eventid);
         } else {
             if (productrefresh.isRefreshing()) {
@@ -91,17 +92,17 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
         
     }
 
-    public MutableLiveData<FetchPestList> getProductType(String token, String eventid) {
+    public MutableLiveData<FetchPestTypeList> getProductType(String token, String eventid) {
         if (productrefresh.isRefreshing()) {
             productrefresh.setRefreshing(false);
         }
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.PestList(token,eventid,pestType.getId(),"","1",""
+        eventApi.PestList(token,eventid,pestType.getId(),"","1","200"
         )
-                .enqueue(new Callback<FetchPestList>() {
+                .enqueue(new Callback<FetchPestTypeList>() {
                     @Override
-                    public void onResponse(Call<FetchPestList> call, Response<FetchPestList> response) {
+                    public void onResponse(Call<FetchPestTypeList> call, Response<FetchPestTypeList> response) {
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
                             Imageurl = response.body().getPest_imagepath();
@@ -110,35 +111,25 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
                             RefreashToken refreashToken = new RefreashToken(PestTypeActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
-                            List<Pest_item> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Pest_item>>() {}.getType());
+                            List<PestTypeItem> eventLists = gson.fromJson(data, new TypeToken<ArrayList<PestTypeItem>>() {}.getType());
 
                             //Fetch Livepoll list
                             if(eventLists!=null) {
-
                                 progressBar.setVisibility(View.GONE);
-
-
                                 if(eventLists.size()>0) {
-
-
-
                                     setupEventAdapter(eventLists);
                                 }else{
                                     progressBar.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
-
                                 }
-
                             }else{
-
                                 progressBar.setVisibility(View.GONE);
-
                             }
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<FetchPestList> call, Throwable t) {
+                    public void onFailure(Call<FetchPestTypeList> call, Throwable t) {
                         FetchProductTypeList.setValue(null);
                     }
                 });
@@ -147,8 +138,8 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
     }
 
 
-    public void setupEventAdapter(List<Pest_item> productList) {
-        PestListAdapter productypeAdapter = new PestListAdapter(this, productList, this, Imageurl);
+    public void setupEventAdapter(List<PestTypeItem> productList) {
+        PestTypeAdapter productypeAdapter = new PestTypeAdapter(this, productList, this, Imageurl);
         //productTypeRv.setLayoutManager(new LinearLayoutManager(getContext()));
         // use a linear layout manager
         int columns = 2;
@@ -183,6 +174,13 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
             mToolbar.showOverflowMenu();
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+
             String eventLogo = SharedPreference.getPref(PestTypeActivity.this, EVENT_LOGO);
             String eventListMediaPath = SharedPreference.getPref(PestTypeActivity.this, EVENT_LIST_MEDIA_PATH);
             Glide.with(PestTypeActivity.this)
@@ -204,9 +202,11 @@ public class PestTypeActivity extends AppCompatActivity implements PestListAdapt
 
 
     @Override
-    public void onContactSelected(Pest_item pest_item) {
+    public void onContactSelected(PestTypeItem pest_item) {
        startActivity(new Intent(PestTypeActivity.this, PestProductDetailsActivity.class)
-                .putExtra("PestType", (Serializable) pest_item));
+                .putExtra("PestType", (Serializable) pest_item)
+                .putExtra("Imageurl", Imageurl)
+       );
     }
 }
 

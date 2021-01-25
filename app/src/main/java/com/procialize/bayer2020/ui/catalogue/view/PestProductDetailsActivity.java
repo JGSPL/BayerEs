@@ -31,6 +31,7 @@ import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.catalogue.model.CataloguePestDetails;
 import com.procialize.bayer2020.ui.catalogue.model.CataloguePestRecommendedProducts;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
+import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 
@@ -54,12 +55,12 @@ public class PestProductDetailsActivity extends AppCompatActivity {
     APIService eventApi;
     private FragmentTabHost mTabHostCel;
     ConnectionDetector cd;
-    String token, eventid, imageurl, pestId = "1";
+    String token, eventid, imageurl, pestId = "1",Imageurl;
     LinearLayout linMain;
 
     ImageView headerlogoIv;
     Toolbar mToolbar;
-    Pest_item pest_item;
+    PestTypeItem pest_item;
     TextView tv_title;
     ImageView iv_cover;
     List<CataloguePestRecommendedProducts> recommendedeProductList = new ArrayList<>();
@@ -79,7 +80,8 @@ public class PestProductDetailsActivity extends AppCompatActivity {
         mTabHostCel = (FragmentTabHost) findViewById(R.id.tabhost);
         mTabHostCel.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
-        pest_item = (Pest_item) getIntent().getSerializableExtra("PestType");
+        pest_item = (PestTypeItem) getIntent().getSerializableExtra("PestType");
+        Imageurl =  getIntent().getStringExtra("Imageurl");
 
         Bundle b = new Bundle();
         b.putSerializable("PestType", (Serializable) pest_item);
@@ -109,13 +111,14 @@ public class PestProductDetailsActivity extends AppCompatActivity {
 
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.PestDetails(token, "1"/*eventid*/, pestId)
+        eventApi.PestDetails(token, eventid, pestId)
                 .enqueue(new Callback<FetchPestDetail>() {
                     @Override
                     public void onResponse(Call<FetchPestDetail> call, Response<FetchPestDetail> response) {
                         if (response.isSuccessful()) {
 
                             String strCommentList = response.body().getDetail();
+
                             RefreashToken refreashToken = new RefreashToken(PestProductDetailsActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
@@ -128,13 +131,14 @@ public class PestProductDetailsActivity extends AppCompatActivity {
                                 Bundle b = new Bundle();
                                 b.putSerializable("PestType", (Serializable) pest_item);
                                 b.putSerializable("recommendedeProductList", (Serializable) recommendedeProductList);
+                                b.putString("strRecommendedPath",eventLists.getRecommended_product_imagepath());
                                 mTabHostCel.addTab(
                                         mTabHostCel.newTabSpec("Tab2")
                                                 .setIndicator(createTabView(PestProductDetailsActivity.this, "Recommended products")),
                                         RecommendedProductFragment.class, b);
-                                tv_title.setText(pest_item.getPest_short_description());
+                                tv_title.setText(pest_item.getProduct_short_description());
                                 Glide.with(PestProductDetailsActivity.this)
-                                        .load(pest_item.getPest_image())
+                                        .load(eventLists.getPest_imagepath()+pest_item.getProduct_image())
                                         .listener(new RequestListener<Drawable>() {
                                             @Override
                                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

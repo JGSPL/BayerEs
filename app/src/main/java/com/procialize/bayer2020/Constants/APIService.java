@@ -8,6 +8,7 @@ import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
+import com.procialize.bayer2020.ui.catalogue.model.FetchPestTypeList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductDetail;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductType;
@@ -535,12 +536,12 @@ public interface APIService {
 
     @POST("Catalogue_api/PestList")
     @FormUrlEncoded
-    Call<FetchPestList> PestList(@Header("authorization") String authkey,
-                                 @Field("event_id") String event_id,
-                                 @Field("pest_type_id") String product_type_id,
-                                 @Field("search_text") String search_text,
-                                 @Field("pageNumber") String pageNumber,
-                                 @Field("pageSize") String pageSize);
+    Call<FetchPestTypeList> PestList(@Header("authorization") String authkey,
+                                     @Field("event_id") String event_id,
+                                     @Field("pest_type_id") String product_type_id,
+                                     @Field("search_text") String search_text,
+                                     @Field("pageNumber") String pageNumber,
+                                     @Field("pageSize") String pageSize);
 
 
     @POST("Catalogue_api/PestDetails")

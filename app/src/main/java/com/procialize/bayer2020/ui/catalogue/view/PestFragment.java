@@ -102,6 +102,7 @@ public class PestFragment extends Fragment implements PestListAdapter.ProductAda
                             Imageurl = response.body().getPest_imagepath();
 
                             String strCommentList =response.body().getDetail();
+
                             RefreashToken refreashToken = new RefreashToken(getContext());
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
