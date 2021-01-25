@@ -660,9 +660,31 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
                 if (connectionDetector.isConnectingToInternet()) {
                     if(user_type.equalsIgnoreCase("PO")){
+                        if (et_first_name.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
 
+                        }else if (et_last_name.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
+
+                        }else if (atv_pincode.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter pincode for proceed", Toast.LENGTH_SHORT).show();
+
+                        }else if (et_emailid.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter emailId for proceed", Toast.LENGTH_SHORT).show();
+
+                        }else if (et_organisation.getText().toString().isEmpty()) {
+                            Toast.makeText(this, "Please enter company name for proceed", Toast.LENGTH_SHORT).show();
+
+                        }else if (designation.isEmpty()) {
+                            Toast.makeText(this, "Please select any designation for proceed", Toast.LENGTH_SHORT).show();
+
+                        }else if (specializtion.isEmpty()) {
+                            Toast.makeText(this, "Please select any specialization", Toast.LENGTH_SHORT).show();
+
+                        } else {
                             saveProfilePCO(first_name, last_name, designation, company_name, city, email, mobile, profile_pic, alternate_no,
                                     user_type, state, no_of_technician, specializtion.toString(), "1", pincode, "", "");
+                        }
 
 
                     }else if(user_type.equalsIgnoreCase("HO")){

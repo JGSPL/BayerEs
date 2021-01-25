@@ -32,6 +32,7 @@
             <ImageView
                 android:id="@+id/headerlogoIv"
                 android:layout_width="50dp"
+
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription=" " />
@@ -94,7 +95,8 @@
     </com.procialize.bayer2020.fonts.RobotoTextview>
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="140dp"
+        android:scaleType="fitXY"
         android:src="@drawable/gallery_placeholder"
         android:id="@+id/imgCover"
         ></ImageView>

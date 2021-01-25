@@ -186,7 +186,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
 
                                 productTitle.setText(product_item.getProduct_name());
                                 Glide.with(ProductListDetailActivity.this)
-                                        .load(product_item.getProduct_image())
+                                        .load(eventLists.getProduct_imagepath()+product_item.getProduct_image())
                                         .listener(new RequestListener<Drawable>() {
                                             @Override
                                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

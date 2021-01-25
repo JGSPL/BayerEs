@@ -226,6 +226,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                                 List<LivePoll> PollLists = eventLists.get(0).getLivePoll_list();
 
                                 if(PollLists.size()>0) {
+                                    progressView.setVisibility(View.GONE);
 
 /*
                                     Glide.with(LivePollActivity.this)

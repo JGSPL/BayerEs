@@ -1066,7 +1066,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
                                 SharedPreference.putPref(ProfileActivity.this, map);
-                               /* final Handler handler = new Handler();
+                                final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -1074,13 +1074,20 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                         profileActivityViewModel.openMainActivity(ProfileActivity.this);
                                         profileActivityViewModel.updateProfileFlag(ProfileActivity.this, "1", profileDetails.get(0).getAttendee_id());
                                     }
-                                }, 500);*/
-                                profileActivityViewModel.openMainActivity(ProfileActivity.this);
-                                profileActivityViewModel.updateProfileFlag(ProfileActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                }, 500);
+
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
 
                             } else {
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        profileActivityViewModel.openMainActivity(ProfileActivity.this);
+                                    }
+                                }, 500);
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
                             }
                         } else {
