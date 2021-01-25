@@ -129,7 +129,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             ll_alternetmobno, ll_organisation, ll_name, ll_last_name, ll_designation, ll_company_name,
             ll_city, ll_email, ll_mobno, ll_bg;
     EditText et_aspociated, et_sapcode, et_pincode, et_emailid, et_alternetmobno, et_mobno, et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile,
-            et_state ;
+            et_state, et_alternetmobno2,et_alternetmobno3 ;
     ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
     RadioGroup radiogroupPCO;
@@ -153,9 +153,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     RadioGroup radiogroupPCOType,radiogroupDesig;
     RadioButton radioPCO,radioOwer, radioother, radioOwner, radioTech,radioManager;
     AutoCompleteTextView atv_pincode;
-    TextView txtAnnualOrg,txtDomain, txttectcount;
+    TextView txtAnnualOrg,txtDomain, txttectcount,tvOrgnisation;
     CheckBox checkResPest, checkcomPest, checkTermite,checkMosquito;
-
+    String technician,turnOver,altno2,altNO3;
     ArrayList specializtion = new ArrayList();
 
     @Override
@@ -201,6 +201,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         txttectcount = findViewById(R.id.txttectcount);
         iv_back = findViewById(R.id.iv_back);
         view_down = findViewById(R.id.view_down);
+        tvOrgnisation = findViewById(R.id.tvOrgnisation);
 
         iv_profile = findViewById(R.id.iv_profile);
         iv_change_profile = findViewById(R.id.iv_change_profile);
@@ -223,6 +224,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         et_aspociated = findViewById(R.id.et_aspociated);
         et_state = findViewById(R.id.et_state);
         et_alternetmobno = findViewById(R.id.et_alternetmobno);
+        et_alternetmobno2 = findViewById(R.id.et_alternetmobno2);
+        et_alternetmobno3 = findViewById(R.id.et_alternetmobno3);
+
         et_pincode = findViewById(R.id.et_pincode);
         et_city = findViewById(R.id.et_city);
         checkResPest = findViewById(R.id.checkResPest);
@@ -335,6 +339,22 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 {
                     // Changes the textview's text to "Checked: example radiobutton text"
                     no_of_pco_served = checkedRadioButton.getText().toString();
+                    if(no_of_pco_served.equalsIgnoreCase("Less than Rs. 10 lacs")) {
+                        turnOver = "0";
+
+                    }else if(no_of_pco_served.equalsIgnoreCase("Rs. 10 to 25 lacs")) {
+                        turnOver = "1";
+                    }else if(no_of_pco_served.equalsIgnoreCase("Rs. 25 to 50 lacs")) {
+                        turnOver = "2";
+                    }else if(no_of_pco_served.equalsIgnoreCase("Rs. 50 lacs to 1 crore")) {
+                        turnOver = "3";
+                    }else if(no_of_pco_served.equalsIgnoreCase("Rs. 1 crore to 1.5 crore")) {
+                        turnOver = "4";
+                    }else if(no_of_pco_served.equalsIgnoreCase("Above Rs. 2 crore")) {
+                        turnOver = "5";
+                    }else{
+                        turnOver = "";
+                    }
 
                 }
             }
@@ -352,8 +372,15 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 if (isChecked)
                 {
                     // Changes the textview's text to "Checked: example radiobutton text"
-                    designation = checkedRadioButton.getText().toString();
+                    String des = checkedRadioButton.getText().toString();
+                    if(des.equalsIgnoreCase("Owner")) {
+                        designation = "0";
 
+                    }else if(des.equalsIgnoreCase("Technician")) {
+                        designation = "1";
+                    }else if(des.equalsIgnoreCase("Manager/Admin/Other")) {
+                        designation = "2";
+                    }
                 }
             }
         });
@@ -385,6 +412,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         ll_sapcode.setVisibility(View.VISIBLE);
                         txttectcount.setVisibility(View.VISIBLE);
                         radiogroupDesig.setVisibility(View.VISIBLE);
+                        tvOrgnisation.setVisibility(View.VISIBLE);
                         user_type = "PO";
 
                     }else if(user_typeText.equalsIgnoreCase("Home/office owner")){
@@ -400,12 +428,14 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         ll_sapcode.setVisibility(View.GONE);
                         txttectcount.setVisibility(View.GONE);
                         ll_organisation.setVisibility(View.GONE);
+                        tvOrgnisation.setVisibility(View.GONE);
 
                         radiogroupDesig.setVisibility(View.GONE);
                         user_type = "HO";
 
                     }else{
                         ll_organisation.setVisibility(View.GONE);
+                        tvOrgnisation.setVisibility(View.GONE);
 
                         ll_alternetmobno.setVisibility(View.GONE);
                         ll_alternetmobno2.setVisibility(View.GONE);
@@ -507,7 +537,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             et_last_name.setText(last_name);
                             et_mobno.setText(mobile);
                             et_aspociated.setText(associated_since);
-                            et_sapcode.setText(sap_code);
+                            et_sapcode.setText(no_of_technician);
                             et_organisation.setText(company_name);
                             et_emailid.setText(email);
                             if(alternate_no!=null) {
@@ -515,6 +545,16 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             }
                             et_pincode.setText(pincode);
                            // et_state.setText(state);
+                            if(user_type.equalsIgnoreCase("PO")){
+                                ((RadioButton)radiogroupPCOType.getChildAt(0)).setChecked(true);
+
+                            }else if(user_type.equalsIgnoreCase("HO")){
+                                ((RadioButton)radiogroupPCOType.getChildAt(1)).setChecked(true);
+
+                            }else if(user_type.equalsIgnoreCase("O")){
+                                ((RadioButton)radiogroupPCOType.getChildAt(2)).setChecked(true);
+
+                            }
 
 
                             if (profileDetails.get(0).getProfile_picture().trim() != null) {
@@ -602,17 +642,23 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
                 first_name = et_first_name.getText().toString().trim();
                 last_name = et_last_name.getText().toString().trim();
-                designation = "";
                 company_name = et_organisation.getText().toString().trim();
                 //city = et_pincode.getText().toString().trim();
                 email = et_emailid.getText().toString().trim();
                 mobile = et_mobno.getText().toString().trim();
                 profile_pic = tv_profile_pic.getText().toString();
-
+                altno2 = et_alternetmobno2.getText().toString();
+                altNO3 = et_alternetmobno3.getText().toString();
+                no_of_technician = et_sapcode.getText().toString();
+                pincode = et_pincode.getText().toString();
+                city = et_city.getText().toString();
+                state = et_state.getText().toString();
 
                 if (connectionDetector.isConnectingToInternet()) {
                     if(user_type.equalsIgnoreCase("PO")){
 
+                        saveProfilePCO(first_name,last_name,designation,company_name,city,email,mobile,profile_pic,alternate_no,
+                                user_type,state, no_of_technician,specializtion.toString(),"1",pincode,"","");
 
                     }else if(user_type.equalsIgnoreCase("HO")){
                         saveProfileHO(first_name,last_name,mobile,email,pincode,city,state,profile_pic,user_type);
@@ -972,9 +1018,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
 
 
-    public void saveProfile(final String first_name, final String last_name, final String designation,
+    public void saveProfilePCO(final String first_name, final String last_name, final String designation,
                             final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String alternate_no,
-                            final String user_type,final String sap_code,final String associated_since, final String no_of_pco_served) {
+                            final String user_type,final String state,final String technician, final String specializations, final String turnOver, final String pincode,final String maltno2, final String maltno3) {
 
         if(!profile_pic.isEmpty()) {
             File file = new File(profile_pic);
@@ -995,18 +1041,19 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         RequestBody mno_of_pco = RequestBody.create(MediaType.parse("text/plain"), "1");
         RequestBody massociated = RequestBody.create(MediaType.parse("text/plain"), "1950");
 
-        RequestBody altno1 = RequestBody.create(MediaType.parse("text/plain"), "");
-        RequestBody altno2 = RequestBody.create(MediaType.parse("text/plain"), "");
-        RequestBody altno3 = RequestBody.create(MediaType.parse("text/plain"), "");
-        RequestBody mstate = RequestBody.create(MediaType.parse("text/plain"), "");
-        RequestBody mnooftect = RequestBody.create(MediaType.parse("text/plain"), "");
-        RequestBody mspecilization = RequestBody.create(MediaType.parse("text/plain"), "");
-        RequestBody mturnOver = RequestBody.create(MediaType.parse("text/plain"), "");
-        RequestBody mPincode = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody altno1 = RequestBody.create(MediaType.parse("text/plain"), alternate_no);
+        RequestBody altno2 = RequestBody.create(MediaType.parse("text/plain"), maltno2);
+        RequestBody altno3 = RequestBody.create(MediaType.parse("text/plain"), maltno3);
+        RequestBody mstate = RequestBody.create(MediaType.parse("text/plain"), state);
+        RequestBody mnooftect = RequestBody.create(MediaType.parse("text/plain"), technician);
+        RequestBody mspecilization = RequestBody.create(MediaType.parse("text/plain"), specializations);
+        RequestBody mturnOver = RequestBody.create(MediaType.parse("text/plain"), turnOver);
+        RequestBody mPincode = RequestBody.create(MediaType.parse("text/plain"), pincode);
 
         if (body == null) {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,/*mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode,*/ massociated, mno_of_pco).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,
+                    altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
@@ -1070,10 +1117,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
             ApiUtils.getAPIService().updateProfile(api_token,
                     mEvent_id,
-                    muser_type/*,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode*/,
-                    massociated,
-                    mno_of_pco/*,
-                    body*/).enqueue(new Callback<Profile>() {
+                    muser_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode,
+                    body).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {

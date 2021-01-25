@@ -337,6 +337,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:id="@+id/tvOrgnisation"
                     android:layout_marginBottom="5dp"
                     android:text="Organization Name*"
                     android:textColor="@color/textcolorLight" />
@@ -434,6 +435,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
+                        android:inputType="number"
+
                         android:background="@color/transperent"
                         android:singleLine="true"
                         android:textSize="13dp"
@@ -475,9 +478,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="0dp"
                         android:padding="10dp"
+
                         android:background="@drawable/edt_profile_white"
                         android:layout_weight="9"
                         android:singleLine="true"
+                        android:inputType="number"
+
                         android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                     <ImageView
@@ -540,6 +546,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="0dp"
                         android:padding="10dp"
+                        android:inputType="number"
+
                         android:background="@drawable/edt_profile_white"
                         android:layout_weight="9"
                         android:singleLine="true"
@@ -796,6 +804,8 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:singleLine="true"
+                        android:inputType="number"
+
                         android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />
                 </LinearLayout>
