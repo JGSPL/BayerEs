@@ -1,6 +1,7 @@
 package com.procialize.bayer2020.ui.loyalityleap.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +59,26 @@ public class RedeemHistoryAdapter extends RecyclerView.Adapter<RedeemHistoryAdap
         holder.txt_cat_name.setText(redeemItem.getProduct_name());
         holder.txtQuantity.setText(redeemItem.getQuantity());
         holder.txt_point.setText(redeemItem.getPoints());
-        holder.txt_status.setText(redeemItem.getStatus());
+        if(redeemItem.getStatus().equalsIgnoreCase("0")){
+            holder.txt_status.setText("Requested");
+            holder.txt_status.setTextColor(Color.parseColor("#002e46"));
+
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("1")){
+            holder.txt_status.setText("Completed");
+            holder.txt_status.setTextColor(Color.parseColor("#5a9e31"));
+
+
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("2")){
+            holder.txt_status.setText("Redeemed");
+            holder.txt_status.setTextColor(Color.parseColor("#f14433"));
+
+
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("3")){
+            holder.txt_status.setText("Approved");
+            holder.txt_status.setTextColor(Color.parseColor("#008bde"));
+
+
+        }
         String dateTime = redeemItem.getRedemption_date();
         if (!dateTime.isEmpty()) {
             String convertedDate = CommonFunction.convertDateRedeem(dateTime);

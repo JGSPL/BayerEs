@@ -227,6 +227,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
 
                                 if(PollLists.size()>0) {
 
+/*
                                     Glide.with(LivePollActivity.this)
                                             .load(eventLists.get(0).getLogo_url_path() + eventLists.get(0).getLive_poll_logo().getApp_livepoll_logo())
                                             .listener(new RequestListener<Drawable>() {
@@ -243,6 +244,7 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
                                                     return false;
                                                 }
                                             }).into(iv_profile);
+*/
 
 
                                     setupEventAdapter(PollLists);

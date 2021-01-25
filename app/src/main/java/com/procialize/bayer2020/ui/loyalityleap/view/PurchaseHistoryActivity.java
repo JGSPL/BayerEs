@@ -55,7 +55,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
     private ConnectionDetector cd;
     MutableLiveData<FetchPurchageHistory> FetchProductTypeList = new MutableLiveData<>();
 
-    TextView txtPurchagePoint;
+    public static TextView txtPurchagePoint;
     String eventid;
     String token;
     RelativeLayout relative;

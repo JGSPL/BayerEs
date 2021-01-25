@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.ui.loyalityleap.model.PurchaseHistory_row;
+import com.procialize.bayer2020.ui.loyalityleap.view.PurchaseHistoryActivity;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class PurchageHistoryAdapter extends RecyclerView.Adapter<PurchageHistory
     private PurchageHistoryAdapter.ProductAdapterListner listener;
     private LayoutInflater inflater;
     String imageurl;
-
+    int Tot = 0;
     public PurchageHistoryAdapter(Context context, List<PurchaseHistory_row> productLists, PurchageHistoryAdapter.ProductAdapterListner listener, String imageurl) {
         this.productLists = productLists;
         this.listener = listener;
@@ -53,7 +54,8 @@ public class PurchageHistoryAdapter extends RecyclerView.Adapter<PurchageHistory
             String convertedDate = CommonFunction.convertYear(dateTime);
             holder.txtyear.setText(convertedDate);
         }
-
+         Tot = Tot + Integer.parseInt(redeemItem.getMpoint());
+        PurchaseHistoryActivity.txtPurchagePoint.setText(String.valueOf(Tot));
 
     }
 
