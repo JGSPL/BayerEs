@@ -43,6 +43,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
     @Override
     public MCalculatorAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.mpointcalcitem, parent, false);
+
         return new MCalculatorAdapter.ProductViewHolder(view);
     }
 
@@ -53,7 +54,6 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
         holder.txt_product.setText(travel.getProduct_name());
         holder.txt_packsize.setText(travel.getPack());
         holder.mpointspermpin.setText(travel.getPoints());
-
 
         holder.txt_noofmpin.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -127,6 +127,15 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
         return productLists.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     public interface ProductAdapterListner {
         void onContactSelected(m_points_list pollList);
@@ -136,6 +145,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
 
         public TextView txt_product, txt_packsize, mpointspermpin, txt_total;
         EditText txt_noofmpin;
+        LinearLayout linear1;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -143,6 +153,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
             txt_packsize = itemView.findViewById(R.id.txt_packsize);
             mpointspermpin = itemView.findViewById(R.id.mpointspermpin);
             txt_total = itemView.findViewById(R.id.txt_total);
+            linear1 = itemView.findViewById(R.id.linear1);
 
             txt_noofmpin = itemView.findViewById(R.id.txt_noofmpin);
         }
