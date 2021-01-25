@@ -2,7 +2,10 @@ package com.procialize.bayer2020.ui.upskill.view;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,7 +22,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContentSubArray;
+
+import org.jsoup.Jsoup;
 
 import java.io.Serializable;
 
@@ -59,8 +65,22 @@ public class UpskillDetailsImageActivity extends AppCompatActivity implements Vi
                         return false;
                     }
                 }).into(iv_banner);
-        tv_Description.setText(upskillContentSubArray.getContentInfo().get(0).getContent_desc());
+        //tv_Description.setText(upskillContentSubArray.getContentInfo().get(0).getContent_desc());
+        String contentDesc = upskillContentSubArray.getContentInfo().get(0).getContent_desc();
+        if (contentDesc.contains("\n")) {
+            contentDesc = contentDesc.trim().replace("\n", "<br/>");
+        } else {
+            contentDesc = contentDesc.trim();
+        }
+        String spannedString = String.valueOf(Jsoup.parse(contentDesc)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            tv_Description.setText(Utility.trimTrailingWhitespace(strPost));
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            tv_Description.setText(Utility.trimTrailingWhitespace(strPost));
+        }
         upskillContentSubArray.getContentInfo().remove(0);
         setUpToolbar();
     }

@@ -8,53 +8,6 @@
     android:layout_marginBottom="-3dp"
     android:padding="3dp">
 
-    <RelativeLayout
-        android:id="@+id/rl_bg_image"
-        android:layout_marginBottom="3dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible">
-
-        <RelativeLayout
-            android:id="@+id/layoutTop"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:background="@android:color/transparent" />
-
-        <RelativeLayout
-            android:id="@+id/layoutBottom"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_below="@id/layoutTop"
-            android:background="@color/colorwhite">
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/layoutBottom"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="-60dp"
-            android:adjustViewBounds="true">
-
-            <ImageView
-                android:id="@+id/profileIV"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:layout_centerInParent="true"
-                android:contentDescription="TODO"
-                android:background="@drawable/image_border" />
-
-            <ProgressBar
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerInParent="true"
-                android:id="@+id/progressBar"/>
-
-        </RelativeLayout>
-    </RelativeLayout>
 
 
     <LinearLayout
@@ -107,7 +60,8 @@
                 android:paddingBottom="5dp"
                 android:textSize="10sp"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/txtcolor" />
+                android:textColor="@color/txtcolor"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

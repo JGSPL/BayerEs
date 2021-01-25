@@ -74,7 +74,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
 
         new RefreashToken(QuizSubmittedActivity.this).callGetRefreashToken(QuizSubmittedActivity.this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+       /* Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -92,7 +92,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
         String eventColor3 = SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_3);
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
-
+*/
         relative = findViewById(R.id.relative);
         txt_count = findViewById(R.id.txt_count);
         questionTv = findViewById(R.id.questionTv);
@@ -102,7 +102,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
         tv_header = findViewById(R.id.tv_header);
         relative_main = findViewById(R.id.relative_main);
 
-        CommonFunction.showBackgroundImage(QuizSubmittedActivity.this, relative);
+      /*  CommonFunction.showBackgroundImage(QuizSubmittedActivity.this, relative);
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));
         questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));
         txt_count.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
@@ -110,7 +110,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
         submit.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         relative_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_2)));
         btnNext.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));
-        submit.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));
+        submit.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));*/
 
         quiz_list.setLayoutManager(new LinearLayoutManager(QuizSubmittedActivity.this, LinearLayoutManager.HORIZONTAL, false));
         llm = (LinearLayoutManager) quiz_list.getLayoutManager();
@@ -146,11 +146,11 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
                     count = count + 1;
                     if (questionList.size() == llm.findLastVisibleItemPosition() + 2) {
 
-                        btnNext.setVisibility(View.INVISIBLE);
+                        btnNext.setVisibility(View.GONE);
                         submit.setVisibility(View.VISIBLE);
                     } else {
                         btnNext.setVisibility(View.VISIBLE);
-                        submit.setVisibility(View.INVISIBLE);
+                        submit.setVisibility(View.GONE);
                     }
 //                    } else {
 //                        Toast.makeText(QuizNewActivity.this, "Please Select Option", Toast.LENGTH_SHORT).show();
@@ -197,9 +197,9 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
                     txt_count.setText("Questions " + 1 + "/" + itemcount);
                     if (questionList.size() > 1) {
                         btnNext.setVisibility(View.VISIBLE);
-                        submit.setVisibility(View.INVISIBLE);
+                        submit.setVisibility(View.GONE);
                     } else {
-                        btnNext.setVisibility(View.INVISIBLE);
+                        btnNext.setVisibility(View.GONE);
                         submit.setVisibility(View.VISIBLE);
                     }
 

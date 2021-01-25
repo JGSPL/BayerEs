@@ -6,7 +6,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,10 +27,13 @@ import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.catalogue.view.PestProductDetailsActivity;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContent;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContentSubArray;
 import com.procialize.bayer2020.ui.upskill.model.UpskillList;
+
+import org.jsoup.Jsoup;
 
 import java.io.Serializable;
 
@@ -87,7 +93,24 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
 
                                 if (upskillContentSubArray != null) {
                                     tv_title.setText(upskillContentSubArray.getMainInfo().getName());
-                                    tv_description.setText(upskillContentSubArray.getMainInfo().getDescription());
+                                    //tv_description.setText(upskillContentSubArray.getMainInfo().getDescription());
+
+                                    String contentDesc = upskillContentSubArray.getMainInfo().getDescription();
+                                    if (contentDesc.contains("\n")) {
+                                        contentDesc = contentDesc.trim().replace("\n", "<br/>");
+                                    } else {
+                                        contentDesc = contentDesc.trim();
+                                    }
+                                    String spannedString = String.valueOf(Jsoup.parse(contentDesc)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+                                        tv_description.setText(Utility.trimTrailingWhitespace(strPost));
+                                    } else {
+                                        Spanned strPost = Html.fromHtml(spannedString);
+                                        tv_description.setText(Utility.trimTrailingWhitespace(strPost));
+                                    }
+
                                     Glide.with(getApplicationContext())
                                             .load(upskillContentSubArray.getMainInfo().getCover_img())
                                             .skipMemoryCache(true)

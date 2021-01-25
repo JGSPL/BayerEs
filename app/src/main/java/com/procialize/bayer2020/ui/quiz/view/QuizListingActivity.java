@@ -2,11 +2,15 @@ package com.procialize.bayer2020.ui.quiz.view;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -15,6 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -39,6 +48,8 @@ import java.util.List;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.QUIZLOGO_MEDIA_PATH;
 
 public class QuizListingActivity extends AppCompatActivity implements QuizListAdapter.QuizListAdapterListner {
@@ -52,6 +63,7 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
     SwipeRefreshLayout quizRefreash;
     TextView tv_header;
     QuizListAdapter quizAdapter;
+    ImageView iv_back,headerlogoIv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,27 +72,52 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
 
         new RefreashToken(QuizListingActivity.this).callGetRefreashToken(QuizListingActivity.this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+       /* Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+        toolbar.getNavigationIcon().setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
                 onBackPressed();
             }
+        });*/
+
+        iv_back = findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
         });
+        headerlogoIv = findViewById(R.id.headerlogoIv);
+
+        String eventLogo = SharedPreference.getPref(this, EVENT_LOGO);
+        String eventListMediaPath = SharedPreference.getPref(this, EVENT_LIST_MEDIA_PATH);
+        Glide.with(this)
+                .load(eventListMediaPath + eventLogo)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(headerlogoIv);
         quizrecycler=findViewById(R.id.quizrecycler);
         quizRefreash=findViewById(R.id.quizrefresher);
         ll_main=findViewById(R.id.ll_main);
         tv_header=findViewById(R.id.tv_header);
-        CommonFunction.showBackgroundImage(QuizListingActivity.this, ll_main);
-        tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizListingActivity.this, EVENT_COLOR_1)));
+        //CommonFunction.showBackgroundImage(QuizListingActivity.this, ll_main);
+        //tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizListingActivity.this, EVENT_COLOR_1)));
         session = new SessionManager(getApplicationContext());
 
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);

@@ -100,9 +100,9 @@ public class QuizPagerAdapter extends PagerAdapter {
 
         txt_page.setText(String.valueOf(position + 1) + "/" + String.valueOf(quizList.size()));
 
-        String eventColor3 = SharedPreference.getPref(activity, EVENT_COLOR_3);
+       /* String eventColor3 = SharedPreference.getPref(activity, EVENT_COLOR_3);
 
-        String eventColor3Opacity40 = eventColor3.replace("#", "");
+        String eventColor3Opacity40 = eventColor3.replace("#", "");*/
 
 
         if (quizList.get(position).getReplied() == null) {
@@ -307,12 +307,14 @@ public class QuizPagerAdapter extends PagerAdapter {
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setTypeface(typeFace);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(quizSpecificOptionListnew.get(i - 1).getOption()));
-//                    rdbtn.setTextColor(Color.BLACK);
-                    rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+                    rdbtn.setTextColor(Color.BLACK);
+//                    rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
                     rdbtn.setTextSize(14);
 //                    rdbtn.setBackgroundResource(R.drawable.livepollback);
                     GradientDrawable border = new GradientDrawable();
-                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity
+                    //border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+                    //black border with full opacity
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                         rdbtn.setBackgroundDrawable(border);
                     } else {
@@ -344,7 +346,7 @@ public class QuizPagerAdapter extends PagerAdapter {
                                         /* Color.parseColor("#585e44")//disabled
                                          , Color.parseColor("#e31e24")//enabled*/
                                         Color.parseColor("#4d4d4d")//disabled
-                                        , Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))//enabled
+                                        , Color.parseColor("#e4004b")//enabled
                                 }
                         );
 
@@ -493,7 +495,7 @@ public class QuizPagerAdapter extends PagerAdapter {
             }
         });
 
-        quiz_title_txt.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+       // quiz_title_txt.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
 //        holder.quiz_status.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
 //        holder.textViewTime.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
 //        holder.right_arrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);

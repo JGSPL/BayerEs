@@ -28,4 +28,16 @@ public class QuizOption implements Serializable {
     public String getOption() {
         return option;
     }
+
+    public void setOption_id(String option_id) {
+        this.option_id = option_id;
+    }
+
+    public void setQuiz_id(String quiz_id) {
+        this.quiz_id = quiz_id;
+    }
+
+    public void setOption(String option) {
+        this.option = option;
+    }
 }

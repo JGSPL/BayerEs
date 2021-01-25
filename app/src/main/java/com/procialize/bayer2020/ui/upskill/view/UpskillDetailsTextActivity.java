@@ -2,7 +2,10 @@ package com.procialize.bayer2020.ui.upskill.view;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,8 +22,11 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContentSubArray;
 import com.procialize.bayer2020.ui.upskill.model.UpskillList;
+
+import org.jsoup.Jsoup;
 
 import java.io.Serializable;
 
@@ -47,8 +53,24 @@ public class UpskillDetailsTextActivity extends AppCompatActivity implements Vie
         btn_next = findViewById(R.id.btn_next);
         btn_next.setOnClickListener(this);
         tv_title = findViewById(R.id.tv_title);
+     /*   String contentDesc = upskillContentSubArray.getContentInfo().get(0).getContent_desc();
+        tv_title.setText(contentDesc);*/
+
         String contentDesc = upskillContentSubArray.getContentInfo().get(0).getContent_desc();
-        tv_title.setText(contentDesc);
+        if (contentDesc.contains("\n")) {
+            contentDesc = contentDesc.trim().replace("\n", "<br/>");
+        } else {
+            contentDesc = contentDesc.trim();
+        }
+        String spannedString = String.valueOf(Jsoup.parse(contentDesc)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            tv_title.setText(Utility.trimTrailingWhitespace(strPost));
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            tv_title.setText(Utility.trimTrailingWhitespace(strPost));
+        }
 
         upskillContentSubArray.getContentInfo().remove(0);
     }

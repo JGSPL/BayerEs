@@ -5,11 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -29,6 +35,8 @@ public class UpskillSurveyActivity extends AppCompatActivity implements View.OnC
 
     UpskillContentSubArray upskillContentSubArray;
     Button btn_next;
+    WebView webView;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +47,45 @@ public class UpskillSurveyActivity extends AppCompatActivity implements View.OnC
        /* tv_title = findViewById(R.id.tv_title);
         String contentDesc = upskillContentSubArray.getContentInfo().get(0).getContent_desc();
         tv_title.setText(contentDesc);*/
+        webView = findViewById(R.id.webView);
         btn_next = findViewById(R.id.btn_next);
-        upskillContentSubArray.getContentInfo().remove(0);
         btn_next.setOnClickListener(this);
+        progressBar = findViewById(R.id.progressBar);
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webView.setBackgroundColor(Color.TRANSPARENT);
+//        webview.setWebViewClient(new CustomWebViewClient());
+
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(false);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setDomStorageEnabled(true);
+        settings.setDatabaseEnabled(true);
+        settings.setAppCacheEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int progress) {
+                if (!UpskillSurveyActivity.this.isFinishing()) {
+                    if (progressBar.getVisibility() == View.GONE) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    if (progress == 100) {
+                        if (progressBar.getVisibility() == View.VISIBLE) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+        });
+
+        String strUrl = upskillContentSubArray.getContentInfo().get(0).getLink();
+        webView.loadUrl(strUrl);
+        upskillContentSubArray.getContentInfo().remove(0);
     }
 
     private void setUpToolbar() {
