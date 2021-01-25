@@ -25,6 +25,7 @@ public class RecommendedProductFragment extends Fragment implements PestRecommen
 
     View rootView;
     RecyclerView rv_recommended_product;
+    String strRecommendedPath;
     private List<CataloguePestRecommendedProducts> cataloguePestRecommendedProducts;
     PestRecommendedProductsAdapter pestRecommendedProductsAdapter;
     public RecommendedProductFragment() {
@@ -44,6 +45,7 @@ public class RecommendedProductFragment extends Fragment implements PestRecommen
         rootView = inflater.inflate(R.layout.fragment_recommended_product, container, false);
 
         cataloguePestRecommendedProducts = (List<CataloguePestRecommendedProducts>) getArguments().getSerializable("recommendedeProductList");
+        strRecommendedPath = getArguments().getString("strRecommendedPath");
         rv_recommended_product = rootView.findViewById(R.id.rv_recommended_product);
 
         setupEventAdapter(cataloguePestRecommendedProducts);
@@ -52,7 +54,7 @@ public class RecommendedProductFragment extends Fragment implements PestRecommen
 
     public void setupEventAdapter(List<CataloguePestRecommendedProducts> commentList) {
         if (commentList != null) {
-            pestRecommendedProductsAdapter = new PestRecommendedProductsAdapter(getActivity(), commentList, this,"");
+            pestRecommendedProductsAdapter = new PestRecommendedProductsAdapter(getActivity(), commentList, this,strRecommendedPath);
             rv_recommended_product.setLayoutManager(new GridLayoutManager(getActivity(),2));
             rv_recommended_product.setAdapter(pestRecommendedProductsAdapter);
             pestRecommendedProductsAdapter.notifyDataSetChanged();

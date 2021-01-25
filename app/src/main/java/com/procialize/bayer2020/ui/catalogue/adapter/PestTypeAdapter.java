@@ -21,20 +21,20 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.R;
-import com.procialize.bayer2020.ui.catalogue.model.CataloguePestRecommendedProducts;
+import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
+import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 
 import java.util.List;
 
-public class PestRecommendedProductsAdapter  extends RecyclerView.Adapter<PestRecommendedProductsAdapter.ProductViewHolder> {
+public class PestTypeAdapter extends RecyclerView.Adapter<PestTypeAdapter.ProductViewHolder> {
 
-    private List<CataloguePestRecommendedProducts> productLists;
+    private List<PestTypeItem> productLists;
     private Context context;
-    private PestRecommendedProductsAdapter.ProductAdapterListner listener;
+    private PestTypeAdapter.ProductAdapterListner listener;
     private LayoutInflater inflater;
     String imageurl;
 
-    public PestRecommendedProductsAdapter(Context context, List<CataloguePestRecommendedProducts> productLists,
-                                          PestRecommendedProductsAdapter.ProductAdapterListner listener, String imageurl) {
+    public PestTypeAdapter(Context context, List<PestTypeItem> productLists, PestTypeAdapter.ProductAdapterListner listener, String imageurl) {
         this.productLists = productLists;
         this.listener = listener;
         this.context = context;
@@ -44,15 +44,15 @@ public class PestRecommendedProductsAdapter  extends RecyclerView.Adapter<PestRe
 
     @NonNull
     @Override
-    public PestRecommendedProductsAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PestTypeAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.product_type_row, parent, false);
-        return new PestRecommendedProductsAdapter.ProductViewHolder(view);
+        return new PestTypeAdapter.ProductViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final PestRecommendedProductsAdapter.ProductViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final PestTypeAdapter.ProductViewHolder holder, final int position) {
 
-        final CataloguePestRecommendedProducts productType = productLists.get(position);
+        final PestTypeItem productType = productLists.get(position);
 
         Glide.with(holder.imageIv)
                 .load(imageurl+productType.getProduct_image())
@@ -60,11 +60,13 @@ public class PestRecommendedProductsAdapter  extends RecyclerView.Adapter<PestRe
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        holder.progressBar.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.progressBar.setVisibility(View.GONE);
                         return false;
                     }
                 }).into(holder.imageIv);
@@ -85,7 +87,7 @@ public class PestRecommendedProductsAdapter  extends RecyclerView.Adapter<PestRe
 
 
     public interface ProductAdapterListner {
-        void onContactSelected(CataloguePestRecommendedProducts pollList);
+        void onContactSelected(PestTypeItem pollList);
     }
 
     public class ProductViewHolder extends RecyclerView.ViewHolder {

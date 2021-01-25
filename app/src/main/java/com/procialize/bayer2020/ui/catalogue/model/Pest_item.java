@@ -15,11 +15,11 @@ public class Pest_item implements Serializable {
     private String event_id;
 
 
-    @SerializedName("pest_name")
+    @SerializedName("pest_type_name")
     @Expose
     private String pest_name;
 
-    @SerializedName("pest_image")
+    @SerializedName("pest_type_image")
     @Expose
     private String pest_image;
 

@@ -3,7 +3,6 @@ package com.procialize.bayer2020.ui.loyalityleap.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.procialize.bayer2020.GetterSetter.Header;
-import com.procialize.bayer2020.ui.catalogue.model.Product_detail;
 
 import java.util.List;
 
