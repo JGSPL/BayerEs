@@ -646,6 +646,7 @@ public class NewsFeedViewModel extends ViewModel {
 
                 if (etmsg.getText().toString().length() > 0) {
 
+                    newsRepository = NewsfeedRepository.getInstance();
                     String msg = StringEscapeUtils.escapeJava(etmsg.getText().toString());
                     dialog.cancel();
                     Utility.hideKeyboard(v);
@@ -676,6 +677,7 @@ public class NewsFeedViewModel extends ViewModel {
                         myDialog.cancel();*/
                         if (ConnectionDetector.getInstance(activityVar).isConnectingToInternet()) {
                             Utility.hideKeyboard(v);
+
                             newsfeedHide = newsRepository.ReportUser(api_token, eventId, attnId, id, msg);
                             newsRepository.getPostActivity().observe((LifecycleOwner) activityVar, new Observer<LoginOrganizer>() {
                                 @Override
