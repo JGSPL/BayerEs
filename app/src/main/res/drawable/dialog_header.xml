@@ -3,12 +3,12 @@
 
 
     <corners
-        android:topLeftRadius="0dp"
-        android:topRightRadius="0dp" />
+        android:topLeftRadius="5dp"
+        android:topRightRadius="5dp" />
 
     <gradient
         android:angle="270"
-        android:centerColor="@color/activetab"
-        android:endColor="@color/activetab"
-        android:startColor="@color/activetab" />
+        android:centerColor="@color/blue"
+        android:endColor="@color/blue"
+        android:startColor="@color/blue" />
 </shape>
