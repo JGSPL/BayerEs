@@ -70,7 +70,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 
 public class PostNewActivity extends AppCompatActivity implements View.OnClickListener, QueryListener, SuggestionsListener {
 
-    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info, ll_inner_layout,ll_post_status;//, ll_post
+    LinearLayout ll_upload_media, ll_media_dots, linear, ll_info, ll_inner_layout, ll_post_status;//, ll_post
     EditText et_post;
     TextView btn_post, tv_count, tv_name, txtUploadImg, tv_header, tv_total_count, textData;
     PostNewsFeedViewModel postNewsFeedViewModel;
@@ -126,15 +126,15 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         txtUploadImg = findViewById(R.id.txtUploadImg);
         tv_total_count = findViewById(R.id.tv_total_count);
         textData = findViewById(R.id.textData);
-        view_top = findViewById(R.id.view_top);
-       /* view_left = findViewById(R.id.view_left);
-        view_right = findViewById(R.id.view_right);*/
-        view_bottom = findViewById(R.id.view_bottom);
+       /*  view_top = findViewById(R.id.view_top);
+       view_left = findViewById(R.id.view_left);
+        view_right = findViewById(R.id.view_right);
+        view_bottom = findViewById(R.id.view_bottom);*/
         et_post = findViewById(R.id.et_post);
         imguploadimg = findViewById(R.id.imguploadimg);
         iv_back.setOnClickListener(this);
 
-      //  setDynamicColor();
+        //  setDynamicColor();
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         String fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
@@ -402,7 +402,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                             Date date = new Date();
                             long time = date.getTime();
 
-                            postNewsFeedViewModel.insertMultimediaIntoDB(this, postText, resultList,String.valueOf(time));
+                            postNewsFeedViewModel.insertMultimediaIntoDB(this, postText, resultList, String.valueOf(time));
                             postNewsFeedViewModel.getDBStatus().observe(this, new Observer<Boolean>() {
                                 @Override
                                 public void onChanged(Boolean aBoolean) {
