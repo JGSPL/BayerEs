@@ -118,10 +118,10 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.MyViewHolder> 
         }
 
         holder.tv_name.setText(likeDetail.getFirst_name() + " " + likeDetail.getLast_name());
-        holder.ll_main.setBackgroundColor(Color.parseColor(eventColor2));
+        /*holder.ll_main.setBackgroundColor(Color.parseColor(eventColor2));
         holder.tv_name.setBackgroundColor(Color.parseColor(eventColor2));
         holder.tv_name.setTextColor(Color.parseColor(eventColor1));
-        holder.v_divider.setBackgroundColor(Color.parseColor(eventColor3));
+        holder.v_divider.setBackgroundColor(Color.parseColor(eventColor3));*/
     }
 
     @Override
