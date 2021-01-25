@@ -96,10 +96,10 @@
                 android:id="@+id/btn_resend"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@drawable/login_drawable"
+                android:background="@drawable/login_blank_drawable"
                 android:text="Resend OTP"
                 android:textAllCaps="false"
-                android:textColor="#ffffff"
+                android:textColor="@color/loginbutton"
                 android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
