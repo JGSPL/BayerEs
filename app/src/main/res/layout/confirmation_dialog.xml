@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="top"
-            android:background="@color/activetab"
+            android:background="@color/Darkblue"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="5dp">
@@ -32,7 +32,7 @@
                 android:paddingLeft="10dp"
                 android:text="Confirmation"
                 android:textColor="@color/colorwhite"
-                android:textSize="@dimen/textsizesmall" />
+                android:textSize="14sp" />
 
 
         </LinearLayout>
@@ -70,8 +70,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/confirm_edit"
+                android:background="@drawable/edt_profile_white"
                 android:inputType="number"
+                android:padding="5dp" />
+
+            <com.procialize.bayer2020.fonts.RobotoTextview
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Email ID"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsizesmall" />
+
+            <com.procialize.bayer2020.fonts.RobotoEditext
+                android:id="@+id/edit_email"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edt_profile_white"
+                android:inputType="textEmailAddress"
+                android:padding="5dp" />
+
+            <com.procialize.bayer2020.fonts.RobotoTextview
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textsizesmall" />
+
+            <com.procialize.bayer2020.fonts.RobotoEditext
+                android:id="@+id/edit_address"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edt_profile_white"
+                android:inputType="text"
                 android:padding="5dp" />
 
             <com.procialize.bayer2020.fonts.RobotoTextview
@@ -92,7 +126,7 @@
                     android:layout_height="30dp"
                     android:layout_margin="10dp"
                     android:layout_weight="5"
-                    android:background="@color/loginbutton"
+                    android:background="@drawable/btn_submit"
                     android:text="Redeem"
                     android:textAllCaps="false"
                     android:textColor="@color/colorwhite" />
@@ -103,10 +137,10 @@
                     android:layout_height="30dp"
                     android:layout_margin="10dp"
                     android:layout_weight="5"
-                    android:background="@color/loginbutton"
+                    android:background="@drawable/btn_next_quiz"
                     android:text="Cancel"
                     android:textAllCaps="false"
-                    android:textColor="@color/colorwhite" />
+                    android:textColor="@color/colorPink" />
 
             </LinearLayout>
 

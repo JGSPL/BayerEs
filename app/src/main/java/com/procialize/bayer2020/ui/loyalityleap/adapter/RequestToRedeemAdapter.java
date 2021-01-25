@@ -165,6 +165,10 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
         TextView txt_name = myDialog.findViewById(R.id.name);
         progressbar = myDialog.findViewById(R.id.progressBar);
 
+        final EditText edit_address = myDialog.findViewById(R.id.edit_address);
+
+        final EditText edit_email = myDialog.findViewById(R.id.edit_email);
+
         txt_name.setText(name);
         txtValue.setText("Value = " + value + " Points");
 
@@ -182,17 +186,25 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
                 if (edit_quantity.getText().toString().isEmpty()) {
                     Toast.makeText(context, "Please enter any value for proceed", Toast.LENGTH_SHORT).show();
 
+                }else if (edit_address.getText().toString().isEmpty()) {
+                    Toast.makeText(context, "Please enter address for proceed", Toast.LENGTH_SHORT).show();
+
+                }else if (edit_email.getText().toString().isEmpty()) {
+                    Toast.makeText(context, "Please enter email for proceed", Toast.LENGTH_SHORT).show();
+
                 } else {
                     Long quantity = Long.parseLong(edit_quantity.getText().toString());
                     int totalpoints = Integer.parseInt(RequestToRedeemActivity.txtRedeemPoint.getText().toString());
                     Long mpoints = Long.parseLong(value) * quantity;
+                    String address = edit_address.getText().toString();
+                    String email = edit_email.getText().toString();
 
-                    if (mpoints > Long.parseLong(RequestToRedeemActivity.txtRedeemPoint.toString())) {
+                    if (mpoints > Long.parseLong(RequestToRedeemActivity.txtRedeemPoint.getText().toString())) {
                         Toast.makeText(context, "You dont have sufficient balance points", Toast.LENGTH_SHORT).show();
                     } else {
                         btn_submit.setEnabled(false);
                         btn_submit.setClickable(false);
-                        redeemRequest(eventid, apikey, productcode, name, String.valueOf(quantity), String.valueOf(mpoints));
+                        redeemRequest(eventid, apikey, productcode, name, String.valueOf(quantity), String.valueOf(mpoints),address,email);
                     }
                 }
 
@@ -201,10 +213,10 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
         });
     }
 
-    public void redeemRequest(String eventid, String token, String product_code, String product_name, String no_of_points, String mpoints) {
+    public void redeemRequest(String eventid, String token, String product_code, String product_name, String no_of_points, String mpoints, String email, String address) {
         showProgress();
 //        showProgress();
-        mAPIService.RedeemRequest(token, eventid, product_code, product_name, no_of_points, "","").enqueue(new Callback<LoginOrganizer>() {
+        mAPIService.RedeemRequest(token, eventid, product_code, product_name, no_of_points, email,address).enqueue(new Callback<LoginOrganizer>() {
             @Override
             public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
 
@@ -214,7 +226,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
                     dismissProgress();
                     Toast.makeText(context, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
                     myDialog.dismiss();
-                   /* if ((Integer.parseInt(response.body().getTotal_available_point())) < 0) {
+                    /*if ((Integer.parseInt(response.body().getTotal_available_point())) < 0) {
                         RequestToRedeemActivity.txtRedeemPoint.setText("0");
                     } else {
                         RequestToRedeemActivity.txtRedeemPoint.setText(response.body().getTotal_available_point());
