@@ -127,8 +127,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         tv_total_count = findViewById(R.id.tv_total_count);
         textData = findViewById(R.id.textData);
         view_top = findViewById(R.id.view_top);
-        view_left = findViewById(R.id.view_left);
-        view_right = findViewById(R.id.view_right);
+       /* view_left = findViewById(R.id.view_left);
+        view_right = findViewById(R.id.view_right);*/
         view_bottom = findViewById(R.id.view_bottom);
         et_post = findViewById(R.id.et_post);
         imguploadimg = findViewById(R.id.imguploadimg);
