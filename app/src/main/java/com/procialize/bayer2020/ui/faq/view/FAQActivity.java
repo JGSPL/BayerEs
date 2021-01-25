@@ -64,7 +64,6 @@ public class FAQActivity extends AppCompatActivity implements FAQAdapter.Product
     private ProductType productType;
     Toolbar mToolbar;
     ImageView headerlogoIv;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
