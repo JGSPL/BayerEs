@@ -124,7 +124,7 @@
 
             android:drawablePadding="5dp"
             android:background="@color/colorwhite"
-            android:drawableTop="@drawable/ic_livepoll"
+            android:drawableTop="@drawable/ic_buynow"
             android:text="Buy Now"
             ></com.procialize.bayer2020.fonts.RobotoButton>
         </LinearLayout>

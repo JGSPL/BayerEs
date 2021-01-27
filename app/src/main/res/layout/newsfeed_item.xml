@@ -209,7 +209,7 @@
             android:orientation="horizontal"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tv_like1"
@@ -218,6 +218,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1.5"
                 android:gravity="left"
+                android:visibility="gone"
                 android:paddingTop="4dp"
                 android:text="0 Like"
                 android:textColor="@color/inactivetab"
@@ -236,6 +237,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="25dp"
                 android:layout_weight="1.5"
+                android:visibility="gone"
+
                 android:gravity="right|center_vertical"
                 android:text="0 Comments"
                 android:textColor="@color/inactivetab"

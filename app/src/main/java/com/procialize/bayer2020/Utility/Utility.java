@@ -384,15 +384,15 @@ compare < 0, if date1 is smaller than date2*/
            // dots[i].setTextColor(Color.parseColor("#343434"));
             String eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
             String eventColor3Opacity40 = eventColor3.replace("#", "");
-            dots[i].setTextColor(Color.parseColor("#8C"+eventColor3Opacity40));
+            dots[i].setTextColor(Color.parseColor("#A2A2A2"));
             ll_dots.addView(dots[i]);
         }
 
         try {
             if (dots.length > 0) {
                 if (dots.length != currentPage) {
-                    //dots[currentPage].setTextColor(Color.parseColor("#A2A2A2"));
-                    dots[currentPage].setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
+                    dots[currentPage].setTextColor(Color.parseColor("#002e46"));
+                    //dots[currentPage].setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)));
                 }
             }
         } catch (Exception e) {
