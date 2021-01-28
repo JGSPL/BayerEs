@@ -660,4 +660,30 @@ public interface APIService {
     @FormUrlEncoded
     Call<FetchAgenda> FAQFetch(@Header("authorization") String auth,
                                  @Field("event_id") String event_id);
+
+
+    @POST("training/add_training_analytics")
+    @FormUrlEncoded
+    Call<FetchAgenda> AddTrainingAnalytics(@Header("authorization") String auth,
+                                 @Field("event_id") String event_id,
+                                 @Field("training_id") String training_id,
+                                 @Field("type") String type,
+                                 @Field("post_id") String post_id,
+                                 @Field("last_submit") String last_submit);
+
+    @POST("training/LivePollSubmit")
+    @FormUrlEncoded
+    Call<FetchAgenda> UpskillLivePollSubmit(@Header("authorization") String auth,
+                                 @Field("event_id") String event_id,
+                                 @Field("live_poll_id") String live_poll_id,
+                                 @Field("live_poll_options_id") String live_poll_options_id);
+
+
+    @POST("training/training_quiz_reply")
+    @FormUrlEncoded
+    Call<QuizSubmit> TrainingQuizReply(@Header("authorization") String auth,
+                                @Field("event_id") String event_id,
+                                @Field("quiz_id") String quiz_id,
+                                @Field("quiz_options_id") String quiz_options_id,
+                                @Field("folder_id") String folder_id);
 }

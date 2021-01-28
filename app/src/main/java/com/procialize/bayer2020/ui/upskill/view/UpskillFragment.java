@@ -76,7 +76,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_upskill, container, false);
 
-        /*iv_banner = rootView.findViewById(R.id.iv_banner);
+        iv_banner = rootView.findViewById(R.id.iv_banner);
         tv_info = rootView.findViewById(R.id.tv_info);
         srl_upskill = rootView.findViewById(R.id.srl_upskill);
         rv_upskill = rootView.findViewById(R.id.rv_upskill);
@@ -84,16 +84,16 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
 
-        getDataFromApi();*/
+        getDataFromApi();
         ll_main = rootView.findViewById(R.id.ll_main);
-        Toast.makeText(getActivity(), "Coming Soon....", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Coming Soon....", Toast.LENGTH_SHORT).show();
 
 
         return rootView;
     }
 
     private void getDataFromApi() {
-        ApiUtils.getAPIService().UpskillList(api_token, eventid, "10", "1", "")
+        ApiUtils.getAPIService().UpskillList(api_token, eventid, "1000", "1", "")
                 .enqueue(new Callback<FetchAgenda>() {
                     @Override
                     public void onResponse(Call<FetchAgenda> call, Response<FetchAgenda> response) {

@@ -207,11 +207,6 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
         if(quiz.getQuiz_question().get(0).getReplied().equalsIgnoreCase("0")) {
             QuizDetailActivity.count1 = 1;
             QuizDetailActivity.submitflag = false;
-//            try {
-//                QuizDetailActivity.timercountdown.cancel();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
             Intent intent = new Intent(QuizListingActivity.this, QuizDetailActivity.class);
             intent.putExtra("timer", quiz.getTimer());
             intent.putExtra("folder_id", quiz.getFolder_id());

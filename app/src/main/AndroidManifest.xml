@@ -47,6 +47,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
         <activity
+            android:name=".ui.upskill.view.UpskillDetailsQuizActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+        <activity
+            android:name=".ui.upskill.view.UpskillQuizSubmittedActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+        <activity
             android:name=".ui.upskill.view.UpskillSurveyActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
@@ -66,11 +74,6 @@
             android:name=".ui.upskill.view.UpskillDetailsVideoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
-        <activity
-            android:name=".ui.upskill.view.UpskillDetailsQuizActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
-
         <activity
             android:name=".ui.document.view.DocumentActivity"
             android:screenOrientation="portrait"

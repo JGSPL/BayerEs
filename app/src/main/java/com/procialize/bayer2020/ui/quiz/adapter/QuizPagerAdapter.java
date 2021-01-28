@@ -244,7 +244,8 @@ public class QuizPagerAdapter extends PagerAdapter {
                 dataArray[position] = radioButton.getText().toString();
                 dataIDArray[position] = radioButton.getText().toString();
             }
-        } else if (quizList.get(position).getReplied().equalsIgnoreCase("2")) {
+        }
+        else if (quizList.get(position).getReplied().equalsIgnoreCase("2")) {
 
             if (raiolayout.getVisibility() == View.VISIBLE) {
                 raiolayout.setVisibility(View.GONE);
@@ -254,7 +255,8 @@ public class QuizPagerAdapter extends PagerAdapter {
             quiz_question_distruct.setText(StringEscapeUtils.unescapeJava(quizList.get(position).getQuestion()));
 
 
-        } else if (quizList.get(position).getReplied().equalsIgnoreCase("0")) {
+        }
+        else if (quizList.get(position).getReplied().equalsIgnoreCase("0")) {
 
             if (raiolayout.getVisibility() == View.GONE) {
                 raiolayout.setVisibility(View.VISIBLE);
