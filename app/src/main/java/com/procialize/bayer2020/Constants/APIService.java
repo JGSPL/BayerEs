@@ -660,4 +660,33 @@ public interface APIService {
     @FormUrlEncoded
     Call<FetchAgenda> FAQFetch(@Header("authorization") String auth,
                                  @Field("event_id") String event_id);
+
+    @POST("QA_api/NewsFeedFetch")
+    @FormUrlEncoded
+    Call<FetchSpotQnA> directQnAFetch(@Header("authorization") String auth,
+                                      @Field("event_id") String event_id,
+                                      @Field("pageSize") String pageSize,
+                                      @Field("pageNumber") String pageNumber
+    );
+
+
+    @Multipart
+    //@Headers("authorization: " + HeaderToken)
+    @POST("QA_api/PostNewsFeed")
+    Call<LoginOrganizer> postNewsFeed1(@Header("authorization") String authorization,
+                                      @Part("event_id") RequestBody event_id,
+                                      @Part("post_content") RequestBody post_content,
+                                      @Part List<MultipartBody.Part> files,
+                                      @Part List<MultipartBody.Part> thumbFiles);
+
+
+    @POST("QA_api/QADirectLike")
+    @FormUrlEncoded
+    Call<LikePost> PostQnALikeDirect(@Header("authorization") String authorization, @Field("event_id") String event_id,
+                                     @Field("question_id") String question_id);
+
+    @POST("QA_api/QADirectPost")
+    @FormUrlEncoded
+    Call<LoginOrganizer> PostQnADirect(@Header("authorization") String authorization, @Field("event_id") String event_id
+            , @Field("question") String question);
 }

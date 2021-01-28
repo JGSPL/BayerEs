@@ -28,12 +28,14 @@ import com.procialize.bayer2020.ui.speaker.roomDB.TableSpeaker;
 
 @Database(entities = {UploadMultimedia.class, TableNewsFeed.class, TableNewsFeedMedia.class,
         ProfileEventId.class, TableAttendee.class, TableSpeaker.class, TableAgenda.class,
-        TableEventInfo.class, Table_Attendee_Chatcount.class, NewsFeedUniqueIdUploadedStarted.class},
+        TableEventInfo.class, Table_Attendee_Chatcount.class, NewsFeedUniqueIdUploadedStarted.class, com.procialize.bayer2020.ui.qapost.roomDB.UploadMultimedia.class, com.procialize.bayer2020.ui.qapost.roomDB.NewsFeedUniqueIdUploadedStarted.class},
         version = 1, exportSchema = false)
 public abstract class EventAppDB extends RoomDatabase {
 
     private static volatile EventAppDB eventAppDB;
     public abstract UploadMultimediaDao uploadMultimediaDao();
+    public abstract com.procialize.bayer2020.ui.qapost.roomDB.UploadMultimediaDao uploadMultimediaQaDao();
+
     public abstract NewsFeedDao newsFeedDao();
     public abstract ProfileUpdateDao profileUpdateDao();
     public abstract AttendeeDao attendeeDao();
@@ -42,6 +44,7 @@ public abstract class EventAppDB extends RoomDatabase {
     public abstract EventInfoDao eventInfoDao();
     public abstract AttendeeChatDao attendeeChatDao();
     public abstract NewsFeedUniqueIdUploadedStartedDao newsFeedUniqueIdUploadedStartedDao();
+    public abstract com.procialize.bayer2020.ui.qapost.roomDB.NewsFeedUniqueIdUploadedStartedDao qaIdUploadedStartedDao();
 
     public static EventAppDB getDatabase(final Context context) {
         if (eventAppDB == null) {

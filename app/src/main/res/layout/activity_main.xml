@@ -331,28 +331,25 @@
 
             </TableRow>
 
-
             <TableRow
-                android:id="@+id/tr_contact_us"
+                android:id="@+id/tr_qna"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:visibility="visible">
+                android:layout_height="fill_parent"
+                android:padding="10dp">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_privacy"
+                    android:src="@drawable/quizsidemenu"
                     android:tint="@color/black" />
 
                 <TextView
-                    android:id="@+id/tv_contact_us"
+                    android:id="@+id/tv_qna"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
-                    android:text="Contact Us"
+                    android:text="Ask Question"
                     android:textColor="@color/black"
                     android:textSize="15dp" />
 
@@ -382,6 +379,34 @@
                     android:textSize="15dp" />
 
             </TableRow>
+
+
+            <TableRow
+                android:id="@+id/tr_contact_us"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_privacy"
+                    android:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_contact_us"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:text="Contact Us"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+            </TableRow>
+
 
 
             <androidx.recyclerview.widget.RecyclerView
