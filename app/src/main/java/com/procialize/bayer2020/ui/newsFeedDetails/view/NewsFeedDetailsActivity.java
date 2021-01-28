@@ -136,10 +136,10 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
         int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4));
         iv_back.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
-        btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
+       /* btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         btn_share.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         btn_save.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
-        btn_share.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        btn_share.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));*/
 
         btn_save.setOnClickListener(this);
         btn_share.setOnClickListener(this);
@@ -161,7 +161,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
                 }).into(headerlogoIv);
 
 
-        CommonFunction.showBackgroundImage(this, ll_main);
+       // CommonFunction.showBackgroundImage(this, ll_main);
         setupPagerAdapter();
     }
 
