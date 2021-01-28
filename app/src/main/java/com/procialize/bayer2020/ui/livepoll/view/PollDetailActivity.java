@@ -221,8 +221,6 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
 
         questionTv.setText(StringEscapeUtils.unescapeJava(question));
 
-
-
         if (optionLists.size() != 0) {
 
             viewGroup = (RadioGroup) findViewById(R.id.radiogroup);
