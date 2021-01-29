@@ -32,6 +32,8 @@ public abstract class EventAppDB extends RoomDatabase {
 
     private static volatile EventAppDB eventAppDB;
     public abstract UploadMultimediaDao uploadMultimediaDao();
+    public abstract com.procialize.bayer2020.ui.qapost.roomDB.UploadMultimediaDao uploadMultimediaQaDao();
+
     public abstract NewsFeedDao newsFeedDao();
     public abstract ProfileUpdateDao profileUpdateDao();
     public abstract AttendeeDao attendeeDao();
@@ -39,6 +41,7 @@ public abstract class EventAppDB extends RoomDatabase {
     public abstract AgendaDao agendaDao();
     public abstract EventInfoDao eventInfoDao();
     public abstract NewsFeedUniqueIdUploadedStartedDao newsFeedUniqueIdUploadedStartedDao();
+    public abstract com.procialize.bayer2020.ui.qapost.roomDB.NewsFeedUniqueIdUploadedStartedDao qaIdUploadedStartedDao();
 
     public static EventAppDB getDatabase(final Context context) {
         if (eventAppDB == null) {

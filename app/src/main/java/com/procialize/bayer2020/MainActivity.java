@@ -93,6 +93,7 @@ import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
 import com.procialize.bayer2020.ui.profile.view.ProfileActivity;
 import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
 import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
+import com.procialize.bayer2020.ui.qa.view.QnADirectActivity;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
 import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
-            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy, tr_downloads, tr_faq, tr_storeLocator;
+            tr_contact_us, tr_survey, tr_eula, tr_privacy_policy, tr_downloads, tr_faq, tr_storeLocator, tr_qna;
     TextView txt_version;
     LinearLayout ll_main;
     DatabaseReference mDatabaseReference;
@@ -253,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_downloads = findViewById(R.id.tr_downloads);
         tr_faq = findViewById(R.id.tr_faq);
         tr_storeLocator = findViewById(R.id.tr_storeLocator);
+        tr_qna = findViewById(R.id.tr_qna);
 
         txt_version.setText(BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
@@ -269,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_downloads.setOnClickListener(this);
         tr_faq.setOnClickListener(this);
         tr_storeLocator.setOnClickListener(this);
+        tr_qna.setOnClickListener(this);
 
         if (tot_event.equalsIgnoreCase("1")) {
             tr_switch_event.setVisibility(View.GONE);
@@ -561,6 +564,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+                break;
+            case R.id.tr_qna:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, QnADirectActivity.class));
                 break;
             case R.id.tr_storeLocator:
                 JzvdStd.releaseAllVideos();
