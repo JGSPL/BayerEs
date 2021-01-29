@@ -27,6 +27,7 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContentSubArray;
+import com.procialize.bayer2020.ui.upskill.model.UpskillList;
 
 import org.jsoup.Jsoup;
 
@@ -50,6 +51,7 @@ public class UpskillDetailsImageActivity extends AppCompatActivity implements Vi
     TextView tv_Description;
     Button btn_next;
 
+    UpskillList upskillList;
     String api_token, eventid,last_submit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class UpskillDetailsImageActivity extends AppCompatActivity implements Vi
         setContentView(R.layout.activity_upskill_details_image);
 
         upskillContentSubArray = (UpskillContentSubArray) getIntent().getSerializableExtra("upskillContent");
+        upskillList = (UpskillList) getIntent().getSerializableExtra("upskill_info");
         contentType = upskillContentSubArray.getContentInfo().get(click_count).getContent_type();
         iv_banner = findViewById(R.id.iv_banner);
         tv_Description = findViewById(R.id.tv_Description);
@@ -95,7 +98,7 @@ public class UpskillDetailsImageActivity extends AppCompatActivity implements Vi
         setUpToolbar();
 
 
-        if(upskillContentSubArray.getContentInfo().size() == 1)
+        if(upskillContentSubArray.getContentInfo().size() == click_count+1)
         {
             btn_next.setText("Submit");
         }
@@ -209,7 +212,7 @@ public class UpskillDetailsImageActivity extends AppCompatActivity implements Vi
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        super.onBackPressed();
         click_count = click_count - 1;
         onNavigation();
     }
@@ -220,27 +223,35 @@ public class UpskillDetailsImageActivity extends AppCompatActivity implements Vi
                 if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
                     startActivity(new Intent(this, UpskillDetailsTextActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Survey")) {
                     startActivity(new Intent(this, UpskillSurveyActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Poll")) {
                     startActivity(new Intent(this, UpskillDetailsPollActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Pdf")) {
                     startActivity(new Intent(this, UpskillDetailsPdfActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Image")) {
                     startActivity(new Intent(this, UpskillDetailsImageActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Video")) {
                     startActivity(new Intent(this, UpskillDetailsVideoActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Quiz")) {
                     startActivity(new Intent(this, UpskillDetailsQuizActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Audio")) {
                     startActivity(new Intent(this, UpskillDetailsAudioActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 }
             }
         }

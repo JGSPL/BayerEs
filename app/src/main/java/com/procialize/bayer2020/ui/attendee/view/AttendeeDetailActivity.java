@@ -44,7 +44,7 @@ import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDetailsViewModel;
-import com.procialize.bayer2020.ui.attendeeChat.ChatActivity;
+//import com.procialize.bayer2020.ui.attendeeChat.ChatActivity;
 
 import java.io.Serializable;
 
@@ -293,10 +293,10 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                         attendee.setFirebase_status("1");
                                         attendeeDatabaseViewModel.deleteAttendee(AttendeeDetailActivity.this,attendeeid);
                                         attendeeDatabaseViewModel.insertIntoDbSingle(AttendeeDetailActivity.this,attendee);
-                                        startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
+                                        /*startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
                                                 .putExtra("page", "AttendeeDetail")
                                                 .putExtra("firstMessage", message)
-                                                .putExtra("Attendee", (Serializable) attendee));
+                                                .putExtra("Attendee", (Serializable) attendee));*/
 
                                         /*Intent chatIntent = new Intent(AttendeeDetailActivity.this, ChatActivity.class);
                                         chatIntent.putExtra("user_id", firebase_id);
@@ -357,12 +357,12 @@ public class AttendeeDetailActivity extends AppCompatActivity implements View.On
                                         attendee.setFirebase_status("1");
                                         attendeeDatabaseViewModel.deleteAttendee(AttendeeDetailActivity.this,attendeeid);
                                         attendeeDatabaseViewModel.insertIntoDbSingle(AttendeeDetailActivity.this,attendee);
-                                        startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
+                                       /* startActivity(new Intent(AttendeeDetailActivity.this, ChatActivity.class)
                                                 .putExtra("page", "AttendeeDetail")
                                                 .putExtra("firstMessage", message)
                                                 .putExtra("Attendee", (Serializable) attendee));
 
-                                        finish();
+                                        finish();*/
 
                                     }
 

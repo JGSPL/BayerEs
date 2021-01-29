@@ -185,7 +185,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                 }
 
                 String firebase_id = attendee.getFirebase_id();
-                int unreadMsgCount = EventAppDB.getDatabase(context).attendeeChatDao().getChatCountId(firebase_id);
+                /*int unreadMsgCount = EventAppDB.getDatabase(context).attendeeChatDao().getChatCountId(firebase_id);
           //      List<Table_Attendee_Chatcount> attenChatCount  = EventAppDB.getDatabase(context).attendeeChatDao().getAllDaoAttendee();
 
                 if (unreadMsgCount > 0) {
@@ -193,12 +193,12 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.MyView
                     holder.tv_count.setVisibility(View.VISIBLE);
                     holder.rl_count.setVisibility(View.VISIBLE);
                     holder.ic_rightarrow.setVisibility(View.GONE);
-                } else {
+                } else {*/
                     holder.tv_count.setText("");
                     holder.tv_count.setVisibility(View.GONE);
                     holder.rl_count.setVisibility(View.GONE);
                     holder.ic_rightarrow.setVisibility(View.VISIBLE);
-                }
+               /* }*/
             }
 
         } catch (Exception e) {

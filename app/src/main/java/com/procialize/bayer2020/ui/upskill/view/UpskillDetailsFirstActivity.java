@@ -144,35 +144,43 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_start:
+                click_count = 0;
                 if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
                     startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillDetailsTextActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                            .putExtra("click_count", click_count));
+                            .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Survey")) {
                     startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillSurveyActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                            .putExtra("click_count", click_count));
+                            .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Poll")) {
                     startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillDetailsPollActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                            .putExtra("click_count", click_count));
+                            .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Pdf")) {
                     startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillDetailsPdfActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                            .putExtra("click_count", click_count));
+                            .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Image")) {
                     startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillDetailsImageActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                            .putExtra("click_count", click_count));
+                            .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Video")) {
                     startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillDetailsVideoActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                            .putExtra("click_count", click_count));
+                            .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Quiz")) {
                     if (upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getReplied().equalsIgnoreCase("0")) {
                         startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillDetailsQuizActivity.class)
                                 .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                                .putExtra("click_count", click_count));
+                                .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                        finish();
                     } else {
                         Intent intent = new Intent(UpskillDetailsFirstActivity.this, UpskillQuizSubmittedActivity.class);
                         intent.putExtra("folderName", upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_name());
@@ -180,6 +188,7 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
                         intent.putExtra("upskillContent", (Serializable) upskillContentSubArray);
                         intent.putExtra("Page", "Question");
                         intent.putExtra("click_count", click_count);
+                        intent.putExtra("upskill_info", (Serializable) upskillList);
                         startActivity(intent);
                         finish();
                        /* startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillQuizSubmittedActivity.class)
@@ -188,7 +197,8 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Audio")) {
                     startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillDetailsAudioActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                            .putExtra("click_count", click_count));
+                            .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                    finish();
                 }
                 break;
         }
@@ -221,5 +231,11 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
                     }).into(headerlogoIv);
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

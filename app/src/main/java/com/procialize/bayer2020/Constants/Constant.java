@@ -15,6 +15,7 @@ public class Constant {
     public static final String VIDEO_DIRECTORY = "/Video";
     public static final String BROADCAST_UPLOAD_MULTIMEDIA_ACTION = "com.procialize.eventsapp.UPLOAD_MULTIMEDIA";
     public static String FIREBASE_TOKEN = "";
+    public static final String BROADCAST_NEW_POST_RECEIVED_ACTION = "com.procialize.eventsapp.NEW_POST_RECEIVED";
     public static final String BROADCAST_ACTION_FOR_EVENT_Chat = "com.procialize.eventapp.BROADCAST.event_Chat";
 
     public static class Config {

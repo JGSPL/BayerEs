@@ -65,6 +65,7 @@ public class UpskillDetailsPdfActivity extends AppCompatActivity implements View
         setContentView(R.layout.activity_upskill_details_pdf);
 
         upskillContentSubArray = (UpskillContentSubArray) getIntent().getSerializableExtra("upskillContent");
+        upskillList = (UpskillList) getIntent().getSerializableExtra("upskill_info");
         setUpToolbar();
         webView = findViewById(R.id.webView);
         btn_next = findViewById(R.id.btn_next);
@@ -104,7 +105,7 @@ public class UpskillDetailsPdfActivity extends AppCompatActivity implements View
 
         webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + upskillContentSubArray.getContentInfo().get(click_count).getContent_url());
 
-        if(upskillContentSubArray.getContentInfo().size() == 1)
+        if(upskillContentSubArray.getContentInfo().size() == click_count+1)
         {
             btn_next.setText("Submit");
         }
@@ -227,7 +228,7 @@ public class UpskillDetailsPdfActivity extends AppCompatActivity implements View
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        super.onBackPressed();
         click_count = click_count - 1;
         onNavigation();
     }
@@ -238,27 +239,35 @@ public class UpskillDetailsPdfActivity extends AppCompatActivity implements View
                 if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
                     startActivity(new Intent(this, UpskillDetailsTextActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Survey")) {
                     startActivity(new Intent(this, UpskillSurveyActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Poll")) {
                     startActivity(new Intent(this, UpskillDetailsPollActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Pdf")) {
                     startActivity(new Intent(this, UpskillDetailsPdfActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Image")) {
                     startActivity(new Intent(this, UpskillDetailsImageActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Video")) {
                     startActivity(new Intent(this, UpskillDetailsVideoActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Quiz")) {
                     startActivity(new Intent(this, UpskillDetailsQuizActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Audio")) {
                     startActivity(new Intent(this, UpskillDetailsAudioActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                    finish();
                 }
             }
         }

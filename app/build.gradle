@@ -171,7 +171,7 @@ dependencies {
 
     //----FIREBASE AUTHENTICATION---
     // implementation 'com.google.firebase:firebase-auth:11.8.0'
-    compile 'com.google.firebase:firebase-database:11.8.0'
+    /*compile 'com.google.firebase:firebase-database:11.8.0'
     implementation 'com.google.firebase:firebase-auth:11.8.0'
     implementation 'com.google.android.gms:play-services:11.8.0'
     implementation 'com.google.firebase:firebase-crash:11.8.0'
@@ -194,7 +194,7 @@ dependencies {
   //  implementation 'com.google.firebase:firebase-messaging:17.3.3'
 
     //-----FIREBASE DATABASE---
-    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-database:11.8.0'*/
 
     //Tagging library
     implementation project(':mentions-release')
@@ -206,7 +206,7 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpcore:4.4.5'
     implementation 'org.apache.httpcomponents:httpmime:4.5.2'
     //implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0-RC1'
-    implementation 'com.google.android.gms:play-services:11.8.0'
+   // implementation 'com.google.android.gms:play-services:11.8.0'
 
     implementation files('libs\\YouTubeAndroidPlayerApi.jar')
 
@@ -231,6 +231,40 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.6'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.6'*/
     //implementation 'com.google.android.gms:play-services-ads-identifier:16.0.0'
+
+
+    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
+    implementation 'com.firebaseui:firebase-ui-storage:6.4.0'
+    // FirebaseUI for Firebase Realtime Database
+    //implementation 'com.firebaseui:firebase-ui-database:3.3.1'
+    //
+    //implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    //implementation 'com.google.android.gms:play-services:11.8.0'
+    // implementation 'com.google.firebase:firebase-messaging:11.8.0'
+
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation 'com.google.firebase:firebase-messaging:15.0.2'
+    //implementation 'com.google.firebase:firebase-analytics'
+
+    //-----DATA IS FETCHED FROM DATABASE AND ADDED TO RECYCLER VIEW----
+    implementation 'com.firebaseui:firebase-ui-database:1.0.1'
+
+    //Google Map
+    implementation 'com.google.maps.android:android-maps-utils:2.2.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    //implementation 'com.google.android.gms:play-services:12.0.1'
+    implementation 'com.google.firebase:firebase-dynamic-links:19.1.1'
+
+    // Add the Firebase Crashlytics SDK.
+    implementation 'com.google.firebase:firebase-crashlytics:17.3.0'
+    implementation 'com.google.firebase:firebase-crashlytics-ndk:17.3.0'
+    // Recommended: Add the Google Analytics SDK.
+    implementation 'com.google.firebase:firebase-analytics:18.0.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

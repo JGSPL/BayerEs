@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 import androidx.lifecycle.LifecycleObserver;
-import com.crashlytics.android.Crashlytics;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.KLog;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -15,7 +14,6 @@ import com.procialize.bayer2020.Constants.Constant;
 import com.procialize.bayer2020.Utility.Utils;
 import com.procialize.bayer2020.ui.quiz.model.QuizOption;
 import java.util.ArrayList;
-import io.fabric.sdk.android.Fabric;
 
 /**
  * @author Alexey Danilov (danikula@gmail.com).
@@ -43,7 +41,7 @@ public class App extends Application implements LifecycleObserver {
         super.onCreate();
         KLog.init(BuildConfig.DEBUG, "[VideoCache]:");
         initImageLoader(getApplicationContext());
-        Fabric.with(this, new Crashlytics());
+        //Fabric.with(this, new Crashlytics());
 
 
     }

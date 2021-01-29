@@ -3,6 +3,7 @@ package com.procialize.bayer2020.firebase;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,9 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.text.Html;
+import android.text.Spanned;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -18,22 +22,45 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.procialize.bayer2020.ConnectionDetector;
+import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.Constant;
+import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.Database.EventAppDB;
+import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.SharedPreferencesConstant;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.roomDB.TableAttendee;
-import com.procialize.bayer2020.ui.attendeeChat.ChatActivity;
-import com.procialize.bayer2020.ui.attendeeChat.roomDb.Table_Attendee_Chatcount;
+import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
+import com.procialize.bayer2020.ui.newsFeedComment.view.CommentActivity;
+import com.procialize.bayer2020.ui.newsfeed.model.FetchNewsfeedMultiple;
+import com.procialize.bayer2020.ui.newsfeed.model.Newsfeed_detail;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
+import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
+
+import org.jsoup.Jsoup;
 
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_LOGIN;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -42,12 +69,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     PendingIntent contentIntent;
     Bitmap bitmap;
 
+    private ArrayList<Newsfeed_detail> newsfeed_detail = new ArrayList<>();
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
        /* final Intent intent = new Intent(this, MainActivity.class);*/
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int notificationID = new Random().nextInt(3000);
-
+        String event_id = SharedPreference.getPref(this, EVENT_ID);
+        String api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
       /*
         Apps targeting SDK 26 or above (Android O) must implement notification channels and add its notifications
         to at least one of them. Therefore, confirm if version is Oreo or higher, then setup notification channel
@@ -61,87 +90,155 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT);*/
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-                R.mipmap.ic_launcher);
+                R.drawable.app_icon);
 
-        String Fireid = SharedPreference.getPref(this, SharedPreferencesConstant.FIREBASE_ID);
+        if (remoteMessage.getData().size() > 0) {
+            Log.d("Payload===>", "Message data payload: " + remoteMessage.getData());
 
-        String CombineId = remoteMessage.getData().get("title");
-        String[] domains = CombineId.split("@");
-        String senderId = domains[1];
-        String receiverId = domains[0];
+        }
+        String isLogin = SharedPreference.getPref(this, IS_LOGIN);
+        if (isLogin.equalsIgnoreCase("true")) {
+                Log.e("test notification===>", remoteMessage.getData().toString());
+                Uri notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        Uri notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        if (Fireid.equalsIgnoreCase(receiverId)) {
+                String spannedString = String.valueOf(Jsoup.parse(remoteMessage.getData().get("content"))).trim();
+                Spanned strPost = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+                } else {
+                    strPost = Html.fromHtml(spannedString);
+                }
 
-            List<Table_Attendee_Chatcount> attenChatCount = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getSingleAttendee(senderId);
-            if (attenChatCount.size() > 0) {
-                String read  = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getReadId(senderId);
-                if(read.equalsIgnoreCase("0")) {
-                    Count = EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().getChatCountId(senderId);
-                    Count++;
-                    EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().updateChatCount(Count, senderId);
-                    if(remoteMessage.getData().get("message").equalsIgnoreCase("image")) {
-
-                        String imageUri = remoteMessage.getData().get("image");
-                        long when = System.currentTimeMillis();
+                if (remoteMessage.getData().get("type").equalsIgnoreCase("AdminPost") ||
+                        remoteMessage.getData().get("type").equalsIgnoreCase("UserPost")) {
+                    if (!remoteMessage.getData().get("sender_id").equalsIgnoreCase(SharedPreference.getPref(getApplicationContext(), KEY_ATTENDEE_ID))) {
+                        String imageUri = remoteMessage.getData().get("mediaUrl");
                         bitmap = getBitmapfromUrl(imageUri);
+                        Intent notificationIntent = new Intent(getApplicationContext(),
+                                MainActivity.class);
+                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                                new Random().nextInt(), notificationIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
-                        final Attendee attendee = new Attendee();
-                        try {
-                            attendee.setFirebase_status(tableAttendees.getFirebase_status());
-                            attendee.setMobile(tableAttendees.getMobile());
-                            attendee.setEmail(tableAttendees.getEmail());
-                            attendee.setFirebase_id(tableAttendees.getFirebase_id());
-                            attendee.setFirebase_name(tableAttendees.getFirebase_name());
-                            attendee.setFirebase_username(tableAttendees.getFirebase_username());
-                            attendee.setAttendee_id(tableAttendees.getAttendee_id());
-                            attendee.setFirst_name(tableAttendees.getFirst_name());
-                            attendee.setLast_name(tableAttendees.getLast_name());
-                            attendee.setCity(tableAttendees.getCity());
-                            attendee.setDesignation(tableAttendees.getDesignation());
-                            attendee.setCompany_name(tableAttendees.getCompany_name());
-                            attendee.setAttendee_type(tableAttendees.getAttendee_type());
-                            attendee.setTotal_sms(tableAttendees.getTotal_sms());
-                            attendee.setProfile_picture(tableAttendees.getProfile_picture());
-                            attendee.setFirebase_status(tableAttendees.getFirebase_status());
-                        }catch(Exception e){
+                        if (remoteMessage.getData().get("mediaType").equalsIgnoreCase("image")) {
+                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                                    .setSmallIcon(R.drawable.app_icon)
+                                    .setContentTitle(remoteMessage.getData().get("event_name"))
+                                    .setContentText(Utility.trimTrailingWhitespace(strPost))
+                                    .setAutoCancel(true)
+                                    .setSound(notificationSoundUri).setStyle(new NotificationCompat.BigPictureStyle()
+                                            .bigPicture(bitmap).bigLargeIcon(null)).setContentIntent(contentIntent);
+                            //Set notification color to match your app color template
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                            }
+                            notificationManager.notify(notificationID, notificationBuilder.build());
+                            Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+                        } else {
+                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                                    .setSmallIcon(R.drawable.app_icon)
+                                    .setContentTitle(remoteMessage.getData().get("event_name"))
+                                    .setContentText(Utility.trimTrailingWhitespace(strPost))
+                                    .setAutoCancel(true).setContentIntent(contentIntent);
 
+                            //Set notification color to match your app color template
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                            }
+                            notificationManager.notify(notificationID, notificationBuilder.build());
+                            Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
                         }
 
-                        if(attendee!=null) {
+                        Intent broadcastIntent = new Intent(Constant.BROADCAST_NEW_POST_RECEIVED_ACTION);
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+                    }
+                } else if (remoteMessage.getData().get("type").equalsIgnoreCase("Quiz")) {
+                    Intent notificationIntent = new Intent(getApplicationContext(),
+                            QuizListingActivity.class);
+                /*notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                            Intent notificationIntent = new Intent(getApplicationContext(),
-                                    ChatActivity.class);
-                            notificationIntent.putExtra("Attendee", (Serializable)attendee);
-                            notificationIntent.putExtra("firstMessage","");
-                            notificationIntent.putExtra("page", "Notification");
-                            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            contentIntent = PendingIntent.getActivity(
-                                    getApplicationContext(), new Random().nextInt(),
-                                    notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        }
+                contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                        new Random().nextInt(), notificationIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);*/
 
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                    stackBuilder.addParentStack(MainActivity.class);
+                    stackBuilder.addNextIntent(notificationIntent);
+                    contentIntent =
+                            stackBuilder.getPendingIntent(new Random().nextInt(), PendingIntent.FLAG_UPDATE_CURRENT);
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                            .setSmallIcon(R.drawable.app_icon)
+                            //.setLargeIcon(largeIcon)
+                            //.setLargeIcon(bitmap)
+                            .setContentTitle(remoteMessage.getData().get("event_name"))
+                            .setContentText(Utility.trimTrailingWhitespace(strPost))
+                            .setAutoCancel(true).setContentIntent(contentIntent);
+                    //Set notification color to match your app color template
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                    }
+                    notificationManager.notify(notificationID, notificationBuilder.build());
+                    Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+
+                } else if (remoteMessage.getData().get("type").equalsIgnoreCase("LivePoll")) {
+                    Intent notificationIntent = new Intent(getApplicationContext(),
+                            LivePollActivity.class);
+                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                            new Random().nextInt(), notificationIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                            .setSmallIcon(R.drawable.app_icon)
+                            //.setLargeIcon(largeIcon)
+                            //.setLargeIcon(bitmap)
+                            .setContentTitle(remoteMessage.getData().get("event_name"))
+                            .setContentText(Utility.trimTrailingWhitespace(strPost))
+                            .setAutoCancel(true).setContentIntent(contentIntent);
+                    //Set notification color to match your app color template
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                    }
+                    notificationManager.notify(notificationID, notificationBuilder.build());
+                    Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+
+                } else if (remoteMessage.getData().get("type").equalsIgnoreCase("Comment") ||
+                        remoteMessage.getData().get("type").equalsIgnoreCase("TagComment") ||
+                        remoteMessage.getData().get("type").equalsIgnoreCase("TagNewsfeed")) {
+                    String imageUri = remoteMessage.getData().get("mediaUrl");
+                    bitmap = getBitmapfromUrl(imageUri);
+
+                    newsfeed_detail = getNewsfeedDetails(remoteMessage.getData().get("id"), api_token, event_id);
+                    if (newsfeed_detail.size() > 0) {
+                        Intent notificationIntent = new Intent(getApplicationContext(),
+                                CommentActivity.class);
+                        notificationIntent.putExtra("Newsfeed_detail", (Serializable) newsfeed_detail.get(0));
+                        notificationIntent.putExtra("newsfeedId", remoteMessage.getData().get("id"));
+                        notificationIntent.putExtra("positionOfList", 0);
+                        notificationIntent.putExtra("position", "0");
+
+                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                                new Random().nextInt(), notificationIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setLargeIcon(bitmap)
-                                .setColorized(true)
-                                .setWhen(when)
-                                .setContentTitle(remoteMessage.getData().get("titleMain"))
-                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                                //.setContentText(remoteMessage.getData().get("message"))
-                                .setAutoCancel(true)
-                                .setSound(notificationSoundUri)
-                                .setStyle(new NotificationCompat.BigPictureStyle()
-                                        .bigPicture(bitmap).bigLargeIcon(null))
-                                .setContentIntent(contentIntent);
-
-
-
+                                .setSmallIcon(R.drawable.app_icon)
+                                .setContentTitle(remoteMessage.getData().get("event_name"))
+                                .setContentText(Utility.trimTrailingWhitespace(strPost))
+                                .setAutoCancel(true).setContentIntent(contentIntent);
+                        if (bitmap != null) {
+                            notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
+                                    .bigPicture(bitmap).bigLargeIcon(null)).setContentIntent(contentIntent);
+                        }
                         //Set notification color to match your app color template
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -149,154 +246,74 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         notificationManager.notify(notificationID, notificationBuilder.build());
                         Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+                    }
+                } else if (remoteMessage.getData().get("type").equalsIgnoreCase("Like")) {
+                    newsfeed_detail = getNewsfeedDetails(remoteMessage.getData().get("id"), api_token, event_id);
+                    if (newsfeed_detail.size() > 0) {
+                        Intent notificationIntent = new Intent(getApplicationContext(),
+                                CommentActivity.class);
+                        notificationIntent.putExtra("Newsfeed_detail", (Serializable) newsfeed_detail.get(0));
+                        notificationIntent.putExtra("newsfeedId", remoteMessage.getData().get("id"));
+                        notificationIntent.putExtra("position", "0");
+                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                                new Random().nextInt(), notificationIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
 
-
-                        notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-                        notificationBuilder.setContentIntent(contentIntent);
-                        notificationBuilder.setAutoCancel(true);
-
-
-
-                    }else{
-
-                        TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
-                        final Attendee attendee = new Attendee();
-                        try {
-                            attendee.setFirebase_status(tableAttendees.getFirebase_status());
-                            attendee.setMobile(tableAttendees.getMobile());
-                            attendee.setEmail(tableAttendees.getEmail());
-                            attendee.setFirebase_id(tableAttendees.getFirebase_id());
-                            attendee.setFirebase_name(tableAttendees.getFirebase_name());
-                            attendee.setFirebase_username(tableAttendees.getFirebase_username());
-                            attendee.setAttendee_id(tableAttendees.getAttendee_id());
-                            attendee.setFirst_name(tableAttendees.getFirst_name());
-                            attendee.setLast_name(tableAttendees.getLast_name());
-                            attendee.setCity(tableAttendees.getCity());
-                            attendee.setDesignation(tableAttendees.getDesignation());
-                            attendee.setCompany_name(tableAttendees.getCompany_name());
-                            attendee.setAttendee_type(tableAttendees.getAttendee_type());
-                            attendee.setTotal_sms(tableAttendees.getTotal_sms());
-                            attendee.setProfile_picture(tableAttendees.getProfile_picture());
-                            attendee.setFirebase_status(tableAttendees.getFirebase_status());
-                        }catch(Exception e){
-
-                        }
-
-                        if(attendee!=null) {
-
-                            Intent notificationIntent = new Intent(getApplicationContext(),
-                                    ChatActivity.class);
-                            notificationIntent.putExtra("Attendee", (Serializable)attendee);
-                            notificationIntent.putExtra("firstMessage","");
-                            notificationIntent.putExtra("page", "Notification");
-                            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            contentIntent = PendingIntent.getActivity(
-                                    getApplicationContext(), new Random().nextInt(),
-                                    notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                            // startActivity(notificationIntent);
-
-
-
-                        }
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setLargeIcon(largeIcon)
-                                 .setContentTitle(remoteMessage.getData().get("titleMain"))
-                                .setContentText(remoteMessage.getData().get("message"))
-                                .setAutoCancel(true)
-                                .setSound(notificationSoundUri)
-                                .setContentIntent(contentIntent);
+                                .setSmallIcon(R.drawable.app_icon)
+                                //.setLargeIcon(largeIcon)
+                                //.setLargeIcon(bitmap)
+                                .setContentTitle(remoteMessage.getData().get("event_name"))
+                                .setContentText(Utility.trimTrailingWhitespace(strPost))
+                                .setAutoCancel(true).setContentIntent(contentIntent);
                         //Set notification color to match your app color template
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
                         }
-
-
                         notificationManager.notify(notificationID, notificationBuilder.build());
                         Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+                    }
+                } else if (remoteMessage.getData().get("type").equalsIgnoreCase("Notification") ||
+                        remoteMessage.getData().get("type").equalsIgnoreCase("TagNotification") ||
+                        remoteMessage.getData().get("type").equalsIgnoreCase("GodNotification")) {
+                    Intent notificationIntent = new Intent(getApplicationContext(),
+                            NotificationActivity.class);
+                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                            new Random().nextInt(), notificationIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
 
-                        notificationBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-                        notificationBuilder.setContentIntent(contentIntent);
-                        notificationBuilder.setAutoCancel(true);
 
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                            .setSmallIcon(R.drawable.app_icon)
+                            //.setLargeIcon(largeIcon)
+                            //.setLargeIcon(bitmap)
+                            .setContentTitle(remoteMessage.getData().get("event_name"))
+                            .setContentText(Utility.trimTrailingWhitespace(strPost))
+                            .setAutoCancel(true).setContentIntent(contentIntent);
+                    //Set notification color to match your app color template
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
+                    }
+                    if (remoteMessage.getData().get("mediaType").equalsIgnoreCase("image")) {
 
+                        String imageUri = remoteMessage.getData().get("mediaUrl");
+                        bitmap = getBitmapfromUrl(imageUri);
+                        notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
+                                .bigPicture(bitmap));
                     }
 
 
+                    notificationManager.notify(notificationID, notificationBuilder.build());
+                    Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
 
                 }
-
-            } else {
-                Table_Attendee_Chatcount attChat = new Table_Attendee_Chatcount();
-                attChat.setChatCount_receId(senderId);
-                attChat.setChat_count(1);
-                attChat.setChat_count_read("0");
-                attChat.setChat_mess("");
-                EventAppDB.getDatabase(getApplicationContext()).attendeeChatDao().insertAttendee(attChat);
-
-                TableAttendee tableAttendees = EventAppDB.getDatabase(getApplicationContext()).attendeeDao().getAttendeeDetailsFromFireId(senderId);
-                final Attendee attendee = new Attendee();
-                try {
-                    attendee.setFirebase_status(tableAttendees.getFirebase_status());
-                    attendee.setMobile(tableAttendees.getMobile());
-                    attendee.setEmail(tableAttendees.getEmail());
-                    attendee.setFirebase_id(tableAttendees.getFirebase_id());
-                    attendee.setFirebase_name(tableAttendees.getFirebase_name());
-                    attendee.setFirebase_username(tableAttendees.getFirebase_username());
-                    attendee.setAttendee_id(tableAttendees.getAttendee_id());
-                    attendee.setFirst_name(tableAttendees.getFirst_name());
-                    attendee.setLast_name(tableAttendees.getLast_name());
-                    attendee.setCity(tableAttendees.getCity());
-                    attendee.setDesignation(tableAttendees.getDesignation());
-                    attendee.setCompany_name(tableAttendees.getCompany_name());
-                    attendee.setAttendee_type(tableAttendees.getAttendee_type());
-                    attendee.setTotal_sms(tableAttendees.getTotal_sms());
-                    attendee.setProfile_picture(tableAttendees.getProfile_picture());
-                    attendee.setFirebase_status(tableAttendees.getFirebase_status());
-                }catch(Exception e){
-
-                }
-                if(attendee!=null) {
-
-                    Intent notificationIntent = new Intent(getApplicationContext(),
-                            ChatActivity.class);
-                    notificationIntent.putExtra("Attendee", (Serializable)attendee);
-                    notificationIntent.putExtra("firstMessage", "");
-                    notificationIntent.putExtra("page", "Notification");
-                    notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    contentIntent = PendingIntent.getActivity(
-                            getApplicationContext(), new Random().nextInt(),
-                            notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                }
-
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setLargeIcon(largeIcon)
-                        // .setContentTitle(remoteMessage.getData().get("title"))
-                        .setContentText(remoteMessage.getData().get("message"))
-                        .setAutoCancel(true)
-                        .setSound(notificationSoundUri)
-                        .setContentIntent(contentIntent);
-
-
-                //Set notification color to match your app color template
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
-                }
-                notificationManager.notify(notificationID, notificationBuilder.build());
-                Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
-
-
-            }
-
-
-
-
-    }
+        }
 
     }
 
@@ -333,5 +350,36 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         }
     }
+
+    private ArrayList<Newsfeed_detail> getNewsfeedDetails(final String newsfeedId, String api_token, String event_id) {
+        if (ConnectionDetector.getInstance(this).isConnectingToInternet()) {
+            ApiUtils.getAPIService().NewsFeedDetailFetch(api_token, event_id, newsfeedId).enqueue(
+                    new Callback<FetchNewsfeedMultiple>() {
+                        @Override
+                        public void onResponse(Call<FetchNewsfeedMultiple> call,
+                                               Response<FetchNewsfeedMultiple> response) {
+                            if (response.isSuccessful()) {
+                                String strEventList = response.body().getDetail();
+                                RefreashToken refreashToken = new RefreashToken(getApplicationContext());
+                                String data = refreashToken.decryptedData(strEventList);
+                                Gson gson = new Gson();
+                                newsfeed_detail = gson.fromJson(data, new TypeToken<ArrayList<Newsfeed_detail>>() {
+                                }.getType());
+
+
+                            } else {
+                                newsfeed_detail = null;
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<FetchNewsfeedMultiple> call, Throwable t) {
+                            newsfeed_detail = null;
+                        }
+                    });
+        }
+        return newsfeed_detail;
+    }
+
 
 }

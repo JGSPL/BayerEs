@@ -3,14 +3,14 @@ package com.procialize.bayer2020.Utility;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class CommonFirebase {
     public static void crashlytics(String page,String userId) {
-        Crashlytics.setString("Screen", page);
+        /*Crashlytics.setString("Screen", page);
         Crashlytics.log(page);
-        Crashlytics.setUserIdentifier(userId);
+        Crashlytics.setUserIdentifier(userId);*/
     }
 
     public static void firbaseAnalytics(Context context, String page, String userId) {
@@ -22,7 +22,7 @@ public class CommonFirebase {
         //Sets whether analytics collection is enabled for this app on this device.
         firebaseAnalytics.setAnalyticsCollectionEnabled(true);
         //Sets the minimum engagement time required before starting a session. The default value is 10000 (10 seconds). Let's make it 20 seconds just for the fun
-        firebaseAnalytics.setMinimumSessionDuration(10000);
+        //firebaseAnalytics.setMinimumSessionDuration(10000);
         //Sets the duration of inactivity that terminates the current session. The default value is 1800000 (30 minutes).
         firebaseAnalytics.setSessionTimeoutDuration(1800000);
         //Sets the user ID property.

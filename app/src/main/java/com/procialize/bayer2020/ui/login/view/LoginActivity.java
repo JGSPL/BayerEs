@@ -101,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         sessionManager = new SessionManager(this);
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this, activityLoginBinding));

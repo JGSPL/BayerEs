@@ -82,7 +82,6 @@ import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.roomDB.TableAttendee;
 import com.procialize.bayer2020.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
-import com.procialize.bayer2020.ui.attendeeChat.ChatActivity;
 import com.procialize.bayer2020.ui.newsFeedComment.adapter.CommentAdapter;
 import com.procialize.bayer2020.ui.newsFeedComment.adapter.GifEmojiAdapter;
 import com.procialize.bayer2020.ui.newsFeedComment.model.Comment;
@@ -404,11 +403,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                                     if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
                                                                         startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
                                                                                 .putExtra("Attendee", (Serializable) attendee));
-                                                                    } else {
+                                                                    }/* else {
                                                                         startActivity(new Intent(CommentActivity.this, ChatActivity.class)
                                                                                 .putExtra("page", "ListPage")
                                                                                 .putExtra("Attendee", (Serializable) attendee));
-                                                                    }
+                                                                    }*/
                                                                 }
                                                             }
                                                         }
@@ -496,11 +495,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                                                                     if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
                                                                         startActivity(new Intent(CommentActivity.this, AttendeeDetailActivity.class)
                                                                                 .putExtra("Attendee", (Serializable) attendee));
-                                                                    } else {
+                                                                    } /*else {
                                                                         startActivity(new Intent(CommentActivity.this, ChatActivity.class)
                                                                                 .putExtra("page", "ListPage")
                                                                                 .putExtra("Attendee", (Serializable) attendee));
-                                                                    }
+                                                                    }*/
                                                                 }
                                                             }
 

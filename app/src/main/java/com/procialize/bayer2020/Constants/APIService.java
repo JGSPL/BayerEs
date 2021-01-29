@@ -27,6 +27,7 @@ import com.procialize.bayer2020.ui.newsFeedComment.model.Comment;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
 import com.procialize.bayer2020.ui.newsFeedLike.model.Like;
 import com.procialize.bayer2020.ui.newsfeed.model.FetchNewsfeedMultiple;
+import com.procialize.bayer2020.ui.notification.model.Notification;
 import com.procialize.bayer2020.ui.profile.model.FetchPincode;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.quiz.model.QuizListing;
@@ -686,4 +687,15 @@ public interface APIService {
                                 @Field("quiz_id") String quiz_id,
                                 @Field("quiz_options_id") String quiz_options_id,
                                 @Field("folder_id") String folder_id);
+
+    @POST("Notification_api/NotificationFetch")
+    @FormUrlEncoded
+    Call<Notification> FetchNotification(@Header("authorization") String authorization, @Field("event_id") String event_id,
+                                         @Field("pageSize") String pageSize, @Field("pageNumber") String pageNumber);
+
+    @POST("Notification_api/SendNotification")
+    @FormUrlEncoded
+    Call<LoginOrganizer> SendNotification(@Header("authorization") String authorization, @Field("event_id") String event_id,
+                                          @Field("schedule_time") String Schedule_time, @Field("content") String content);
+
 }

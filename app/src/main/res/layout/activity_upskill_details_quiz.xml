@@ -141,7 +141,7 @@
         android:paddingTop="10dp"
         android:paddingRight="30dp"
         android:paddingBottom="10dp"
-        android:text="Quiz Next"
+        android:text="Next"
         android:textColor="@color/white" />
 
     <com.procialize.bayer2020.fonts.RobotoButton

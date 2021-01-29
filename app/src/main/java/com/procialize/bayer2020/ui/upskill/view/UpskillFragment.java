@@ -40,7 +40,7 @@ import com.procialize.bayer2020.ui.upskill.model.UpskillList;
 import java.io.Serializable;
 import java.util.List;
 
-import io.fabric.sdk.android.services.common.CommonUtils;
+//import io.fabric.sdk.android.services.common.CommonUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

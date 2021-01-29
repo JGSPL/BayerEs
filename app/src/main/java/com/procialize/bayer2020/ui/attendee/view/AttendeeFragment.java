@@ -49,8 +49,6 @@ import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.attendee.roomDB.TableAttendee;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeViewModel;
-import com.procialize.bayer2020.ui.attendeeChat.ChatActivity;
-import com.procialize.bayer2020.ui.attendeeChat.viewmodel.AttendeeChatCountViewModel;
 import com.procialize.bayer2020.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.bayer2020.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 
@@ -94,7 +92,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
     int attendeePageSize = 100;
     AttendeeViewModel attendeeViewModel;
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
-    public static AttendeeChatCountViewModel  attendeeChatCountViewModel ;
+   // public static AttendeeChatCountViewModel  attendeeChatCountViewModel ;
     IntentFilter spotChatFilter;
 
     private int currentPage = PAGE_START;
@@ -138,7 +136,7 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
 
         attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
-        attendeeChatCountViewModel = ViewModelProviders.of(this).get(AttendeeChatCountViewModel.class);
+        //attendeeChatCountViewModel = ViewModelProviders.of(this).get(AttendeeChatCountViewModel.class);
 
         searchEt.setHintTextColor(Color.parseColor(eventColor3));
         searchEt.setTextColor(Color.parseColor(eventColor3));
@@ -447,14 +445,14 @@ public class AttendeeFragment extends Fragment implements AttendeeAdapter.Attend
 
     @Override
     public void onContactSelected(Attendee attendee) {
-        if (!(attendee.getFirebase_status().equalsIgnoreCase("0"))) {
+        /*if (!(attendee.getFirebase_status().equalsIgnoreCase("0"))) {
             getActivity().startActivity(new Intent(getContext(), ChatActivity.class)
                     .putExtra("page", "ListPage")
                     .putExtra("Attendee", (Serializable) attendee));
-        } else {
+        } else {*/
             getActivity().startActivity(new Intent(getContext(), AttendeeDetailActivity.class)
                     .putExtra("Attendee", (Serializable) attendee));
-        }
+        /*}*/
         // getActivity().finish();
     }
 

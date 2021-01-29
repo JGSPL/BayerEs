@@ -1,34 +1,71 @@
 {
   "project_info": {
-    "project_number": "984305293803",
-    "firebase_url": "https://bayer2020-ac7eb.firebaseio.com",
-    "project_id": "bayer2020-ac7eb",
-    "storage_bucket": "bayer2020-ac7eb.appspot.com"
+    "project_number": "524195205462",
+    "firebase_url": "https://mrgeapp20-fd593.firebaseio.com",
+    "project_id": "mrgeapp20-fd593",
+    "storage_bucket": "mrgeapp20-fd593.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:984305293803:android:7be674c6fd9ecad2c4a1ae",
+        "mobilesdk_app_id": "1:524195205462:android:8685559cc2c7a6d18446f7",
         "android_client_info": {
           "package_name": "com.procialize.bayer2020"
         }
       },
       "oauth_client": [
         {
-          "client_id": "984305293803-q97g4t8f1h14kcc6ie332ohp5r3ugrts.apps.googleusercontent.com",
+          "client_id": "524195205462-v55hplfeonejlbqp9716ofs88enhbarg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.procialize.bayer2020",
+            "certificate_hash": "c866cb497332278eb574bd07b3b769ef430706cf"
+          }
+        },
+        {
+          "client_id": "524195205462-ui4pu2dkodgeoutbolipo3f4vdjqoc9d.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB9ZtBfG65557F8n3hdEiWSTALZwZczl2k"
+          "current_key": "AIzaSyBzZFGNtS_KNJQAAAevzAXox5mGr0d3ko0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "984305293803-q97g4t8f1h14kcc6ie332ohp5r3ugrts.apps.googleusercontent.com",
+              "client_id": "524195205462-ui4pu2dkodgeoutbolipo3f4vdjqoc9d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524195205462:android:b179a2a4d6f1c0658446f7",
+        "android_client_info": {
+          "package_name": "com.procialize.mrgeApp20"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "524195205462-ui4pu2dkodgeoutbolipo3f4vdjqoc9d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzZFGNtS_KNJQAAAevzAXox5mGr0d3ko0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "524195205462-ui4pu2dkodgeoutbolipo3f4vdjqoc9d.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

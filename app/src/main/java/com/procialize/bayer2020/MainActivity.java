@@ -44,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rv_side_menu = findViewById(R.id.rv_side_menu);
         mToolbar = findViewById(R.id.toolbar);
         ll_main = findViewById(R.id.ll_main);
+        FirebaseApp.initializeApp(this);
         mauth = FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");

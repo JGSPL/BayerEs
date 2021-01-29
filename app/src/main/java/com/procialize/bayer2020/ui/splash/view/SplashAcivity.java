@@ -25,7 +25,6 @@ public class SplashAcivity extends AppCompatActivity implements Splash {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionManager = new SessionManager(this);
-
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         ActivitySplashAcivityBinding activitysplashBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash_acivity);
         activitysplashBinding.setViewModel(new SplashViewModel(SplashAcivity.this));

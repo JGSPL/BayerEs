@@ -1,9 +1,8 @@
-package com.procialize.bayer2020.ui.newsFeedComment.adapter;
+package com.procialize.bayer2020.ui.notification.adapter;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
@@ -43,9 +42,9 @@ import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.roomDB.TableAttendee;
 import com.procialize.bayer2020.ui.attendee.view.AttendeeDetailActivity;
-import com.procialize.bayer2020.ui.newsFeedComment.model.CommentDetail;
 import com.procialize.bayer2020.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.bayer2020.ui.newsfeed.viewmodel.NewsFeedDatabaseViewModel;
+import com.procialize.bayer2020.ui.notification.model.NotificationList;
 
 import org.jsoup.Jsoup;
 
@@ -53,20 +52,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_5;
 
-
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder> {
 
     Context context;
-    List<CommentDetail> commentDetails;
+    List<NotificationList> notificationLists;
     String name1 = "", substring;
-    CommentAdapterListner listener;
-    String eventColor1, eventColor2, eventColor3, eventColor4, eventColor5;
+    NotificationAdapterListner listener;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
     String spannedString;
     String postStatus;
@@ -74,100 +66,75 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
     private boolean retryPageLoad = false;
     private boolean isLoadingAdded = false;
 
-    public CommentAdapter(Context context/*, List<CommentDetail> commentDetails*/, CommentAdapterListner listener) {
+    public NotificationAdapter(Context context, NotificationAdapterListner listener) {
         this.context = context;
-        //this.commentDetails = commentDetails;
-        this.commentDetails = new ArrayList<>();
+        this.notificationLists = new ArrayList<>();
         this.listener = listener;
 
         newsFeedDatabaseViewModel = ViewModelProviders.of((FragmentActivity) context).get(NewsFeedDatabaseViewModel.class);
-        eventColor1 = SharedPreference.getPref(context, EVENT_COLOR_1);
-        eventColor2 = SharedPreference.getPref(context, EVENT_COLOR_2);
-        eventColor3 = SharedPreference.getPref(context, EVENT_COLOR_3);
-        eventColor4 = SharedPreference.getPref(context, EVENT_COLOR_4);
-        eventColor5 = SharedPreference.getPref(context, EVENT_COLOR_5);
+
     }
 
     @NonNull
     @Override
-    public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_comments, parent, false);
-        return new NewsViewHolder(view);
+    public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_notification, parent, false);
+        return new NotificationViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final NewsViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final NotificationViewHolder holder, final int position) {
 
         try {
             //Newsfeed_detail feedData = feed_detail.get(position);
-            CommentDetail comments = commentDetails.get(position);
+            final NotificationList comments = notificationLists.get(position);
 
-            if (comments.getComment_id() != null) {
+            if (comments.getNotification_id() != null) {
                 holder.ll_root.setVisibility(View.VISIBLE);
             } else {
                 holder.ll_root.setVisibility(View.GONE);
             }
 
-            if (position + 2 == commentDetails.size()) {
+            if (position + 2 == notificationLists.size()) {
                 holder.v_divider.setVisibility(View.INVISIBLE);
             } else {
                 holder.v_divider.setVisibility(View.VISIBLE);
             }
 
-            if (comments.getProfile_picture().trim() != null) {
+            //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + comments.getComment();
+           /* name1 = "<font color='"+eventColor1 +"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + " " +
+                    "<font color='"+eventColor3 +"'>" + comments.getComment() + "</font>" ;*/
 
-                Glide.with(context)
-                        .load(comments.getProfile_picture().trim())
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                holder.progressView.setVisibility(View.GONE);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                holder.progressView.setVisibility(View.GONE);
-                                return false;
-                            }
-                        }).into(holder.iv_profile);
-            }
-
-            if (comments.getComment().contains("gif")) {
-                //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
-                name1 = "<font color='" + eventColor4 + "'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
-                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
+            if (!comments.getMedia_type().isEmpty()) {
+                holder.fl_gif.setVisibility(View.VISIBLE);
+                holder.tv_comment.setVisibility(View.GONE);
+                name1 = comments.getFirst_name() + " " + comments.getLast_name();
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                     holder.tv_name.setText(Html.fromHtml(name1));
                 } else {
                     holder.tv_name.setText(Html.fromHtml(name1, Html.FROM_HTML_MODE_LEGACY));
                 }
-                holder.fl_gif.setVisibility(View.VISIBLE);
-                holder.tv_comment.setVisibility(View.INVISIBLE);
-                Glide.with(context)
-                        .load(comments.getComment())
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                holder.pb_gif.setVisibility(View.GONE);
-                                return false;
-                            }
+                Glide.with(context).load(comments.getMedia_url().trim()).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        holder.iv_gif.setImageResource(R.drawable.profilepic_placeholder);
+                        holder.pb_gif.setVisibility(View.GONE);
+                        return true;
+                    }
 
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                holder.pb_gif.setVisibility(View.GONE);
-                                return false;
-                            }
-                        }).into(holder.iv_gif);
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        holder.pb_gif.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).into(holder.iv_gif);
             } else {
-                //name1 = "<font color='#D81B60'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + comments.getComment();
-           /* name1 = "<font color='"+eventColor1 +"'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>" + " " +
-                    "<font color='"+eventColor3 +"'>" + comments.getComment() + "</font>" ;*/
                 holder.fl_gif.setVisibility(View.GONE);
 
                 try {
 
-                    name1 = "<font color='" + eventColor1 + "'>" + comments.getFirst_name() + " " + comments.getLast_name() + " " + "</font>";
-                    if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
+                    name1 = comments.getFirst_name() + " " + comments.getLast_name();
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                         holder.tv_name.setText(Html.fromHtml(name1));
                     } else {
                         holder.tv_name.setText(Html.fromHtml(name1, Html.FROM_HTML_MODE_LEGACY));
@@ -176,10 +143,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                     /**
                      * Code for HTML text + Tagging
                      */
-                    if (comments.getComment().contains("\n")) {
-                        postStatus = comments.getComment().trim().replace("\n", "<br/>");
+                    if (comments.getContent().contains("\n")) {
+                        postStatus = comments.getContent().trim().replace("\n", "<br/>");
                     } else {
-                        postStatus = comments.getComment().trim();
+                        postStatus = comments.getContent().trim();
                     }
                     spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
 
@@ -194,7 +161,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                     //holder.testdata.setText(comments.getComment());//.replace("\n",System.getProperty("line.separator")));
 
                     final SpannableStringBuilder stringBuilder = new SpannableStringBuilder(holder.testdata.getText());
-                    if (comments.getComment() != null) {
+                    if (comments.getContent() != null) {
                         holder.tv_comment.setVisibility(View.VISIBLE);
                         int flag = 0;
                         for (int i = 0; i < stringBuilder.length(); i++) {
@@ -276,11 +243,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                                                                 if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
                                                                                     context.startActivity(new Intent(context, AttendeeDetailActivity.class)
                                                                                             .putExtra("Attendee", (Serializable) attendee));
-                                                                                } /*else {
-                                                                                    context.startActivity(new Intent(context, ChatActivity.class)
-                                                                                            .putExtra("page", "ListPage")
-                                                                                            .putExtra("Attendee", (Serializable) attendee));
-                                                                                }*/
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
@@ -370,11 +333,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                                                                                 if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
                                                                                     context.startActivity(new Intent(context, AttendeeDetailActivity.class)
                                                                                             .putExtra("Attendee", (Serializable) attendee));
-                                                                                } /*else {
-                                                                                    context.startActivity(new Intent(context, ChatActivity.class)
-                                                                                            .putExtra("page", "ListPage")
-                                                                                            .putExtra("Attendee", (Serializable) attendee));
-                                                                                }*/
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
@@ -402,9 +361,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                             }
                         }
 
+
                         holder.tv_comment.setMovementMethod(LinkMovementMethod.getInstance());
                         holder.tv_comment.setText(stringBuilder);
-                        holder.tv_comment.setTextColor(Color.parseColor(eventColor3));
                     } else {
                         holder.tv_comment.setVisibility(View.GONE);
                     }
@@ -412,80 +371,96 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
                     e.printStackTrace();
                 }
             }
+            holder.tv_date_time.setText(CommonFunction.convertDate(comments.getDatetime()));
 
-            holder.tv_date_time.setText(CommonFunction.convertDate(comments.getDateTime()));
 
-            String eventColor3Opacity40 = eventColor3.replace("#", "");
-            holder.tv_date_time.setTextColor(Color.parseColor("#66" + eventColor3Opacity40));
-            int color = Color.parseColor(eventColor3);
-            holder.iv_options.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            holder.iv_options.setAlpha(150);
+
+            if (comments.getProfile_pic() != null) {
+                Glide.with(context).load(comments.getProfile_pic().trim()).listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        holder.iv_profile.setImageResource(R.drawable.profilepic_placeholder);
+                        //holder.pb_profile.setVisibility(View.GONE);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        //holder.pb_profile.setVisibility(View.GONE);
+                        return false;
+                    }
+                }).into(holder.iv_profile);
+            } else {
+                holder.iv_profile.setImageResource(R.drawable.profilepic_placeholder);
+            }
+
             // holder.tv_name.setAlpha(0.5f);
-            holder.ll_root.setBackgroundColor(Color.parseColor(eventColor2));
-            holder.v_divider.setBackgroundColor(Color.parseColor("#66" + eventColor3Opacity40));
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
     }
 
     @Override
     public int getItemCount() {
-        return commentDetails.size();
+        return notificationLists.size();
     }
 
-    public interface CommentAdapterListner {
-        void onMoreSelected(CommentDetail comment, int position);
+    public interface NotificationAdapterListner {
+        void onMoreSelected(NotificationList comment, int position);
     }
 
-    public class NewsViewHolder extends RecyclerView.ViewHolder {
+    public class NotificationViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_name, tv_date_time, testdata, tv_comment;
         FrameLayout fl_gif;
-        ImageView iv_gif, iv_options, iv_profile;
+        ImageView iv_gif, iv_profile;
         ProgressBar pb_gif, progressView;
-        LinearLayout ll_root;
+        LinearLayout ll_root, ll_main;
         View v_divider;
 
-        public NewsViewHolder(@NonNull View itemView) {
+        public NotificationViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_name = itemView.findViewById(R.id.tv_name);
             testdata = itemView.findViewById(R.id.testdata);
             tv_date_time = itemView.findViewById(R.id.tv_date_time);
             fl_gif = itemView.findViewById(R.id.fl_gif);
             iv_gif = itemView.findViewById(R.id.iv_gif);
-            iv_options = itemView.findViewById(R.id.iv_options);
             iv_profile = itemView.findViewById(R.id.iv_profile);
             pb_gif = itemView.findViewById(R.id.pb_gif);
             progressView = itemView.findViewById(R.id.progressView);
             ll_root = itemView.findViewById(R.id.ll_root);
+            ll_main = itemView.findViewById(R.id.ll_main);
             v_divider = itemView.findViewById(R.id.v_divider);
             tv_comment = itemView.findViewById(R.id.tv_comment);
 
-            iv_options.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onMoreSelected(commentDetails.get(getAdapterPosition()), getAdapterPosition());
+                    listener.onMoreSelected(notificationLists.get(getAdapterPosition()), getAdapterPosition());
                 }
             });
         }
     }
 
-    public void add(CommentDetail r) {
-        commentDetails.add(r);
-        notifyItemInserted(commentDetails.size() - 1);
+    public void add(NotificationList r) {
+        notificationLists.add(r);
+        notifyItemInserted(notificationLists.size() - 1);
     }
 
-    public void addAll(List<CommentDetail> moveResults) {
-        for (CommentDetail result : moveResults) {
+    public void addAll(List<NotificationList> moveResults) {
+        for (NotificationList result : moveResults) {
             add(result);
         }
     }
 
-    public void remove(CommentDetail r) {
-        int position = commentDetails.indexOf(r);
+    public void remove(NotificationList r) {
+        int position = notificationLists.indexOf(r);
         if (position > -1) {
-            commentDetails.remove(position);
+            notificationLists.remove(position);
             notifyItemRemoved(position);
         }
     }
@@ -504,18 +479,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
 
     public void addLoadingFooter() {
         isLoadingAdded = true;
-        add(new CommentDetail());
+        add(new NotificationList());
     }
 
     public void removeLoadingFooter() {
         try {
             isLoadingAdded = false;
 
-            int position = commentDetails.size() - 1;
-            CommentDetail result = getItem(position);
+            int position = notificationLists.size() - 1;
+            NotificationList result = getItem(position);
 
             if (result != null) {
-                commentDetails.remove(position);
+                notificationLists.remove(position);
                 notifyItemRemoved(position);
             }
         } catch (Exception e) {
@@ -523,8 +498,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
         }
     }
 
-    public CommentDetail getItem(int position) {
-        return commentDetails.get(position);
+    public NotificationList getItem(int position) {
+        return notificationLists.get(position);
     }
 
     /**
@@ -535,11 +510,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.NewsView
      */
     public void showRetry(boolean show, @Nullable String errorMsg) {
         retryPageLoad = show;
-        notifyItemChanged(commentDetails.size() - 1);
+        notifyItemChanged(notificationLists.size() - 1);
     }
 
 
-    public List<CommentDetail> getCommentDetails() {
-        return commentDetails;
+    public List<NotificationList> getNotifications() {
+        return notificationLists;
     }
 }
