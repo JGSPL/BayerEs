@@ -48,7 +48,6 @@ import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.roomDB.TableAttendee;
 import com.procialize.bayer2020.ui.attendee.view.AttendeeDetailActivity;
-import com.procialize.bayer2020.ui.attendeeChat.ChatActivity;
 import com.procialize.bayer2020.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
 import com.procialize.bayer2020.ui.newsfeed.adapter.SwipeMultimediaAdapter;
 import com.procialize.bayer2020.ui.newsfeed.model.News_feed_media;
@@ -424,12 +423,12 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
                                                                     if (tableAttendees.get(0).getFirebase_status().equalsIgnoreCase("0")) {
                                                                         context.startActivity(new Intent(context, AttendeeDetailActivity.class)
                                                                                 .putExtra("Attendee", (Serializable) attendee));
-                                                                    } else {
+                                                                    }/* else {
                                                                         context.startActivity(new Intent(context, ChatActivity.class)
                                                                                 .putExtra("page", "ListPage")
                                                                                 .putExtra("firstMessage", "")
                                                                                 .putExtra("Attendee", (Serializable) attendee));
-                                                                    }
+                                                                    }*/
                                                                 }
                                                             }
 
@@ -506,10 +505,10 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
                                                                         context.startActivity(new Intent(context, AttendeeDetailActivity.class)
                                                                                 .putExtra("Attendee", (Serializable) attendee));
                                                                     } else {
-                                                                        context.startActivity(new Intent(context, ChatActivity.class)
+                                                                        /*context.startActivity(new Intent(context, ChatActivity.class)
                                                                                 .putExtra("page", "ListPage")
                                                                                 .putExtra("firstMessage", "")
-                                                                                .putExtra("Attendee", (Serializable) attendee));
+                                                                                .putExtra("Attendee", (Serializable) attendee));*/
                                                                     }
                                                                 }
                                                             }

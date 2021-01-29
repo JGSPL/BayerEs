@@ -26,7 +26,9 @@ import com.procialize.bayer2020.ui.speaker.roomDB.TableSpeaker;
 
 @Database(entities = {UploadMultimedia.class, TableNewsFeed.class, TableNewsFeedMedia.class,
         ProfileEventId.class, TableAttendee.class, TableSpeaker.class, TableAgenda.class,
-        TableEventInfo.class, NewsFeedUniqueIdUploadedStarted.class},
+        TableEventInfo.class,  NewsFeedUniqueIdUploadedStarted.class,
+        com.procialize.bayer2020.ui.qapost.roomDB.UploadMultimedia.class,
+        com.procialize.bayer2020.ui.qapost.roomDB.NewsFeedUniqueIdUploadedStarted.class},
         version = 1, exportSchema = false)
 public abstract class EventAppDB extends RoomDatabase {
 
@@ -49,7 +51,7 @@ public abstract class EventAppDB extends RoomDatabase {
                 if (eventAppDB == null) {
                     eventAppDB = Room.databaseBuilder(context.getApplicationContext(),
                             EventAppDB.class, "EventApp_database.db").allowMainThreadQueries()
-                           .build();
+                            .build();
                 }
             }
         }
