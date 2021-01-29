@@ -18,6 +18,9 @@ public class Product_detail {
     @Expose
     List<product_subpoint_detail> product_subpoints_detail;
 
+    @SerializedName("product_dosage_detail")
+    @Expose
+    List<product_dosage_detail> product_dosage_detailList;
 
     @SerializedName("total_document_count")
     @Expose
@@ -75,5 +78,13 @@ public class Product_detail {
 
     public void setProduct_subpoints_detail(List<product_subpoint_detail> product_subpoints_detail) {
         this.product_subpoints_detail = product_subpoints_detail;
+    }
+
+    public List<product_dosage_detail> getProduct_dosage_detailList() {
+        return product_dosage_detailList;
+    }
+
+    public void setProduct_dosage_detailList(List<product_dosage_detail> product_dosage_detailList) {
+        this.product_dosage_detailList = product_dosage_detailList;
     }
 }
