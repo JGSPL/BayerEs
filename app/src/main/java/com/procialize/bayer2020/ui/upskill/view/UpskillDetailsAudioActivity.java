@@ -1,16 +1,19 @@
 package com.procialize.bayer2020.ui.upskill.view;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -30,11 +33,9 @@ import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContentSubArray;
 import com.procialize.bayer2020.ui.upskill.model.UpskillList;
 
-
 import org.jsoup.Jsoup;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
@@ -51,11 +52,17 @@ public class UpskillDetailsAudioActivity extends AppCompatActivity implements Vi
 
     UpskillContentSubArray upskillContentSubArray;
     ImageView iv_play_pause;
-    TextView tv_duration,tv_description;
+    TextView tv_duration, tv_description;
     String spannedString;
     Button btn_next;
     UpskillList upskillList;
-    String api_token, eventid,last_submit;
+    String api_token, eventid, last_submit;
+    SeekBar seek_bar;
+    MediaPlayer mp;
+    private double startTime = 0;
+    private Handler myHandler = new Handler();
+    private double finalTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +73,10 @@ public class UpskillDetailsAudioActivity extends AppCompatActivity implements Vi
         iv_play_pause = findViewById(R.id.iv_play_pause);
         tv_duration = findViewById(R.id.tv_duration);
         btn_next = findViewById(R.id.btn_next);
+        seek_bar = findViewById(R.id.seek_bar);
         btn_next.setOnClickListener(this);
         tv_description = findViewById(R.id.tv_description);
-        final MediaPlayer mp = new MediaPlayer();
+        mp = new MediaPlayer();
         try {
             String url = upskillContentSubArray.getContentInfo().get(click_count).getContent_url();
             //you can change the path, here path is external directory(e.g. sdcard) /Music/maine.mp3
@@ -80,7 +88,7 @@ public class UpskillDetailsAudioActivity extends AppCompatActivity implements Vi
                     TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
                     TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
 
-            tv_duration.setText(""+hms);
+            tv_duration.setText("" + hms);
             String contentDesc = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc();
             if (contentDesc.contains("\n")) {
                 contentDesc = contentDesc.trim().replace("\n", "<br/>");
@@ -107,7 +115,11 @@ public class UpskillDetailsAudioActivity extends AppCompatActivity implements Vi
             public void onClick(View v) {
                 if (!mp.isPlaying()) {
                     mp.start();
-                    iv_play_pause.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+                    finalTime = mp.getDuration();
+                    seek_bar.setMax((int) finalTime);
+                    seek_bar.setProgress((int) startTime);
+                    iv_play_pause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_b));
+                    myHandler.postDelayed(UpdateSongTime, 100);
                 } else {
                     mp.pause();
                     iv_play_pause.setImageDrawable(getResources().getDrawable(R.drawable.play));
@@ -115,15 +127,28 @@ public class UpskillDetailsAudioActivity extends AppCompatActivity implements Vi
             }
         });
 
-        if(upskillContentSubArray.getContentInfo().size() == click_count+1)
-        {
+
+        if (upskillContentSubArray.getContentInfo().size() == click_count + 1) {
             btn_next.setText("Submit");
-        }
-        else
-        {
+        } else {
             btn_next.setText("Next");
         }
     }
+
+    private Runnable UpdateSongTime = new Runnable() {
+        @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+        public void run() {
+            startTime = mp.getCurrentPosition();
+            /*startTimeField.setText(String.format("%d min, %d sec",
+                    TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                    TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                    toMinutes((long) startTime)))
+            );*/
+            seek_bar.setProgress((int) startTime);
+            myHandler.postDelayed(this, 100);
+        }
+    };
 
     private void setUpToolbar() {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -242,7 +267,9 @@ public class UpskillDetailsAudioActivity extends AppCompatActivity implements Vi
     }
 
     private void onNavigation() {
-        if (last_submit.equalsIgnoreCase("0")) {
+        try {
+            mp.pause();
+            //if (last_submit.equalsIgnoreCase("0")) {
             if (click_count > 0) {
                 if (upskillContentSubArray.getContentInfo().size() > click_count) {
 
@@ -271,16 +298,37 @@ public class UpskillDetailsAudioActivity extends AppCompatActivity implements Vi
                                 .putExtra("upskillContent", (Serializable) upskillContentSubArray));
                         finish();
                     } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Quiz")) {
-                        startActivity(new Intent(this, UpskillDetailsQuizActivity.class)
-                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                        finish();
+                        if (upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getReplied().equalsIgnoreCase("0")) {
+                            startActivity(new Intent(this, UpskillDetailsQuizActivity.class)
+                                    .putExtra("upskillContent", (Serializable) upskillContentSubArray)
+                                    .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                            finish();
+                        } else {
+                            Intent intent = new Intent(this, UpskillQuizSubmittedActivity.class);
+                            intent.putExtra("folderName", upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_name());
+                            intent.putExtra("folderid", upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_id());
+                            intent.putExtra("upskillContent", (Serializable) upskillContentSubArray);
+                            intent.putExtra("Page", "Question");
+                            intent.putExtra("click_count", click_count);
+                            intent.putExtra("upskill_info", (Serializable) upskillList);
+                            startActivity(intent);
+                            finish();
+                       /* startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillQuizSubmittedActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));*/
+                        }
                     } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Audio")) {
                         startActivity(new Intent(this, UpskillDetailsAudioActivity.class)
                                 .putExtra("upskillContent", (Serializable) upskillContentSubArray));
                         finish();
                     }
                 }
+                //}
+            } else {
+                startActivity(new Intent(this, UpskillDetailsFirstActivity.class)
+                        .putExtra("upskill_info", (Serializable) upskillList));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -94,7 +94,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage.getData().size() > 0) {
             Log.d("Payload===>", "Message data payload: " + remoteMessage.getData());
-
         }
         String isLogin = SharedPreference.getPref(this, IS_LOGIN);
         if (isLogin.equalsIgnoreCase("true")) {

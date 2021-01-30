@@ -42,7 +42,11 @@
     <style name="MineCustomTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">0sp</item>
     </style>
-
+    <style name="MySeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">#f4511e</item>
+        <item name="android:progressTint">@color/ta</item>
+        <item name="android:colorControlActivated">#c51162</item>
+    </style>
    <!-- <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
         <item name="colorPrimary">@color/activetab</item>

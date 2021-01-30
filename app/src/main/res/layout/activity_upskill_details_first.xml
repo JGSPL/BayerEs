@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:src="@drawable/image_placeholder" />
 
     <com.procialize.bayer2020.fonts.RobotoTextview
         android:id="@+id/tv_description"

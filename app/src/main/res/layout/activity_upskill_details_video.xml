@@ -46,7 +46,8 @@
         android:id="@+id/videoview"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:visibility="visible" />
+        android:visibility="visible"
+        />
 
     <ScrollView
         android:layout_width="match_parent"
