@@ -48,7 +48,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
 
     TextView txt_count;
     ImageView iv_banner;
-    String api_token, event_id;
+    String api_token, event_id,trainingId;
     Button btn_next, btn_quiz_next;
     UpskillContentSubArray upskillContentSubArray;
     CustomViewPager pager;
@@ -65,6 +65,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
     public static int count1 = 1;
 
     UpskillList upskillList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +77,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
         folder_id = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_id();
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
-
+        trainingId = upskillContentSubArray.getContentInfo().get(click_count).getTraining_id();
         txt_count = findViewById(R.id.txt_count);
         btn_next = findViewById(R.id.btn_next);
         btn_quiz_next = findViewById(R.id.btn_quiz_next);
@@ -116,7 +117,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
             btn_quiz_next.setVisibility(View.VISIBLE);
             btn_next.setVisibility(View.GONE);
             btn_next.setText("Next");
-        } else if (upskillContentSubArray.getContentInfo().size() ==  click_count+1) {
+        } else if (upskillContentSubArray.getContentInfo().size() == click_count + 1) {
             btn_next.setVisibility(View.VISIBLE);
             btn_quiz_next.setVisibility(View.GONE);
             btn_next.setText("Submit");
@@ -213,6 +214,9 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
                     last_submit = "0";
                 }
                 submitAnalytics();
+
+
+                onNavigation();
                 break;
         }
     }
@@ -220,7 +224,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
     private void submitAnalytics() {
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
-        ApiUtils.getAPIService().AddTrainingAnalytics(api_token, event_id, upskillContentSubArray.getContentInfo().get(click_count).getTraining_id(),
+        ApiUtils.getAPIService().AddTrainingAnalytics(api_token, event_id, trainingId,
                 "Quiz", upskillContentSubArray.getMainInfo().getId(), last_submit)
                 .enqueue(new Callback<FetchAgenda>() {
                     @Override
@@ -380,7 +384,9 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
     }
 
     private void onNavigation() {
-        //if (last_submit.equalsIgnoreCase("0")) {
+
+        try {
+            //if (last_submit.equalsIgnoreCase("0")) {
             //upskillContentSubArray.getContentInfo().remove(0);
             if (click_count > 0) {
                 if (upskillContentSubArray.getContentInfo().size() > click_count) {
@@ -417,10 +423,24 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
                                 .putExtra("click_count", click_count));
                         finish();
                     } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Quiz")) {
-                        startActivity(new Intent(this, UpskillDetailsQuizActivity.class)
-                                .putExtra("upskillContent", (Serializable) upskillContentSubArray)
-                                .putExtra("click_count", click_count));
-                        finish();
+                        if (upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getReplied().equalsIgnoreCase("0")) {
+                            startActivity(new Intent(this, UpskillDetailsQuizActivity.class)
+                                    .putExtra("upskillContent", (Serializable) upskillContentSubArray)
+                                    .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                            finish();
+                        } else {
+                            Intent intent = new Intent(this, UpskillQuizSubmittedActivity.class);
+                            intent.putExtra("folderName", upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_name());
+                            intent.putExtra("folderid", upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_id());
+                            intent.putExtra("upskillContent", (Serializable) upskillContentSubArray);
+                            intent.putExtra("Page", "Question");
+                            intent.putExtra("click_count", click_count);
+                            intent.putExtra("upskill_info", (Serializable) upskillList);
+                            startActivity(intent);
+                            finish();
+                       /* startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillQuizSubmittedActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));*/
+                        }
                     } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Audio")) {
                         startActivity(new Intent(this, UpskillDetailsAudioActivity.class)
                                 .putExtra("upskillContent", (Serializable) upskillContentSubArray)
@@ -428,9 +448,16 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
                         finish();
                     }
                 }
-            //}
-        } else {
-            submitAnswer();
+                //}
+               /* else {
+                    submitAnswer();
+                }*/
+            } else {
+                startActivity(new Intent(this, UpskillDetailsFirstActivity.class)
+                        .putExtra("upskill_info", (Serializable) upskillList));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
