@@ -268,6 +268,7 @@ public class UpskillDetailsAudioActivity extends AppCompatActivity implements Vi
 
     private void onNavigation() {
         try {
+            mp.pause();
             //if (last_submit.equalsIgnoreCase("0")) {
             if (click_count > 0) {
                 if (upskillContentSubArray.getContentInfo().size() > click_count) {

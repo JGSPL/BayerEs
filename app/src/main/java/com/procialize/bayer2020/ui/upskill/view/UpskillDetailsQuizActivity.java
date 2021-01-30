@@ -53,7 +53,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
     UpskillContentSubArray upskillContentSubArray;
     CustomViewPager pager;
     UpskillQuizPagerAdapter upskillpagerAdapter;
-    String last_submit = "";
+    String last_submit = "0",folderName,folderId;
     List<QuizList> quizList;
     public static int countpage = 1;
     public static boolean submitflag = false;
@@ -84,7 +84,8 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
         pager = findViewById(R.id.pager);
         btn_next.setOnClickListener(this);
         btn_quiz_next.setOnClickListener(this);
-
+        folderName = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_name();
+        folderId = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_id();
         quizList = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getQuiz_list();
         txt_count.setText("Questions 1" + "/" + quizList.size());
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -137,7 +138,8 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
 
                 int option = upskillpagerAdapter.getSelectedOption();
                 int i = upskillpagerAdapter.getItemCount();
-
+                api_token = SharedPreference.getPref(UpskillDetailsQuizActivity.this, AUTHERISATION_KEY);
+                event_id = SharedPreference.getPref(UpskillDetailsQuizActivity.this, EVENT_ID);
 
                 if (quizList.size() == pager.getCurrentItem() + 1) {
                     btn_quiz_next.setVisibility(View.GONE);
@@ -149,12 +151,28 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
                         btn_next.setText("Submit");
 
                         submitAnswer();
+
+                        if (upskillContentSubArray.getContentInfo().size() == 1) {
+                            last_submit = "1";
+                        } else {
+                            last_submit = "0";
+                        }
+                        submitAnalytics();
+
                     } else {
                         btn_quiz_next.setVisibility(View.VISIBLE);
                         btn_next.setVisibility(View.GONE);
                         btn_next.setText("Next");
 
                         submitAnswer();
+
+                        if (upskillContentSubArray.getContentInfo().size() == 1) {
+                            last_submit = "1";
+                        } else {
+                            last_submit = "0";
+                        }
+                        submitAnalytics();
+
                     }
                 } else if (quizList.size() >= pager.getCurrentItem() + 1) {
                     submitflag = false;
@@ -214,9 +232,10 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
                     last_submit = "0";
                 }
                 submitAnalytics();
+                //click_count = click_count + 1;
+                submitAnswer();
 
-
-                onNavigation();
+                //onNavigation();
                 break;
         }
     }
@@ -359,8 +378,8 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
                                             int answers = upskillpagerAdapter.getCorrectOption();
                                             Intent intent = new Intent(UpskillDetailsQuizActivity.this, UpskillQuizSubmittedActivity.class);
                                             intent.putExtra("upskillContent", (Serializable) upskillContentSubArray);
-                                            intent.putExtra("folderName", upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_name());
-                                            intent.putExtra("folderid", upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_id());
+                                            intent.putExtra("folderName", folderName);
+                                            intent.putExtra("folderid", folderId);
                                             intent.putExtra("Answers", response.body().getTotal_correct_answer());
                                             intent.putExtra("TotalQue", response.body().getTotal_questions());
                                             intent.putExtra("TotalQue", response.body().getTotal_questions());
@@ -391,7 +410,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
             if (click_count > 0) {
                 if (upskillContentSubArray.getContentInfo().size() > click_count) {
 
-                    click_count = click_count + 1;
+
                     if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
                         startActivity(new Intent(this, UpskillDetailsTextActivity.class)
                                 .putExtra("upskillContent", (Serializable) upskillContentSubArray)

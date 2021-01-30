@@ -77,9 +77,9 @@ public class UpskillQuizSubmittedActivity extends AppCompatActivity implements V
         new RefreashToken(UpskillQuizSubmittedActivity.this).callGetRefreashToken(UpskillQuizSubmittedActivity.this);
         upskillContentSubArray = (UpskillContentSubArray) getIntent().getSerializableExtra("upskillContent");
         upskillList = (UpskillList) getIntent().getSerializableExtra("upskill_info");
-        quizList = upskillContentSubArray.getContentInfo().get(0).getContent_desc_quiz().get(0).getQuiz_list();
-        folder_id = upskillContentSubArray.getContentInfo().get(0).getContent_desc_quiz().get(0).getFolder_id();
-        foldername = upskillContentSubArray.getContentInfo().get(0).getContent_desc_quiz().get(0).getFolder_name();
+        quizList = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getQuiz_list();
+        folder_id = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_id();
+        foldername = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc_quiz().get(0).getFolder_name();
         iv_back = findViewById(R.id.iv_back);
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
