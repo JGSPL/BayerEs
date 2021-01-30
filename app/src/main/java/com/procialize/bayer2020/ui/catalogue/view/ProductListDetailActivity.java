@@ -38,6 +38,7 @@ import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 import com.procialize.bayer2020.ui.catalogue.model.Product_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Product_document_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Product_item;
+import com.procialize.bayer2020.ui.catalogue.model.product_dosage_detail;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
 import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
 
@@ -63,6 +64,8 @@ public class ProductListDetailActivity extends AppCompatActivity {
     String token, eventid, imageurl, productId = "1";
     List<product_subpoint_detail> product_subpoint_detailList = new ArrayList<>();
     List<Product_document_detail> Product_document_detailList = new ArrayList<>();
+    List<product_dosage_detail> product_dosage_detailList = new ArrayList<>();
+
     LinearLayout linMain;
     ImageView imgCover;
     TextView productTitle;
@@ -110,6 +113,8 @@ public class ProductListDetailActivity extends AppCompatActivity {
         linBuyNow = findViewById(R.id.linBuyNow);
         imgCalc = findViewById(R.id.imgCalc);
 
+
+
        /* mTabHostCel.addTab(
                 mTabHostCel.newTabSpec("Tab1")
                         .setIndicator(createTabView(this, "Details")),
@@ -120,20 +125,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
                 ProductListDetailActivity.class, null);*/
                 //PestFragment.class, null);
 
-        linCalc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class));
 
-            }
-        });
-        imgCalc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class));
-
-            }
-        });
 
 
         getDataFromApi(token,eventid);
@@ -145,7 +137,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
 
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.ProductDetails(token, "1", productId)
+        eventApi.ProductDetails(token, "1", "1")
                 .enqueue(new Callback<FetchProductDetail>() {
                     @Override
                     public void onResponse(Call<FetchProductDetail> call, Response<FetchProductDetail> response) {
@@ -163,6 +155,8 @@ public class ProductListDetailActivity extends AppCompatActivity {
                             if (eventLists != null) {
                                 product_subpoint_detailList = eventLists.getProduct_subpoints_detail();
                                 Product_document_detailList = eventLists.getProductDocumentList();
+                                product_dosage_detailList = eventLists.getProduct_dosage_detailList();
+
                                 String DocumentPath = eventLists.getProduct_documentpath();
                                 Bundle bb = new Bundle();
                                 bb.putSerializable("ProductType", (Serializable) product_item);
@@ -183,6 +177,27 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                         mTabHostCel.newTabSpec("Tab2")
                                                 .setIndicator(createTabView(ProductListDetailActivity.this, "Downloads")),
                                         ProductDocumentFragment.class, b);
+
+
+                                linCalc.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class)
+                                                .putExtra("ProductDosage", (Serializable) product_dosage_detailList)
+                                               . putExtra("ProductName", product_item.getProduct_name())
+                                        );
+
+                                    }
+                                });
+                                imgCalc.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class)
+                                                .putExtra("ProductDosage", (Serializable) product_dosage_detailList)
+                                                . putExtra("ProductName", product_item.getProduct_name())
+                                        );
+                                    }
+                                });
 
                                 productTitle.setText(product_item.getProduct_name());
                                 Glide.with(ProductListDetailActivity.this)
