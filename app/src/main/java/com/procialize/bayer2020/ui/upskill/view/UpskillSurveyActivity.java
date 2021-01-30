@@ -98,7 +98,7 @@ public class UpskillSurveyActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        String strUrl = upskillContentSubArray.getContentInfo().get(0).getLink();
+        String strUrl = upskillContentSubArray.getContentInfo().get(click_count).getLink();
         webView.loadUrl(strUrl);
 
         if (upskillContentSubArray.getContentInfo().size() ==  click_count+1) {
@@ -106,6 +106,8 @@ public class UpskillSurveyActivity extends AppCompatActivity implements View.OnC
         } else {
             btn_next.setText("Next");
         }
+
+        setUpToolbar();
     }
 
     private void setUpToolbar() {
@@ -225,8 +227,8 @@ public class UpskillSurveyActivity extends AppCompatActivity implements View.OnC
     }
 
     private void onNavigation() {
-        if (last_submit.equalsIgnoreCase("0")) {
-            if (upskillContentSubArray.getContentInfo().size() > 0) {
+        if (click_count > 0) {
+            if (upskillContentSubArray.getContentInfo().size() > click_count) {
 
                 if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
                     startActivity(new Intent(this, UpskillDetailsTextActivity.class)

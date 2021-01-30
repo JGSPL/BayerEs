@@ -79,7 +79,7 @@ public class UpskillDetailsImageActivity extends AppCompatActivity implements Vi
                         return false;
                     }
                 }).into(iv_banner);
-        //tv_Description.setText(upskillContentSubArray.getContentInfo().get(0).getContent_desc());
+        //tv_Description.setText(upskillContentSubArray.getContentInfo().get(click_count).getContent_desc());
         String contentDesc = upskillContentSubArray.getContentInfo().get(click_count).getContent_desc();
         if (contentDesc.contains("\n")) {
             contentDesc = contentDesc.trim().replace("\n", "<br/>");
@@ -218,42 +218,45 @@ public class UpskillDetailsImageActivity extends AppCompatActivity implements Vi
     }
 
     private void onNavigation() {
-        if (last_submit.equalsIgnoreCase("0")) {
-            if (upskillContentSubArray.getContentInfo().size() > 0) {
-                if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
-                    startActivity(new Intent(this, UpskillDetailsTextActivity.class)
-                            .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                    finish();
-                } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Survey")) {
-                    startActivity(new Intent(this, UpskillSurveyActivity.class)
-                            .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                    finish();
-                } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Poll")) {
-                    startActivity(new Intent(this, UpskillDetailsPollActivity.class)
-                            .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                    finish();
-                } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Pdf")) {
-                    startActivity(new Intent(this, UpskillDetailsPdfActivity.class)
-                            .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                    finish();
-                } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Image")) {
-                    startActivity(new Intent(this, UpskillDetailsImageActivity.class)
-                            .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                    finish();
-                } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Video")) {
-                    startActivity(new Intent(this, UpskillDetailsVideoActivity.class)
-                            .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                    finish();
-                } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Quiz")) {
-                    startActivity(new Intent(this, UpskillDetailsQuizActivity.class)
-                            .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                    finish();
-                } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Audio")) {
-                    startActivity(new Intent(this, UpskillDetailsAudioActivity.class)
-                            .putExtra("upskillContent", (Serializable) upskillContentSubArray));
-                    finish();
+        //if (last_submit.equalsIgnoreCase("0")) {
+            if (click_count > 0) {
+                if (upskillContentSubArray.getContentInfo().size() > click_count) {
+
+                    if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
+                        startActivity(new Intent(this, UpskillDetailsTextActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                        finish();
+                    } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Survey")) {
+                        startActivity(new Intent(this, UpskillSurveyActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                        finish();
+                    } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Poll")) {
+                        startActivity(new Intent(this, UpskillDetailsPollActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                        finish();
+                    } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Pdf")) {
+                        startActivity(new Intent(this, UpskillDetailsPdfActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                        finish();
+                    } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Image")) {
+                        startActivity(new Intent(this, UpskillDetailsImageActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                        finish();
+                    } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Video")) {
+                        startActivity(new Intent(this, UpskillDetailsVideoActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                        finish();
+                    } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Quiz")) {
+                        startActivity(new Intent(this, UpskillDetailsQuizActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                        finish();
+                    } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Audio")) {
+                        startActivity(new Intent(this, UpskillDetailsAudioActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray));
+                        finish();
+                    }
                 }
             }
-        }
+        //}
     }
 }

@@ -164,6 +164,7 @@ public class UpskillDetailsPdfActivity extends AppCompatActivity implements View
                 }
                 submitAnalytics();
                 click_count = click_count + 1;
+                onNavigation();
                 /*upskillContentSubArray.getContentInfo().remove(0);
                 if(last_submit.equalsIgnoreCase("0")) {
                     if (upskillContentSubArray.getContentInfo().size() > 0) {
@@ -234,8 +235,8 @@ public class UpskillDetailsPdfActivity extends AppCompatActivity implements View
     }
 
     private void onNavigation() {
-        if (last_submit.equalsIgnoreCase("0")) {
-            if (upskillContentSubArray.getContentInfo().size() > 0) {
+        if(click_count>0) {
+            if (upskillContentSubArray.getContentInfo().size() > click_count) {
                 if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
                     startActivity(new Intent(this, UpskillDetailsTextActivity.class)
                             .putExtra("upskillContent", (Serializable) upskillContentSubArray));

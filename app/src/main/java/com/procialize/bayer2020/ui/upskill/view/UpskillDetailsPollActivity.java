@@ -356,7 +356,9 @@ public class UpskillDetailsPollActivity extends AppCompatActivity implements Vie
             } else {
                 last_submit = "0";
             }
-            submitLivePoll();
+            if(pollGraph.getVisibility() == View.GONE) {
+                submitLivePoll();
+            }
             submitAnalytics();
             //upskillContentSubArray.getContentInfo().remove(0);
             click_count = click_count + 1;
@@ -391,7 +393,6 @@ public class UpskillDetailsPollActivity extends AppCompatActivity implements Vie
             if (last_submit.equalsIgnoreCase("0")) {
                 if (click_count > 0) {
                     if (upskillContentSubArray.getContentInfo().size() > click_count) {
-
                         if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
                             startActivity(new Intent(this, UpskillDetailsTextActivity.class)
                                     .putExtra("upskillContent", (Serializable) upskillContentSubArray));
