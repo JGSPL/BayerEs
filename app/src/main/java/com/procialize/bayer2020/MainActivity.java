@@ -126,6 +126,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_COM
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_DESIGNATION;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_EMAIL;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_FNAME;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_GCM_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_LNAME;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_MOBILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PASSWORD;
@@ -204,6 +205,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
 //        CommonFunction.showBackgroundImage(this, ll_main);
 
+        String device_token = SharedPreference.getPref(this, KEY_GCM_ID);;
+        Log.e("device_token===>",device_token);
         LinearLayout outer = findViewById(R.id.my);
         ImageView iv_profile = outer.findViewById(R.id.iv_profile);
         TextView tv_name = outer.findViewById(R.id.tv_name);

@@ -390,7 +390,7 @@ public class UpskillDetailsPollActivity extends AppCompatActivity implements Vie
 
     private void onNavigation() {
         try {
-            if (last_submit.equalsIgnoreCase("0")) {
+            //if (last_submit.equalsIgnoreCase("0")) {
                 if (click_count > 0) {
                     if (upskillContentSubArray.getContentInfo().size() > click_count) {
                         if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
@@ -427,7 +427,7 @@ public class UpskillDetailsPollActivity extends AppCompatActivity implements Vie
                             finish();
                         }
                     }
-                }
+                //}
             }
         } catch (Exception e) {
             e.printStackTrace();

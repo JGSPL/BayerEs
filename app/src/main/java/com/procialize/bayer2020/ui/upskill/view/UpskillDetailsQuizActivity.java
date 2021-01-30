@@ -380,7 +380,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
     }
 
     private void onNavigation() {
-        if (last_submit.equalsIgnoreCase("0")) {
+        //if (last_submit.equalsIgnoreCase("0")) {
             //upskillContentSubArray.getContentInfo().remove(0);
             if (click_count > 0) {
                 if (upskillContentSubArray.getContentInfo().size() > click_count) {
@@ -428,7 +428,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
                         finish();
                     }
                 }
-            }
+            //}
         } else {
             submitAnswer();
         }

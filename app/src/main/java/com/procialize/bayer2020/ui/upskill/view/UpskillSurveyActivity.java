@@ -66,6 +66,8 @@ public class UpskillSurveyActivity extends AppCompatActivity implements View.OnC
         btn_next = findViewById(R.id.btn_next);
         btn_next.setOnClickListener(this);
         progressBar = findViewById(R.id.progressBar);
+
+
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         webView.setBackgroundColor(Color.TRANSPARENT);
 //        webview.setWebViewClient(new CustomWebViewClient());

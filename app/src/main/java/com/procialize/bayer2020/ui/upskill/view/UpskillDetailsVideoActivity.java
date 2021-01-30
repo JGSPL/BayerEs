@@ -97,6 +97,7 @@ public class UpskillDetailsVideoActivity extends AppCompatActivity implements Vi
         }
 
         videoview = findViewById(R.id.videoview);
+        videoview.thumbImageView.setImageDrawable(getResources().getDrawable(R.drawable.video_placeholder));
         videoview.setUp(upskillContentSubArray.getContentInfo().get(click_count).getContent_url().trim(), ""
                 , JzvdStd.SCREEN_NORMAL);
         Jzvd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP);
@@ -274,7 +275,7 @@ public class UpskillDetailsVideoActivity extends AppCompatActivity implements Vi
     }
 
     private void onNavigation() {
-        if (last_submit.equalsIgnoreCase("0")) {
+        //if (last_submit.equalsIgnoreCase("0")) {
             if (click_count > 0) {
                 if (upskillContentSubArray.getContentInfo().size() > click_count) {
 
@@ -314,6 +315,6 @@ public class UpskillDetailsVideoActivity extends AppCompatActivity implements Vi
                     }
                 }
             }
-        }
+        //}
     }
 }

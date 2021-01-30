@@ -126,6 +126,14 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
                                                     return false;
                                                 }
                                             }).into(iv_banner);
+
+                                    if (upskillContentSubArray.getContentInfo().get(0).getContent_desc_quiz().size() == 0 &&
+                                            upskillContentSubArray.getContentInfo().get(0).getContent_desc().isEmpty() &&
+                                            upskillContentSubArray.getContentInfo().get(0).getContent_desc_poll().size() == 0) {
+                                        btn_start.setVisibility(View.GONE);
+                                    } else {
+                                        btn_start.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
