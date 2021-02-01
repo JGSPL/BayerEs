@@ -96,6 +96,7 @@ import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.bayer2020.ui.qa.view.QnADirectActivity;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
+import com.procialize.bayer2020.ui.storelocator.view.StoreLocatorActivity;
 import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
 import com.procialize.bayer2020.ui.upskill.view.UpskillFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
@@ -576,9 +577,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_storeLocator:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                Utility.createShortSnackBar(mDrawerLayout, "Coming soon");
+               // Utility.createShortSnackBar(mDrawerLayout, "Coming soon");
 
-                //startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+                startActivity(new Intent(MainActivity.this, StoreLocatorActivity.class));
                 break;
 
             case R.id.tr_event_info:

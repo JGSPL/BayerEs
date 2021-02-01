@@ -111,7 +111,7 @@
             android:background="@color/blue"
             android:textStyle="bold"
             android:textColor="@color/colorwhite"
-            android:text="Dosage Calculator"
+            android:text=" "
             android:textSize="20sp">
 
         </com.procialize.bayer2020.fonts.RobotoTextViewHeader>

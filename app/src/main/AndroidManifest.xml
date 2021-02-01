@@ -110,13 +110,23 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" /> <!-- The API key for Google Maps-based APIs. -->
+            android:value="@integer/google_play_services_version" />
+        <!--
+                <meta-data
+                    android:name="com.google.android.geo.API_KEY"
+                    android:value="AIzaSyBM7hXgoejSIXc7Y9KwXKsxbH0lc_gKNEo" />
+        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/maps_api_key" />
+            android:value="AIzaSyAG03eif3L7ZJMfX9BdMNqf2rRCyr2WeLI" />
+        <!--<meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" /> &lt;!&ndash; The API key for Google Maps-based APIs. &ndash;&gt;
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/maps_api_key" />-->
 
         <activity
             android:name=".ui.attendee.view.AttendeeDetailActivity"
@@ -230,15 +240,6 @@
             android:value="true" />
 
         <activity
-            android:name=".ui.attendeeChat.ChatListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity
-            android:name=".ui.attendeeChat.ChatActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.livepoll.view.LivePollActivity"
             android:configChanges="keyboardHidden"
             android:screenOrientation="portrait"
@@ -250,15 +251,7 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.attendeeChat.activity.AttendeeChatDetail"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity
             android:name=".ui.speaker.view.SpeakerDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity
-            android:name=".ui.attendeeChat.activity.FullScreenImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
@@ -352,6 +345,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
+        <activity
+            android:name=".ui.storelocator.view.StoreLocatorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
         <activity
             android:name=".ui.faq.view.FAQActivity"
@@ -364,6 +361,8 @@
         <meta-data
             android:name="JW_LICENSE_KEY"
             android:value="/E8rZOSks454yMGJbQcMnXWaooyxJ/00vGuqtotvWCf9qpoW4len3F8L0sFmE4tJ" />
+
+
     </application>
 
 </manifest>

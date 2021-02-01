@@ -727,4 +727,14 @@ public interface APIService {
     Call<LoginOrganizer> SendNotification(@Header("authorization") String authorization, @Field("event_id") String event_id,
                                           @Field("schedule_time") String Schedule_time, @Field("content") String content);
 
+    @POST("store_locator_api/DistributorCountFetch")
+    @FormUrlEncoded
+    Call<FetchAgenda> DistributorCountFetch(@Header("authorization") String authorization,
+                                               @Field("event_id") String event_id);
+
+    @POST("store_locator_api/DistributorListFetch")
+    @FormUrlEncoded
+    Call<FetchAgenda> DistributorListFetch(@Header("authorization") String authorization,
+                                               @Field("event_id") String event_id,
+                                              @Field("state") String state);
 }
