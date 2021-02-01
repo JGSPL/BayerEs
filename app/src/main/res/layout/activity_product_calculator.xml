@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:id="@+id/linear"
     android:background="@color/background"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -135,7 +136,7 @@
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_weight="7"
                 android:layout_gravity="center"
                 android:text="Infestation Level"
@@ -144,12 +145,12 @@
 
             <Spinner
                 android:id="@+id/spinner"
-                android:background="@drawable/cell_border"
+                android:background="@drawable/spinner_backcal"
                 android:padding="5dp"
 
                 android:layout_width="0dp"
                 android:layout_weight="3"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 >
 
             </Spinner>
@@ -166,24 +167,24 @@
                 android:layout_width="0dp"
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_weight="7"
                 android:layout_gravity="center"
                 android:text="Area To be treated"
                 android:textColor="@color/black"
                 android:textSize="15dp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/txt_area"
                 android:layout_width="0dp"
                 android:layout_weight="3"
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
-
-                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:layout_height="40dp"
                 >
 
-            </TextView>
+            </EditText>
 
 
         </TableRow>
@@ -208,7 +209,7 @@
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_weight="7"
                 android:layout_gravity="center"
                 android:text="Quantity of product required (ml)"
@@ -222,7 +223,7 @@
                 android:text="10"
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
-                android:layout_height="wrap_content">
+                android:layout_height="40dp">
 
             </TextView>
 
@@ -238,7 +239,7 @@
                 android:layout_width="0dp"
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_weight="7"
                 android:layout_gravity="center"
                 android:text="Quantity of Water required for mixing"
@@ -251,7 +252,7 @@
                 android:layout_weight="3"
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 >
 
             </TextView>
@@ -268,7 +269,7 @@
                 android:layout_width="0dp"
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:layout_weight="7"
                 android:lines="2"
 
@@ -284,7 +285,7 @@
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
                 android:lines="2"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 >
 
             </TextView>
@@ -302,6 +303,79 @@
             android:textSize="20sp">
 
         </com.procialize.bayer2020.fonts.RobotoTextview>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="10"
+
+            >
+
+            <com.procialize.bayer2020.fonts.RobotoEditext
+                android:id="@+id/edtAmountConvert"
+                android:layout_margin="10dp"
+                android:background="@drawable/profile_edit_text_bg"
+                android:padding="10dp"
+                android:layout_width="0dp"
+                android:singleLine="true"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:layout_gravity="center"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/txtAmountConvert"
+                android:layout_margin="10dp"
+                android:background="@drawable/profile_edit_text_bg"
+                android:padding="10dp"
+                android:layout_width="0dp"
+                android:singleLine="true"
+
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:layout_gravity="center"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+
+
+
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="10"
+
+            >
+
+            <Spinner
+                android:id="@+id/spinnersqare"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:background="@drawable/spinner_backcal"
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent"
+                >
+
+            </Spinner>
+
+            <Spinner
+                android:id="@+id/spinnersqare2"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:background="@drawable/spinner_backcal"
+
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent"
+                >
+
+            </Spinner>
+
+        </TableRow>
 
 
     </LinearLayout>

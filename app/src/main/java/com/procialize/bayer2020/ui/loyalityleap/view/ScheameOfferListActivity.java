@@ -163,7 +163,7 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
         ScheameOfferAdapter productypeAdapter = new ScheameOfferAdapter(this, productList, this, Imageurl);
         //productTypeRv.setLayoutManager(new LinearLayoutManager(getContext()));
         // use a linear layout manager
-        int columns = 2;
+        int columns = 1;
         productTypeRv.setLayoutManager(new GridLayoutManager(this, columns));
 
         productTypeRv.setAdapter(productypeAdapter);
