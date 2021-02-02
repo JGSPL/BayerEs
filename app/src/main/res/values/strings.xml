@@ -52,4 +52,18 @@
     <string name="designandeveloped"><u>Design &amp; Developed by Procialize</u></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="high_array">
+        <item>High</item>
+        <item>Low</item>
+
+    </string-array>
+    <string-array name="any_array">
+        <item>Any</item>
+    </string-array>
+
+    <string-array name="amount_array">
+        <item>Square foot</item>
+        <item>Square meter</item>
+
+    </string-array>
 </resources>

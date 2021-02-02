@@ -61,13 +61,13 @@ public class product_dosage_detail implements Serializable {
     @Expose
     private String amount_unit;
 
-    @SerializedName("area_to_be_treated")
+    @SerializedName("diluted_solution_quantity")
     @Expose
-    private String area_to_be_treated;
+    private String diluted_solution_quantity;
 
-    @SerializedName("area_to_be_treated_unit")
+    @SerializedName("diluted_solution_quantity_unit")
     @Expose
-    private String area_to_be_treated_unit;
+    private String diluted_solution_quantity_unit;
 
     @SerializedName("created")
     @Expose
@@ -180,20 +180,20 @@ public class product_dosage_detail implements Serializable {
         this.amount_unit = amount_unit;
     }
 
-    public String getArea_to_be_treated() {
-        return area_to_be_treated;
+    public String getDiluted_solution_quantity() {
+        return diluted_solution_quantity;
     }
 
-    public void setArea_to_be_treated(String area_to_be_treated) {
-        this.area_to_be_treated = area_to_be_treated;
+    public void setDiluted_solution_quantity(String diluted_solution_quantity) {
+        this.diluted_solution_quantity = diluted_solution_quantity;
     }
 
-    public String getArea_to_be_treated_unit() {
-        return area_to_be_treated_unit;
+    public String getDiluted_solution_quantity_unit() {
+        return diluted_solution_quantity_unit;
     }
 
-    public void setArea_to_be_treated_unit(String area_to_be_treated_unit) {
-        this.area_to_be_treated_unit = area_to_be_treated_unit;
+    public void setDiluted_solution_quantity_unit(String diluted_solution_quantity_unit) {
+        this.diluted_solution_quantity_unit = diluted_solution_quantity_unit;
     }
 
     public String getCreated() {

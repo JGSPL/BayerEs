@@ -42,9 +42,13 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -63,6 +67,7 @@ import com.procialize.bayer2020.session.SessionManager;
 import com.procialize.bayer2020.ui.Contactus.ContactUsActivity;
 import com.procialize.bayer2020.ui.EULA.EulaActivity;
 import com.procialize.bayer2020.ui.Privacypolicy.PrivacypolicyActivity;
+import com.procialize.bayer2020.ui.agenda.view.AgendaFragment;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
@@ -74,14 +79,21 @@ import com.procialize.bayer2020.ui.eventinfo.view.EventInfoActivity;
 import com.procialize.bayer2020.ui.faq.view.FAQActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.login.view.LoginActivity;
+import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemStatusBasicData;
+import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_item;
+import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_status_item;
 import com.procialize.bayer2020.ui.loyalityleap.view.LoyalityLeapFragment;
+import com.procialize.bayer2020.ui.loyalityleap.view.RedemptionHistoryList;
 import com.procialize.bayer2020.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
 import com.procialize.bayer2020.ui.profile.view.ProfileActivity;
 import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
+import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
 import com.procialize.bayer2020.ui.qa.view.QnADirectActivity;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
+import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
+import com.procialize.bayer2020.ui.storelocator.view.StoreLocatorActivity;
 import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
 import com.procialize.bayer2020.ui.upskill.view.UpskillFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
@@ -90,6 +102,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.jzvd.JzvdStd;
 import retrofit2.Call;
@@ -561,9 +574,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_storeLocator:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                Utility.createShortSnackBar(mDrawerLayout, "Coming soon");
+               // Utility.createShortSnackBar(mDrawerLayout, "Coming soon");
 
-                //startActivity(new Intent(MainActivity.this, ProfilePCOActivity.class));
+                startActivity(new Intent(MainActivity.this, StoreLocatorActivity.class));
                 break;
 
             case R.id.tr_event_info:

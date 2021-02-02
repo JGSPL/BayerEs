@@ -2,8 +2,16 @@ package com.procialize.bayer2020.ui.catalogue.view;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,16 +24,31 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
+import com.procialize.bayer2020.ui.catalogue.model.product_dosage_detail;
+import com.procialize.bayer2020.ui.loyalityleap.view.MPointActivity;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
-public class ProductmCalculator_Activity extends AppCompatActivity {
+public class ProductmCalculator_Activity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
 
     Toolbar mToolbar;
     ImageView headerlogoIv;
-    String token, eventid, docurl, productId = "1";
+    String token, eventid, docurl, productId = "1",productName;
+    List<product_dosage_detail> product_dosage_detailList = new ArrayList<>();
+    TextView tvProductTitle ,txt_quan, txt_quantity, txt_quantitySolu, txtAmountConvert;
+    EditText txt_area, edtAmountConvert;
+    String high;
+    Spinner spinner, spinnersqare, spinnersqare2;
+    String conversionValue;
+    LinearLayout linear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +64,146 @@ public class ProductmCalculator_Activity extends AppCompatActivity {
                 finish();
             }
         });
+
+        product_dosage_detailList = (List<product_dosage_detail>) getIntent().getSerializableExtra("ProductDosage");
+        productName = getIntent().getStringExtra("ProductName");
+        linear = findViewById(R.id.linear);
+
+        tvProductTitle = findViewById(R.id.tvProductTitle);
+        txt_area = findViewById(R.id.txt_area);
+        spinner = findViewById(R.id.spinner);
+        txt_quan = findViewById(R.id.txt_quan);
+        txt_quantity = findViewById(R.id.txt_quantity);
+        txt_quantitySolu = findViewById(R.id.txt_quantitySolu);
+        txtAmountConvert = findViewById(R.id.txtAmountConvert);
+        edtAmountConvert = findViewById(R.id.edtAmountConvert);
+
+        spinnersqare = findViewById(R.id.spinnersqare);
+        spinnersqare2 = findViewById(R.id.spinnersqare2);
+
+
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
+                R.array.amount_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinnersqare.setAdapter(adapter2);
+
+        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this,
+                R.array.amount_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinnersqare2.setAdapter(adapter3);
+
+        // Class Spinner implementing onItemSelectedListener
+        spinnersqare2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                // do something upon option selection
+                conversionValue = parent.getItemAtPosition(position).toString();
+                // if(txt_area.getText().toString().isEmpty()) {
+                if (conversionValue.equalsIgnoreCase("Square foot")) {
+                    String value = edtAmountConvert.getText().toString();
+                    Double fvalue = Float.parseFloat(value)*10.7;
+                    txtAmountConvert.setText(String.valueOf(fvalue));
+
+                } else if (conversionValue.equalsIgnoreCase("Square meter")) {
+                    String value = edtAmountConvert.getText().toString();
+                    Double fvalue = Float.parseFloat(value)/10.7;
+                    txtAmountConvert.setText(String.valueOf(fvalue));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+                // can leave this empty
+            }
+        });
+
+        txt_area.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // You can identify which key pressed buy checking keyCode value
+                // with KeyEvent.KEYCODE_
+                if (keyCode == KeyEvent.KEYCODE_DEL) {
+                    // this is for backspace
+                    txt_area.getText().clear();
+                }
+                return false;
+            }
+        });
+
+        txt_area.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_UP) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+
+                    try {
+
+                        if (txt_area.getText().toString().isEmpty()) {
+                            Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
+                            return false;
+                        } else {
+
+                            String txt_score = txt_area.toString().trim();
+                            String txt_total = product_dosage_detailList.get(0).getDiluted_solution_quantity();
+
+                            if (txt_score.equalsIgnoreCase("")) {
+                                Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Long mPointtotal = Long.parseLong(txt_score) * Long.parseLong(txt_total);
+                                String s1 = String.valueOf(mPointtotal);
+                                String res = s1.replace(".", "");
+                               txt_quantity.setText(res);
+                            }
+                            txt_area.setFocusable(false);
+                            txt_area.setEnabled(false);
+                            return true;
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return false;
+            }
+        });
+
+
+
+        if(product_dosage_detailList!=null){
+            if(product_dosage_detailList.get(0).getInfestation_level().equalsIgnoreCase("0")){
+                // Create an ArrayAdapter using the string array and a default spinner layout
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                        R.array.any_array, android.R.layout.simple_spinner_item);
+                // Specify the layout to use when the list of choices appears
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                // Apply the adapter to the spinner
+                spinner.setAdapter(adapter);
+                spinner.setOnItemSelectedListener(this);
+            }else{
+                // Create an ArrayAdapter using the string array and a default spinner layout
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                        R.array.high_array, android.R.layout.simple_spinner_item);
+                // Specify the layout to use when the list of choices appears
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                // Apply the adapter to the spinner
+                spinner.setAdapter(adapter);
+                spinner.setOnItemSelectedListener(this);
+            }
+            tvProductTitle.setText(productName);
+            txt_quan.setText(product_dosage_detailList.get(0).getAmount_unit());
+            txt_quantity.setText(product_dosage_detailList.get(0).getAmount_unit());
+            txt_quantitySolu.setText(product_dosage_detailList.get(0).getDiluted_solution_quantity());
+
+        }
+
 
 
     }
@@ -80,4 +243,35 @@ public class ProductmCalculator_Activity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        high = parent.getItemAtPosition(position).toString();
+        if(high.equalsIgnoreCase("High")){
+            Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getHigh_amount());
+            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+            Float quantity = amountReq/contentProduct;
+            txt_quan.setText(String.valueOf(quantity));
+
+
+        }else if(high.equalsIgnoreCase("Low")){
+            Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getLow_amount());
+            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+            Float quantity = amountReq/contentProduct;
+            txt_quan.setText(String.valueOf(quantity));
+        }else if(high.equalsIgnoreCase("any")){
+            Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getAny_amount());
+            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+            Float quantity = amountReq/contentProduct;
+            txt_quan.setText(String.valueOf(quantity));
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
