@@ -141,7 +141,7 @@ import static com.procialize.bayer2020.ui.newsfeed.view.NewsFeedFragment.newsfee
 
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener, GifEmojiAdapter.GifEmojiAdapterListner,
-        CommentAdapter.CommentAdapterListner, QueryListener, SuggestionsListener {
+        CommentAdapter.CommentAdapterListner/*, QueryListener, SuggestionsListener */{
 
     private static final String API_KEY = "TVG20YJW1MXR";
     ImageView iv_gif, iv_back_gif, iv_likes, iv_comments, iv_share, iv_profile, iv_back, moreIV, iv_send;
@@ -170,9 +170,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     View v_divider;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
     PostNewsFeedViewModel postNewsFeedViewModel;
-    UsersAdapter usersAdapter;
-    private Mentions mentions;
-    AttendeeDatabaseViewModel attendeeDatabaseViewModel;
+    //UsersAdapter usersAdapter;
+    //private Mentions mentions;
+    //AttendeeDatabaseViewModel attendeeDatabaseViewModel;
     List<TableAttendee> attendeeList = null;
     private static NewsfeedRepository newsRepository;
     Dialog myDialog;
@@ -206,7 +206,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         commentViewModel = ViewModelProviders.of(this).get(CommentViewModel.class);
         newsFeedDatabaseViewModel = ViewModelProviders.of(this).get(NewsFeedDatabaseViewModel.class);
         postNewsFeedViewModel = ViewModelProviders.of(this).get(PostNewsFeedViewModel.class);
-        attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+        //attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
 
         connectionDetector = ConnectionDetector.getInstance(this);
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
@@ -685,7 +685,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         setDynamicColor();
 
         //Tagging Functionality
-        attendeeList = new ArrayList<TableAttendee>();
+      /*  attendeeList = new ArrayList<TableAttendee>();
         attendeeDatabaseViewModel.getAttendeeDetails(this);
         attendeeDatabaseViewModel.getAttendeeList().observeForever(new Observer<List<TableAttendee>>() {
             @Override
@@ -698,7 +698,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 .queryListener(this)
                 .build();
 
-        setupMentionsList();
+        setupMentionsList();*/
     }
 
     public void getComments(final int commentCount) {
@@ -902,14 +902,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.fl_post_comment:
                 if (connectionDetector.isConnectingToInternet()) {
                     commentText = et_comment.getText().toString();
-                    final TaggingComment comment = new TaggingComment();
+                   /* final TaggingComment comment = new TaggingComment();
                     comment.setComment(commentText);
-                    comment.setMentions(mentions.getInsertedMentions());
+                    comment.setMentions(mentions.getInsertedMentions());*/
                     textData.setText(commentText);
 
                     fl_post_comment.setEnabled(false);
 
-                    commentText = highlightMentions(textData, comment.getMentions());
+                   // commentText = highlightMentions(textData, comment.getMentions());
                     commentViewModel.validation(commentText);
                     commentViewModel.getIsValid().observe(this, new Observer<Boolean>() {
                         @Override
@@ -1699,6 +1699,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(CommentActivity.this, EVENT_COLOR_4)));
     }
 
+/*
     private void setupMentionsList() {
         final RecyclerView mentionsList = findViewById(R.id.mentions_list);
         mentionsList.setLayoutManager(new LinearLayoutManager(this));
@@ -1712,11 +1713,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             public void onItemClick(final View view, final int position) {
                 final TableAttendee user = usersAdapter.getItem(position);
 
-                /*
-                 * We are creating a mentions object which implements the
-                 * <code>Mentionable</code> interface this allows the library to set the offset
-                 * and length of the mention.
-                 */
                 if (user != null) {
                     final Mention mention = new Mention();
                     mention.setMentionName(user.getFirst_name() + " " + user.getLast_name());
@@ -1795,6 +1791,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         }
         return commentTextView.getText().toString();
     }
+*/
 
     @Override
     public void onBackPressed() {

@@ -69,7 +69,7 @@
         android:scaleType="centerCrop"/>
 
 <!--
-                <com.procialize.eventapp.Utility.MyJZVideoPlayerStandard
+                <com.procialize.bayer2020.Utility.MyJZVideoPlayerStandard
                     android:id="@+id/videoplayer"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
@@ -178,7 +178,7 @@
             android:scaleType="centerCrop"/>
 
 <!--
-        <com.procialize.eventapp.Utility.MyJZVideoPlayerStandard
+        <com.procialize.bayer2020.Utility.MyJZVideoPlayerStandard
             android:id="@+id/videoplayer2"
             android:layout_width="match_parent"
             android:layout_height="200dp"

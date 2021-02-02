@@ -6,7 +6,7 @@
     <item
         android:id="@+id/navigation_leap"
         android:enabled="true"
-        android:title="Loyality-LEAP"
+        android:title="Loyalty-LEAP"
         android:icon="@drawable/agenda_selector"
         app:showAsAction="withText" />
     <item

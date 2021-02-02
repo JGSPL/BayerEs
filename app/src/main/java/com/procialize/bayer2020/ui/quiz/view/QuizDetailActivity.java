@@ -3,6 +3,7 @@ package com.procialize.bayer2020.ui.quiz.view;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,7 +23,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
@@ -37,6 +38,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.App;
 import com.procialize.bayer2020.ConnectionDetector;
+import com.procialize.bayer2020.Constants.ApiUtils;
+import com.procialize.bayer2020.Constants.Constant;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.GetterSetter.Header;
 import com.procialize.bayer2020.R;
@@ -46,7 +49,6 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.costumTools.CustomViewPager;
 import com.procialize.bayer2020.session.SessionManager;
-import com.procialize.bayer2020.ui.livepoll.view.PollDetailActivity;
 import com.procialize.bayer2020.ui.quiz.adapter.QuizPagerAdapter;
 import com.procialize.bayer2020.ui.quiz.model.QuizList;
 import com.procialize.bayer2020.ui.quiz.model.QuizListing;
@@ -60,10 +62,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
@@ -74,8 +77,9 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
     SessionManager session;
     String event_id, api_token;
     RelativeLayout ll_main;
-    public static String quiz_question_id;
+    public static String quiz_question_id = "";
     public static String folder_id, foldername = "null", strTimer = "0";
+    int position;
     QuizDetailViewModel quizDetailViewModel;
     public String getQuizUrl, untimed_quiz = "", timed_quiz = "";
     ConnectionDetector cd;
@@ -88,8 +92,9 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
     public int time = 0, timerForQuiz;
     RelativeLayout rv_timer;
     QuizPagerAdapter quizPagerAdapter;
-    public static boolean submitflag = false, isBackePressed = false;
-    public static CountDownTimer timercountdown;
+    public boolean isBackedPressed = false;
+    public static boolean submitflag = false;
+    private static CountDownTimer timercountdown;
     QuizPagerAdapter pagerAdapter;
     public static int count1 = 1;
     List<QuizList> quizList;
@@ -101,9 +106,8 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
     boolean flag = true;
     boolean flag1 = true;
     boolean flag2 = true;
-    RelativeLayout relative_main;
+    LinearLayout relative_main;
     ImageView headerlogoIv;
-    ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,14 +116,10 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
 
         new RefreashToken(QuizDetailActivity.this).callGetRefreashToken(QuizDetailActivity.this);
 
-        /*Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        isBackedPressed = false;
+        ImageView iv_back = findViewById(R.id.iv_back);
+        //iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+        iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 count = 1;
@@ -133,23 +133,41 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                 }
 
                 onBackPressed();
-
             }
-        });*/
+        });
 
         try {
-                timercountdown.cancel();
+            timercountdown.cancel();
         } catch (Exception e) {
 
         }
-       /* String eventColor3 = SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_3);
 
-        String eventColor3Opacity40 = eventColor3.replace("#", "");*/
+        headerlogoIv = findViewById(R.id.headerlogoIv);
+
+        String eventLogo = SharedPreference.getPref(this, EVENT_LOGO);
+        String eventListMediaPath = SharedPreference.getPref(this, EVENT_LIST_MEDIA_PATH);
+        Glide.with(this)
+                .load(eventListMediaPath + eventLogo)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(headerlogoIv);
+       // String eventColor3 = SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_3);
+
+       // String eventColor3Opacity40 = eventColor3.replace("#", "");
 
         app = (App) getApplicationContext();
         foldername = getIntent().getExtras().getString("folder_name");
         strTimer = getIntent().getExtras().getString("timer");
         folder_id = getIntent().getExtras().getString("folder_id");
+        position = getIntent().getExtras().getInt("position");
         timerForQuiz = Integer.parseInt(getIntent().getExtras().getString("timer"));
         if (timerForQuiz == 0) {
             timed_quiz = "0";
@@ -161,13 +179,6 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         time = timerForQuiz;
         time = Integer.parseInt(strTimer);
 
-        iv_back = findViewById(R.id.iv_back);
-        iv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
         ll_main = findViewById(R.id.relative);
         submit = (Button) findViewById(R.id.submit);
         btnNext = (Button) findViewById(R.id.btnNext);
@@ -177,7 +188,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         tv_header = (TextView) findViewById(R.id.tv_header);
         relative_main = findViewById(R.id.relative_main);
         questionTv = findViewById(R.id.questionTv);
-        /*tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1)));
+       /* tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_3)));
         questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1)));
         txt_count.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
         btnNext.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
@@ -185,7 +196,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         relative_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_2)));
         btnNext.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1)));
         submit.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1)));
-
+        txtSkip.setTextColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1)));
         GradientDrawable border = new GradientDrawable();
 //        border.setColor(Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1))); //white background
         border.setStroke(1, Color.parseColor(SharedPreference.getPref(QuizDetailActivity.this, EVENT_COLOR_1))); //black border with full opacity
@@ -211,6 +222,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
 
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
+
 
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -240,16 +252,23 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                 int option = pagerAdapter.getSelectedOption();
                 int i = pagerAdapter.getItemCount();
 
-                pager.setCurrentItem(pager.getCurrentItem() + 1, true);
-                countpage = pager.getCurrentItem();
+                if (option == pager.getCurrentItem()) {
+                    Utility.createShortSnackBar(ll_main, "Please select Answer.");
+                } else {
+                    pager.setCurrentItem(pager.getCurrentItem() + 1, true);
+                    countpage = pager.getCurrentItem();
+                }
                 if (questionList.size() == pager.getCurrentItem() + 1) {
+
                     btnNext.setVisibility(View.GONE);
                     submit.setVisibility(View.VISIBLE);
                     submitflag = true;
                     //txt_time.setText(String.format(Locale.getDefault(), "%d", time));
 //                    if (time > 0)
 //                        time -= 1;
-                } else if (questionList.size() >= pager.getCurrentItem() + 1) {
+
+                } else if (questionList.size() >= pager.getCurrentItem()) {
+
                     btnNext.setVisibility(View.VISIBLE);
                     submit.setVisibility(View.GONE);
                     //time = 0;
@@ -314,39 +333,44 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                 txt_time.setText("" + ":" + checkdigit(time));
                                 textViewTime.setText(String.valueOf(time));
                                 progressBarCircle.setProgress(time);
+
+                                Log.e("pager_current_item==>", pager.getCurrentItem() + "");
+                                Log.e("pager_timer==>", time + "");
                                 time--;
                             }
 
                             public void onFinish() {
                                 time = 0;
-//
+                                try {
+                                    timercountdown.cancel();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
                                 if (questionList.size() == pager.getCurrentItem() + 1) {
-                                    try {
-                                        timercountdown.cancel();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    if (!isBackePressed) {
+                                    if (!isBackedPressed) {
                                         submitflag = true;
                                         submitQuiz();
                                     }
                                 } else {
-                                    timercountdown.cancel();
                                     timercountdown.start();
                                     txt_time.setText("" + ":" + checkdigit(time));
                                     pager.setCurrentItem(pager.getCurrentItem() + 1, true);
-                                    if (questionList.size() == pager.getCurrentItem() + 1) {
+
+                                    int questionListSize = questionList.size();
+                                    int currentItem = pager.getCurrentItem();
+                                    if (questionListSize == currentItem) {
                                         btnNext.setVisibility(View.GONE);
                                         submit.setVisibility(View.VISIBLE);
                                         submitflag = true;
                                         //valid = true;
-                                    } else if (questionList.size() >= pager.getCurrentItem() + 1) {
+                                    } else if (questionListSize >= currentItem) {
                                         btnNext.setVisibility(View.VISIBLE);
                                         submit.setVisibility(View.GONE);
                                         //time = 0;
                                         time = timerForQuiz;
-                                        //timercountdown.start();
+                                        timercountdown.cancel();
+                                        timercountdown.start();
                                         txt_time.setText("" + ":" + checkdigit(time));
                                     }
                                 }
@@ -355,7 +379,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                     } else {
                         try {
                             timercountdown.cancel();
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         rv_timer.setVisibility(View.GONE);
@@ -373,6 +397,10 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                         btnNext.setVisibility(View.GONE);
                         submit.setVisibility(View.VISIBLE);
                     }
+
+                    if (quizDetailViewModel != null && quizDetailViewModel.getQuizList().hasObservers()) {
+                        quizDetailViewModel.getQuizList().removeObservers(QuizDetailActivity.this);
+                    }
                 }
             });
         } else {
@@ -383,24 +411,6 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         CommonFirebase.crashlytics("QuizDetail", api_token);
         CommonFirebase.firbaseAnalytics(this, "QuizDetail", api_token);
         //CommonFunction.showBackgroundImage(QuizDetailActivity.this, ll_main);
-
-        headerlogoIv = findViewById(R.id.headerlogoIv);
-
-        String eventLogo = SharedPreference.getPref(this, EVENT_LOGO);
-        String eventListMediaPath = SharedPreference.getPref(this, EVENT_LIST_MEDIA_PATH);
-        Glide.with(this)
-                .load(eventListMediaPath + eventLogo)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                }).into(headerlogoIv);
     }
 
     public String checkdigit(int number) {
@@ -571,7 +581,8 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                     Toast.makeText(getApplicationContext(), "Please answer all questions", Toast.LENGTH_SHORT).show();
                 }*/
             }
-        } else if (v.getId() == R.id.txtSkip) {
+        }
+        else if (v.getId() == R.id.txtSkip) {
             Boolean valid = false;
             countpage = pager.getCurrentItem();
 
@@ -755,7 +766,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         count1 = 1;
 //        pagerAdapter.selectopt = 0;
         submitflag = false;
-        isBackePressed = true;
+        isBackedPressed = true;
         try {
             if (timercountdown != null) {
                 timercountdown.cancel();
@@ -763,33 +774,19 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         /*Intent intent = new Intent(QuizActivity.this, FolderQuizActivity.class);
         startActivity(intent);
         finish();*/
-
     }
 
     public void submitQuiz() {
 
         Boolean valid = false;
         countpage = pager.getCurrentItem();
-
-        //submitflag = true;
-        //Boolean valid = true;
-        final int[] check = {0};
-        int sum = 0;
         final String[] question_id = {""};
         final String[] question_ans = {""};
-        final String[] value = {""};
-        final RadioGroup[] radioGroup = new RadioGroup[1];
-        final EditText[] ans_edit = new EditText[1];
-        final RadioButton[] radioButton = new RadioButton[1];
-//            Log.e("size", adapter.getItemCount() + "");
 
         String[] data = pagerAdapter.getselectedOption();
-        String[] question = pagerAdapter.getselectedquestion();
-
         if (data != null) {
             for (int i = 0; i < data.length; i++) {
                 if (i != 0) {
@@ -829,7 +826,6 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                     if (questionList.get(i).getQuiz_option().get(j).getQuiz_id().equals(idno)) {
                                         if (flag1 == true) {
                                             question_ans[0] = question_ans[0] + "0";
-                                            //question_ans[0] = question_ans[0] + quizOptionList.get(j).getOptionId();
                                             flag1 = false;
                                         }
                                     }
@@ -854,7 +850,6 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                 if (questionList.get(i).getQuiz_option().get(j).getQuiz_id().equals(idno)) {
                                     if (flag2 == true) {
                                         question_ans[0] = question_ans[0] + "0";
-                                        // question_ans[0] = question_ans[0] + quizOptionList.get(j).getOptionId();
                                         flag2 = false;
                                     }
                                 }
@@ -868,7 +863,6 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                     for (int j = 0; j < questionList.get(i).getQuiz_option().size(); j++) {
                         if (questionList.get(i).getQuiz_option().get(j).getQuiz_id().equals(idno)) {
                             if (flag == true) {
-                                // question_ans[0] = question_ans[0] + quizOptionList.get(j).getOptionId();
                                 question_ans[0] = question_ans[0] + "0";
                                 flag = false;
                             }
@@ -881,19 +875,20 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
             Log.e("valid_id", question_id.toString());
             Log.e("valid_string", valid.toString());
 
-            //if (valid == true && submitflag == true) {
+            //if (valid == true) {
             if (submitflag == true) {
                 quiz_question_id = question_id[0];
                 quiz_options_id = question_ans[0];
                 int answers = pagerAdapter.getCorrectOption();
-
+                //Toast.makeText(appDelegate, quiz_options_id, Toast.LENGTH_SHORT).show();
                 Log.d("Selected Options==>", quiz_options_id);
                 quizDetailViewModel.quizSubmit(api_token, event_id, quiz_question_id, quiz_options_id);
-
                 quizDetailViewModel.quizSubmit().observe(QuizDetailActivity.this, new Observer<QuizSubmit>() {
                     @Override
                     public void onChanged(QuizSubmit response) {
-                        timercountdown.cancel();
+                        if (timercountdown != null) {
+                            timercountdown.cancel();
+                        }
                         pagerAdapter.checkArray = null;
                         pagerAdapter.correctAnswer = "";
                         pagerAdapter.selectedOption = "";
@@ -907,26 +902,27 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                             if (header.get(0).getType().equalsIgnoreCase("success")) {
                                 count1 = 1;
                                 pagerAdapter.selectopt = 0;
-                                submitflag = false;
+                                submitflag = true;
+                                time = 0;
                                 int answers = pagerAdapter.getCorrectOption();
                                 Intent intent = new Intent(QuizDetailActivity.this, YourScoreActivity.class);
                                 intent.putExtra("folderName", foldername);
                                 intent.putExtra("folderid", folder_id);
                                 intent.putExtra("Answers", response.getTotal_correct_answer());
                                 intent.putExtra("TotalQue", response.getTotal_questions());
+                                intent.putExtra("TotalQue", response.getTotal_questions());
                                 intent.putExtra("Page", "Question");
                                 startActivity(intent);
                                 finish();
                             }
-
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 });
-
-            }
+            } /*else {
+                    Toast.makeText(getApplicationContext(), "Please answer all questions", Toast.LENGTH_SHORT).show();
+                }*/
         }
 
         pager.setCurrentItem(pager.getCurrentItem() + 1, true);
@@ -942,14 +938,11 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
             if (timercountdown != null) {
                 time = timerForQuiz;
                 timercountdown.cancel();
+                Log.e("SubmitQuizFun==>", "timer start");
                 timercountdown.start();
                 txt_time.setText("" + ":" + checkdigit(time));
             }
         }
-
-
     }
 
 }
-
-

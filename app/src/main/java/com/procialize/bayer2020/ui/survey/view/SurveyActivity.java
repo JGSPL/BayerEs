@@ -12,9 +12,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
@@ -37,7 +39,8 @@ public class SurveyActivity extends AppCompatActivity implements SurveyAdapter.S
     LinearLayout ll_main;
     SurveyAdapter surevyAdapter;
     RecyclerView surevyrecycler;
-
+    ConnectionDetector cd;
+    SwipeRefreshLayout surveyrefresh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,7 @@ public class SurveyActivity extends AppCompatActivity implements SurveyAdapter.S
         //event_id = "1";
         iv_back = findViewById(R.id.iv_back);
         ll_main = findViewById(R.id.ll_main);
+        surveyrefresh = findViewById(R.id.surveyrefresh);
         surevyrecycler = findViewById(R.id.surevyrecycler);
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +70,35 @@ public class SurveyActivity extends AppCompatActivity implements SurveyAdapter.S
         getUserActivityReport.userActivityReport();*/
         //--------------------------------------------------------------------------------------
 
-        surveyViewModel.getSurvey(api_token,"1"/*event_id*/,"100","1");
+
+        cd = ConnectionDetector.getInstance(this);
+        if (cd.isConnectingToInternet()) {
+            getDataFromApi();
+        } else {
+            if (surveyrefresh.isRefreshing()) {
+                surveyrefresh.setRefreshing(false);
+            }
+            Utility.createShortSnackBar(ll_main, "No internet connection");
+        }
+        surveyrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                surveyrefresh.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    getDataFromApi();
+                } else {
+                    if (surveyrefresh.isRefreshing()) {
+                        surveyrefresh.setRefreshing(false);
+                    }
+                    Utility.createShortSnackBar(ll_main, "No internet connection");
+                }
+            }
+        });
+    }
+
+    private void getDataFromApi()
+    {
+        surveyViewModel.getSurvey(api_token,event_id,"1000","1");
         surveyViewModel.getSurvey().observeForever(new Observer<FetchAgenda>() {
             @Override
             public void onChanged(FetchAgenda fetchAgenda) {

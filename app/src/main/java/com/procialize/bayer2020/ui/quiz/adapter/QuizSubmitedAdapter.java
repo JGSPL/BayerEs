@@ -78,10 +78,10 @@ public class QuizSubmitedAdapter extends RecyclerView.Adapter<QuizSubmitedAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.setIsRecyclable(false);
 
-    /*    String eventColor3 = SharedPreference.getPref(activity, EVENT_COLOR_3);
+        String eventColor3 = SharedPreference.getPref(activity, EVENT_COLOR_3);
 
         String eventColor3Opacity40 = eventColor3.replace("#", "");
-*/
+
         if (quizList.get(position).getReplied() != null) {
             try {
                 holder.txt_question.setText(StringEscapeUtils.unescapeJava(quizList.get(position).getQuestion()));
@@ -89,7 +89,7 @@ public class QuizSubmitedAdapter extends RecyclerView.Adapter<QuizSubmitedAdapte
                 e.printStackTrace();
             }
 
-           // holder.txt_question.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+            //holder.txt_question.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
 
             if (quizList.get(position).getSelected_option() != null) {
                 if (quizList.get(position).getSelected_option().equals("0")) {

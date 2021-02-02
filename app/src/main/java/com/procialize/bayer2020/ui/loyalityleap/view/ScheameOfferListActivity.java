@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -22,6 +23,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.APIService;
@@ -31,12 +34,16 @@ import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.catalogue.view.ProductListDetailActivity;
+import com.procialize.bayer2020.ui.document.model.Document;
+import com.procialize.bayer2020.ui.document.model.DocumentDetail;
+import com.procialize.bayer2020.ui.document.view.DocumentActivity;
 import com.procialize.bayer2020.ui.loyalityleap.adapter.ScheameOfferAdapter;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchSchemeOffer;
 import com.procialize.bayer2020.ui.loyalityleap.model.Scheme_offer_item;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,6 +51,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.DOCUMENT_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
@@ -97,10 +105,22 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
                 productrefresh.setRefreshing(false);
             }
             Utility.createShortSnackBar(relative, "No internet connection");
-
-
         }
 
+        productrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                productrefresh.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    getProductType(token,eventid);
+                } else {
+                    if (productrefresh.isRefreshing()) {
+                        productrefresh.setRefreshing(false);
+                    }
+                    Utility.createShortSnackBar(relative, "No internet connection");
+                }
+            }
+        });
     }
 
     public MutableLiveData<FetchSchemeOffer> getProductType(String token, String eventid) {

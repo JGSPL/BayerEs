@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.procialize.bayer2020.R;
-import com.procialize.bayer2020.ui.quiz.adapter.AnswerAdapter;
 import com.procialize.bayer2020.ui.upskill.model.QuizList;
 import com.procialize.bayer2020.ui.upskill.model.QuizOption;
 import com.procialize.bayer2020.ui.upskill.model.QuizQuestion;

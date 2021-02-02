@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.procialize.eventapp", appContext.getPackageName());
+        assertEquals("com.procialize.bayer2020", appContext.getPackageName());
     }
 }

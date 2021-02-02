@@ -207,7 +207,7 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
                             Gson gson = new Gson();
                             gsonevent = gson.fromJson(je, new TypeToken<ArrayList<DocumentDetail>>() {
                             }.getType());
-                            setAdapter(gsonevent);
+                            setAdapterlist(gsonevent);
                         }
                     });
                 } else {
@@ -235,11 +235,13 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
         });*/
     }
 
+/*
     public void setAdapter(List<DocumentDetail> commentList) {
         documentAdapter = new DocumentGridAdapter(DocumentActivity.this, commentList);
         recycler_document.setLayoutManager(new GridLayoutManager(this, 2));
         recycler_document.setAdapter(documentAdapter);
     }
+*/
 
     public void setAdapterlist(List<DocumentDetail> commentList) {
 

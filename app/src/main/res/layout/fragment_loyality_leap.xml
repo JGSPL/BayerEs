@@ -19,8 +19,8 @@
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="0dp"
                     android:text="My Points"
-                    android:gravity="left"
-                    android:padding="5dp"
+                    android:gravity="left|center"
+                    android:padding="10dp"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:layout_weight="1"
@@ -51,8 +51,8 @@
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="0dp"
                     android:text="All India Ranking"
-                    android:gravity="left"
-                    android:padding="5dp"
+                    android:gravity="left|center"
+                    android:padding="10dp"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:layout_weight="1"
@@ -77,12 +77,14 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
                 android:weightSum="2"
                 android:layout_height="wrap_content">
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="180dp"
                     android:id="@+id/relScheame"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:background="@drawable/leap_scheame"
                     >
@@ -134,8 +136,8 @@
                     android:layout_width="0dp"
                     android:layout_height="180dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="5dp"
                     android:layout_weight="1"
+                    android:layout_marginRight="5dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/leap_redeem">
 
@@ -160,15 +162,27 @@
                 android:layout_marginTop="10dp"
                 android:weightSum="2"
                 android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgredeemHistory"
+                    android:layout_width="0dp"
+                    android:layout_height="180dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/leap_history">
+
+                </ImageView>
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:id="@+id/imgredeemHistory"
                     android:scaleType="fitXY"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/leap_history"
-                    android:layout_height="180dp">
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/leap_calcu"
+                    android:layout_height="180dp"
+                    android:visibility="invisible">
 
                 </ImageView>
 

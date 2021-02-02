@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
@@ -40,8 +40,6 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
@@ -63,6 +61,7 @@ import com.procialize.bayer2020.Database.EventAppDB;
 import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
 import com.procialize.bayer2020.Utility.CommonFirebase;
 import com.procialize.bayer2020.Utility.CommonFunction;
+import com.procialize.bayer2020.Utility.KeyboardUtility;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.SharedPreferencesConstant;
 import com.procialize.bayer2020.Utility.Utility;
@@ -203,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         getProfileDetails();
-        CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
+        //CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
 //        CommonFunction.showBackgroundImage(this, ll_main);
 
         String device_token = SharedPreference.getPref(this, KEY_GCM_ID);;
@@ -402,15 +401,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void setUpToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        /*mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            mToolbar.showOverflowMenu();
+            mToolbar.showOverflowMenu();*/
             headerlogoIv = findViewById(R.id.headerlogoIv);
-            headerlogoIv.setOnClickListener(this);
+            //headerlogoIv.setOnClickListener(this);
 
             String eventLogo = SharedPreference.getPref(MainActivity.this, EVENT_LOGO);
             String eventListMediaPath = SharedPreference.getPref(MainActivity.this, EVENT_LIST_MEDIA_PATH);
@@ -428,10 +427,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     }).into(headerlogoIv);
 
-        }
+        /*}*/
     }
 
-    private void setUpNavDrawer() {
+    private void setUpNavDrawer_old() {
         if (mToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             mToolbar.setNavigationIcon(R.drawable.menuicon);
@@ -467,6 +466,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     });
 
             navView.setItemIconTintList(iconsColorStates);
+//            navView.setItemTextColor(textColorStates);
+//            navView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
+        }
+    }
+
+    private void setUpNavDrawer() {
+        if (mToolbar != null) {
+            /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            mToolbar.setNavigationIcon(R.drawable.ic_drawer);
+            mToolbar.getNavigationIcon().setTint(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                    KeyboardUtility.hideSoftKeyboard(MainActivity.this);
+
+                }
+            });*/
+            ImageView iv_drawer = findViewById(R.id.iv_drawer);
+            iv_drawer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                    KeyboardUtility.hideSoftKeyboard(MainActivity.this);
+
+                }
+            });
+            int color4 = Color.parseColor(SharedPreference.getPref(MainActivity.this, EVENT_COLOR_4));
+            iv_drawer.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
+            ColorStateList iconsColorStates = new ColorStateList(
+                    new int[][]{
+                            new int[]{-android.R.attr.state_checked},
+                            new int[]{android.R.attr.state_checked}
+                    },
+                    new int[]{
+                            //Color.parseColor(colorunselect),
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)),
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
+                    });
+
+            ColorStateList textColorStates = new ColorStateList(
+                    new int[][]{
+                            new int[]{-android.R.attr.state_checked},
+                            new int[]{android.R.attr.state_checked}
+                    },
+                    new int[]{
+                            //Color.parseColor(colorunselect),
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)),
+                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
+                    });
+
+            navView.setItemIconTintList(iconsColorStates);
+
 //            navView.setItemTextColor(textColorStates);
 //            navView.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         }
@@ -833,7 +885,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 } else {
                     Utility.createShortSnackBar(mDrawerLayout, "Please checked this box");
-
                 }
             }
         });

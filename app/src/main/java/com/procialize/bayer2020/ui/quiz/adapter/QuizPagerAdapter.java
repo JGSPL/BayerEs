@@ -30,8 +30,11 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+
+//import com.procialize.bayer2020.Utility.GetUserActivityReport;
 
 public class QuizPagerAdapter extends PagerAdapter {
     private Activity activity;
@@ -42,7 +45,7 @@ public class QuizPagerAdapter extends PagerAdapter {
     ArrayList<QuizOption> quizSpecificOptionListnew1 = new ArrayList<QuizOption>();
     int count = 0;
     public static String correctAnswer;
-    public static  String[] dataArray;
+    public static String[] dataArray;
     public static String[] dataIDArray;
     public static String[] checkArray;
     public static String[] ansArray;
@@ -55,7 +58,7 @@ public class QuizPagerAdapter extends PagerAdapter {
     private String quizQuestionUrl = "";
     int flag = 0;
     String MY_PREFS_NAME = "ProcializeInfo";
-    String accessToken, event_id;
+    String accessToken, event_id, api_token;
 
     Typeface typeFace;
     private RadioGroup lastCheckedRadioGroup = null;
@@ -68,15 +71,11 @@ public class QuizPagerAdapter extends PagerAdapter {
         checkArray = new String[quizList.size()];
         ansArray = new String[quizList.size()];
         optionArray = new String[quizList.size()];
-//        session = new SessionManager(activity.getApplicationContext());
-//        accessToken = session.getUserDetails().get(SessionManager.KEY_TOKEN);
-//        SharedPreferences prefs = activity.getSharedPreferences(MY_PREFS_NAME, activity.MODE_PRIVATE);
-//        event_id = prefs.getString("eventid", "1");
-//        colorActive = prefs.getString("colorActive", "");
-//        colorActive = prefs.getString("colorActive", "");
-//
-//        quizQuestionUrl = constant.baseUrl + constant.quizsubmit;
         inflater = LayoutInflater.from(activity);
+
+        api_token = SharedPreference.getPref(activity, AUTHERISATION_KEY);
+        event_id = SharedPreference.getPref(activity, EVENT_ID);
+
 
     }
 
@@ -100,10 +99,18 @@ public class QuizPagerAdapter extends PagerAdapter {
 
         txt_page.setText(String.valueOf(position + 1) + "/" + String.valueOf(quizList.size()));
 
-       /* String eventColor3 = SharedPreference.getPref(activity, EVENT_COLOR_3);
+    /*    String eventColor3 = SharedPreference.getPref(activity, EVENT_COLOR_3);
 
-        String eventColor3Opacity40 = eventColor3.replace("#", "");*/
-
+        String eventColor3Opacity40 = eventColor3.replace("#", "");
+*/
+        //--------------------------------------------------------------------------------------
+       /* GetUserActivityReport getUserActivityReport = new GetUserActivityReport(activity,api_token,
+                event_id,
+                Constant.pageVisited,
+                "23",
+                quizList.get(position).getId());
+        getUserActivityReport.userActivityReport();*/
+        //--------------------------------------------------------------------------------------
 
         if (quizList.get(position).getReplied() == null) {
 
@@ -146,10 +153,7 @@ public class QuizPagerAdapter extends PagerAdapter {
 
 
             for (int row = 0; row < 1; row++) {
-
-
                 for (int i = 1; i < number; i++) {
-
                     AppCompatRadioButton rdbtn = new AppCompatRadioButton(activity);
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setTypeface(typeFace);
@@ -161,20 +165,16 @@ public class QuizPagerAdapter extends PagerAdapter {
 
                         ColorStateList colorStateList = new ColorStateList(
                                 new int[][]{
-
                                         new int[]{-android.R.attr.state_checked}, //disabled
                                         new int[]{android.R.attr.state_checked} //enabled
                                 },
                                 new int[]{
-
                                         /* Color.parseColor("#585e44")//disabled
                                          , Color.parseColor("#e31e24")//enabled*/
                                         Color.parseColor("#4d4d4d")//disabled
                                         , Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))//enabled
                                 }
                         );
-
-
                         rdbtn.setButtonTintList(colorStateList);//set the color tint list
                         rdbtn.invalidate(); //could not be necessary
                     }
@@ -208,12 +208,8 @@ public class QuizPagerAdapter extends PagerAdapter {
                     if (checkArray[position] != null) {
                         if (rdbtn.getText().toString().equalsIgnoreCase(checkArray[position])) {
                             rdbtn.setChecked(true);
-
-
                         }
                     }
-
-
                     viewGroup.addView(rdbtn);
 
                     flag = 1;
@@ -244,8 +240,7 @@ public class QuizPagerAdapter extends PagerAdapter {
                 dataArray[position] = radioButton.getText().toString();
                 dataIDArray[position] = radioButton.getText().toString();
             }
-        }
-        else if (quizList.get(position).getReplied().equalsIgnoreCase("2")) {
+        } else if (quizList.get(position).getReplied().equalsIgnoreCase("2")) {
 
             if (raiolayout.getVisibility() == View.VISIBLE) {
                 raiolayout.setVisibility(View.GONE);
@@ -255,8 +250,7 @@ public class QuizPagerAdapter extends PagerAdapter {
             quiz_question_distruct.setText(StringEscapeUtils.unescapeJava(quizList.get(position).getQuestion()));
 
 
-        }
-        else if (quizList.get(position).getReplied().equalsIgnoreCase("0")) {
+        } else if (quizList.get(position).getReplied().equalsIgnoreCase("0")) {
 
             if (raiolayout.getVisibility() == View.GONE) {
                 raiolayout.setVisibility(View.VISIBLE);
@@ -310,13 +304,11 @@ public class QuizPagerAdapter extends PagerAdapter {
                     rdbtn.setTypeface(typeFace);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(quizSpecificOptionListnew.get(i - 1).getOption()));
                     rdbtn.setTextColor(Color.BLACK);
-//                    rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
+                    // rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_3)));
                     rdbtn.setTextSize(14);
 //                    rdbtn.setBackgroundResource(R.drawable.livepollback);
                     GradientDrawable border = new GradientDrawable();
-                    //border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
-                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
-                    //black border with full opacity
+                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                         rdbtn.setBackgroundDrawable(border);
                     } else {
@@ -348,7 +340,7 @@ public class QuizPagerAdapter extends PagerAdapter {
                                         /* Color.parseColor("#585e44")//disabled
                                          , Color.parseColor("#e31e24")//enabled*/
                                         Color.parseColor("#4d4d4d")//disabled
-                                        , Color.parseColor("#e4004b")//enabled
+                                        , Color.parseColor("#000000")//enabled
                                 }
                         );
 
@@ -497,10 +489,7 @@ public class QuizPagerAdapter extends PagerAdapter {
             }
         });
 
-       // quiz_title_txt.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
-//        holder.quiz_status.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
-//        holder.textViewTime.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
-//        holder.right_arrow.setColorFilter(Color.parseColor("#8C" + eventColor3Opacity40), PorterDuff.Mode.SRC_ATOP);
+        // quiz_title_txt.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1)));
 
         view.addView(myImageLayout, 0);
         return myImageLayout;

@@ -126,7 +126,7 @@ public class DocumentDetailActivity extends AppCompatActivity {
             }
         });
         String path = SharedPreference.getPref(this, DOCUMENT_MEDIA_PATH);
-        webview.loadUrl(path+url);
+        webview.loadUrl("https://docs.google.com/gview?embedded=true&url=" +path+url1);
 
         btn_share.setOnClickListener(new View.OnClickListener() {
             @Override

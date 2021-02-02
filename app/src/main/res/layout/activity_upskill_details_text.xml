@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/bg_1"
     android:orientation="vertical"
     tools:context=".ui.upskill.view.UpskillDetailsFirstActivity">
 
@@ -50,13 +51,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
+
             <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="@color/black" />
         </LinearLayout>
     </ScrollView>
 

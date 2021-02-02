@@ -68,7 +68,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_C
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 
-public class PostNewActivity extends AppCompatActivity implements View.OnClickListener, QueryListener, SuggestionsListener {
+public class PostNewActivity extends AppCompatActivity implements View.OnClickListener/*, QueryListener, SuggestionsListener */{
 
     LinearLayout ll_upload_media, ll_media_dots, linear, ll_info, ll_inner_layout, ll_post_status;//, ll_post
     EditText et_post;
@@ -88,8 +88,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     String event_id, api_token, postText = "";
     UsersAdapter usersAdapter;
     private Mentions mentions;
-    AttendeeDatabaseViewModel attendeeDatabaseViewModel;
-    List<TableAttendee> attendeeList = null;
+    //AttendeeDatabaseViewModel attendeeDatabaseViewModel;
+    //List<TableAttendee> attendeeList = null;
     View view_top, view_left, view_right, view_bottom;
 
     @Override
@@ -107,7 +107,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         CommonFirebase.firbaseAnalytics(this, "PostActivity", api_token);
         Log.d("tot_count", String.valueOf(eventAppDB.uploadMultimediaDao().getRowCount()));
         postNewsFeedViewModel = ViewModelProviders.of(this).get(PostNewsFeedViewModel.class);
-        attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
+        //attendeeDatabaseViewModel = ViewModelProviders.of(this).get(AttendeeDatabaseViewModel.class);
 
         cd = ConnectionDetector.getInstance(this);
         ll_upload_media = findViewById(R.id.ll_upload_media);
@@ -324,7 +324,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         //Tagging Functionality
-        attendeeList = new ArrayList<TableAttendee>();
+       /* attendeeList = new ArrayList<TableAttendee>();
         attendeeDatabaseViewModel.getAttendeeDetails(this);
         attendeeDatabaseViewModel.getAttendeeList().observeForever(new Observer<List<TableAttendee>>() {
             @Override
@@ -337,7 +337,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                 .queryListener(this)
                 .build();
 
-        setupMentionsList();
+        setupMentionsList();*/
     }
 
     @Override
@@ -358,12 +358,12 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                     new RefreashToken(this).callGetRefreashToken(this);
 
                     postText = et_post.getText().toString().trim();
-                    final TaggingComment comment = new TaggingComment();
+                   /* final TaggingComment comment = new TaggingComment();
                     comment.setComment(postText);
-                    comment.setMentions(mentions.getInsertedMentions());
+                    comment.setMentions(mentions.getInsertedMentions());*/
                     textData.setText(postText);
 
-                    postText = highlightMentions(textData, comment.getMentions());
+                    //postText = highlightMentions(textData, comment.getMentions());
 
                     btn_post.setEnabled(false);
                     if (resultList.size() == 0) {
@@ -537,6 +537,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         }));
     }
 
+/*
     @Override
     public void onQueryReceived(String s) {
         postNewsFeedViewModel.searchUsers(s, attendeeList);
@@ -605,6 +606,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         }
         return commentTextView.getText().toString();
     }
+*/
 
     @Override
     public void onBackPressed() {

@@ -239,6 +239,7 @@
             android:name="firebase_crashlytics_collection_enabled"
             android:value="true" />
 
+
         <activity
             android:name=".ui.livepoll.view.LivePollActivity"
             android:configChanges="keyboardHidden"

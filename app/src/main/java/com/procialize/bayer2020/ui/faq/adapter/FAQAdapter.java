@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.procialize.bayer2020.R;
+import com.procialize.bayer2020.Utility.Animations;
 import com.procialize.bayer2020.ui.faq.model.faq_item;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
     int i = 0;
 
     public FAQAdapter(Context context, List<faq_item> productLists,
-                                  FAQAdapter.ProductAdapterListner listener, String imageurl) {
+                      FAQAdapter.ProductAdapterListner listener, String imageurl) {
         this.productLists = productLists;
         this.listener = listener;
         this.context = context;
@@ -51,13 +52,20 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
         holder.iv_right_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(i==0){
-                    holder.tv_desc.setVisibility(View.VISIBLE);
+                if (holder.tv_desc.getVisibility() == View.VISIBLE) {
+                    Animations.collapse(holder.tv_desc);
+                } else {
+                    Animations.expand(holder.tv_desc);
+                }
+                /*if(i==0){
+                    Animations.expand(holder.tv_desc);
+                    //holder.tv_desc.setVisibility(View.VISIBLE);
                     i =1;
                 }else if(i==1){
-                    holder.tv_desc.setVisibility(View.GONE);
+                    Animations.collapse(holder.tv_desc);
+                   // holder.tv_desc.setVisibility(View.GONE);
                     i = 0;
-                }
+                }*/
             }
         });
 
@@ -82,9 +90,10 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
 
     public class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView iv_right_arrow ;
+        public ImageView iv_right_arrow;
         public LinearLayout ll_row;
         TextView tv_title, tv_desc;
+
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             ll_row = itemView.findViewById(R.id.ll_row);

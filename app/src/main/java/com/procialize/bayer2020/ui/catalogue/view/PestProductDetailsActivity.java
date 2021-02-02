@@ -102,8 +102,12 @@ public class PestProductDetailsActivity extends AppCompatActivity {
             }
         });
 
+        if (cd.isConnectingToInternet()) {
+            getDataFromApi(token, eventid);
+        } else {
+            Utility.createShortSnackBar(linMain, "No internet connection");
+        }
 
-        getDataFromApi(token, eventid);
 
     }
 
@@ -136,7 +140,7 @@ public class PestProductDetailsActivity extends AppCompatActivity {
                                         mTabHostCel.newTabSpec("Tab2")
                                                 .setIndicator(createTabView(PestProductDetailsActivity.this, "Recommended products")),
                                         RecommendedProductFragment.class, b);
-                                tv_title.setText(pest_item.getProduct_short_description());
+                                tv_title.setText(pest_item.getProduct_name());
                                 Glide.with(PestProductDetailsActivity.this)
                                         .load(eventLists.getPest_imagepath()+pest_item.getProduct_image())
                                         .listener(new RequestListener<Drawable>() {

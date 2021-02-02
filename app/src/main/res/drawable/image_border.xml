@@ -3,17 +3,17 @@
     android:shape="rectangle" android:innerRadius="1dp">
 
     <corners android:radius="0.5dp" />
-    // if you want clear round shape then make radius size is half of your button`s height.
-
+   <!-- // if you want clear round shape then make radius size is half of your button`s height.
+-->
 
     <solid android:color="@color/white" />
-    // Button Colour
+   <!-- // Button Colour
+-->
 
-
-    <gradient
+    <!--<gradient
         android:angle="90"
         android:endColor="@android:color/transparent"
-        android:startColor="@android:color/transparent" />
+        android:startColor="@android:color/transparent" />-->
 
     <stroke
         android:width="30dp"
