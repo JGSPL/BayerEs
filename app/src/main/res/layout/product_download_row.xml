@@ -22,7 +22,8 @@
         android:layout_weight="1"
         android:padding="10dp"
         android:text="TextView"
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        android:textColor="@color/black"/>
 
     <ImageView
         android:id="@+id/iv_right_arrow"

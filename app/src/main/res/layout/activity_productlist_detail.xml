@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:weightSum="10"
-    android:id="@+id/linMain"
-    android:orientation="vertical">
+    android:background="@mipmap/bg_1"
+    android:orientation="vertical"
+    android:weightSum="10">
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,8 +18,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:elevation="0dp">
+            app:elevation="0dp"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
             <ImageView
                 android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
@@ -25,14 +28,13 @@
                 android:layout_gravity="left"
                 android:contentDescription=" "
                 android:padding="10dp"
-                android:tint="@color/colorPink"
                 android:src="@mipmap/ic_back"
+                android:tint="@color/colorPink"
                 android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/headerlogoIv"
-                android:layout_width="50dp"
-
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription=" " />
@@ -40,9 +42,8 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="right"
-
                 android:layout_alignParentRight="true"
+                android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:gravity="center">
 
@@ -82,102 +83,108 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <com.procialize.bayer2020.fonts.RobotoTextview
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/productTitle"
-        android:textSize="16sp"
-        android:padding="5dp"
-        android:textColor="@color/black">
-    </com.procialize.bayer2020.fonts.RobotoTextview>
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/gallery_placeholder"
-        android:id="@+id/imgCover"
-        ></ImageView>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="3"
-        android:layout_margin="5dp"
-        android:orientation="horizontal">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:id="@+id/linBuyNow"
-            android:layout_gravity="center"
-            android:background="@color/colorwhite"
-            android:layout_weight="1">
-        <com.procialize.bayer2020.fonts.RobotoButton
+        android:orientation="vertical">
+
+        <com.procialize.bayer2020.fonts.RobotoTextview
+            android:id="@+id/productTitle"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textAllCaps="false"
-            android:textSize="8sp"
-            android:stateListAnimator="@null"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"></com.procialize.bayer2020.fonts.RobotoTextview>
 
-            android:drawablePadding="5dp"
-            android:background="@color/colorwhite"
-            android:drawableTop="@drawable/ic_buynow"
-            android:text="Buy Now"
-            ></com.procialize.bayer2020.fonts.RobotoButton>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:id="@+id/linCalc"
-            android:layout_gravity="center"
-            android:background="@color/colorwhite"
-            android:layout_weight="1">
-            <com.procialize.bayer2020.fonts.RobotoButton
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-            android:textSize="8sp"
-            android:drawablePadding="5dp"
-            android:background="@color/colorwhite"
-            android:layout_margin="5dp"
-                android:stateListAnimator="@null"
-            android:id="@+id/imgCalc"
-            android:drawableTop="@drawable/ic_dosage"
-            android:text="Dosage Calculator"
-            android:textAllCaps="false"
-            ></com.procialize.bayer2020.fonts.RobotoButton>
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/imgCover"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gallery_placeholder"></ImageView>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:id="@+id/linShare"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:background="@color/colorwhite"
-            android:layout_weight="1">
-            <com.procialize.bayer2020.fonts.RobotoButton
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-            android:textAllCaps="false"
-            android:textSize="8sp"
-            android:background="@color/colorwhite"
-            android:layout_margin="5dp"
-            android:stateListAnimator="@null"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            android:drawablePadding="5dp"
-            android:drawableTop="@drawable/ic_share"
-            android:text="Share"
-            ></com.procialize.bayer2020.fonts.RobotoButton>
+            <LinearLayout
+                android:id="@+id/linBuyNow"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorwhite"
+                android:gravity="center">
+
+                <com.procialize.bayer2020.fonts.RobotoButton
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/colorwhite"
+                    android:drawableTop="@drawable/ic_buynow"
+                    android:drawablePadding="5dp"
+
+                    android:stateListAnimator="@null"
+                    android:text="Buy Now"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="8sp"></com.procialize.bayer2020.fonts.RobotoButton>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linCalc"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorwhite"
+                android:gravity="center">
+
+                <com.procialize.bayer2020.fonts.RobotoButton
+                    android:id="@+id/imgCalc"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:background="@color/colorwhite"
+                    android:drawableTop="@drawable/ic_dosage"
+                    android:drawablePadding="5dp"
+                    android:stateListAnimator="@null"
+                    android:text="Dosage Calculator"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="8sp"></com.procialize.bayer2020.fonts.RobotoButton>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linShare"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@color/colorwhite"
+                android:gravity="center">
+
+                <com.procialize.bayer2020.fonts.RobotoButton
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="5dp"
+                    android:background="@color/colorwhite"
+                    android:drawableTop="@drawable/ic_share"
+                    android:drawablePadding="5dp"
+                    android:stateListAnimator="@null"
+
+                    android:text="Share"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="8sp"></com.procialize.bayer2020.fonts.RobotoButton>
+            </LinearLayout>
+
         </LinearLayout>
-
     </LinearLayout>
-</LinearLayout>
 
     <androidx.fragment.app.FragmentTabHost
         android:id="@android:id/tabhost"
@@ -187,32 +194,32 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TabWidget
                 android:id="@android:id/tabs"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="15dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"/>
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="0"
+                android:orientation="horizontal" />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="0"/>
+                android:layout_weight="0" />
 
             <FrameLayout
                 android:id="@+id/realtabcontent"
                 android:layout_width="match_parent"
-                android:layout_marginTop="5dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_marginTop="5dp"
+                android:layout_weight="1" />
 
         </LinearLayout>
     </androidx.fragment.app.FragmentTabHost>
