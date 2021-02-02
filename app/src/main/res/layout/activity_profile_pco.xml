@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/ll_main"
+    android:background="@mipmap/bg_1"
     android:orientation="vertical"
     tools:context=".ui.profile.view.ProfileActivity.ProfileActivity">
 
@@ -199,7 +200,8 @@
                             android:layout_centerInParent="true"
                             android:adjustViewBounds="true"
                             android:contentDescription="TODO"
-                            android:scaleType="centerCrop" />
+                            android:scaleType="centerCrop"
+                            android:background="@color/white"/>
                     </androidx.cardview.widget.CardView>
 
                     <ProgressBar

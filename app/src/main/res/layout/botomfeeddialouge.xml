@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-         <!--   <com.procialize.eventapp.fonts.RobotoTextview
+         <!--   <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/editIV"
                 android:gravity="center"
                 android:padding="@dimen/padding"

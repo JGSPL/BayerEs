@@ -27,7 +27,8 @@
             android:layout_weight="1"
             android:textColor="@color/black"
             android:text="TextView"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tv_desc"
@@ -39,7 +40,7 @@
 
             android:textColor="@color/black"
             android:text="TextView"
-            android:textSize="15dp" />
+            android:textSize="14dp" />
     </RelativeLayout>
 
     <ImageView

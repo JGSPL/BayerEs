@@ -24,6 +24,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
@@ -70,13 +71,14 @@ public class ProductListDetailActivity extends AppCompatActivity {
     LinearLayout linCalc,linShare, linBuyNow;
     Button imgCalc;
 
+    private ConnectionDetector cd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_productlist_detail);
 
         setUpToolbar();
-
+        cd = ConnectionDetector.getInstance(this);
         ImageView iv_back = findViewById(R.id.iv_back);
 
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -124,21 +126,20 @@ public class ProductListDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class));
-
             }
         });
         imgCalc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class));
-
             }
         });
 
-
-        getDataFromApi(token,eventid);
-
-
+        if (cd.isConnectingToInternet()) {
+            getDataFromApi(token, eventid);
+        }else {
+            Utility.createShortSnackBar(linMain, "No internet connection");
+        }
     }
 
     public void getDataFromApi(String token, String eventid) {
@@ -177,7 +178,6 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                 Bundle b = new Bundle();
                                 b.putSerializable("ProductType", (Serializable) product_item);
                                 b.putString("DocumentPath", DocumentPath);
-
                                 b.putSerializable("productDocumentList", (Serializable) Product_document_detailList);
                                 mTabHostCel.addTab(
                                         mTabHostCel.newTabSpec("Tab2")
@@ -209,10 +209,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
                         Utility.createShortSnackBar(linMain, "Failure");
                     }
                 });
-
-
     }
-
 
     private static View createTabView(final Context context, final String text) {
         View view = LayoutInflater.from(context).inflate(R.layout.catalogue_tab_bg, null);
@@ -226,6 +223,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
 
         return view;
     }
+
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {

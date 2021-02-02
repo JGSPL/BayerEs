@@ -30,7 +30,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.ApiUtils;
-import com.procialize.bayer2020.Constants.Constant;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
 import com.procialize.bayer2020.MainActivity;

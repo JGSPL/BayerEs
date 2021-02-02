@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relative"
+    android:background="@mipmap/bg_1"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -165,11 +166,12 @@
         </com.google.android.material.appbar.AppBarLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/relative_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linear">
+        android:layout_below="@+id/linear"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -314,7 +316,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:alpha="0.9"
             android:gravity="center"
             android:orientation="horizontal"
@@ -347,7 +349,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:layout_margin="10dp"
                 android:minHeight="0dp"
                 android:paddingLeft="60dp"
                 android:paddingTop="10dp"
@@ -379,5 +380,5 @@
 
 
 
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

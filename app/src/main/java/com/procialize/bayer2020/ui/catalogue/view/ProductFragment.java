@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTabHost;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.APIService;
@@ -39,10 +42,14 @@ import com.procialize.bayer2020.ui.attendee.view.AttendeeDetailActivity;
 import com.procialize.bayer2020.ui.catalogue.adapter.ProductTypeAdapter;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductType;
 import com.procialize.bayer2020.ui.catalogue.model.ProductType;
+import com.procialize.bayer2020.ui.document.model.Document;
+import com.procialize.bayer2020.ui.document.model.DocumentDetail;
+import com.procialize.bayer2020.ui.document.view.DocumentActivity;
 import com.procialize.bayer2020.ui.livepoll.adapter.LivePollAdapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -50,6 +57,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.DOCUMENT_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 
@@ -92,9 +100,23 @@ public class ProductFragment extends Fragment implements ProductTypeAdapter.Prod
                 productrefresh.setRefreshing(false);
             }
             Utility.createShortSnackBar(linMain, "No internet connection");
-
-
         }
+
+        productrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                productrefresh.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    getProductType(token,eventid);
+                } else {
+                    if (productrefresh.isRefreshing()) {
+                        productrefresh.setRefreshing(false);
+                    }
+                    Utility.createShortSnackBar(linMain, "No internet connection");
+                }
+
+            }
+        });
         return rootView;
     }
 

@@ -19,6 +19,10 @@ public class QuizList {
     @Expose
     List<QuizQuestion> quiz_question;
 
+    @SerializedName("answered")
+    @Expose
+    String answered;
+
     @SerializedName("folder_name")
     @Expose
     String folder_name;
@@ -34,6 +38,14 @@ public class QuizList {
     @SerializedName("total_quiz")
     @Expose
     String total_quiz;
+
+    public String getAnswered() {
+        return answered;
+    }
+
+    public void setAnswered(String answered) {
+        this.answered = answered;
+    }
 
     public String getTotal_quiz() {
         return total_quiz;

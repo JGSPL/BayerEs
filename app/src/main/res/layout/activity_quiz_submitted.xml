@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
+    android:background="@mipmap/bg_1"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -167,16 +168,18 @@
     </LinearLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/relative_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linear">
+        android:layout_below="@+id/linear"
+        android:orientation="vertical">
 
         <ScrollView
             android:id="@+id/scroller"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -193,6 +196,7 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:text=""
+                    android:textColor="@color/black"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
@@ -204,6 +208,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:gravity="left"
+                    android:textColor="@color/black"
                     android:padding="5dp" />
 
 
@@ -214,7 +219,7 @@
                     android:visibility="gone" />
 
 
-                <com.procialize.bayer2020.costumTools.NoScrollRecycler
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/quiz_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -286,6 +291,6 @@
 
 
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

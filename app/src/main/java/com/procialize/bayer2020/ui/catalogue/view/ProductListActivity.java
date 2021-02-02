@@ -97,10 +97,22 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
                 productrefresh.setRefreshing(false);
             }
             Utility.createShortSnackBar(relative, "No internet connection");
-
-
         }
 
+        productrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                productrefresh.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    getProductType(token,eventid);
+                } else {
+                    if (productrefresh.isRefreshing()) {
+                        productrefresh.setRefreshing(false);
+                    }
+                    Utility.createShortSnackBar(relative, "No internet connection");
+                }
+            }
+        });
     }
 
     public MutableLiveData<FetchProductList> getProductType(String token, String eventid) {
@@ -109,8 +121,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         }
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.ProductList(token,eventid,productType.getId(),"","1",""
-        )
+        eventApi.ProductList(token,eventid,productType.getId(),"","1","")
                 .enqueue(new Callback<FetchProductList>() {
                     @Override
                     public void onResponse(Call<FetchProductList> call, Response<FetchProductList> response) {
@@ -127,20 +138,14 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
                             //Fetch Livepoll list
                             if(eventLists!=null) {
                                 progressBar.setVisibility(View.GONE);
-
                                 if(eventLists.size()>0) {
-
                                      setupEventAdapter(eventLists);
                                 }else{
                                     progressBar.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
-
                                 }
-
                             }else{
-
                                 progressBar.setVisibility(View.GONE);
-
                             }
                         }
                     }

@@ -130,7 +130,7 @@
             </LinearLayout>
 
 <!--
-                <com.procialize.eventapp.fonts.RobotoButton
+                <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/ratebtn"
                     android:layout_width="0dp"
                     android:layout_height="35dp"

@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 
 public class UpskillQuizPagerAdapter extends PagerAdapter {
     private Activity activity;

@@ -2,6 +2,7 @@ package com.procialize.bayer2020.ui.quiz.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.procialize.bayer2020.ui.quiz.model.QuizQuestion;
 
 import java.util.List;
 
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 
 
@@ -72,15 +74,16 @@ public class AnswerAdapter extends RecyclerView.Adapter<AnswerAdapter.ViewHolder
                 if (correctAns.equalsIgnoreCase(SelectedAns)) {
                     holder.raiolayout.setBackgroundResource(R.drawable.quiz_correct);
                     holder.radio.setBackgroundResource(R.drawable.radiobtn_checked);
-//                    holder.radio.setColorFilter(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
+                    holder.radio.setColorFilter(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
                 } else if (option.equalsIgnoreCase(correctAns)) {
                     holder.raiolayout.setBackgroundResource(R.drawable.quiz_correct);
-                    holder.radio.setBackgroundResource(R.drawable.unchecked_radio);
+                    holder.radio.setBackgroundResource(R.drawable.checked_radio);
+                    //holder.radio.setColorFilter(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)), PorterDuff.Mode.MULTIPLY);
                 }
             } else if (option.equalsIgnoreCase(SelectedAns)) {
                 holder.raiolayout.setBackgroundResource(R.drawable.quiz_wrong);
                 holder.radio.setBackgroundResource(R.drawable.radiobtn_checked);
-//                holder.radio.setColorFilter(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
+                //holder.radio.setColorFilter(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_1)), PorterDuff.Mode.SRC_ATOP);
             }
         } catch (Exception e) {
             e.printStackTrace();

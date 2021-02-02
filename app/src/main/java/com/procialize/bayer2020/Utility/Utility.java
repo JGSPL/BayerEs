@@ -371,8 +371,6 @@ compare < 0, if date1 is smaller than date2*/
         return true;
     }
 
-
-
     public static void setupPagerIndidcatorDots(Context context,int currentPage, LinearLayout ll_dots, int size) {
 
         TextView[] dots = new TextView[size];

@@ -34,7 +34,6 @@ import com.procialize.bayer2020.ui.quiz.model.QuizListing;
 import com.procialize.bayer2020.ui.quiz.model.QuizSubmit;
 import com.procialize.bayer2020.ui.speaker.model.FetchSpeaker;
 import com.procialize.bayer2020.ui.spotQnA.model.FetchSpotQnA;
-import com.procialize.bayer2020.ui.profile.model.FetchPincode;
 import com.procialize.bayer2020.ui.upskill.model.UpskillContent;
 
 import java.util.List;

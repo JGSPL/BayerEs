@@ -86,9 +86,23 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
                 productrefresh.setRefreshing(false);
             }
             Utility.createShortSnackBar(relative, "No internet connection");
-
-
         }
+
+
+        productrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                productrefresh.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    getProductType(token,eventid);
+                } else {
+                    if (productrefresh.isRefreshing()) {
+                        productrefresh.setRefreshing(false);
+                    }
+                    Utility.createShortSnackBar(relative, "No internet connection");
+                }
+            }
+        });
         
     }
 

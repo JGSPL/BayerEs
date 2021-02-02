@@ -102,7 +102,7 @@
                     android:visibility="gone" />
             </TableRow>
 
-            <!-- <com.procialize.eventapp.fonts.RobotoTextview
+            <!-- <com.procialize.bayer2020.fonts.RobotoTextview
                  android:id="@+id/designationTv"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"

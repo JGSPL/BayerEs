@@ -229,15 +229,7 @@
             android:name="firebase_crashlytics_collection_enabled"
             android:value="true" />
 
-        <activity
-            android:name=".ui.attendeeChat.ChatListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity
-            android:name=".ui.attendeeChat.ChatActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.livepoll.view.LivePollActivity"
             android:configChanges="keyboardHidden"
@@ -249,16 +241,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.attendeeChat.activity.AttendeeChatDetail"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
         <activity
             android:name=".ui.speaker.view.SpeakerDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
-        <activity
-            android:name=".ui.attendeeChat.activity.FullScreenImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity

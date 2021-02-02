@@ -3,13 +3,6 @@ package com.procialize.bayer2020.ui.upskill.view;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -26,10 +24,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
-import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
@@ -40,13 +38,14 @@ import com.procialize.bayer2020.ui.upskill.model.UpskillList;
 import java.io.Serializable;
 import java.util.List;
 
-//import io.fabric.sdk.android.services.common.CommonUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+
+//import io.fabric.sdk.android.services.common.CommonUtils;
 
 public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillListAdapterListner {
 
@@ -58,6 +57,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
     String api_token, eventid;
     UpskillAdapter upskillAdapter;
     LinearLayout ll_main;
+    ConnectionDetector cd;
 
     public static UpskillFragment newInstance() {
         return new UpskillFragment();
@@ -83,11 +83,28 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
+        cd = ConnectionDetector.getInstance(getActivity());
 
-        getDataFromApi();
         ll_main = rootView.findViewById(R.id.ll_main);
         //Toast.makeText(getActivity(), "Coming Soon....", Toast.LENGTH_SHORT).show();
 
+        if (cd.isConnectingToInternet()) {
+            getDataFromApi();
+        } else {
+            Utility.createShortSnackBar(ll_main, "No Internet Connection");
+        }
+
+        srl_upskill.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                srl_upskill.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    getDataFromApi();
+                } else {
+                    Utility.createShortSnackBar(ll_main, "No Internet Connection");
+                }
+            }
+        });
 
         return rootView;
     }
@@ -150,7 +167,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
 
     @Override
     public void onContactSelected(UpskillList upskillList) {
-        startActivity(new Intent(getActivity(),UpskillDetailsFirstActivity.class)
+        startActivity(new Intent(getActivity(), UpskillDetailsFirstActivity.class)
                 .putExtra("upskill_info", (Serializable) upskillList));
 
     }

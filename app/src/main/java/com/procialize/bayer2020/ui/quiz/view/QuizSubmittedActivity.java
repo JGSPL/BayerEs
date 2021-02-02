@@ -1,10 +1,10 @@
 package com.procialize.bayer2020.ui.quiz.view;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,7 +35,6 @@ import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFirebase;
-import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.session.SessionManager;
@@ -51,9 +49,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
@@ -75,8 +70,9 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
     QuizSubmitedAdapter adapter;
     LinearLayoutManager llm;
     int count = 1;
-    RelativeLayout relative,relative_main;
-    ImageView iv_back,headerlogoIv;
+    RelativeLayout relative;
+    LinearLayout relative_main;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +80,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
 
         new RefreashToken(QuizSubmittedActivity.this).callGetRefreashToken(QuizSubmittedActivity.this);
 
-       /* Toolbar toolbar = findViewById(R.id.toolbar);
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -97,20 +93,17 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
                 onBackPressed();
 
             }
-        });
+        });*/
 
-        String eventColor3 = SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_3);
-
-        String eventColor3Opacity40 = eventColor3.replace("#", "");
-*/
-        iv_back = findViewById(R.id.iv_back);
+        ImageView iv_back = findViewById(R.id.iv_back);
+        ///iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        headerlogoIv = findViewById(R.id.headerlogoIv);
+        ImageView headerlogoIv = findViewById(R.id.headerlogoIv);
 
         String eventLogo = SharedPreference.getPref(this, EVENT_LOGO);
         String eventListMediaPath = SharedPreference.getPref(this, EVENT_LIST_MEDIA_PATH);
@@ -128,6 +121,10 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
                     }
                 }).into(headerlogoIv);
 
+        //String eventColor3 = SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_3);
+
+        //String eventColor3Opacity40 = eventColor3.replace("#", "");
+
         relative = findViewById(R.id.relative);
         txt_count = findViewById(R.id.txt_count);
         questionTv = findViewById(R.id.questionTv);
@@ -137,7 +134,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
         tv_header = findViewById(R.id.tv_header);
         relative_main = findViewById(R.id.relative_main);
 
-      /*  CommonFunction.showBackgroundImage(QuizSubmittedActivity.this, relative);
+        /*CommonFunction.showBackgroundImage(QuizSubmittedActivity.this, relative);
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));
         questionTv.setTextColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));
         txt_count.setTextColor(Color.parseColor("#8C" + eventColor3Opacity40));
@@ -147,7 +144,14 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
         btnNext.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));
         submit.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizSubmittedActivity.this, EVENT_COLOR_1)));*/
 
+        quiz_list.setLayoutFrozen(true);
         quiz_list.setLayoutManager(new LinearLayoutManager(QuizSubmittedActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        llm = new LinearLayoutManager(QuizSubmittedActivity.this) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         llm = (LinearLayoutManager) quiz_list.getLayoutManager();
 
         session = new SessionManager(getApplicationContext());
@@ -165,6 +169,18 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
         questionTv.setText(foldername);
 
         quizDetailViewModel = ViewModelProviders.of(this).get(QuizSubmittedViewModel.class);
+
+        quiz_list.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    quiz_list.setLayoutFrozen(true);
+                } else {
+                    quiz_list.setLayoutFrozen(false);
+                }
+                return false;
+            }
+        });
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -314,7 +330,6 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
                     } else {
                         valid = false;
                     }
-
                 }
 
 
@@ -331,11 +346,13 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
 
                 startActivity(intent);
                 finish();
-
-
             }
-
         }
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

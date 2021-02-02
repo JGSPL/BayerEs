@@ -1,6 +1,9 @@
 package com.procialize.bayer2020.ui.catalogue.view;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +14,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.procialize.bayer2020.R;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.catalogue.adapter.ProductSubPointAdapter;
 import com.procialize.bayer2020.ui.catalogue.model.Product_item;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
+
+import org.jsoup.Jsoup;
 
 import java.util.List;
 
@@ -29,6 +35,8 @@ public class ProductSubPointFragment extends Fragment implements ProductSubPoint
     TextView txtDescription;
     Product_item product_item;
 
+    String spannedString;
+    String postStatus;
     public ProductSubPointFragment() {
         // Required empty public constructor
     }
@@ -51,7 +59,24 @@ public class ProductSubPointFragment extends Fragment implements ProductSubPoint
 
         rv_recommended_product = rootView.findViewById(R.id.rv_recommended_product);
         txtDescription = rootView.findViewById(R.id.txtDescription);
-        txtDescription.setText(product_item.getProduct_long_description());
+
+
+        if (product_item.getProduct_long_description().contains("\n")) {
+            postStatus =product_item.getProduct_long_description().trim().replace("\n", "<br/>");
+        } else {
+            postStatus = product_item.getProduct_long_description().trim();
+        }
+        spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            txtDescription.setText(Utility.trimTrailingWhitespace(strPost));
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            txtDescription.setText(Utility.trimTrailingWhitespace(strPost));
+        }
+
+        //txtDescription.setText(product_item.getProduct_long_description());
         setupEventAdapter(ProductSubpointList);
         return  rootView;
     }

@@ -3,9 +3,10 @@ package com.procialize.bayer2020.ui.quiz.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class QuizQuestion {
+public class QuizQuestion implements Serializable {
 
     @SerializedName("id")
     @Expose

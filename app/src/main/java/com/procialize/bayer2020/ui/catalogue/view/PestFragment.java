@@ -74,16 +74,28 @@ public class PestFragment extends Fragment implements PestListAdapter.ProductAda
         linMain = rootView.findViewById(R.id.linMain);
 
         if (cd.isConnectingToInternet()) {
-
             getProductType(token,eventid);
         } else {
             if (productrefresh.isRefreshing()) {
                 productrefresh.setRefreshing(false);
             }
             Utility.createShortSnackBar(linMain, "No internet connection");
-
-
         }
+
+        productrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                productrefresh.setRefreshing(false);
+                if (cd.isConnectingToInternet()) {
+                    getProductType(token,eventid);
+                } else {
+                    if (productrefresh.isRefreshing()) {
+                        productrefresh.setRefreshing(false);
+                    }
+                    Utility.createShortSnackBar(linMain, "No internet connection");
+                }
+            }
+        });
         return rootView;
     }
 
