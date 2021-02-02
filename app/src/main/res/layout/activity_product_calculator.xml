@@ -32,7 +32,7 @@
 
             <ImageView
                 android:id="@+id/headerlogoIv"
-                android:layout_width="50dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription=" " />
@@ -174,7 +174,7 @@
                 android:textColor="@color/black"
                 android:textSize="15dp" />
 
-            <EditText
+           <!-- <EditText
                 android:id="@+id/txt_area"
                 android:layout_width="0dp"
                 android:layout_weight="3"
@@ -182,9 +182,25 @@
                 android:padding="5dp"
                 android:inputType="number"
                 android:layout_height="40dp"
-                >
+                > </EditText>-->
+                <com.procialize.bayer2020.fonts.RobotoEditext
+                    android:id="@+id/txt_area"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:imeOptions="actionDone"
 
-            </EditText>
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="2dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/cell_border"
+
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:inputType="number"
+                    android:maxLength="10"/>
+
+
+
 
 
         </TableRow>
@@ -221,6 +237,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="3"
                 android:text="10"
+                android:textColor="@color/black"
+
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
                 android:layout_height="40dp">
@@ -250,6 +268,8 @@
                 android:id="@+id/txt_quantity"
                 android:layout_width="0dp"
                 android:layout_weight="3"
+                android:textColor="@color/black"
+
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
                 android:layout_height="55dp"
@@ -284,6 +304,8 @@
                 android:layout_weight="3"
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
+                android:textColor="@color/black"
+
                 android:lines="2"
                 android:layout_height="55dp"
                 >
@@ -320,7 +342,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:layout_gravity="center"
-                android:text="0"
+                android:hint="0"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+
                 android:textColor="@color/black"
                 android:textSize="15dp" />
 
@@ -335,7 +360,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:layout_gravity="center"
-                android:text="0"
+                android:hint="0"
                 android:textColor="@color/black"
                 android:textSize="15dp" />
 

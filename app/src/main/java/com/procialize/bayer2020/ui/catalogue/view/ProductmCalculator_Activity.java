@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -83,7 +84,7 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
 
 
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
-                R.array.amount_array, android.R.layout.simple_spinner_item);
+                R.array.amount_array1, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -105,9 +106,11 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
                 // do something upon option selection
                 conversionValue = parent.getItemAtPosition(position).toString();
                 // if(txt_area.getText().toString().isEmpty()) {
-                if (conversionValue.equalsIgnoreCase("Square foot")) {
+                if (conversionValue.equalsIgnoreCase("Square feet")) {
                     String value = edtAmountConvert.getText().toString();
-                    Double fvalue = Float.parseFloat(value)*10.7;
+                   // Double fvalue = Float.parseFloat(value)*10.7;
+                    Double fvalue = Double.parseDouble(value);
+
                     txtAmountConvert.setText(String.valueOf(fvalue));
 
                 } else if (conversionValue.equalsIgnoreCase("Square meter")) {
@@ -121,57 +124,6 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
             public void onNothingSelected(AdapterView<?> parent)
             {
                 // can leave this empty
-            }
-        });
-
-        txt_area.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // You can identify which key pressed buy checking keyCode value
-                // with KeyEvent.KEYCODE_
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    // this is for backspace
-                    txt_area.getText().clear();
-                }
-                return false;
-            }
-        });
-
-        txt_area.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_UP) ||
-                        (keyCode == KeyEvent.KEYCODE_ENTER) || (keyCode == KeyEvent.KEYCODE_NAVIGATE_NEXT)) {
-                    // Perform action on key press
-
-                    try {
-
-                        if (txt_area.getText().toString().isEmpty()) {
-                            Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
-                            return false;
-                        } else {
-
-                            String txt_score = txt_area.toString().trim();
-                            String txt_total = product_dosage_detailList.get(0).getDiluted_solution_quantity();
-
-                            if (txt_score.equalsIgnoreCase("")) {
-                                Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Long mPointtotal = Long.parseLong(txt_score) * Long.parseLong(txt_total);
-                                String s1 = String.valueOf(mPointtotal);
-                                String res = s1.replace(".", "");
-                               txt_quantity.setText(res);
-                            }
-                            txt_area.setFocusable(false);
-                            txt_area.setEnabled(false);
-                            return true;
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                return false;
             }
         });
 
@@ -201,6 +153,44 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
             txt_quan.setText(product_dosage_detailList.get(0).getAmount_unit());
             txt_quantity.setText(product_dosage_detailList.get(0).getAmount_unit());
             txt_quantitySolu.setText(product_dosage_detailList.get(0).getDiluted_solution_quantity());
+
+            txt_area.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if ( (actionId == EditorInfo.IME_ACTION_DONE) || ((event.getKeyCode() == KeyEvent.KEYCODE_ENTER) && (event.getAction() == KeyEvent.ACTION_DOWN ))){
+                        try {
+
+                            if (txt_area.getText().toString().isEmpty()) {
+                                Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
+                                return false;
+                            } else {
+
+                                String txt_score = txt_area.getText().toString().trim();
+                                String txt_total = product_dosage_detailList.get(0).getDiluted_solution_quantity();
+
+                                if (txt_score.equalsIgnoreCase("")) {
+                                    Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Double mPointtotal = Double.parseDouble(txt_score) * Double.parseDouble(txt_total);
+                                    String s1 = String.valueOf(mPointtotal);
+                                    String res = s1.replace(".", "");
+                                    txt_quantity.setText(res);
+                                }
+                                //txt_area.setFocusable(false);
+                               // txt_area.setEnabled(false);
+                                return true;
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+            });
 
         }
 
