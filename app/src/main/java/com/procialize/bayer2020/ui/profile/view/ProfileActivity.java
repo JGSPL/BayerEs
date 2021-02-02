@@ -202,9 +202,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         et_pincode = findViewById(R.id.et_pincode);
         spinner = findViewById(R.id.spinner);
         ArrayAdapter<String>adapter = new ArrayAdapter<String>(ProfileActivity.this,
-                android.R.layout.simple_spinner_item,year);
+                R.layout.spinner_item,year);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
