@@ -1,10 +1,13 @@
 package com.procialize.bayer2020.ui.loyalityleap.view;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -30,7 +33,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_L
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
 public class ScheameOfferDetail_Activity extends AppCompatActivity {
-    String api_token,event_id;
+    String api_token,event_id, docurl;
     Toolbar mToolbar;
     ImageView headerlogoIv;
     Scheme_offer_item ScheameList;
@@ -58,12 +61,56 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
         });
 
 
-        String eulaLink = ScheameList.getDescription() ;
+        /*String eulaLink = ScheameList.getDescription() ;
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
        // webView.loadUrl(eulaLink);
-        webView.loadData(eulaLink, "text/html", "UTF-8");
+        webView.loadData(eulaLink, "text/html", "UTF-8");*/
+        docurl = getIntent().getStringExtra("url");
+
+        String eulaLink = docurl+ScheameList.getDescription() ;
+
+        final WebView webview = (WebView) findViewById(R.id.webview_scheame);
+        webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webview.setBackgroundColor(Color.TRANSPARENT);
+
+        WebSettings settings = webview.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setDomStorageEnabled(true);
+        settings.setDatabaseEnabled(true);
+        settings.setAppCacheEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
+
+
+
+        webview.clearCache(true);
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setPluginState(WebSettings.PluginState.ON);
+
+        webview.loadUrl(eulaLink);
+
+
+        webview.setWebViewClient(new WebViewClient() {
+            boolean checkhasOnPageStarted = false;
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                checkhasOnPageStarted = true;
+            }
+
+            public void onPageFinished(WebView view, String url) {
+                if (view.getTitle().equals(""))
+                    view.reload();
+            }
+        });
+
 
     }
     private void setUpToolbar() {

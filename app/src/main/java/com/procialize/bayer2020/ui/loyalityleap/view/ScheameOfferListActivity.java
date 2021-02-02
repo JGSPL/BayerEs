@@ -33,6 +33,7 @@ import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.ui.catalogue.view.ProductDocumentDetailActivity;
 import com.procialize.bayer2020.ui.catalogue.view.ProductListDetailActivity;
 import com.procialize.bayer2020.ui.document.model.Document;
 import com.procialize.bayer2020.ui.document.model.DocumentDetail;
@@ -65,7 +66,7 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
     String eventid;
     String token;
     RelativeLayout relative;
-    String Imageurl;
+    String Imageurl, fileurl;
     private APIService eventApi;
     Toolbar mToolbar;
     ImageView headerlogoIv;
@@ -137,6 +138,7 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
                             Imageurl = response.body().getImagepath();
+                            fileurl =  response.body().getFilepath();
 
                             String strCommentList =response.body().getDetail();
                             RefreashToken refreashToken = new RefreashToken(ScheameOfferListActivity.this);
@@ -240,7 +242,12 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
 
     @Override
     public void onContactSelected(Scheme_offer_item scheameList) {
-        startActivity(new Intent(this, ScheameOfferDetail_Activity.class)
-                .putExtra("ScheameList", (Serializable) scheameList));
+        /*startActivity(new Intent(this, ScheameOfferDetail_Activity.class)
+                .putExtra("ScheameList", (Serializable) scheameList));*/
+
+        Intent pdfview = new Intent(this, ScheameOfferDetail_Activity.class);
+        pdfview.putExtra("ScheameList",(Serializable) scheameList);
+        pdfview.putExtra("url", "https://docs.google.com/gview?embedded=true&url=" + fileurl);
+        startActivity(pdfview);
     }
 }

@@ -29,6 +29,18 @@ public class FetchSchemeOffer {
     @Expose
     private String imagepath;
 
+    @SerializedName("filepath")
+    @Expose
+    private String filepath;
+
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+    }
+
     public List<Header> getHeader() {
         return header;
     }

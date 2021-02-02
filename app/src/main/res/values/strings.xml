@@ -60,9 +60,13 @@
     <string-array name="any_array">
         <item>Any</item>
     </string-array>
+    <string-array name="amount_array1">
+        <item>Square feet</item>
+
+    </string-array>
 
     <string-array name="amount_array">
-        <item>Square foot</item>
+        <item>Square feet</item>
         <item>Square meter</item>
 
     </string-array>
