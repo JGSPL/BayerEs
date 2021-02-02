@@ -1,6 +1,8 @@
 package com.procialize.bayer2020.ui.storelocator.view;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -32,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -70,6 +74,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener
 {
     private Marker myMarker;
+    Dialog dialog;
 
     private  String api_token;
     ImageView iv_back;
@@ -141,7 +146,13 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
        /* if (marker.equals(myMarker))
         {*/
             //handle click here
-            getDistributerNameList(api_token,"1",marker.getTitle());
+        if(marker.getSnippet().equalsIgnoreCase("main")) {
+            getDistributerNameList(api_token, "1", marker.getTitle());
+        }else {
+            String str = marker.getSnippet();
+            String[] splitStr = str.split("\\@+");
+            openMoreDetails(splitStr[0].toString(), splitStr[1].toString(), splitStr[2].toString());
+        }
 
        // }
         return false;
@@ -192,8 +203,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                                                 Double.parseDouble(profileDetails.get(i).getLatitude()),
                                                 Double.parseDouble(profileDetails.get(i).getLongitude())))
                                         .title(profileDetails.get(i).getState())
-                                        .snippet(profileDetails.get(0).getDistributor_count() +
-                                                profileDetails.get(0).getCity())
+                                        .snippet("main")
                                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                                 map.setOnMarkerClickListener(StoreLocatorActivity.this);
 
@@ -242,11 +252,11 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
 
 
                             for (int i = 0; i < profileDetails.size(); i++) {
+                                String arg[] = {profileDetails.get(i).getCompany_name(), profileDetails.get(i).getMobile(), profileDetails.get(i).getAddress()};
                                 // Create a marker for each city in the JSON data.
                                 map.addMarker(new MarkerOptions()
                                         .title(profileDetails.get(i).getState())
-                                        .snippet(profileDetails.get(0).getCity())
-                                        //.snippet(Integer.toString(jsonObj.getInt("population")))
+                                        .snippet(profileDetails.get(i).getCompany_name()+ "@" + profileDetails.get(i).getMobile()+ "@" + profileDetails.get(i).getAddress())
                                         .position(new LatLng(
                                                 Double.parseDouble(profileDetails.get(i).getLatitude()),
                                                 Double.parseDouble(profileDetails.get(i).getLongitude())
@@ -281,7 +291,30 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
         });
     }
 
+    public void openMoreDetails(final String company, final String mobile, final String address) {
 
+
+        dialog = new BottomSheetDialog(this);
+        dialog.setContentView(R.layout.dialog_maptext);
+
+
+        TextView tvCompanyName = dialog.findViewById(R.id.tvCompanyName);
+        TextView tvMobile = dialog.findViewById(R.id.tvMobile);
+        TextView tvAddress = dialog.findViewById(R.id.tvAddress);
+        ImageView ivClose = dialog.findViewById(R.id.ivClose);
+
+        tvCompanyName.setText(company);
+        tvMobile.setText("Mobile: "+mobile);
+        tvAddress.setText("Address: "+ address);
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+
+    }
 
 }
 
