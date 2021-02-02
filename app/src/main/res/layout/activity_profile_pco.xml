@@ -165,7 +165,44 @@
                         android:src="@drawable/image_border" />
 
 
+                    <ImageView
+                        android:id="@+id/iv_profile"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:layout_centerInParent="true"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop" />
+
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/myCardView"
+                        android:layout_width="140dp"
+                        android:layout_height="140dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/image_border">
+
+
+                        <RelativeLayout
+                            android:id="@+id/rl_update_pic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:alpha="20"
+                            android:background="#70000000"
+                            android:gravity="bottom">
+
+                            <ImageView
+                                android:id="@+id/iv_change_profile"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_gravity="bottom"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_camera"
+                                android:tint="@color/white" />
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+                    <!--<androidx.cardview.widget.CardView
                         android:id="@+id/myCardView"
                         android:layout_width="140dp"
                         android:layout_height="140dp"
@@ -202,7 +239,7 @@
                             android:contentDescription="TODO"
                             android:scaleType="centerCrop"
                             android:background="@color/white"/>
-                    </androidx.cardview.widget.CardView>
+                    </androidx.cardview.widget.CardView>-->
 
                     <ProgressBar
                         android:id="@+id/progressView"
@@ -441,13 +478,12 @@
                         android:src="@drawable/ic_location"
                         android:visibility="gone" />
 
-                    <com.procialize.bayer2020.fonts.RobotoEditext
+                    <com.procialize.bayer2020.fonts.RobotoTextview
                         android:id="@+id/et_mobno"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:inputType="number"
-
                         android:background="@color/transperent"
                         android:singleLine="true"
                         android:textSize="13dp"
@@ -618,11 +654,12 @@
                         android:textSize="13dp" />
                 </LinearLayout>
                 <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:id="@+id/tv_designation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
-                    android:text="Designation"
+                    android:text="Designation*"
                     android:textColor="@color/textcolorLight" />
                 <RadioGroup
                     android:layout_width="fill_parent"

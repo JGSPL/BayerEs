@@ -21,13 +21,13 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +42,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
@@ -53,7 +51,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-//import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -67,7 +64,6 @@ import com.procialize.bayer2020.Utility.CommonFirebase;
 import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
-import com.procialize.bayer2020.costumTools.CustomAutoCompleteTextView;
 import com.procialize.bayer2020.ui.profile.model.FetchPincode;
 import com.procialize.bayer2020.ui.profile.model.Pincode_item;
 import com.procialize.bayer2020.ui.profile.model.Profile;
@@ -90,8 +86,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Header;
-import retrofit2.http.Part;
 
 import static com.procialize.bayer2020.Constants.Constant.REQUEST_CAMERA;
 import static com.procialize.bayer2020.Constants.Constant.SELECT_FILE;
@@ -122,20 +116,22 @@ import static com.procialize.bayer2020.Utility.Utility.getImageUri;
 import static com.procialize.bayer2020.Utility.Utility.getRealPathFromURI;
 import static com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel.mCurrentPhotoPath;
 
+//import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+
 public class ProfilePCOActivity extends AppCompatActivity implements View.OnClickListener {
     public static final int RequestPermissionCode = 101;
     RelativeLayout ll_main;
-    LinearLayout ll_aspociated, ll_sapcode, ll_location, ll_emailid,ll_alternetmobno2,ll_alternetmobno3,
+    LinearLayout ll_aspociated, ll_sapcode, ll_location, ll_emailid, ll_alternetmobno2, ll_alternetmobno3,
             ll_alternetmobno, ll_organisation, ll_name, ll_last_name, ll_designation, ll_company_name,
             ll_city, ll_email, ll_mobno, ll_bg;
-    EditText et_aspociated, et_sapcode, et_pincode, et_emailid, et_alternetmobno, et_mobno, et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile,
-            et_state, et_alternetmobno2,et_alternetmobno3 ;
+    EditText et_aspociated, et_sapcode, et_pincode, et_emailid, et_alternetmobno,  et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile,
+            et_state, et_alternetmobno2, et_alternetmobno3;
     ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
     RadioGroup radiogroupPCO;
     RadioButton radioButton4, radioButton3, radioButton2, radioButton1;
     View view_down;
-    TextView tv_profile_pic, tv_header,txtaltno;
+    TextView tv_profile_pic, tv_header, txtaltno,et_mobno;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
     String event_id, profile_pic = "";
@@ -145,17 +141,18 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     UCrop.Options options;
     File file;
     Spinner spinner;
+    boolean isCheckeddesignation = false;
     String api_token, first_name, last_name, designation, company_name, city, email,
-            mobile, is_god, alternate_no, turnover, license, pincode="",
-            no_of_technician="", no_of_pco_served="", associated_since="", sap_code="", attendee_id="", user_type="", state="";
+            mobile, is_god, alternate_no, turnover, license, pincode = "",
+            no_of_technician = "", no_of_pco_served = "", associated_since = "", sap_code = "", attendee_id = "", user_type = "", state = "";
     ArrayList pincodeData = new ArrayList();
     MultipartBody.Part body;
-    RadioGroup radiogroupPCOType,radiogroupDesig;
-    RadioButton radioPCO,radioOwer, radioother, radioOwner, radioTech,radioManager;
+    RadioGroup radiogroupPCOType, radiogroupDesig;
+    RadioButton radioPCO, radioOwer, radioother, radioOwner, radioTech, radioManager;
     AutoCompleteTextView atv_pincode;
-    TextView txtAnnualOrg,txtDomain, txttectcount,tvOrgnisation;
-    CheckBox checkResPest, checkcomPest, checkTermite,checkMosquito;
-    String technician,turnOver,altno2,altNO3;
+    TextView txtAnnualOrg, txtDomain, txttectcount, tvOrgnisation, tv_designation;
+    CheckBox checkResPest, checkcomPest, checkTermite, checkMosquito;
+    String technician, turnOver, altno2, altNO3;
     ArrayList specializtion = new ArrayList();
 
     @Override
@@ -202,6 +199,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         iv_back = findViewById(R.id.iv_back);
         view_down = findViewById(R.id.view_down);
         tvOrgnisation = findViewById(R.id.tvOrgnisation);
+        tv_designation = findViewById(R.id.tv_designation);
 
         iv_profile = findViewById(R.id.iv_profile);
         iv_change_profile = findViewById(R.id.iv_change_profile);
@@ -253,14 +251,13 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 String mosquito;
 
                 // Check which checkbox was clicked
-                if (checked){
+                if (checked) {
                     // Do your coding
-                    mosquito = (String)checkMosquito.getTag();
+                    mosquito = (String) checkMosquito.getTag();
                     specializtion.add("0");
-                }
-                else{
+                } else {
                     // Do your coding
-                    mosquito = (String)checkMosquito.getTag();
+                    mosquito = (String) checkMosquito.getTag();
                     specializtion.remove("0");
                 }
             }
@@ -272,14 +269,13 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 String mosquito;
 
                 // Check which checkbox was clicked
-                if (checked){
+                if (checked) {
                     // Do your coding
-                    mosquito = (String)checkResPest.getTag();
+                    mosquito = (String) checkResPest.getTag();
                     specializtion.add("1");
-                }
-                else{
+                } else {
                     // Do your coding
-                    mosquito = (String)checkResPest.getTag();
+                    mosquito = (String) checkResPest.getTag();
                     specializtion.remove("1");
                 }
             }
@@ -292,14 +288,13 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 String mosquito;
 
                 // Check which checkbox was clicked
-                if (checked){
+                if (checked) {
                     // Do your coding
-                    mosquito = (String)checkTermite.getTag();
+                    mosquito = (String) checkTermite.getTag();
                     specializtion.add("3");
-                }
-                else{
+                } else {
                     // Do your coding
-                    mosquito = (String)checkMosquito.getTag();
+                    mosquito = (String) checkMosquito.getTag();
                     specializtion.remove("3");
                 }
             }
@@ -312,47 +307,43 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 String mosquito;
 
                 // Check which checkbox was clicked
-                if (checked){
+                if (checked) {
                     // Do your coding
-                    mosquito = (String)checkMosquito.getTag();
+                    mosquito = (String) checkMosquito.getTag();
                     specializtion.add("2");
-                }
-                else{
+                } else {
                     // Do your coding
-                    mosquito = (String)checkMosquito.getTag();
+                    mosquito = (String) checkMosquito.getTag();
                     specializtion.remove("2");
                 }
             }
         });
 
 
-        radiogroupPCO.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
+        radiogroupPCO.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // This will get the radiobutton that has changed in its check state
-                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                RadioButton checkedRadioButton = (RadioButton) group.findViewById(checkedId);
                 // This puts the value (true/false) into the variable
                 boolean isChecked = checkedRadioButton.isChecked();
                 // If the radiobutton that has changed in check state is now checked...
-                if (isChecked)
-                {
+                if (isChecked) {
                     // Changes the textview's text to "Checked: example radiobutton text"
                     no_of_pco_served = checkedRadioButton.getText().toString();
-                    if(no_of_pco_served.equalsIgnoreCase("Less than Rs. 10 lacs")) {
+                    if (no_of_pco_served.equalsIgnoreCase("Less than Rs. 10 lacs")) {
                         turnOver = "0";
 
-                    }else if(no_of_pco_served.equalsIgnoreCase("Rs. 10 to 25 lacs")) {
+                    } else if (no_of_pco_served.equalsIgnoreCase("Rs. 10 to 25 lacs")) {
                         turnOver = "1";
-                    }else if(no_of_pco_served.equalsIgnoreCase("Rs. 25 to 50 lacs")) {
+                    } else if (no_of_pco_served.equalsIgnoreCase("Rs. 25 to 50 lacs")) {
                         turnOver = "2";
-                    }else if(no_of_pco_served.equalsIgnoreCase("Rs. 50 lacs to 1 crore")) {
+                    } else if (no_of_pco_served.equalsIgnoreCase("Rs. 50 lacs to 1 crore")) {
                         turnOver = "3";
-                    }else if(no_of_pco_served.equalsIgnoreCase("Rs. 1 crore to 1.5 crore")) {
+                    } else if (no_of_pco_served.equalsIgnoreCase("Rs. 1 crore to 1.5 crore")) {
                         turnOver = "4";
-                    }else if(no_of_pco_served.equalsIgnoreCase("Above Rs. 2 crore")) {
+                    } else if (no_of_pco_served.equalsIgnoreCase("Above Rs. 2 crore")) {
                         turnOver = "5";
-                    }else{
+                    } else {
                         turnOver = "";
                     }
 
@@ -360,45 +351,39 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        radiogroupDesig.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
+        radiogroupDesig.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // This will get the radiobutton that has changed in its check state
-                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                RadioButton checkedRadioButton = (RadioButton) group.findViewById(checkedId);
                 // This puts the value (true/false) into the variable
-                boolean isChecked = checkedRadioButton.isChecked();
+                isCheckeddesignation = checkedRadioButton.isChecked();
                 // If the radiobutton that has changed in check state is now checked...
-                if (isChecked)
-                {
+                if (isCheckeddesignation) {
                     // Changes the textview's text to "Checked: example radiobutton text"
                     String des = checkedRadioButton.getText().toString();
-                    if(des.equalsIgnoreCase("Owner")) {
+                    if (des.equalsIgnoreCase("Owner")) {
                         designation = "0";
 
-                    }else if(des.equalsIgnoreCase("Technician")) {
+                    } else if (des.equalsIgnoreCase("Technician")) {
                         designation = "1";
-                    }else if(des.equalsIgnoreCase("Manager/Admin/Other")) {
+                    } else if (des.equalsIgnoreCase("Manager/Admin/Other")) {
                         designation = "2";
                     }
                 }
             }
         });
 
-        radiogroupPCOType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
+        radiogroupPCOType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // This will get the radiobutton that has changed in its check state
-                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                RadioButton checkedRadioButton = (RadioButton) group.findViewById(checkedId);
                 // This puts the value (true/false) into the variable
                 boolean isChecked = checkedRadioButton.isChecked();
                 // If the radiobutton that has changed in check state is now checked...
-                if (isChecked)
-                {
+                if (isChecked) {
                     // Changes the textview's text to "Checked: example radiobutton text"
                     String user_typeText = checkedRadioButton.getText().toString();
-                    if(user_typeText.equalsIgnoreCase("Pest Control Operator")){
+                    if (user_typeText.equalsIgnoreCase("Pest Control Operator")) {
                         ll_alternetmobno.setVisibility(View.VISIBLE);
 
                         ll_alternetmobno2.setVisibility(View.VISIBLE);
@@ -412,10 +397,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         ll_sapcode.setVisibility(View.VISIBLE);
                         txttectcount.setVisibility(View.VISIBLE);
                         radiogroupDesig.setVisibility(View.VISIBLE);
+                        tv_designation.setVisibility(View.VISIBLE);
                         tvOrgnisation.setVisibility(View.VISIBLE);
                         user_type = "PO";
 
-                    }else if(user_typeText.equalsIgnoreCase("Home/office owner")){
+                    } else if (user_typeText.equalsIgnoreCase("Home/office owner")) {
                         ll_alternetmobno.setVisibility(View.GONE);
 
                         ll_alternetmobno2.setVisibility(View.GONE);
@@ -431,9 +417,10 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         tvOrgnisation.setVisibility(View.GONE);
 
                         radiogroupDesig.setVisibility(View.GONE);
+                        tv_designation.setVisibility(View.GONE);
                         user_type = "HO";
 
-                    }else{
+                    } else {
                         ll_organisation.setVisibility(View.GONE);
                         tvOrgnisation.setVisibility(View.GONE);
 
@@ -448,6 +435,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         ll_sapcode.setVisibility(View.GONE);
                         txttectcount.setVisibility(View.GONE);
                         radiogroupDesig.setVisibility(View.GONE);
+                        tv_designation.setVisibility(View.GONE);
                         user_type = "O";
 
 
@@ -455,8 +443,6 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         });
-
-
 
 
         atv_pincode.addTextChangedListener(new TextWatcher() {
@@ -487,9 +473,6 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         });
 
 
-
-
-
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(this, EVENT_ID);
 
@@ -506,7 +489,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                         String data = refreashToken.decryptedData(strEventList);
                         JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                        ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                        ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                        }.getType());
 
                         // List<ProfileDetails> profileDetails = profile.getProfileDetails();
                         if (profileDetails.size() > 0) {
@@ -528,9 +512,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             is_god = profileDetails.get(0).getIs_god();
                             alternate_no = profileDetails.get(0).getAlternate_no();
                             state = profileDetails.get(0).getState();
-                           // pincode = profileDetails.get(0).getPincode();
+                            // pincode = profileDetails.get(0).getPincode();
                             user_type = profileDetails.get(0).getUser_type();
-                           // tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
+                            // tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
 
 
                             et_first_name.setText(first_name);
@@ -540,23 +524,23 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             et_sapcode.setText(no_of_technician);
                             et_organisation.setText(company_name);
                             et_emailid.setText(email);
-                            if(alternate_no!=null) {
+                            if (alternate_no != null) {
                                 et_alternetmobno.setText(alternate_no);
                             }
                             atv_pincode.setText(pincode);
-                            if(pincode!=null || pincode!="") {
+                            if (pincode != null || pincode != "") {
                                 getState(atv_pincode.getText().toString());
                             }
 
-                           // et_state.setText(state);
-                            if(user_type.equalsIgnoreCase("PO")){
-                                ((RadioButton)radiogroupPCOType.getChildAt(0)).setChecked(true);
+                            // et_state.setText(state);
+                            if (user_type.equalsIgnoreCase("PO")) {
+                                ((RadioButton) radiogroupPCOType.getChildAt(0)).setChecked(true);
 
-                            }else if(user_type.equalsIgnoreCase("HO")){
-                                ((RadioButton)radiogroupPCOType.getChildAt(1)).setChecked(true);
+                            } else if (user_type.equalsIgnoreCase("HO")) {
+                                ((RadioButton) radiogroupPCOType.getChildAt(1)).setChecked(true);
 
-                            }else if(user_type.equalsIgnoreCase("O")){
-                                ((RadioButton)radiogroupPCOType.getChildAt(2)).setChecked(true);
+                            } else if (user_type.equalsIgnoreCase("O")) {
+                                ((RadioButton) radiogroupPCOType.getChildAt(2)).setChecked(true);
 
                             }
 
@@ -578,30 +562,25 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                             }
                                         }).into(iv_profile);
                             }
-
                         }
-
-                    }else
-                    {
-                        Toast.makeText(ProfilePCOActivity.this,"Internal server error", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfilePCOActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Profile> call, Throwable t) {
                     try {
-                        Toast.makeText(ProfilePCOActivity.this,"Failure", Toast.LENGTH_SHORT).show();
-                    }catch (Exception e)
-                    {}
+                        Toast.makeText(ProfilePCOActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                    }
                 }
             });
 
-        }
-        else
-        {
+        } else {
             first_name = SharedPreference.getPref(getApplicationContext(), KEY_FNAME);
             last_name = SharedPreference.getPref(getApplicationContext(), KEY_LNAME);
-            designation =SharedPreference.getPref(getApplicationContext(), KEY_DESIGNATION);
+            designation = SharedPreference.getPref(getApplicationContext(), KEY_DESIGNATION);
             company_name = SharedPreference.getPref(getApplicationContext(), KEY_COMPANY);
             city = SharedPreference.getPref(getApplicationContext(), KEY_CITY);
             email = SharedPreference.getPref(getApplicationContext(), KEY_EMAIL);
@@ -659,26 +638,29 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 state = et_state.getText().toString();
 
                 if (connectionDetector.isConnectingToInternet()) {
-                    if(user_type.equalsIgnoreCase("PO")){
+                    if (user_type.equalsIgnoreCase("PO")) {
                         if (et_first_name.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
 
-                        }else if (et_last_name.getText().toString().isEmpty()) {
+                        } else if (et_last_name.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
 
-                        }else if (atv_pincode.getText().toString().isEmpty()) {
+                        } else if (atv_pincode.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter pincode for proceed", Toast.LENGTH_SHORT).show();
 
-                        }else if (et_emailid.getText().toString().isEmpty()) {
+                        } else if (et_emailid.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter emailId for proceed", Toast.LENGTH_SHORT).show();
 
-                        }else if (et_organisation.getText().toString().isEmpty()) {
+                        } else if (!Patterns.EMAIL_ADDRESS.matcher(et_emailid.getText().toString().trim()).matches()) {
+                            Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
+
+                        } else if (et_organisation.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter company name for proceed", Toast.LENGTH_SHORT).show();
 
-                        }else if (designation.isEmpty()) {
-                            Toast.makeText(this, "Please select any designation for proceed", Toast.LENGTH_SHORT).show();
+                        } else if (isCheckeddesignation == false) {
+                            Toast.makeText(this, "Please select designation", Toast.LENGTH_SHORT).show();
 
-                        }else if (specializtion.isEmpty()) {
+                        } else if (specializtion.isEmpty()) {
                             Toast.makeText(this, "Please select any specialization", Toast.LENGTH_SHORT).show();
 
                         } else {
@@ -686,56 +668,55 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                     user_type, state, no_of_technician, specializtion.toString(), "1", pincode, "", "");
                         }
 
-
-                    }else if(user_type.equalsIgnoreCase("HO")){
+                    } else if (user_type.equalsIgnoreCase("HO")) {
                         if (et_first_name.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
 
-                        }else if (et_last_name.getText().toString().isEmpty()) {
+                        } else if (et_last_name.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
 
-                        }else if (atv_pincode.getText().toString().isEmpty()) {
+                        } else if (atv_pincode.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter pincode for proceed", Toast.LENGTH_SHORT).show();
 
-                        }else if (et_emailid.getText().toString().isEmpty()) {
+                        } else if (et_emailid.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter emailId for proceed", Toast.LENGTH_SHORT).show();
+
+                        } else if (!Patterns.EMAIL_ADDRESS.matcher(et_emailid.getText().toString().trim()).matches()) {
+                            Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
 
                         } else {
                             saveProfileHO(first_name, last_name, mobile, email, pincode, city, state, profile_pic, user_type);
                         }
 
-                    }else{
+                    } else {
                         if (et_first_name.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
 
-                        }else if (et_last_name.getText().toString().isEmpty()) {
+                        } else if (et_last_name.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
 
-                        }else if (atv_pincode.getText().toString().isEmpty()) {
+                        } else if (atv_pincode.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter pincode for proceed", Toast.LENGTH_SHORT).show();
 
-                        }else if (et_emailid.getText().toString().isEmpty()) {
+                        } else if (et_emailid.getText().toString().isEmpty()) {
                             Toast.makeText(this, "Please enter emailId for proceed", Toast.LENGTH_SHORT).show();
+
+                        } else if (!Patterns.EMAIL_ADDRESS.matcher(et_emailid.getText().toString().trim()).matches()) {
+                            Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
 
                         } else {
                             saveProfileHO(first_name, last_name, mobile, email, pincode, city, state, profile_pic, user_type);
                         }
-
                     }
-
-
                 } else {
                     Utility.createShortSnackBar(ll_main, "No Internet connection");
                 }
                 break;
             case R.id.iv_change_profile:
-
                 selectImage();
-
                 break;
             case R.id.iv_back:
                 onBackPressed();
-
                 break;
         }
     }
@@ -758,7 +739,6 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             profileActivityViewModel.cameraIntent(ProfilePCOActivity.this);
                         }
                     }
-
                 } else if (items[item].equals("Choose from Gallery")) {
                     userChoosenTask = "Choose from Gallery";
                     if (result) {
@@ -1072,12 +1052,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-
     public void saveProfilePCO(final String first_name, final String last_name, final String designation,
-                            final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String alternate_no,
-                            final String user_type,final String state,final String technician, final String specializations, final String turnOver, final String pincode,final String maltno2, final String maltno3) {
+                               final String company_name, final String city, final String email, final String mobile, final String profile_pic, final String alternate_no,
+                               final String user_type, final String state, final String technician, final String specializations, final String turnOver, final String pincode, final String maltno2, final String maltno3) {
 
-        if(!profile_pic.isEmpty()) {
+        if (!profile_pic.isEmpty()) {
             File file = new File(profile_pic);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/png"), file);
             body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
@@ -1107,14 +1086,14 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
         if (body == null) {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,
-                    altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token, mEvent_id, muser_type, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile,
+                    altno1, altno2, altno3, mCompany_name, mstate, mnooftect, mspecilization, mturnOver, mPincode).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
 
                         if (response != null) {
-                            if ( response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                            if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
 
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
@@ -1122,7 +1101,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                                 String data = refreashToken.decryptedData(strEventList);
                                 JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                                }.getType());
 
                                 HashMap<String, String> map = new HashMap<>();
                                 map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
@@ -1135,7 +1115,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 //map.put(KEY_TOKEN, "");
                                 map.put(KEY_CITY, profileDetails.get(0).getCity());
                                 //map.put(KEY_GCM_ID, "");
-                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
@@ -1172,7 +1152,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
             ApiUtils.getAPIService().updateProfile(api_token,
                     mEvent_id,
-                    muser_type,mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode,
+                    muser_type, mFirst_name, mLast_name, mDesignation, mCity, mEmail, mMobile, altno1, altno2, altno3, mCompany_name, mstate, mnooftect, mspecilization, mturnOver, mPincode,
                     body).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
@@ -1187,7 +1167,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                                 String data = refreashToken.decryptedData(strEventList);
                                 JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                                }.getType());
 
                                 HashMap<String, String> map = new HashMap<>();
                                 map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
@@ -1200,7 +1181,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 //map.put(KEY_TOKEN, "");
                                 map.put(KEY_CITY, profileDetails.get(0).getCity());
                                 //map.put(KEY_GCM_ID, "");
-                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
@@ -1238,11 +1219,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    public void saveProfileHO(final String first_name, final String last_name, final String mobile,final String email,
-                              final String pincode  ,final String city,final String state,  final String profile_pic,
-                            final String user_type) {
+    public void saveProfileHO(final String first_name, final String last_name, final String mobile, final String email,
+                              final String pincode, final String city, final String state, final String profile_pic,
+                              final String user_type) {
 
-        if(!profile_pic.isEmpty()) {
+        if (!profile_pic.isEmpty()) {
             File file = new File(profile_pic);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/png"), file);
             body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
@@ -1262,13 +1243,13 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
         if (body == null) {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mEmail,mMobile,mpincode,mCity,mstate).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token, mEvent_id, muser_type, mFirst_name, mLast_name, mEmail, mMobile, mpincode, mCity, mstate).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
 
                         if (response != null) {
-                            if ( response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                            if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
 
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
@@ -1276,7 +1257,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                                 String data = refreashToken.decryptedData(strEventList);
                                 JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                                }.getType());
 
                                 HashMap<String, String> map = new HashMap<>();
                                 map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
@@ -1289,7 +1271,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 //map.put(KEY_TOKEN, "");
                                 map.put(KEY_CITY, profileDetails.get(0).getCity());
                                 //map.put(KEY_GCM_ID, "");
-                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
@@ -1324,7 +1306,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             });
         } else {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,mFirst_name,mLast_name,mEmail,mMobile,mpincode,mCity,mstate,body).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token, mEvent_id, muser_type, mFirst_name, mLast_name, mEmail, mMobile, mpincode, mCity, mstate, body).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
@@ -1338,7 +1320,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                                 String data = refreashToken.decryptedData(strEventList);
                                 JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                                }.getType());
 
                                 HashMap<String, String> map = new HashMap<>();
                                 map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
@@ -1351,7 +1334,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 //map.put(KEY_TOKEN, "");
                                 map.put(KEY_CITY, profileDetails.get(0).getCity());
                                 //map.put(KEY_GCM_ID, "");
-                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
@@ -1566,8 +1549,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         return inSampleSize;
     }
 
-    public void setDynamicColor()
-    {
+    public void setDynamicColor() {
         btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         ll_bg.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         view_down.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
@@ -1595,68 +1577,68 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-void getPincode( String pin) {
-    ApiUtils.getAPIService().PincodeList(api_token, event_id, pin).enqueue(new Callback<FetchPincode>() {
-        @Override
-        public void onResponse(Call<FetchPincode> call, Response<FetchPincode> response) {
-            if (response.isSuccessful()) {
-                try {
-                String strEventList = response.body().getDetail();
-                RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
-                String data = refreashToken.decryptedData(strEventList);
+    void getPincode(String pin) {
+        ApiUtils.getAPIService().PincodeList(api_token, event_id, pin).enqueue(new Callback<FetchPincode>() {
+            @Override
+            public void onResponse(Call<FetchPincode> call, Response<FetchPincode> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String strEventList = response.body().getDetail();
+                        RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
+                        String data = refreashToken.decryptedData(strEventList);
 
-                    JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                    ArrayList<Pincode_item> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<Pincode_item>>() {
-                    }.getType());
+                        JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                        ArrayList<Pincode_item> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<Pincode_item>>() {
+                        }.getType());
 
-                    // List<ProfileDetails> profileDetails = profile.getProfileDetails();
+                        // List<ProfileDetails> profileDetails = profile.getProfileDetails();
 
-                    if (profileDetails.size() > 0) {
+                        if (profileDetails.size() > 0) {
 
-                        for (int i = 0; i < profileDetails.size(); i++) {
-                            pincodeData.add(profileDetails.get(i).getPincode());
+                            for (int i = 0; i < profileDetails.size(); i++) {
+                                pincodeData.add(profileDetails.get(i).getPincode());
+
+                            }
+                            //Creating the instance of ArrayAdapter containing list of language names
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                                    (ProfilePCOActivity.this, android.R.layout.select_dialog_item, pincodeData);
+
+                            atv_pincode.setAdapter(adapter);
+
+                            atv_pincode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                                        long id) {
+                                    Toast.makeText(ProfilePCOActivity.this, " selected", Toast.LENGTH_LONG).show();
+                                    pincode = atv_pincode.getText().toString();
+                                    getState(atv_pincode.getText().toString());
+                                }
+                            });
 
                         }
-                        //Creating the instance of ArrayAdapter containing list of language names
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                                (ProfilePCOActivity.this, android.R.layout.select_dialog_item, pincodeData);
-
-                        atv_pincode.setAdapter(adapter);
-
-                        atv_pincode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View arg1, int pos,
-                                                    long id) {
-                                Toast.makeText(ProfilePCOActivity.this, " selected", Toast.LENGTH_LONG).show();
-                                pincode = atv_pincode.getText().toString();
-                                getState(atv_pincode.getText().toString());
-                            }
-                        });
+                    } catch (Exception e) {
+                        Toast.makeText(ProfilePCOActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                        atv_pincode.setText("");
 
                     }
-                }catch (Exception e){
-                    Toast.makeText(ProfilePCOActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
-                    atv_pincode.setText("");
 
+                } else {
+                    Toast.makeText(ProfilePCOActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
                 }
-
-            } else {
-                Toast.makeText(ProfilePCOActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
             }
-        }
 
-        @Override
-        public void onFailure(Call<FetchPincode> call, Throwable t) {
-            try {
-                Toast.makeText(ProfilePCOActivity.this, "Failure", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
+            @Override
+            public void onFailure(Call<FetchPincode> call, Throwable t) {
+                try {
+                    Toast.makeText(ProfilePCOActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                }
             }
-        }
-    });
-}
+        });
+    }
 
-    void getState( String pin) {
+    void getState(String pin) {
         ApiUtils.getAPIService().CityState(api_token, event_id, pin).enqueue(new Callback<FetchPincode>() {
             @Override
             public void onResponse(Call<FetchPincode> call, Response<FetchPincode> response) {
@@ -1664,12 +1646,12 @@ void getPincode( String pin) {
                     String strEventList = response.body().getDetail();
                     RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                     String data = refreashToken.decryptedData(strEventList);
-                 //   JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
+                    //   JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
                    /* ArrayList<Pincode_item> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<Pincode_item>>() {
                     }.getType());*/
                     Pincode_item pincodeLists = new Gson().fromJson(data, new TypeToken<Pincode_item>() {
                     }.getType());
-                    if(pincodeLists!=null){
+                    if (pincodeLists != null) {
                         et_city.setText(pincodeLists.getCity());
                         et_state.setText(pincodeLists.getState());
 
