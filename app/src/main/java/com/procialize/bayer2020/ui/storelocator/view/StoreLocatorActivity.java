@@ -3,16 +3,22 @@ package com.procialize.bayer2020.ui.storelocator.view;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -146,12 +152,14 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
        /* if (marker.equals(myMarker))
         {*/
             //handle click here
+
         if(marker.getSnippet().equalsIgnoreCase("main")) {
             getDistributerNameList(api_token, "1", marker.getTitle());
         }else {
             String str = marker.getSnippet();
             String[] splitStr = str.split("\\@+");
             openMoreDetails(splitStr[0].toString(), splitStr[1].toString(), splitStr[2].toString());
+
         }
 
        // }
@@ -198,13 +206,19 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                                                 Double.parseDouble(profileDetails.get(i).getLongitude())
                                         ))
                                 );*/
+
+                                View marker = ((LayoutInflater)StoreLocatorActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
+                                TextView tv_marker_text = (TextView) marker.findViewById(R.id.tv_marker_text);
+                                tv_marker_text.setText(profileDetails.get(i).getDistributor_count());
+
                                 myMarker = map.addMarker(new MarkerOptions()
                                         .position(new LatLng(
                                                 Double.parseDouble(profileDetails.get(i).getLatitude()),
                                                 Double.parseDouble(profileDetails.get(i).getLongitude())))
                                         .title(profileDetails.get(i).getState())
                                         .snippet("main")
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                        .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(StoreLocatorActivity.this, marker))));
+                                       // .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                                 map.setOnMarkerClickListener(StoreLocatorActivity.this);
 
 
@@ -252,16 +266,23 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
 
 
                             for (int i = 0; i < profileDetails.size(); i++) {
-                                String arg[] = {profileDetails.get(i).getCompany_name(), profileDetails.get(i).getMobile(), profileDetails.get(i).getAddress()};
                                 // Create a marker for each city in the JSON data.
+
+                                View marker = ((LayoutInflater)StoreLocatorActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
+                                TextView tv_marker_text = (TextView) marker.findViewById(R.id.tv_marker_text);
+                                tv_marker_text.setText("1");
+
                                 map.addMarker(new MarkerOptions()
                                         .title(profileDetails.get(i).getState())
+                                        .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(StoreLocatorActivity.this, marker)))
                                         .snippet(profileDetails.get(i).getCompany_name()+ "@" + profileDetails.get(i).getMobile()+ "@" + profileDetails.get(i).getAddress())
                                         .position(new LatLng(
                                                 Double.parseDouble(profileDetails.get(i).getLatitude()),
                                                 Double.parseDouble(profileDetails.get(i).getLongitude())
-                                        ))
-                                );
+                                        )));
+
+
+
 
                                // clusterManager.addItem( new ClusterMarkerLocation( new LatLng(  Double.parseDouble(profileDetails.get(i).getLatitude()), Double.parseDouble(profileDetails.get(i).getLongitude() ) )));
 
@@ -315,6 +336,19 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
         dialog.show();
 
     }
+    private Bitmap createDrawableFromView(Context context, View view) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+        view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+        view.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
 
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        return bitmap;
+    }
 }
 
