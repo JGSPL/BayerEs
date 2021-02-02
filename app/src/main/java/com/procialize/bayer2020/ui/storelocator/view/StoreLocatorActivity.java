@@ -222,6 +222,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                                 map.setOnMarkerClickListener(StoreLocatorActivity.this);
 
 
+
                             }
 
 

@@ -140,8 +140,8 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
         txt_area.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_UP) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                if ((event.getAction() == KeyEvent.ACTION_UP) ||
+                        (keyCode == KeyEvent.KEYCODE_ENTER) || (keyCode == KeyEvent.KEYCODE_NAVIGATE_NEXT)) {
                     // Perform action on key press
 
                     try {
