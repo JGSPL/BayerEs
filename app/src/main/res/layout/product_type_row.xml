@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         android:background="@color/trans"
         android:id="@+id/mainLL"
-        app:cardBackgroundColor="@color/activetab"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp">
 
@@ -32,6 +31,7 @@
                     android:layout_centerInParent="true"
                     android:layout_marginLeft="0dp"
                     android:layout_marginTop="0dp"
+                    android:src="@drawable/gallery_placeholder"
                     android:layout_marginRight="0dp"
                     android:contentDescription="TODO"
                     android:scaleType="centerCrop" />

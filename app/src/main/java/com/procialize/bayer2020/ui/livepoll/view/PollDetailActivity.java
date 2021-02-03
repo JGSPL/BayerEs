@@ -230,8 +230,15 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
 
             if (viewGroup.isSelected()) {
                 for (int i = 0; i < optionLists.size(); i++) {
-                    test.setText(StringEscapeUtils.unescapeJava(optionLists.get(i).getOption()));
+                   /* test.setText(StringEscapeUtils.unescapeJava(optionLists.get(i).getOption()));
                     if (optionLists.get(i).getOption().equalsIgnoreCase(test.getText().toString())) {
+
+                        quiz_options_id = optionLists.get(i)
+                                .getOption_id();
+
+                    }*/
+                    test.setText(optionLists.get(i).getOption_id());
+                    if (optionLists.get(i).getOption_id().equalsIgnoreCase(test.getText().toString())) {
 
                         quiz_options_id = optionLists.get(i)
                                 .getOption_id();
@@ -434,6 +441,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
                     rdbtn.setId((row * 2) + i);
                     rdbtn.setText(StringEscapeUtils.unescapeJava(optionLists.get(i - 1).getOption()));
                     rdbtn.setTextColor(Color.parseColor("#000000"));
+                    rdbtn.setHint(optionLists.get(i-1).getOption_id());
                     rdbtn.setOnClickListener(this);
 
                     radios.add(rdbtn);
@@ -543,16 +551,25 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
         } else {
 
             String option = ((RadioButton) v).getText().toString();
+            String option2 = ((RadioButton) v).getHint().toString();
 
-            for (RadioButton radio : radios) {
+           /* for (RadioButton radio : radios) {
                 if (!radio.getText().equals(option)) {
 
                     radio.setChecked(false);
 
                 }
 
-            }
+            }*/
 
+            for (RadioButton radio : radios) {
+                if (!radio.getHint().equals(option2)) {
+
+                    radio.setChecked(false);
+
+                }
+
+            }
             for (int i = 0; i < optionLists.size(); i++) {
                 test.setText(StringEscapeUtils.unescapeJava(optionLists.get(i).getOption()));
                 if (option.equalsIgnoreCase(test.getText().toString())) {
