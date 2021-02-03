@@ -1,6 +1,7 @@
 package com.procialize.bayer2020.Constants;
 
 
+import com.procialize.bayer2020.GetterSetter.BaseResponse;
 import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
 import com.procialize.bayer2020.GetterSetter.resendOTP;
 import com.procialize.bayer2020.GetterSetter.validateOTP;
@@ -736,4 +737,14 @@ public interface APIService {
     Call<FetchAgenda> DistributorListFetch(@Header("authorization") String authorization,
                                                @Field("event_id") String event_id,
                                               @Field("state") String state);
+
+    @POST("analytics_api/all_analytics")
+    @FormUrlEncoded
+    Call<BaseResponse> getUserActivityReport(@Header("authorization") String api_access_token,
+                                             @Field("event_id") String event_id,
+                                             @Field("object_id") String file_id,
+                                             @Field("activity_type") String event_type,
+                                             @Field("page_name") String page_name,
+                                             @Field("page_id") String page_id);
+
 }

@@ -107,11 +107,15 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
                 conversionValue = parent.getItemAtPosition(position).toString();
                 // if(txt_area.getText().toString().isEmpty()) {
                 if (conversionValue.equalsIgnoreCase("Square feet")) {
-                    String value = edtAmountConvert.getText().toString();
-                   // Double fvalue = Float.parseFloat(value)*10.7;
-                    Double fvalue = Double.parseDouble(value);
+                    try {
+                        String value = edtAmountConvert.getText().toString();
+                        // Double fvalue = Float.parseFloat(value)*10.7;
+                        Double fvalue = Double.parseDouble(value);
 
-                    txtAmountConvert.setText(String.valueOf(fvalue));
+                        txtAmountConvert.setText(String.valueOf(fvalue));
+                    }catch (Exception e){
+
+                    }
 
                 } else if (conversionValue.equalsIgnoreCase("Square meter")) {
                     String value = edtAmountConvert.getText().toString();

@@ -36,6 +36,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFunction;
+import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.session.SessionManager;
 
@@ -69,7 +70,7 @@ public class DocumentDetailActivity extends AppCompatActivity {
     String api_token, event_id;
     ProgressBar progressBar;
     String url = "";
-    String url1 = "";
+    String url1 = "", DocId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class DocumentDetailActivity extends AppCompatActivity {
 
         url = getIntent().getStringExtra("url");
         url1 = getIntent().getStringExtra("url1");
+        DocId = getIntent().getStringExtra("DocId");
 
       /*  iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);*/
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +120,16 @@ public class DocumentDetailActivity extends AppCompatActivity {
         settings.setDatabaseEnabled(true);
         settings.setAppCacheEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
+        //--------------------------------------------------------------------------------------
+        GetUserActivityReport getUserActivityReport = new GetUserActivityReport(this,api_token,
+                event_id,
+                DocId,
+                "downloads_document_view",
+                "downloads",
+                "8");
+        getUserActivityReport.userActivityReport();
+        //--------------------------------------------------------------------------------------
 
         webview.setWebChromeClient(new WebChromeClient() {
 

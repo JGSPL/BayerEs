@@ -140,7 +140,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
 
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.ProductDetails(token, "1", "1")
+        eventApi.ProductDetails(token, "1", productId)
                 .enqueue(new Callback<FetchProductDetail>() {
                     @Override
                     public void onResponse(Call<FetchProductDetail> call, Response<FetchProductDetail> response) {
@@ -184,20 +184,32 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                 linCalc.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class)
-                                                .putExtra("ProductDosage", (Serializable) product_dosage_detailList)
-                                               . putExtra("ProductName", product_item.getProduct_name())
-                                        );
+
+                                        if(product_dosage_detailList.size()>0) {
+                                            startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class)
+                                                    .putExtra("ProductDosage", (Serializable) product_dosage_detailList)
+                                                    .putExtra("ProductName", product_item.getProduct_name())
+                                            );
+                                        }else{
+                                            Utility.createShortSnackBar(linMain, "Data not available");
+
+                                        }
 
                                     }
                                 });
                                 imgCalc.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class)
-                                                .putExtra("ProductDosage", (Serializable) product_dosage_detailList)
-                                                . putExtra("ProductName", product_item.getProduct_name())
-                                        );
+                                        if(product_dosage_detailList.size()>0) {
+
+                                            startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class)
+                                                    .putExtra("ProductDosage", (Serializable) product_dosage_detailList)
+                                                    .putExtra("ProductName", product_item.getProduct_name())
+                                            );
+                                        }else{
+                                            Utility.createShortSnackBar(linMain, "Data not available");
+
+                                        }
                                     }
                                 });
 

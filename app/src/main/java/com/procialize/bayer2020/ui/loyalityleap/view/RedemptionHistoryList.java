@@ -288,7 +288,7 @@ public class RedemptionHistoryList extends AppCompatActivity implements RedeemHi
     public MutableLiveData<FetchRedeemHistoryStatus> getRedeemStatus(String token, String eventid, String  id) {
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.RedemptionHistoryDetails(token,eventid,"1")
+        eventApi.RedemptionHistoryDetails(token,eventid,id)
                 .enqueue(new Callback<FetchRedeemHistoryStatus>() {
                     @Override
                     public void onResponse(Call<FetchRedeemHistoryStatus> call, Response<FetchRedeemHistoryStatus> response) {

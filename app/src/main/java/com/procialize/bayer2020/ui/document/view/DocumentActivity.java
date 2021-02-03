@@ -38,6 +38,7 @@ import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFirebase;
 import com.procialize.bayer2020.Utility.CommonFunction;
+import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.session.SessionManager;
@@ -255,6 +256,17 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
     public void onMoreSelected(DocumentDetail event, int position) {
         String path = SharedPreference.getPref(DocumentActivity.this, DOCUMENT_MEDIA_PATH);
         new DownloadFile().execute(path + event.getDocument_file_name());
+
+        //--------------------------------------------------------------------------------------
+        GetUserActivityReport getUserActivityReport = new GetUserActivityReport(this,api_token,
+                event_id,
+                event.getDoc_id(),
+                "downloads_document_download",
+                "downloads",
+                "8");
+        getUserActivityReport.userActivityReport();
+        //--------------------------------------------------------------------------------------
+
     }
 
     private class DownloadFile extends AsyncTask<String, String, String> {

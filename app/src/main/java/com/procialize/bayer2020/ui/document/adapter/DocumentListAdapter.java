@@ -71,6 +71,8 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
                 Intent pdfview = new Intent(context, DocumentDetailActivity.class);
                 pdfview.putExtra("url", "https://docs.google.com/gview?embedded=true&url=" + doc.getDocument_file_name());
                 pdfview.putExtra("url1", doc.getDocument_file_name());
+                pdfview.putExtra("DocId", doc.getDoc_id());
+
                 context.startActivity(pdfview);
             }
         });
