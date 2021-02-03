@@ -938,12 +938,10 @@
                     android:text="Annual organization turnover"
                     android:textColor="@color/textcolorLight" />
 
-                <com.whygraphics.multilineradiogroup.MultiLineRadioGroup xmlns:multi_line_radio_group="http://schemas.android.com/apk/res-auto"
+                <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/radiogroupPCO"
-                    multi_line_radio_group:default_button="button_2"
-                    multi_line_radio_group:max_in_row="1">
+                    android:id="@+id/radiogroupPCO">
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -997,7 +995,7 @@
                         android:textColor="@color/textcolorLight"  />
 
                     />
-                </com.whygraphics.multilineradiogroup.MultiLineRadioGroup>
+                </RadioGroup>
 
 
                 <com.procialize.bayer2020.fonts.RobotoButton

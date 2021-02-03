@@ -1,16 +1,22 @@
 package com.procialize.bayer2020.Constants;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.auth0.android.jwt.JWT;
 import com.procialize.bayer2020.ConnectionDetector;
+import com.procialize.bayer2020.Database.EventAppDB;
 import com.procialize.bayer2020.GetterSetter.validateOTP;
+import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.SharedPreferencesConstant;
 import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.session.SessionManager;
+import com.procialize.bayer2020.ui.eventList.view.EventListActivity;
+import com.procialize.bayer2020.ui.login.view.LoginActivity;
 
 import java.util.HashMap;
 
@@ -92,51 +98,103 @@ public class RefreashToken {
 
         map.put(EXPIRY_TIME, jwt.getClaim("expiry_time").asString());
         SharedPreference.putPref(context, map);
-
     }
 
-    public void GetRefreashToken(String username, String otp, String access_token) {
-        mApiService.getRefreashToken("1", username, otp, access_token).enqueue(new Callback<validateOTP>() {
+    public void GetRefreashToken(final String username, final String otp, String access_token) {
+
+        Log.e("Refresh Token===>", access_token);
+        Log.e("username===>", username);
+        Log.e("otp===>", otp);
+        Log.e("access_token===>", access_token);
+       /* Toast.makeText(context, "username ====> "+username, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "otp ====> "+otp, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "access_token ====> "+access_token, Toast.LENGTH_SHORT).show();*/
+
+        mApiService.getRefreashToken("0", username, otp, access_token).enqueue(new Callback<validateOTP>() {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
-                    RefreashToken refreashToken = new RefreashToken(context);
-                    String data = refreashToken.decryptedData(response.body().getToken().toString().trim());
-                    refreashToken.decodeRefreashToken(data);
+                    if(response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
+                        otpValidate(username, otp);
+                    }else {
 
+                        RefreashToken refreashToken = new RefreashToken(context);
+                        String data = refreashToken.decryptedData(response.body().getToken().toString().trim());
+                        refreashToken.decodeRefreashToken(data);
+                        Log.e("token===>", data);
+                    }
                 } else {
                     if (response.body() != null) {
-
-                        Toast.makeText(context, "Invalid Token", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.body().toString(), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context, "Invalid Token", Toast.LENGTH_SHORT).show();
+                        SessionManager.clearCurrentEvent(context);
+                        SessionManager.logoutUser(context);
+                        //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                        EventAppDB.getDatabase(context).newsFeedDao().deleteNewsFeed();
+                        EventAppDB.getDatabase(context).newsFeedDao().deleteNewsFeedMedia();
+                        context.startActivity(new Intent(context, LoginActivity.class));
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<validateOTP> call, Throwable t) {
-
+                //Toast.makeText(context, "Invalid Token", Toast.LENGTH_SHORT).show();
+                SessionManager.clearCurrentEvent(context);
+                SessionManager.logoutUser(context);
+                //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                EventAppDB.getDatabase(context).newsFeedDao().deleteNewsFeed();
+                EventAppDB.getDatabase(context).newsFeedDao().deleteNewsFeedMedia();
+                context.startActivity(new Intent(context, LoginActivity.class));
             }
         });
     }
 
     public void callGetRefreashToken(Context context) {
-        if(ConnectionDetector.getInstance(context).isConnectingToInternet()) {
+        if (ConnectionDetector.getInstance(context).isConnectingToInternet()) {
             String expirytime = SharedPreference.getPref(context, SharedPreferencesConstant.EXPIRY_TIME);
             String timestamp_expiry = Utility.getDate(Long.parseLong(expirytime));
             boolean isvalidtoken = Utility.isTimeGreater(String.valueOf(timestamp_expiry));
             String accesstoken = SharedPreference.getPref(context, KEY_TOKEN);
-            String accesstoken1 =accesstoken;
+            Log.e("Access Token===>", accesstoken);
+            String accesstoken1 = accesstoken;
             if (isvalidtoken == false) {
                 String username = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_EMAIL);
                 String otp = SharedPreference.getPref(context, SharedPreferencesConstant.OTP);
                 String accesstoken2 = SharedPreference.getPref(context, KEY_TOKEN);
                 mApiService = ApiUtils.getAPIService();
+
+
+                String api_token = SharedPreference.getPref(context, AUTHERISATION_KEY);
+                JWT jwt = new JWT(api_token);
+                accesstoken2 = jwt.getClaim("refresh_token").asString();
                 GetRefreashToken(username, otp, accesstoken2);
             } else {
                 Log.d("TAG", "Token is already refreashed");
             }
         }
+    }
+
+    private void otpValidate(String username, final String otp) {
+        mApiService.validateOTP("0", username, otp).enqueue(new Callback<validateOTP>() {
+            @Override
+            public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
+                if (response.isSuccessful()) {
+                    RefreashToken refreashToken = new RefreashToken(context);
+                    String data = refreashToken.decryptedData(response.body().getToken().toString().trim());
+                    refreashToken.decodeRefreashToken(data);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(SharedPreferencesConstant.OTP, otp);
+                    String authorizationtolen= CommonFunction.stripquotes(data);
+                    map.put(AUTHERISATION_KEY, authorizationtolen);
+                    SharedPreference.putPref(context, map);
+                } else {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<validateOTP> call, Throwable t) {
+            }
+        });
     }
 }
