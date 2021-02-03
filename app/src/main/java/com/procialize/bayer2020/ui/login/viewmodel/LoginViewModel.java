@@ -189,6 +189,8 @@ public class LoginViewModel extends BaseObservable {
     public boolean isInputDataValid() {
         if (getloginEmail() == null || getloginEmail().isEmpty())
             return false;
+        else if (getloginEmail().length()<10)
+            return false;
         /*else if (getloginPassword() == null || getloginPassword().isEmpty())
             return false;
         else if (TextUtils.isEmpty(getloginEmail()) || !Patterns.EMAIL_ADDRESS.matcher(getloginEmail()).matches() || getloginPassword().length() < 5)
