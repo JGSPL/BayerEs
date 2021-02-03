@@ -25,6 +25,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.R;
+import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.ui.Contactus.ContactUsActivity;
 import com.procialize.bayer2020.ui.catalogue.model.Product_document_detail;
@@ -34,6 +35,8 @@ import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
@@ -42,7 +45,7 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     ImageView headerlogoIv;
-    String token, eventid, docurl, productId = "1";
+    String token, eventid, docurl, productId = "1", DocId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +62,12 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+        token = SharedPreference.getPref(this, AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(this, EVENT_ID);
 
 
         docurl = getIntent().getStringExtra("url");
+        DocId = getIntent().getStringExtra("DocId");
         String eulaLink = docurl ;
 
         final WebView webview = (WebView) findViewById(R.id.webview_scheame);
@@ -88,6 +94,17 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
             webview.getSettings().setPluginState(WebSettings.PluginState.ON);
 
         webview.loadUrl(eulaLink);
+
+        //--------------------------------------------------------------------------------------
+        GetUserActivityReport getUserActivityReport = new GetUserActivityReport(this,token,
+                eventid,
+                DocId,
+                "product_document_view",
+                "Product Document",
+                "10");
+        getUserActivityReport.userActivityReport();
+        //--------------------------------------------------------------------------------------
+
 
 
         webview.setWebViewClient(new WebViewClient() {

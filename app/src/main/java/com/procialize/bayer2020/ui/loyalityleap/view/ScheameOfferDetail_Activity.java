@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
+import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.ui.catalogue.model.ProductType;
 import com.procialize.bayer2020.ui.loyalityleap.model.Scheme_offer_item;
@@ -87,6 +88,15 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
         settings.setAppCacheEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
+        //--------------------------------------------------------------------------------------
+        GetUserActivityReport getUserActivityReport = new GetUserActivityReport(this,api_token,
+                event_id,
+                ScheameList.getId(),
+                "scheme_and_offer_view",
+                "scheme_and_offer",
+                "7");
+        getUserActivityReport.userActivityReport();
+        //--------------------------------------------------------------------------------------
 
 
 

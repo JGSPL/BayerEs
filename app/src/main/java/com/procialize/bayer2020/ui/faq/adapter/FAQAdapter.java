@@ -14,9 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.Animations;
+import com.procialize.bayer2020.Utility.GetUserActivityReport;
+import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.ui.faq.model.faq_item;
 
 import java.util.List;
+
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 
 public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolder> {
 
@@ -24,7 +29,7 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
     private Context context;
     private FAQAdapter.ProductAdapterListner listener;
     private LayoutInflater inflater;
-    String imageurl;
+    String imageurl,token,eventid;
     int i = 0;
 
     public FAQAdapter(Context context, List<faq_item> productLists,
@@ -33,6 +38,9 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
         this.listener = listener;
         this.context = context;
         this.imageurl = imageurl;
+
+        token = SharedPreference.getPref(context, AUTHERISATION_KEY);
+        eventid = SharedPreference.getPref(context, EVENT_ID);
 
     }
 
@@ -59,6 +67,17 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
                     holder.iv_right_arrow.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus));
 
                 } else {
+
+                    //--------------------------------------------------------------------------------------
+                    GetUserActivityReport getUserActivityReport = new GetUserActivityReport(context,token,
+                            eventid,
+                            productType.getId(),
+                            "faq_view",
+                            "faq",
+                            "9");
+                    getUserActivityReport.userActivityReport();
+                    //--------------------------------------------------------------------------------------
+
                     Animations.expand(holder.tv_desc);
                    // holder.iv_right_arrow.setBackgroundResource(R.drawable.ic_cross);
                     holder.iv_right_arrow.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_cross));
