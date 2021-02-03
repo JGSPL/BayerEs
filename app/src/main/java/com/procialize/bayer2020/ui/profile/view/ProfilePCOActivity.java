@@ -124,14 +124,14 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     LinearLayout ll_aspociated, ll_sapcode, ll_location, ll_emailid, ll_alternetmobno2, ll_alternetmobno3,
             ll_alternetmobno, ll_organisation, ll_name, ll_last_name, ll_designation, ll_company_name,
             ll_city, ll_email, ll_mobno, ll_bg;
-    EditText et_aspociated, et_sapcode, et_pincode, et_emailid, et_alternetmobno,  et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile,
+    EditText et_aspociated, et_sapcode, et_pincode, et_emailid, et_alternetmobno, et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile,
             et_state, et_alternetmobno2, et_alternetmobno3;
     ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
     RadioGroup radiogroupPCO;
-    RadioButton radioButton4, radioButton3, radioButton2, radioButton1;
+    RadioButton radioButton6,radioButton5,radioButton4, radioButton3, radioButton2, radioButton1;
     View view_down;
-    TextView tv_profile_pic, tv_header, txtaltno,et_mobno;
+    TextView tv_profile_pic, tv_header, txtaltno, et_mobno;
     Button btn_save;
     ProfileActivityViewModel profileActivityViewModel;
     String event_id, profile_pic = "";
@@ -143,7 +143,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     Spinner spinner;
     boolean isCheckeddesignation = false;
     String api_token, first_name, last_name, designation, company_name, city, email,
-            mobile, is_god, alternate_no, turnover, license, pincode = "",
+            mobile, is_god, alternate_no, alternate_no2, alternate_no3, license, pincode = "",
             no_of_technician = "", no_of_pco_served = "", associated_since = "", sap_code = "", attendee_id = "", user_type = "", state = "";
     ArrayList pincodeData = new ArrayList();
     MultipartBody.Part body;
@@ -152,8 +152,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     AutoCompleteTextView atv_pincode;
     TextView txtAnnualOrg, txtDomain, txttectcount, tvOrgnisation, tv_designation;
     CheckBox checkResPest, checkcomPest, checkTermite, checkMosquito;
-    String technician, turnOver, altno2, altNO3;
+    String technician, turnOver, altno1, altno2, altNO3;
     ArrayList specializtion = new ArrayList();
+    boolean isCheckedPCO= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +211,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         et_emailid = findViewById(R.id.et_emailid);
         et_sapcode = findViewById(R.id.et_sapcode);
         tv_profile_pic = findViewById(R.id.tv_profile_pic);
+        radioButton5 = findViewById(R.id.radioButton5);
+        radioButton6 = findViewById(R.id.radioButton6);
         radioButton4 = findViewById(R.id.radioButton4);
         radioButton3 = findViewById(R.id.radioButton3);
         radioButton2 = findViewById(R.id.radioButton2);
@@ -325,9 +328,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 // This will get the radiobutton that has changed in its check state
                 RadioButton checkedRadioButton = (RadioButton) group.findViewById(checkedId);
                 // This puts the value (true/false) into the variable
-                boolean isChecked = checkedRadioButton.isChecked();
+                isCheckedPCO = checkedRadioButton.isChecked();
                 // If the radiobutton that has changed in check state is now checked...
-                if (isChecked) {
+                if (isCheckedPCO) {
                     // Changes the textview's text to "Checked: example radiobutton text"
                     no_of_pco_served = checkedRadioButton.getText().toString();
                     if (no_of_pco_served.equalsIgnoreCase("Less than Rs. 10 lacs")) {
@@ -508,14 +511,37 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             pincode = profileDetails.get(0).getPincode();
                             //   license = profileDetails.get(0).getLicense();
                             //specialization = profileDetails.get(0).getSpecialization();
-                            turnover = profileDetails.get(0).getTurnover();
+                            turnOver = profileDetails.get(0).getTurnover();
                             is_god = profileDetails.get(0).getIs_god();
                             alternate_no = profileDetails.get(0).getAlternate_no();
+                            alternate_no2 = profileDetails.get(0).getAlternate_no_2();
+                            alternate_no3 = profileDetails.get(0).getAlternate_no_3();
                             state = profileDetails.get(0).getState();
                             // pincode = profileDetails.get(0).getPincode();
                             user_type = profileDetails.get(0).getUser_type();
                             // tv_profile_pic.setText(profileDetails.get(0).getProfile_picture());
+                            String strSpecialization = profileDetails.get(0).getSpecialization();
+                            if (profileDetails.get(0).getDesignation().equalsIgnoreCase("0")) {
+                                radioOwner.setChecked(true);
+                            } else if (profileDetails.get(0).getDesignation().equalsIgnoreCase("1")) {
+                                radioTech.setChecked(true);
+                            } else if (profileDetails.get(0).getDesignation().equalsIgnoreCase("2")) {
+                                radioManager.setChecked(true);
+                            }
 
+                            if (profileDetails.get(0).getTurnover().equalsIgnoreCase("0")) {
+                                radioButton1.setChecked(true);
+                            } else if (profileDetails.get(0).getTurnover().equalsIgnoreCase("1")) {
+                                radioButton2.setChecked(true);
+                            } else if (profileDetails.get(0).getTurnover().equalsIgnoreCase("2")) {
+                                radioButton3.setChecked(true);
+                            } else if (profileDetails.get(0).getTurnover().equalsIgnoreCase("3")) {
+                                radioButton4.setChecked(true);
+                            } else if (profileDetails.get(0).getTurnover().equalsIgnoreCase("4")) {
+                                radioButton5.setChecked(true);
+                            } else if (profileDetails.get(0).getTurnover().equalsIgnoreCase("5")) {
+                                radioButton6.setChecked(true);
+                            }
 
                             et_first_name.setText(first_name);
                             et_last_name.setText(last_name);
@@ -526,9 +552,13 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             et_emailid.setText(email);
                             if (alternate_no != null) {
                                 et_alternetmobno.setText(alternate_no);
+                            }if (alternate_no2 != null) {
+                                et_alternetmobno2.setText(alternate_no2);
+                            }if (alternate_no3 != null) {
+                                et_alternetmobno3.setText(alternate_no3);
                             }
                             atv_pincode.setText(pincode);
-                            if (pincode != null || pincode != "") {
+                            if (pincode != null && !pincode.isEmpty()) {
                                 getState(atv_pincode.getText().toString());
                             }
 
@@ -630,6 +660,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 email = et_emailid.getText().toString().trim();
                 mobile = et_mobno.getText().toString().trim();
                 profile_pic = tv_profile_pic.getText().toString();
+                alternate_no = et_alternetmobno.getText().toString();
                 altno2 = et_alternetmobno2.getText().toString();
                 altNO3 = et_alternetmobno3.getText().toString();
                 no_of_technician = et_sapcode.getText().toString();
@@ -664,8 +695,10 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             Toast.makeText(this, "Please select any specialization", Toast.LENGTH_SHORT).show();
 
                         } else {
+                            String specialization =  specializtion.toString();
                             saveProfilePCO(first_name, last_name, designation, company_name, city, email, mobile, profile_pic, alternate_no,
-                                    user_type, state, no_of_technician, specializtion.toString(), "1", pincode, "", "");
+                                    user_type, state, no_of_technician, specialization, turnOver, pincode, altno2,
+                                    altNO3);
                         }
 
                     } else if (user_type.equalsIgnoreCase("HO")) {
@@ -1612,7 +1645,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                                         long id) {
                                     Toast.makeText(ProfilePCOActivity.this, " selected", Toast.LENGTH_LONG).show();
                                     pincode = atv_pincode.getText().toString();
-                                    getState(atv_pincode.getText().toString());
+
+                                    if (!pincode.isEmpty() && pincode != null)
+                                        getState(atv_pincode.getText().toString());
                                 }
                             });
 

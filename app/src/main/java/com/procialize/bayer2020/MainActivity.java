@@ -214,16 +214,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         iv_edit.setOnClickListener(this);
         TextView tv_designation = outer.findViewById(R.id.tv_designation);
         TextView tv_city = outer.findViewById(R.id.tv_city);
-        tv_name.setText(fName + " " + lName);
+
+        if(!fName.equalsIgnoreCase("false")&&!lName.equalsIgnoreCase("false")) {
+            tv_name.setText(fName + " " + lName);
+        }
+        else
+        {
+            tv_name.setText("");
+        }
         tv_designation.setText(designation);
         tv_designation.setText(company);
 
-
-        if (enrollleapFlag.equalsIgnoreCase("1")) {
+        /*if (enrollleapFlag.equalsIgnoreCase("1")) {
 
         } else {
             showLeepdialouge();
-        }
+        }*/
 
 
         Glide.with(MainActivity.this)
@@ -282,9 +288,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tr_switch_event.setVisibility(View.VISIBLE);
         }
 
-
-
-
         try {
             String from = getIntent().getStringExtra("from");
             if(from.equalsIgnoreCase("postNewsFeed")){
@@ -299,6 +302,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 navView.setSelectedItemId(R.id.navigation_home);
             }
             else {
+                if (enrollleapFlag.equalsIgnoreCase("1")) {
+
+                } else {
+                    showLeepdialouge();
+                }
+
                 LoyalityLeapFragment newsFeedFragment = LoyalityLeapFragment.newInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("isFrom", "MainActivity");
@@ -312,6 +321,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } catch (Exception e) {
             e.printStackTrace();
+
+            if (enrollleapFlag.equalsIgnoreCase("1")) {
+
+            } else {
+                showLeepdialouge();
+            }
+
+
             LoyalityLeapFragment newsFeedFragment = LoyalityLeapFragment.newInstance();
             Bundle bundle = new Bundle();
             bundle.putString("isFrom", "MainActivity");
@@ -358,6 +375,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_leap:
                         // Switch to page two
+                        if (enrollleapFlag.equalsIgnoreCase("1")) {
+
+                        } else {
+                            showLeepdialouge();
+                        }
+
                         JzvdStd.releaseAllVideos();
                         getSupportFragmentManager()
                                 .beginTransaction()
