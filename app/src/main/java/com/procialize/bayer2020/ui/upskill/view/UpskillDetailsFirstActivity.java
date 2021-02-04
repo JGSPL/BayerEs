@@ -72,6 +72,13 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
         /*tv_description.setText(upskillList.getDescription());
         tv_title.setText(upskillList.getName());*/
 
+        ImageView iv_back = findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         setUpToolbar();
 
         getDataFromApi();
@@ -218,13 +225,22 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
     }
 
     private void setUpToolbar() {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        /* Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
+           setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             mToolbar.showOverflowMenu();
+
+            mToolbar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });*/
+
+
             ImageView headerlogoIv = findViewById(R.id.headerlogoIv);
 
             String eventLogo = SharedPreference.getPref(this, EVENT_LOGO);
@@ -243,7 +259,7 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
                         }
                     }).into(headerlogoIv);
 
-        }
+        /*}*/
     }
 
     @Override
