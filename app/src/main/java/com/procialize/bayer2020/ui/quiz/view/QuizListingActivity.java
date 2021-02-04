@@ -132,6 +132,17 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
 
 */
 
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
+
+
         /* // final ProgressBar progressBar = findViewById(R.id.progressBar);
         final ImageView profileIV = findViewById(R.id.profileIV);
        // final String logoUrl = SharedPreference.getPref(QuizListingActivity.this, QUIZLOGO_MEDIA_PATH);
