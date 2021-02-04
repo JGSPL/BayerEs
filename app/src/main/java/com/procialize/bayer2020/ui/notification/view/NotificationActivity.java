@@ -313,7 +313,7 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             startActivity(new Intent(this, QuizListingActivity.class));
         } else if (comment.getType().equalsIgnoreCase("AdminPost") ||
                 comment.getType().equalsIgnoreCase("UserPost")) {
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, MainActivity.class).putExtra("from","postNewsFeed"));
         } else if (comment.getType().equalsIgnoreCase("Comment")) {
             getNewsfeedDetails(comment.getParent_id());
         } else if (comment.getType().equalsIgnoreCase("Like")) {

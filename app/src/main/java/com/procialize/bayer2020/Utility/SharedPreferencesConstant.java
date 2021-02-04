@@ -62,6 +62,7 @@ public final class SharedPreferencesConstant {
     public static final String EVENT_COLOR_5 = "color5";
 
     public static final String Chat_Table = "Chat_Table";
+    public static final String notification_count = "notification_count";
 
 
 

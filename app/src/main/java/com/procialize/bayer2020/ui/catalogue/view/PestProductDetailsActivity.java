@@ -43,6 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
@@ -108,7 +109,15 @@ public class PestProductDetailsActivity extends AppCompatActivity {
             Utility.createShortSnackBar(linMain, "No internet connection");
         }
 
-
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
     }
 
     public void getDataFromApi(String token, String eventid) {

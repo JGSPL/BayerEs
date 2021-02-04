@@ -5,8 +5,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
@@ -103,6 +106,16 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
                 }
             }
         });
+
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
         
     }
 

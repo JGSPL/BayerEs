@@ -1,12 +1,17 @@
 package com.procialize.bayer2020;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -33,6 +38,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -56,6 +62,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.Constants.ApiUtils;
+import com.procialize.bayer2020.Constants.Constant;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.Database.EventAppDB;
 import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
@@ -87,6 +94,7 @@ import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_status_item
 import com.procialize.bayer2020.ui.loyalityleap.view.LoyalityLeapFragment;
 import com.procialize.bayer2020.ui.loyalityleap.view.RedemptionHistoryList;
 import com.procialize.bayer2020.ui.newsfeed.view.NewsFeedFragment;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
 import com.procialize.bayer2020.ui.profile.view.ProfileActivity;
@@ -112,6 +120,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.bayer2020.Constants.Constant.FOLDER_DIRECTORY;
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ENROLL_LEAP_FLAG;
@@ -131,6 +140,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_LNA
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_MOBILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.notification_count;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -140,13 +150,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     BottomNavigationView navView;
     FrameLayout mContentFrame;
     Toolbar mToolbar;
-    ImageView headerlogoIv;
+    ImageView headerlogoIv,iv_notification;
     RecyclerView rv_side_menu;
     boolean doubleBackToExitPressedOnce = false;
     TableRow tr_switch_event, tr_home, tr_profile, tr_logout, tr_event_info, tr_quiz, tr_live_poll,
             tr_contact_us, tr_survey, tr_eula, tr_privacy_policy, tr_downloads, tr_faq, tr_storeLocator, tr_qna;
     TextView txt_version;
     LinearLayout ll_main;
+    public static LinearLayout ll_notification_count;
+    public static TextView tv_notification;
     DatabaseReference mDatabaseReference;
     FirebaseAuth mauth;
     private DatabaseReference mDatabase;
@@ -161,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Dialog myDialog;
     MutableLiveData<LoginOrganizer> FetchenleepStatusList = new MutableLiveData<>();
 
+    public static NotificationCountReciever notificationCountReciever;
+    public static IntentFilter notificationCountFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +190,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rv_side_menu = findViewById(R.id.rv_side_menu);
         mToolbar = findViewById(R.id.toolbar);
         ll_main = findViewById(R.id.ll_main);
+        ll_notification_count = findViewById(R.id.ll_notification_count);
+        tv_notification = findViewById(R.id.tv_notification);
+        iv_notification = findViewById(R.id.iv_notification);
+        iv_notification.setOnClickListener(this);
         FirebaseApp.initializeApp(this);
         mauth = FirebaseAuth.getInstance();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -200,10 +218,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userType = SharedPreference.getPref(this, SharedPreferencesConstant.USER_TYPE);
         enrollleapFlag = SharedPreference.getPref(this, ENROLL_LEAP_FLAG);
 
+        String notificationCount = SharedPreference.getPref(this, notification_count);
+        tv_notification.setText(notificationCount);
 
         getProfileDetails();
         //CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
 //        CommonFunction.showBackgroundImage(this, ll_main);
+
+        try {
+            notificationCountReciever = new NotificationCountReciever();
+            notificationCountFilter = new IntentFilter(Constant.BROADCAST_ACTION_FOR_NOTIFICATION_COUNT);
+            LocalBroadcastManager.getInstance(this).registerReceiver(notificationCountReciever, notificationCountFilter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         String device_token = SharedPreference.getPref(this, KEY_GCM_ID);;
         Log.e("device_token===>",device_token);
@@ -656,7 +685,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 startActivity(new Intent(MainActivity.this, StoreLocatorActivity.class));
                 break;
-
+            case R.id.iv_notification:
+                JzvdStd.releaseAllVideos();
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
+                break;
             case R.id.tr_event_info:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -940,5 +973,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return FetchenleepStatusList;
     }
+
+
+    public static class NotificationCountReciever extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                new getNotiCount().execute(context);
+            } catch (Exception e) {
+            }
+
+
+            try {
+                notificationCountReciever = new MainActivity.NotificationCountReciever();
+                notificationCountFilter = new IntentFilter(Constant.BROADCAST_ACTION_FOR_NOTIFICATION_COUNT);
+                LocalBroadcastManager.getInstance(context).registerReceiver(notificationCountReciever, notificationCountFilter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    static class getNotiCount extends AsyncTask<Context, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected String doInBackground(Context... f_url) {
+            try {
+                setNotification(f_url[0], tv_notification, ll_notification_count);
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+            }
+            return "Something went wrong";
+        }
+
+        @Override
+        protected void onPostExecute(String message) {
+        }
+    }
+
 
 }

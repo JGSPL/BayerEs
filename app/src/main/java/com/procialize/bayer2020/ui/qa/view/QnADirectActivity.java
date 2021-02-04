@@ -2,6 +2,7 @@ package com.procialize.bayer2020.ui.qa.view;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,6 +30,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
@@ -63,12 +70,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 import static com.procialize.bayer2020.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class QnADirectActivity extends AppCompatActivity implements View.OnClickListener, QnAAdapter.FeedAdapterListner {
@@ -120,7 +130,7 @@ public class QnADirectActivity extends AppCompatActivity implements View.OnClick
         question_refresh = findViewById(R.id.question_refresh);
         tv_ask_question.setOnClickListener(this);
         iv_back.setOnClickListener(this);
-
+        setUpToolbar() ;
         //--------------------------------------------------------------------------------------
        /* GetUserActivityReport getUserActivityReport = new GetUserActivityReport(this,api_token,
                 eventid,
@@ -163,7 +173,15 @@ public class QnADirectActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
 
 
         /*rv_qna.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
@@ -502,14 +520,14 @@ public class QnADirectActivity extends AppCompatActivity implements View.OnClick
 */
 
 
-    private void setDynamicColor() {
+   /* private void setDynamicColor() {
         tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         tv_asked_question.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)));
         iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
         ll_ask_question.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         tv_ask_question.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         tv_ask_question.setTextColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
-    }
+    }*/
 
     public void openAskQuestionDialog() {
         //askQuestionDialog = new Dialog(QnADirectActivity.this);
@@ -709,6 +727,40 @@ public class QnADirectActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+    }
+
+    private void setUpToolbar() {
+        /*Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            mToolbar.showOverflowMenu();
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });*/
+            ImageView headerlogoIv = findViewById(R.id.headerlogoIv);
+
+            String eventLogo = SharedPreference.getPref(this, EVENT_LOGO);
+            String eventListMediaPath = SharedPreference.getPref(this, EVENT_LIST_MEDIA_PATH);
+            Glide.with(this)
+                    .load(eventListMediaPath + eventLogo)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    }).into(headerlogoIv);
+        //}
     }
 
 

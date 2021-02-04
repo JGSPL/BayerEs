@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.DOCUMENT_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
@@ -155,6 +157,16 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
 
         cd = ConnectionDetector.getInstance(this);
         documentviewmodel = ViewModelProviders.of(this).get(DocumentViewModel.class);
+
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
 
 
 

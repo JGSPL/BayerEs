@@ -72,7 +72,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:visibility="invisible">
+                    android:visibility="visible">
 
                     <ImageView
                         android:id="@+id/notificationlogoIv"
@@ -99,7 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="15dp"
                             android:gravity="top|center"
-                            android:text="50"
+                            android:text=""
                             android:textColor="@color/colorwhite"
                             android:textSize="8dp" />
                     </LinearLayout>

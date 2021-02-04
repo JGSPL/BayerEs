@@ -81,7 +81,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="15dp"
                             android:gravity="top|center"
-                            android:text="50"
+                            android:text=""
                             android:textColor="@color/colorwhite"
                             android:textSize="8dp" />
                     </LinearLayout>
