@@ -154,7 +154,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     CheckBox checkResPest, checkcomPest, checkTermite, checkMosquito;
     String technician, turnOver, altno1, altno2, altNO3;
     ArrayList arrSpecializtion = new ArrayList();
-    boolean isCheckedPCO = false;
+    boolean isCheckedPCO = false, isSpecializationChanged = false;
     String specialization = "";
 
     @Override
@@ -253,7 +253,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View v) {
                 boolean checked = ((CheckBox) v).isChecked();
                 String mosquito;
-
+                isSpecializationChanged = true;
                 // Check which checkbox was clicked
                 if (checked) {
                     // Do your coding
@@ -271,7 +271,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View v) {
                 boolean checked = ((CheckBox) v).isChecked();
                 String mosquito;
-
+                isSpecializationChanged = true;
                 // Check which checkbox was clicked
                 if (checked) {
                     // Do your coding
@@ -290,7 +290,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View v) {
                 boolean checked = ((CheckBox) v).isChecked();
                 String mosquito;
-
+                isSpecializationChanged = true;
                 // Check which checkbox was clicked
                 if (checked) {
                     // Do your coding
@@ -309,7 +309,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View v) {
                 boolean checked = ((CheckBox) v).isChecked();
                 String mosquito;
-
+                isSpecializationChanged = true;
                 // Check which checkbox was clicked
                 if (checked) {
                     // Do your coding
@@ -705,13 +705,19 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         } else if (isCheckeddesignation == false) {
                             Toast.makeText(this, "Please select designation", Toast.LENGTH_SHORT).show();
 
-                        } else if (arrSpecializtion.isEmpty()) {
-                            Toast.makeText(this, "Please select any specialization", Toast.LENGTH_SHORT).show();
+                        } else if (isSpecializationChanged) {
+                            if (arrSpecializtion.isEmpty()) {
+                                Toast.makeText(this, "Please select any specialization", Toast.LENGTH_SHORT).show();
 
+                            } else {
+                                specialization = arrSpecializtion.toString();
+                                specialization = specialization.substring(1, specialization.length() - 1);
+
+                                saveProfilePCO(first_name, last_name, designation, company_name, city, email, mobile, profile_pic, alternate_no,
+                                        user_type, state, no_of_technician, specialization, turnOver, pincode, altno2,
+                                        altNO3);
+                            }
                         } else {
-                            specialization = arrSpecializtion.toString();
-                            specialization = specialization.substring(1, specialization.length() - 1);
-
                             saveProfilePCO(first_name, last_name, designation, company_name, city, email, mobile, profile_pic, alternate_no,
                                     user_type, state, no_of_technician, specialization, turnOver, pincode, altno2,
                                     altNO3);

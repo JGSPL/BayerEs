@@ -219,8 +219,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         enrollleapFlag = SharedPreference.getPref(this, ENROLL_LEAP_FLAG);
 
         String notificationCount = SharedPreference.getPref(this, notification_count);
-        tv_notification.setText(notificationCount);
-
+        //tv_notification.setText(notificationCount);
+        if (notificationCount.equalsIgnoreCase("0")) {
+            tv_notification.setVisibility(View.GONE);
+            ll_notification_count.setVisibility(View.GONE);
+        } else {
+            tv_notification.setVisibility(View.VISIBLE);
+            ll_notification_count.setVisibility(View.VISIBLE);
+        }
         getProfileDetails();
         //CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
 //        CommonFunction.showBackgroundImage(this, ll_main);
