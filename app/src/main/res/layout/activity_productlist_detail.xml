@@ -125,7 +125,7 @@
                     android:background="@color/colorwhite"
                     android:drawableTop="@drawable/ic_buynow"
                     android:drawablePadding="5dp"
-
+                    android:id="@+id/btnbuy"
                     android:stateListAnimator="@null"
                     android:text="Buy Now"
                     android:textAllCaps="false"

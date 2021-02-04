@@ -42,6 +42,7 @@ import com.procialize.bayer2020.ui.catalogue.model.Product_item;
 import com.procialize.bayer2020.ui.catalogue.model.product_dosage_detail;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
 import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
+import com.procialize.bayer2020.ui.storelocator.view.StoreLocatorActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
     TextView productTitle;
     Product_item product_item;
     LinearLayout linCalc,linShare, linBuyNow;
-    Button imgCalc;
+    Button imgCalc,btnbuy;
 
     private ConnectionDetector cd;
     @Override
@@ -114,7 +115,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
         linShare = findViewById(R.id.linShare);
         linBuyNow = findViewById(R.id.linBuyNow);
         imgCalc = findViewById(R.id.imgCalc);
-
+        btnbuy = findViewById(R.id.btnbuy);
 
 
        /* mTabHostCel.addTab(
@@ -134,6 +135,8 @@ public class ProductListDetailActivity extends AppCompatActivity {
         }else {
             Utility.createShortSnackBar(linMain, "No internet connection");
         }
+
+
     }
 
     public void getDataFromApi(String token, String eventid) {
@@ -213,6 +216,20 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                     }
                                 });
 
+                               /* btnbuy.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(ProductListDetailActivity.this, StoreLocatorActivity.class)
+                                        );
+                                    }
+                                });
+                                linBuyNow.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(ProductListDetailActivity.this, StoreLocatorActivity.class)
+                                        );
+                                    }
+                                });*/
                                 productTitle.setText(product_item.getProduct_name());
                                 Glide.with(ProductListDetailActivity.this)
                                         .load(eventLists.getProduct_imagepath()+product_item.getProduct_image())

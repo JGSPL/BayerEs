@@ -126,9 +126,9 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                     if (map != null) {
                         setUpMap();
 
-                        /*LatLng norway = new LatLng(62.455102,17.345599);
+                        /*LatLng norway = new LatLng(23.63936,97.34466);
 
-                        CameraPosition target = CameraPosition.builder().target(norway).zoom(14).build();
+                        CameraPosition target = CameraPosition.builder().target(norway).zoom(6).build();
                         map.moveCamera(CameraUpdateFactory.newCameraPosition(target));*/
                         LatLngBounds boundsIndia = new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466));
                         int padding = 0; // offset from edges of the map in pixels
