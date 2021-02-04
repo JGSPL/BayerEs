@@ -979,7 +979,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                new getNotiCount().execute(context);
+                getNotiCount(context);
             } catch (Exception e) {
             }
 
@@ -996,27 +996,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    static class getNotiCount extends AsyncTask<Context, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected String doInBackground(Context... f_url) {
+    static void getNotiCount(Context context){
             try {
-                setNotification(f_url[0], tv_notification, ll_notification_count);
+                setNotification(context, tv_notification, ll_notification_count);
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
             }
-            return "Something went wrong";
-        }
 
-        @Override
-        protected void onPostExecute(String message) {
-        }
     }
 
 
