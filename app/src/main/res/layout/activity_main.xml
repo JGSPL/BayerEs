@@ -195,6 +195,7 @@
             app:elevation="5dp"
             app:itemBackground="@drawable/tabselector"
             app:itemTextColor="@drawable/textselector"
+
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu" />
 
@@ -430,7 +431,7 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/quizsidemenu"
+                    android:src="@drawable/ic_inactive_live_qa"
                     android:tint="@color/black" />
 
                 <TextView

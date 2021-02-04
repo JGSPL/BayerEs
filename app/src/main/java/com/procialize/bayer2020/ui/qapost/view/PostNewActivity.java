@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -102,6 +103,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     AttendeeDatabaseViewModel attendeeDatabaseViewModel;
     List<TableAttendee> attendeeList = null;
     View view_top, view_left, view_right, view_bottom;
+    ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +146,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
         et_post = findViewById(R.id.et_post);
         imguploadimg = findViewById(R.id.imguploadimg);
         iv_back.setOnClickListener(this);
+        progress = findViewById(R.id.progress);
+        tv_header.setText("Ask Question");
 
         //  setDynamicColor();
 
@@ -365,6 +369,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_post:
                 Utility.hideKeyboard(v);
                 if (cd.isConnectingToInternet()) {
+
                     //Call Refresh token
                     new RefreashToken(this).callGetRefreashToken(this);
 
@@ -414,6 +419,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                             Date date = new Date();
                             long time = date.getTime();
 
+                            progress.setVisibility(View.VISIBLE);
 
                             APIService newsfeedApi = ApiUtils.getAPIService();
                             RequestBody mevent_id = RequestBody.create(MediaType.parse("text/plain"), event_id);
@@ -461,8 +467,11 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                         @Override
                                         public void onResponse(Call<LoginOrganizer> call, final Response<LoginOrganizer> response) {
                                             if (response.isSuccessful()) {
+                                                progress.setVisibility(View.GONE);
+
                                                 Log.d("PostResponse", response.body().getHeader().get(0).getMsg());
                                                 if (response != null) {
+
                                                     Utility.createShortSnackBar(linear, response.body().getHeader().get(0).getMsg());
                                                     postNewsFeedViewModel.startNewsFeedFragment(PostNewActivity.this);
                                                     finish();
@@ -476,16 +485,22 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                         @Override
                                         public void onFailure(Call<LoginOrganizer> call, Throwable t) {
                                             Log.d("PostResponse", t.getMessage() + "==>Failure");
+                                            progress.setVisibility(View.GONE);
+
                                         }
                                     });
 
                         } catch (Exception e) {
                             e.printStackTrace();
+                            progress.setVisibility(View.GONE);
+
                         }
                     }
 
                 } else {
                     btn_post.setEnabled(true);
+                    progress.setVisibility(View.GONE);
+
                     Utility.createShortSnackBar(linear, "No Internet Connection");
                 }
                 break;

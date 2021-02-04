@@ -327,6 +327,11 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:id="@+id/relContainer"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
 
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/vp_media"
@@ -334,17 +339,26 @@
                 android:layout_height="fill_parent"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="0dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"/>
+                android:layout_marginBottom="10dp" />
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
 
+
+            </RelativeLayout>
             <LinearLayout
                 android:id="@+id/ll_media_dots"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/vp_media"
+                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="20dp"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal" />
+
         </LinearLayout>
     </LinearLayout>
 </layout>
