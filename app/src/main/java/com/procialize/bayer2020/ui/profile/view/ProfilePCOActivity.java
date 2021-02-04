@@ -129,7 +129,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
     RadioGroup radiogroupPCO;
-    RadioButton radioButton6,radioButton5,radioButton4, radioButton3, radioButton2, radioButton1;
+    RadioButton radioButton6, radioButton5, radioButton4, radioButton3, radioButton2, radioButton1;
     View view_down;
     TextView tv_profile_pic, tv_header, txtaltno, et_mobno;
     Button btn_save;
@@ -153,8 +153,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     TextView txtAnnualOrg, txtDomain, txttectcount, tvOrgnisation, tv_designation;
     CheckBox checkResPest, checkcomPest, checkTermite, checkMosquito;
     String technician, turnOver, altno1, altno2, altNO3;
-    ArrayList specializtion = new ArrayList();
-    boolean isCheckedPCO= false;
+    ArrayList arrSpecializtion = new ArrayList();
+    boolean isCheckedPCO = false;
+    String specialization = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,11 +258,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 if (checked) {
                     // Do your coding
                     mosquito = (String) checkMosquito.getTag();
-                    specializtion.add("0");
+                    arrSpecializtion.add("0");
                 } else {
                     // Do your coding
                     mosquito = (String) checkMosquito.getTag();
-                    specializtion.remove("0");
+                    arrSpecializtion.remove("0");
                 }
             }
         });
@@ -275,11 +276,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 if (checked) {
                     // Do your coding
                     mosquito = (String) checkResPest.getTag();
-                    specializtion.add("1");
+                    arrSpecializtion.add("1");
                 } else {
                     // Do your coding
                     mosquito = (String) checkResPest.getTag();
-                    specializtion.remove("1");
+                    arrSpecializtion.remove("1");
                 }
             }
         });
@@ -294,11 +295,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 if (checked) {
                     // Do your coding
                     mosquito = (String) checkTermite.getTag();
-                    specializtion.add("3");
+                    arrSpecializtion.add("3");
                 } else {
                     // Do your coding
                     mosquito = (String) checkMosquito.getTag();
-                    specializtion.remove("3");
+                    arrSpecializtion.remove("3");
                 }
             }
         });
@@ -313,11 +314,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                 if (checked) {
                     // Do your coding
                     mosquito = (String) checkMosquito.getTag();
-                    specializtion.add("2");
+                    arrSpecializtion.add("2");
                 } else {
                     // Do your coding
                     mosquito = (String) checkMosquito.getTag();
-                    specializtion.remove("2");
+                    arrSpecializtion.remove("2");
                 }
             }
         });
@@ -543,6 +544,17 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 radioButton6.setChecked(true);
                             }
 
+                            specialization = profileDetails.get(0).getSpecialization();
+
+                            if (specialization.contains("0"))
+                                checkMosquito.setChecked(true);
+                            if (specialization.contains("1"))
+                                checkResPest.setChecked(true);
+                            if (specialization.contains("2"))
+                                checkcomPest.setChecked(true);
+                            if (specialization.contains("3"))
+                                checkTermite.setChecked(true);
+
                             et_first_name.setText(first_name);
                             et_last_name.setText(last_name);
                             et_mobno.setText(mobile);
@@ -552,9 +564,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             et_emailid.setText(email);
                             if (alternate_no != null) {
                                 et_alternetmobno.setText(alternate_no);
-                            }if (alternate_no2 != null) {
+                            }
+                            if (alternate_no2 != null) {
                                 et_alternetmobno2.setText(alternate_no2);
-                            }if (alternate_no3 != null) {
+                            }
+                            if (alternate_no3 != null) {
                                 et_alternetmobno3.setText(alternate_no3);
                             }
                             atv_pincode.setText(pincode);
@@ -691,11 +705,13 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         } else if (isCheckeddesignation == false) {
                             Toast.makeText(this, "Please select designation", Toast.LENGTH_SHORT).show();
 
-                        } else if (specializtion.isEmpty()) {
+                        } else if (arrSpecializtion.isEmpty()) {
                             Toast.makeText(this, "Please select any specialization", Toast.LENGTH_SHORT).show();
 
                         } else {
-                            String specialization =  specializtion.toString();
+                            specialization = arrSpecializtion.toString();
+                            specialization = specialization.substring(1, specialization.length() - 1);
+
                             saveProfilePCO(first_name, last_name, designation, company_name, city, email, mobile, profile_pic, alternate_no,
                                     user_type, state, no_of_technician, specialization, turnOver, pincode, altno2,
                                     altNO3);
