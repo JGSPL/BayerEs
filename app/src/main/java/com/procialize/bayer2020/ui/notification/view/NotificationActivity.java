@@ -53,12 +53,14 @@ import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ATTENDEE_STATUS;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -66,6 +68,19 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_C
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_GOD;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_LOGIN;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_CITY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_COMPANY;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_DESIGNATION;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_EMAIL;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_FNAME;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_GCM_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_LNAME;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_MOBILE;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PASSWORD;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.notification_count;
 import static com.procialize.bayer2020.ui.newsfeed.adapter.PaginationListener.PAGE_START;
 
 public class NotificationActivity extends AppCompatActivity implements NotificationAdapter.NotificationAdapterListner
@@ -101,6 +116,10 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(notification_count, "0");
+        SharedPreference.putPref(this, map);
 
         ATTENDEE_STATUS = SharedPreference.getPref(this, IS_GOD);
         recycler_notification = findViewById(R.id.recycler_notification);
@@ -313,7 +332,7 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             startActivity(new Intent(this, QuizListingActivity.class));
         } else if (comment.getType().equalsIgnoreCase("AdminPost") ||
                 comment.getType().equalsIgnoreCase("UserPost")) {
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, MainActivity.class).putExtra("from","postNewsFeed"));
         } else if (comment.getType().equalsIgnoreCase("Comment")) {
             getNewsfeedDetails(comment.getParent_id());
         } else if (comment.getType().equalsIgnoreCase("Like")) {

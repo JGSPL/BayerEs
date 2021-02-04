@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -22,12 +23,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.core.content.FileProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.procialize.bayer2020.BuildConfig;
 import com.procialize.bayer2020.Constants.Constant;
+import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -46,7 +50,10 @@ import java.util.Date;
 import static com.procialize.bayer2020.Constants.Constant.FOLDER_DIRECTORY;
 import static com.procialize.bayer2020.Constants.Constant.IMAGE_DIRECTORY;
 import static com.procialize.bayer2020.Constants.Constant.VIDEO_DIRECTORY;
+import static com.procialize.bayer2020.MainActivity.notificationCountFilter;
+import static com.procialize.bayer2020.MainActivity.notificationCountReciever;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.notification_count;
 
 public class CommonFunction {
 
@@ -437,5 +444,30 @@ public class CommonFunction {
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
         }
         return ssb;
+    }
+
+    public static void setNotification(Context context, TextView tv_notification, LinearLayout ll_notification_count) {
+        try {
+
+            if (tv_notification != null && ll_notification_count != null) {
+                notificationCountReciever = new MainActivity.NotificationCountReciever();
+                notificationCountFilter = new IntentFilter(Constant.BROADCAST_ACTION_FOR_NOTIFICATION_COUNT);
+                LocalBroadcastManager.getInstance(context).registerReceiver(notificationCountReciever, notificationCountFilter);
+
+
+                String notificationCount = SharedPreference.getPref(context, notification_count);
+                tv_notification.setText(notificationCount);
+
+                if (notificationCount.equalsIgnoreCase("0")) {
+                    tv_notification.setVisibility(View.GONE);
+                    ll_notification_count.setVisibility(View.GONE);
+                } else {
+                    tv_notification.setVisibility(View.VISIBLE);
+                    ll_notification_count.setVisibility(View.VISIBLE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

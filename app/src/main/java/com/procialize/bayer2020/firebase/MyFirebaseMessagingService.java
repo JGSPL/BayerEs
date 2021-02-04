@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -46,6 +47,7 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -56,6 +58,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERI
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.notification_count;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -64,10 +67,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     PendingIntent contentIntent;
     Bitmap bitmap;
 
+    int notificationCount = 0;
     private ArrayList<Newsfeed_detail> newsfeed_detail = new ArrayList<>();
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
        /* final Intent intent = new Intent(this, MainActivity.class);*/
+
+
+
+
+        notificationCount++;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int notificationID = new Random().nextInt(3000);
         String event_id = SharedPreference.getPref(this, EVENT_ID);
@@ -92,6 +101,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         String isLogin = SharedPreference.getPref(this, IS_LOGIN);
         if (isLogin.equalsIgnoreCase("true")) {
+
+
+
+            //----------------------------------------------------------------------
+
                 Log.e("test notification===>", remoteMessage.getData().toString());
                 Uri notificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -332,6 +346,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
                 }
+
+            String strNotificationCount = SharedPreference.getPref(this, notification_count);
+
+            if (strNotificationCount.isEmpty()) {
+                strNotificationCount = "0";
+            }
+
+            notificationCount = Integer.parseInt(strNotificationCount);
+
+            notificationCount = notificationCount + 1;
+            HashMap<String, String> map_token = new HashMap<>();
+            map_token.put(notification_count, notificationCount+"");
+            SharedPreference.putPref(this, map_token);
+
+            Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_NOTIFICATION_COUNT);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
         }
 
     }

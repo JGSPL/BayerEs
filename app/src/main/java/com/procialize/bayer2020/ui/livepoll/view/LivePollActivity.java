@@ -55,6 +55,7 @@ import retrofit2.Response;
 
 import static com.procialize.bayer2020.Utility.CommonFirebase.crashlytics;
 import static com.procialize.bayer2020.Utility.CommonFirebase.firbaseAnalytics;
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
@@ -174,7 +175,15 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
 
         }
 
-
+//-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
 
         pollrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
