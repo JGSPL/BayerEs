@@ -154,8 +154,17 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
             //handle click here
 
         if(marker.getSnippet().equalsIgnoreCase("main")) {
+            myMarker.hideInfoWindow();
+            marker.hideInfoWindow();
+
+            map.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
             getDistributerNameList(api_token, "1", marker.getTitle());
         }else {
+            marker.hideInfoWindow();
+            myMarker.hideInfoWindow();
+
+            CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(14).build();
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
             String str = marker.getSnippet();
             String[] splitStr = str.split("\\@+");
             openMoreDetails(splitStr[0].toString(), splitStr[1].toString(), splitStr[2].toString());
@@ -163,7 +172,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
         }
 
        // }
-        return false;
+        return true;
 
     }
 
@@ -220,6 +229,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                                         .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(StoreLocatorActivity.this, marker))));
                                        // .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                                 map.setOnMarkerClickListener(StoreLocatorActivity.this);
+                                myMarker.hideInfoWindow();
 
 
 
@@ -282,6 +292,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                                                 Double.parseDouble(profileDetails.get(i).getLongitude())
                                         )));
 
+                                //marker.hideInfoWindow();
 
 
 
