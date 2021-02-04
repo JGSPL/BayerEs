@@ -248,7 +248,6 @@ public interface APIService {
                                             @Field("os_version") String os_version,
                                             @Field("app_version") String app_version);
 
-    // @Headers("authorization: " + HeaderToken)
     @POST("login_api_call/getProfileInfo")
     @FormUrlEncoded
     Call<Profile> getProfile(@Header("authorization") String authorization, @Field("event_id") String event_id);
