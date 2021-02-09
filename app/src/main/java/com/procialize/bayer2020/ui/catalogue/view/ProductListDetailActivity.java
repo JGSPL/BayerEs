@@ -3,7 +3,9 @@ package com.procialize.bayer2020.ui.catalogue.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +47,8 @@ import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
 import com.procialize.bayer2020.ui.storelocator.view.StoreLocatorActivity;
 
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,8 +78,9 @@ public class ProductListDetailActivity extends AppCompatActivity {
     TextView productTitle;
     Product_item product_item;
     LinearLayout linCalc,linShare, linBuyNow;
-    Button imgCalc,btnbuy;
-
+    Button imgCalc,btnbuy,btnShare;
+    private Uri dynamicLink = null;
+    private static final String TAG = "DynamicLinks";
     private ConnectionDetector cd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +122,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
         linBuyNow = findViewById(R.id.linBuyNow);
         imgCalc = findViewById(R.id.imgCalc);
         btnbuy = findViewById(R.id.btnbuy);
-
+        btnShare = findViewById(R.id.btnShare);
 //-----------------------------For Notification count-----------------------------
         try {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
@@ -136,8 +141,21 @@ public class ProductListDetailActivity extends AppCompatActivity {
                         .setIndicator(createTabView(this, "Downloads")),
                 ProductListDetailActivity.class, null);*/
                 //PestFragment.class, null);
+        getLink();
 
+        linShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareLink();
+            }
+        });
 
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareLink();
+            }
+        });
 
         if (cd.isConnectingToInternet()) {
             getDataFromApi(token, eventid);
@@ -308,4 +326,38 @@ public class ProductListDetailActivity extends AppCompatActivity {
         }
     }
 
+    public void getLink() {
+        String appCode = "524195205462";
+        final Uri deepLink = Uri.parse("http://example.com/promo?discount");
+
+        String packageName = getApplicationContext().getPackageName();
+
+        // Build the link with all required parameters
+        Uri.Builder builder = new Uri.Builder()
+                .scheme("https")
+                .authority(appCode + ".app.goo.gl")
+                .path("/")
+                .appendQueryParameter("link", deepLink.toString())
+                .appendQueryParameter("apn", packageName);
+
+        dynamicLink = builder.build();
+        linShare.setEnabled(true);
+    }
+    public void shareLink() {
+        try {
+           /* URL url = new URL(URLDecoder.decode(dynamicLink.toString(),
+                    "UTF-8"));*/
+
+            URL url = new URL(URLDecoder.decode("https://play.google.com/store/apps/details?id=com.procialize.vivoapp_2020&hl=en_IN&gl=US",
+                    "UTF-8"));
+            Log.i(TAG, "URL = " + url.toString());
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Firebase Deep Link");
+            intent.putExtra(Intent.EXTRA_TEXT, url.toString());
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.i(TAG, "Could not decode Uri: " + e.getLocalizedMessage());
+        }
+    }
 }

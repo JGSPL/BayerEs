@@ -42,6 +42,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Field;
+import retrofit2.http.Header;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
@@ -99,7 +101,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
             }
         }).into(holder.image_reward);
 
-        if (Integer.parseInt(redeemItem.getProduct_value()) <= Integer.parseInt(RequestToRedeemActivity.txtRedeemPoint.getText().toString())) {
+       /* if (Integer.parseInt(redeemItem.getProduct_value()) <= Integer.parseInt(RequestToRedeemActivity.txtRedeemPoint.getText().toString())) {
             holder.btn_reedem.setVisibility(View.VISIBLE);
             holder.txt_needed.setVisibility(View.GONE);
 
@@ -109,6 +111,16 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
 
             int Total = (Integer.parseInt(redeemItem.getProduct_value()) - Integer.parseInt(RequestToRedeemActivity.txtRedeemPoint.getText().toString()));
             holder.txt_needed.setText(String.valueOf(Total) + " Points more needed.");
+        }*/
+
+        if(redeemItem.getRedeem_flag().equalsIgnoreCase("1")){
+            holder.btn_reedem.setVisibility(View.VISIBLE);
+            holder.txt_needed.setVisibility(View.GONE);
+
+        }else if(redeemItem.getRedeem_flag().equalsIgnoreCase("0")){
+            holder.btn_reedem.setVisibility(View.GONE);
+            holder.txt_needed.setText(redeemItem.getRedeem_status_line());
+
         }
 
         holder.btn_reedem.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +216,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
                     } else {
                         btn_submit.setEnabled(false);
                         btn_submit.setClickable(false);
-                        redeemRequest(eventid, apikey, productcode, name, String.valueOf(quantity), String.valueOf(mpoints),address,email);
+                        redeemRequest(eventid, apikey, productcode, value, String.valueOf(quantity), String.valueOf(mpoints),email,address);
                     }
                 }
 
@@ -226,13 +238,13 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
                     dismissProgress();
                     Toast.makeText(context, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
                     myDialog.dismiss();
-                    /*if ((Integer.parseInt(response.body().getTotal_available_point())) < 0) {
+                   /* if ((Integer.parseInt(response.body().getTotal_available_point())) < 0) {
                         RequestToRedeemActivity.txtRedeemPoint.setText("0");
                     } else {
                         RequestToRedeemActivity.txtRedeemPoint.setText(response.body().getTotal_available_point());
                     }*/
-                    Intent intent = new Intent(context, RequestToRedeemActivity.class);
-                    context.startActivity(intent);
+                   /* Intent intent = new Intent(context, RequestToRedeemActivity.class);
+                    context.startActivity(intent);*/
                 } else {
 
                     dismissProgress();

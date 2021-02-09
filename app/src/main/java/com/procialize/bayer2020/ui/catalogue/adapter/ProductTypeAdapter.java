@@ -64,7 +64,7 @@ public class ProductTypeAdapter extends RecyclerView.Adapter<ProductTypeAdapter.
 
         Glide.with(holder.imageIv)
                 .load(imageurl+productType.getProduct_type_image())
-                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).centerCrop()
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

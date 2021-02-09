@@ -20,6 +20,10 @@ public class FetchRequestToRedeem {
     @Expose
     private String totalRecords;
 
+    @SerializedName("available_redeemable_points")
+    @Expose
+    private String available_redeemable_points;
+
     @SerializedName("product_imagepath")
     @Expose
     private String product_imagepath;
@@ -54,5 +58,13 @@ public class FetchRequestToRedeem {
 
     public void setProduct_imagepath(String product_imagepath) {
         this.product_imagepath = product_imagepath;
+    }
+
+    public String getAvailable_redeemable_points() {
+        return available_redeemable_points;
+    }
+
+    public void setAvailable_redeemable_points(String available_redeemable_points) {
+        this.available_redeemable_points = available_redeemable_points;
     }
 }

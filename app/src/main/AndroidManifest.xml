@@ -275,7 +275,18 @@
         <activity
             android:name=".ui.catalogue.view.ProductListDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+   <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+       <data
+           android:host="www.google.com"
+           android:pathPrefix="/help"
+           android:scheme="https" />
+        </intent-filter></activity>
         <activity
             android:name=".ui.catalogue.view.PestTypeActivity"
             android:screenOrientation="portrait"

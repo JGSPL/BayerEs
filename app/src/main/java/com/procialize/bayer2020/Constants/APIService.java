@@ -592,7 +592,7 @@ public interface APIService {
                                        @Field("event_id") String event_id,
                                        @Field("product_code") String product_code,
                                        @Field("product_value") String product_name,
-                                       @Field("no_of_quantity") String no_of_quantity,
+                                       @Field("qty") String no_of_quantity,
                                        @Field("email") String email,
                                        @Field("address") String address);
 

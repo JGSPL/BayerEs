@@ -118,7 +118,7 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
                     public void onResponse(Call<FetchRequestToRedeem> call, Response<FetchRequestToRedeem> response) {
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
-                            Imageurl = response.body().getProduct_imagepath();
+                            Imageurl = response.body().getAvailable_redeemable_points();
 
                             String strCommentList =response.body().getDetail();
                             RefreashToken refreashToken = new RefreashToken(RequestToRedeemActivity.this);
@@ -126,7 +126,7 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
                             Gson gson = new Gson();
                             List<RequestToRedeem> eventLists = gson.fromJson(data, new TypeToken<ArrayList<RequestToRedeem>>() {}.getType());
 
-                            txtRedeemPoint.setText(response.body().getTotalRecords());
+                            txtRedeemPoint.setText(response.body().getAvailable_redeemable_points());
 
                             //Fetch Livepoll list
                             if(eventLists!=null) {

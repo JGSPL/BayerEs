@@ -34,7 +34,7 @@
                     android:src="@drawable/gallery_placeholder"
                     android:layout_marginRight="0dp"
                     android:contentDescription="TODO"
-                    android:scaleType="centerCrop" />
+                     android:scaleType="fitXY"/>
 
                 <ProgressBar
                     android:id="@+id/progressBar"

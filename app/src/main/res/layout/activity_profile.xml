@@ -564,7 +564,7 @@
                         android:background="@color/transperent"
                         android:clickable="false"
                         android:editable="false"
-                        android:hint="Mumbai"
+                        android:hint=""
                         android:singleLine="true"
                         android:textColor="@color/textcolorLight"
                         android:textSize="13dp" />

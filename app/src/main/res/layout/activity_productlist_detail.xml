@@ -176,7 +176,7 @@
                     android:drawableTop="@drawable/ic_share"
                     android:drawablePadding="5dp"
                     android:stateListAnimator="@null"
-
+                    android:id="@+id/btnShare"
                     android:text="Share"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
