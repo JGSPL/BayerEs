@@ -225,7 +225,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
         });
     }
 
-    public void redeemRequest(String eventid, String token, String product_code, String product_name, String no_of_points, String mpoints, String email, String address) {
+    public void redeemRequest(String eventid, String token, String product_code, String product_name, String no_of_points, final String mpoints, String email, String address) {
         showProgress();
 //        showProgress();
         mAPIService.RedeemRequest(token, eventid, product_code, product_name, no_of_points, email,address).enqueue(new Callback<LoginOrganizer>() {
@@ -237,6 +237,8 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
 //                    btn_submit.setClickable(false);
                     dismissProgress();
                     Toast.makeText(context, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
+                    Long value = Long.parseLong(RequestToRedeemActivity.txtRedeemPoint.getText().toString())- Long.parseLong(mpoints);
+                    RequestToRedeemActivity.txtRedeemPoint.setText(value.toString());
                     myDialog.dismiss();
                    /* if ((Integer.parseInt(response.body().getTotal_available_point())) < 0) {
                         RequestToRedeemActivity.txtRedeemPoint.setText("0");

@@ -56,7 +56,7 @@ public class ScheameOfferAdapter extends RecyclerView.Adapter<ScheameOfferAdapte
         if(productType.getTile_images()!=null) {
             Glide.with(holder.imageIv)
                     .load(imageurl + productType.getTile_images())
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).centerCrop()
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
