@@ -103,23 +103,25 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
 
        /* if (Integer.parseInt(redeemItem.getProduct_value()) <= Integer.parseInt(RequestToRedeemActivity.txtRedeemPoint.getText().toString())) {
             holder.btn_reedem.setVisibility(View.VISIBLE);
-            holder.txt_needed.setVisibility(View.GONE);
+            holder.btn_reedemnot.setVisibility(View.GONE);
 
         } else {
             holder.btn_reedem.setVisibility(View.GONE);
-            holder.txt_needed.setVisibility(View.VISIBLE);
+            holder.btn_reedemnot.setVisibility(View.VISIBLE);
 
             int Total = (Integer.parseInt(redeemItem.getProduct_value()) - Integer.parseInt(RequestToRedeemActivity.txtRedeemPoint.getText().toString()));
-            holder.txt_needed.setText(String.valueOf(Total) + " Points more needed.");
+            holder.btn_reedemnot.setText(String.valueOf(Total) + " Points more needed.");
         }*/
 
         if(redeemItem.getRedeem_flag().equalsIgnoreCase("1")){
             holder.btn_reedem.setVisibility(View.VISIBLE);
-            holder.txt_needed.setVisibility(View.GONE);
+            holder.btn_reedemnot.setVisibility(View.GONE);
 
         }else if(redeemItem.getRedeem_flag().equalsIgnoreCase("0")){
             holder.btn_reedem.setVisibility(View.GONE);
-            holder.txt_needed.setText(redeemItem.getRedeem_status_line());
+            holder.btn_reedemnot.setVisibility(View.VISIBLE);
+
+            holder.btn_reedemnot.setText(redeemItem.getRedeem_status_line());
 
         }
 
@@ -147,13 +149,13 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
 
         public TextView txt_rewardname, txt_points, txt_needed;
         ImageView image_reward;
-        Button btn_reedem;
+        Button btn_reedem, btn_reedemnot;
         LinearLayout linear1;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_rewardname = itemView.findViewById(R.id.txt_rewardname);
             txt_points = itemView.findViewById(R.id.txt_points);
-            txt_needed = itemView.findViewById(R.id.txt_needed);
+            btn_reedemnot = itemView.findViewById(R.id.btn_reedemnot);
             btn_reedem = itemView.findViewById(R.id.btn_reedem);
             image_reward = itemView.findViewById(R.id.image_reward);
 
