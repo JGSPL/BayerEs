@@ -144,9 +144,11 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             }
 
             if (feedData.getCity_id() != null && !(feedData.getCity_id().equalsIgnoreCase(""))) {
-                holder.designationTv.setText(feedData.getDesignation() + " - " + feedData.getCity_id());
+               // holder.designationTv.setText(feedData.getDesignation() + " - " + feedData.getCity_id());
+                holder.designationTv.setText(feedData.getCompany_name());
+
             } else {
-                holder.designationTv.setText(feedData.getDesignation());
+                holder.designationTv.setText(feedData.getCompany_name());
             }
 
             if (feedData.getProfile_pic() != null) {

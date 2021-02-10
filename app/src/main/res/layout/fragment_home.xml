@@ -35,14 +35,14 @@
             app:layout_constraintTop_toTopOf="parent"
             android:padding="2dp">
 
-            <androidx.cardview.widget.CardView
+            <!--<androidx.cardview.widget.CardView
                 android:id="@+id/myCardView"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 app:cardCornerRadius="13dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp">-->
 
             <ImageView
                 android:id="@+id/iv_profile"
@@ -53,7 +53,7 @@
                 android:background="@drawable/border"
                 android:src="@drawable/profilepic_placeholder" />
 
-            </androidx.cardview.widget.CardView>
+           <!-- </androidx.cardview.widget.CardView>-->
             <TextView
                 android:id="@+id/tv_whats_on_mind"
                 android:layout_width="match_parent"
