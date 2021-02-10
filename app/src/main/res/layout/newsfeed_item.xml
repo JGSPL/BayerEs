@@ -159,14 +159,23 @@
             </LinearLayout>
         </LinearLayout>
 
-
+    <TextView
+        android:id="@+id/QuestionTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="Question:"
+        android:visibility="gone"
+        android:textColor="@color/linecolor"
+        android:textSize="12dp" />
         <TextView
             android:id="@+id/tv_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="web"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
             android:paddingBottom="5dp"
             android:text=""
@@ -194,6 +203,81 @@
                 android:layout_marginTop="5dp"
                 android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/replyadminTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="Reply from admin:"
+        android:visibility="gone"
+        android:textColor="@color/linecolor"
+        android:textSize="12dp" />
+    <LinearLayout
+        android:id="@+id/ll__adminswipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+
+        android:layout_gravity="left|top">
+
+        <!-- <androidx.cardview.widget.CardView
+             android:id="@+id/myCardView"
+             android:layout_width="50dp"
+             android:layout_height="50dp"
+             android:layout_centerHorizontal="true"
+             android:layout_centerVertical="true"
+             app:cardCornerRadius="40dp"
+             app:cardElevation="0dp">-->
+
+        <ImageView
+            android:id="@+id/adminIV"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/border"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profilepic_placeholder" />
+
+        <!--   </androidx.cardview.widget.CardView>-->
+
+        <ProgressBar
+            android:id="@+id/progressadminView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_weight="0.7"
+        android:layout_marginLeft="7dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/adminTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/designationTv"
+            android:layout_alignTop="@+id/imageView"
+            android:paddingLeft="5dp"
+            android:text="bghngfhgfh"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+    </LinearLayout>
+    </LinearLayout>
 
 
 

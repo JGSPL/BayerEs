@@ -151,6 +151,41 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
                 holder.designationTv.setText(feedData.getCompany_name());
             }
 
+            if(feedData.getQa_reply().equalsIgnoreCase("")){
+                holder.ll__adminswipe.setVisibility(View.GONE);
+                holder.QuestionTv.setVisibility(View.GONE);
+                holder.replyadminTv.setVisibility(View.GONE);
+            }else{
+                holder.ll__adminswipe.setVisibility(View.VISIBLE);
+                holder.QuestionTv.setVisibility(View.VISIBLE);
+                holder.replyadminTv.setVisibility(View.VISIBLE);
+                if (feedData.getAdmin_profile_picture() != null) {
+                    Glide.with(context).load((feedData.getAdmin_profile_picture().trim()))
+                            .placeholder(R.drawable.profilepic_placeholder)
+                            .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).fitCenter()
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    //feedprogress.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    //feedprogress.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            }).into(holder.adminIV);
+
+                }
+                if (!feedData.getQa_reply().isEmpty() && feedData.getQa_reply() != null) {
+                    holder.adminTv.setText(StringEscapeUtils.unescapeJava(feedData.getQa_reply()));
+                    holder.adminTv.setVisibility(View.VISIBLE);
+                } else {
+                    holder.adminTv.setVisibility(View.GONE);
+                }
+            }
+
             if (feedData.getProfile_pic() != null) {
                 Glide.with(context).load((feedData.getProfile_pic().trim()))
                         .placeholder(R.drawable.profilepic_placeholder)
@@ -590,6 +625,9 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
         LinearLayout ll_dots, ll_bottom;
         LinearLayout root;
         View v_divider;
+        TextView replyadminTv,QuestionTv,adminTv;
+        ImageView adminIV;
+        LinearLayout ll__adminswipe;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -621,6 +659,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
 
             ll_bottom = itemView.findViewById(R.id.ll_bottom);
             v_divider = itemView.findViewById(R.id.v_divider);
+
+            replyadminTv = itemView.findViewById(R.id.replyadminTv);
+            adminIV = itemView.findViewById(R.id.adminIV);
+            QuestionTv = itemView.findViewById(R.id.QuestionTv);
+            adminTv = itemView.findViewById(R.id.adminTv);
+
+            ll__adminswipe = itemView.findViewById(R.id.ll__adminswipe);
+
         }
     }
 
