@@ -119,7 +119,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     RelativeLayout ll_main;
     LinearLayout ll_aspociated, ll_sapcode, ll_location, ll_emailid, ll_alternetmobno, ll_organisation, ll_name, ll_last_name, ll_designation, ll_company_name, ll_city, ll_email, ll_mobno, ll_bg;
     EditText et_aspociated, et_sapcode, et_pincode, et_emailid, et_alternetmobno, et_mobno, et_organisation, et_first_name, et_last_name, et_designation, et_company_name, et_city, et_email, et_mobile,
-    et_state ;
+            et_state;
     ImageView iv_first_name, iv_last_name, iv_designation, iv_company_name, iv_city, iv_email, iv_mobile;
     ImageView iv_profile, iv_change_profile, iv_back;
     RadioGroup radiogroupPCO;
@@ -134,13 +134,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     ConnectionDetector connectionDetector;
     UCrop.Options options;
     File file;
-
+    HashMap<String, String> mapProfile;
     Spinner spinner;
-    String api_token, first_name, last_name, designation, company_name, city, email, mobile, is_god, alternate_no, turnover, specialization, license, pincode="",
-            no_of_technician="", no_of_pco_served="", associated_since="", sap_code="", attendee_id="", user_type="", state="";
-    String year[] = {"1950","1951","1952","1953","1954","1955","1956","1957","1958","1959","1960","1961","1962","1963","1964","1965","1966","1967","1968","1969","1970","1971","1972","1973",
-    "1974","1975","1976","1977","1978","1979","1980","1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000",
-    "2001","2002","2003","2004","2005","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021"};
+    String api_token, first_name, last_name, designation, company_name, city, email, mobile, is_god, alternate_no, turnover, specialization, license, pincode = "",
+            no_of_technician = "", no_of_pco_served = "", associated_since = "", sap_code = "", attendee_id = "", user_type = "", state = "";
+    String year[] = {"1950", "1951", "1952", "1953", "1954", "1955", "1956", "1957", "1958", "1959", "1960", "1961", "1962", "1963", "1964", "1965", "1966", "1967", "1968", "1969", "1970", "1971", "1972", "1973",
+            "1974", "1975", "1976", "1977", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987", "1988", "1989", "1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000",
+            "2001", "2002", "2003", "2004", "2005", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"};
     MultipartBody.Part body;
 
     @Override
@@ -201,25 +201,22 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         et_alternetmobno = findViewById(R.id.et_alternetmobno);
         et_pincode = findViewById(R.id.et_pincode);
         spinner = findViewById(R.id.spinner);
-        ArrayAdapter<String>adapter = new ArrayAdapter<String>(ProfileActivity.this,
-                R.layout.spinner_item,year);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ProfileActivity.this,
+                R.layout.spinner_item, year);
 
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
 
-        radiogroupPCO.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
+        radiogroupPCO.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // This will get the radiobutton that has changed in its check state
-                RadioButton checkedRadioButton = (RadioButton)group.findViewById(checkedId);
+                RadioButton checkedRadioButton = (RadioButton) group.findViewById(checkedId);
                 // This puts the value (true/false) into the variable
                 boolean isChecked = checkedRadioButton.isChecked();
                 // If the radiobutton that has changed in check state is now checked...
-                if (isChecked)
-                {
+                if (isChecked) {
                     // Changes the textview's text to "Checked: example radiobutton text"
                     String dataRad = checkedRadioButton.getText().toString();
                     if (dataRad.equalsIgnoreCase("Less than 50")) {
@@ -230,7 +227,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         no_of_pco_served = "2";
                     } else if (dataRad.equalsIgnoreCase("Above 200")) {
                         no_of_pco_served = "3";
-                    }else{
+                    } else {
                         no_of_pco_served = "";
                     }
 
@@ -261,7 +258,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
                         String data = refreashToken.decryptedData(strEventList);
                         JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                        ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                        ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                        }.getType());
 
                         // List<ProfileDetails> profileDetails = profile.getProfileDetails();
                         if (profileDetails.size() > 0) {
@@ -295,7 +293,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             et_sapcode.setText(sap_code);
                             et_organisation.setText(company_name);
                             et_emailid.setText(email);
-                            if(alternate_no!=null) {
+                            if (alternate_no != null) {
                                 et_alternetmobno.setText(alternate_no);
                             }
                             et_pincode.setText(pincode);
@@ -323,18 +321,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                         }
 
-                    }else
-                    {
-                        Toast.makeText(ProfileActivity.this,"Internal server error", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Profile> call, Throwable t) {
                     try {
-                        Toast.makeText(ProfileActivity.this,"Failure", Toast.LENGTH_SHORT).show();
-                    }catch (Exception e)
-                    {}
+                        Toast.makeText(ProfileActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                    }
                 }
             });
 
@@ -414,19 +411,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
             });*/
-        }
-        else
-        {
+        } else {
             first_name = SharedPreference.getPref(getApplicationContext(), KEY_FNAME);
             last_name = SharedPreference.getPref(getApplicationContext(), KEY_LNAME);
-            designation =SharedPreference.getPref(getApplicationContext(), KEY_DESIGNATION);
+            designation = SharedPreference.getPref(getApplicationContext(), KEY_DESIGNATION);
             company_name = SharedPreference.getPref(getApplicationContext(), KEY_COMPANY);
             city = SharedPreference.getPref(getApplicationContext(), KEY_CITY);
             email = SharedPreference.getPref(getApplicationContext(), KEY_EMAIL);
             mobile = SharedPreference.getPref(getApplicationContext(), KEY_MOBILE);
             user_type = SharedPreference.getPref(getApplicationContext(), USER_TYPE);
 
-           // tv_profile_pic.setText(SharedPreference.getPref(getApplicationContext(), PROFILE_PIC));
+            // tv_profile_pic.setText(SharedPreference.getPref(getApplicationContext(), PROFILE_PIC));
 
 
             et_first_name.setText(first_name);
@@ -472,7 +467,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 profile_pic = tv_profile_pic.getText().toString();
 
                 sap_code = et_sapcode.getText().toString();
-               // associated_since = et_aspociated.getText().toString();
+                // associated_since = et_aspociated.getText().toString();
 
 
                 no_of_technician = "";
@@ -481,7 +476,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 specialization = "";
                 turnover = "";
                 alternate_no = "";
-
 
 
                 if (connectionDetector.isConnectingToInternet()) {
@@ -861,17 +855,17 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
 
     public void updateProfile(final String first_name, final String last_name, final String designation,
-                              final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String alternate_no,
-                              final String user_type,final String sap_code,final String associated_since, final String no_of_pco_served) {
-        profileActivityViewModel.validation(first_name, last_name, designation, company_name,city);
+                              final String company_name, final String city, final String email, final String mobile, final String profile_pic, final String alternate_no,
+                              final String user_type, final String sap_code, final String associated_since, final String no_of_pco_served) {
+        profileActivityViewModel.validation(first_name, last_name, designation, company_name, city);
         profileActivityViewModel.getIsValid().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if(s.isEmpty()) {
+                if (s.isEmpty()) {
                     btn_save.setClickable(false);
                     btn_save.setEnabled(false);
                     profileActivityViewModel.updateProfile(api_token, event_id, first_name, last_name, designation, city,
-                            email, mobile, company_name, profile_pic,user_type, no_of_pco_served,associated_since);
+                            email, mobile, company_name, profile_pic, user_type, no_of_pco_served, associated_since);
                     profileActivityViewModel.UpdateProfileDetails().observe(ProfileActivity.this, new Observer<Profile>() {
                         @Override
                         public void onChanged(final Profile profile) {
@@ -884,7 +878,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                     RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
                                     String data = refreashToken.decryptedData(strEventList);
                                     JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                                    final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                                    final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                                    }.getType());
 
                                     HashMap<String, String> map = new HashMap<>();
                                     map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
@@ -897,7 +892,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                     //map.put(KEY_TOKEN, "");
                                     map.put(KEY_CITY, profileDetails.get(0).getCity());
                                     //map.put(KEY_GCM_ID, "");
-                                    map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                    map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                     map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                     map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                     map.put(IS_LOGIN, "true");
@@ -932,10 +927,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void saveProfile(final String first_name, final String last_name, final String designation,
-                            final String company_name, final String city, final String email, final String mobile, final String profile_pic,final String alternate_no,
-                            final String user_type,final String sap_code,final String associated_since, final String no_of_pco_served) {
+                            final String company_name, final String city, final String email, final String mobile, final String profile_pic, final String alternate_no,
+                            final String user_type, final String sap_code, final String associated_since, final String no_of_pco_served) {
 
-        if(!profile_pic.isEmpty()) {
+        if (!profile_pic.isEmpty()) {
             File file = new File(profile_pic);
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/png"), file);
             body = MultipartBody.Part.createFormData("profile_pic", file.getName(), reqFile);
@@ -965,13 +960,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if (body == null) {
 
-            ApiUtils.getAPIService().updateProfile(api_token,mEvent_id,muser_type,/*mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode,*/ massociated, mno_of_pco).enqueue(new Callback<Profile>() {
+            ApiUtils.getAPIService().updateProfile(api_token, mEvent_id, muser_type,/*mFirst_name,mLast_name,mDesignation,mCity,mEmail,mMobile,altno1,altno2,altno3,mCompany_name,mstate,mnooftect,mspecilization,mturnOver, mPincode,*/ massociated, mno_of_pco).enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     try {
 
                         if (response != null) {
-                            if ( response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                            if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
 
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
@@ -979,26 +974,32 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
                                 String data = refreashToken.decryptedData(strEventList);
                                 JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                                }.getType());
 
-                                HashMap<String, String> map = new HashMap<>();
-                                map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
-                                map.put(KEY_LNAME, profileDetails.get(0).getLast_name());
-                                map.put(KEY_EMAIL, profileDetails.get(0).getEmail());
-                                map.put(KEY_PASSWORD, "");
-                                map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
-                                map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
-                                map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
+                                mapProfile = new HashMap<>();
+                                mapProfile.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
+                                mapProfile.put(KEY_LNAME, profileDetails.get(0).getLast_name());
+                                mapProfile.put(KEY_EMAIL, profileDetails.get(0).getEmail());
+                                mapProfile.put(KEY_PASSWORD, "");
+                                mapProfile.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
+                                mapProfile.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
+                                mapProfile.put(KEY_MOBILE, profileDetails.get(0).getMobile());
                                 //map.put(KEY_TOKEN, "");
-                                map.put(KEY_CITY, profileDetails.get(0).getCity());
+                                mapProfile.put(KEY_CITY, profileDetails.get(0).getCity());
                                 //map.put(KEY_GCM_ID, "");
-                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
-                                map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
-                                map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
-                                map.put(ENROLL_LEAP_FLAG, profileDetails.get(0).getEnrollleapflag());
+                                mapProfile.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
+                                mapProfile.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
+                                mapProfile.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
 
-                                map.put(IS_LOGIN, "true");
-                                SharedPreference.putPref(ProfileActivity.this, map);
+                                if (profileDetails.get(0).getEnrollleapflag() != null) {
+                                    mapProfile.put(ENROLL_LEAP_FLAG, profileDetails.get(0).getEnrollleapflag());
+                                } else {
+                                    mapProfile.put(ENROLL_LEAP_FLAG, "");
+                                }
+
+                                mapProfile.put(IS_LOGIN, "true");
+                                SharedPreference.putPref(ProfileActivity.this, mapProfile);
                                 final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     @Override
@@ -1048,7 +1049,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 RefreashToken refreashToken = new RefreashToken(ProfileActivity.this);
                                 String data = refreashToken.decryptedData(strEventList);
                                 JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
-                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>(){}.getType());
+                                final ArrayList<ProfileDetails> profileDetails = new Gson().fromJson(jsonArray, new TypeToken<List<ProfileDetails>>() {
+                                }.getType());
 
                                 HashMap<String, String> map = new HashMap<>();
                                 map.put(KEY_FNAME, profileDetails.get(0).getFirst_name());
@@ -1061,7 +1063,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 //map.put(KEY_TOKEN, "");
                                 map.put(KEY_CITY, profileDetails.get(0).getCity());
                                 //map.put(KEY_GCM_ID, "");
-                                map.put(KEY_PROFILE_PIC,profileDetails.get(0).getProfile_picture());
+                                map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
@@ -1286,8 +1288,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         return inSampleSize;
     }
 
-    public void setDynamicColor()
-    {
+    public void setDynamicColor() {
         btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_1)));
         ll_bg.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         view_down.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
@@ -1318,7 +1319,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         associated_since = parent.getItemAtPosition(position).toString();
-      //  Toast.makeText(this, "YOUR SELECTION IS : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(this, "YOUR SELECTION IS : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
 
     }
 

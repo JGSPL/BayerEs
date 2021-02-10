@@ -35,6 +35,8 @@ import com.procialize.bayer2020.ui.Contactus.model.ContactUs;
 import com.procialize.bayer2020.ui.Contactus.viewmodel.ContactUsViewModel;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.faq.view.FAQActivity;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
+import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,6 +131,14 @@ public class ContactUsActivity extends AppCompatActivity {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ContactUsActivity.this, NotificationActivity.class));
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

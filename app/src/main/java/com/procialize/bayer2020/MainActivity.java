@@ -337,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 navView.setSelectedItemId(R.id.navigation_home);
             }
             else {
+                enrollleapFlag = SharedPreference.getPref(this, ENROLL_LEAP_FLAG);
                 if (enrollleapFlag.equalsIgnoreCase("1")) {
 
                 } else {
@@ -356,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } catch (Exception e) {
             e.printStackTrace();
-
+            enrollleapFlag = SharedPreference.getPref(this, ENROLL_LEAP_FLAG);
             if (enrollleapFlag.equalsIgnoreCase("1")) {
 
             } else {
@@ -410,6 +411,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_leap:
                         // Switch to page two
+                        enrollleapFlag = SharedPreference.getPref(MainActivity.this, ENROLL_LEAP_FLAG);
                         if (enrollleapFlag.equalsIgnoreCase("1")) {
 
                         } else {
@@ -964,8 +966,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                         if (response.isSuccessful()) {
                             HashMap<String, String> map = new HashMap<>();
-
                             map.put(ENROLL_LEAP_FLAG, "1");
+                            SharedPreference.putPref(MainActivity.this, map);
                             Utility.createShortSnackBar(mDrawerLayout, response.body().getHeader().get(0).getMsg());
 
                         }
