@@ -42,6 +42,7 @@
 
 
             <RelativeLayout
+                android:id="@+id/rl_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
@@ -72,8 +73,8 @@
 
                     <TextView
                         android:id="@+id/tv_notification"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
+                        android:layout_width="15dp"
+                        android:layout_height="match_parent"
                         android:gravity="top|center"
                         android:text="50"
                         android:textColor="@color/colorwhite"

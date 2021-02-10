@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_gravity="top"
     android:layout_marginBottom="5dp"
-    android:gravity="center"
     android:background="@color/colorwhite"
     android:orientation="horizontal"
     android:paddingLeft="10dp"
@@ -17,7 +16,9 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_weight="9"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/tv_title"
@@ -48,5 +49,6 @@
         android:layout_width="25dp"
         android:layout_weight="1"
         android:layout_height="25dp"
+        android:layout_marginTop="10dp"
         app:srcCompat="@drawable/ic_plus" />
 </LinearLayout>

@@ -63,6 +63,7 @@
                 android:layout_gravity="center"
                 android:contentDescription=" " />
             <RelativeLayout
+                android:id="@+id/rl_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
@@ -120,7 +121,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="200dp"
         android:background="@drawable/backdrop"
         android:layout_gravity="center">
 
@@ -150,7 +151,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:visibility="visible"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:adjustViewBounds="true"

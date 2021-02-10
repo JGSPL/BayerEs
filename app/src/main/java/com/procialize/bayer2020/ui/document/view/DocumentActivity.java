@@ -1,6 +1,7 @@
 package com.procialize.bayer2020.ui.document.view;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +50,7 @@ import com.procialize.bayer2020.ui.document.adapter.DocumentListAdapter;
 import com.procialize.bayer2020.ui.document.model.Document;
 import com.procialize.bayer2020.ui.document.model.DocumentDetail;
 import com.procialize.bayer2020.ui.document.viewmodel.DocumentViewModel;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -87,6 +90,7 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
     public static List<DocumentDetail> gsonevent = new ArrayList<>();
     DocumentGridAdapter documentAdapter;
     DocumentListAdapter documentAdapterlist;
+
     //ImageView image_list, image_grid;
     int color, color2;
 
@@ -163,6 +167,14 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(DocumentActivity.this, NotificationActivity.class));
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

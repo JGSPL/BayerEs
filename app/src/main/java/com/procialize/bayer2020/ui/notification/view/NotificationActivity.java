@@ -547,8 +547,8 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
-        startActivity(new Intent(NotificationActivity.this,MainActivity.class));
+        super.onBackPressed();
+        //startActivity(new Intent(NotificationActivity.this,MainActivity.class));
         finish();
     }
 

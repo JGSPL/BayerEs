@@ -36,8 +36,10 @@ import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.catalogue.model.ProductType;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
 import com.procialize.bayer2020.ui.catalogue.view.ProductListDetailActivity;
+import com.procialize.bayer2020.ui.document.view.DocumentActivity;
 import com.procialize.bayer2020.ui.faq.adapter.FAQAdapter;
 import com.procialize.bayer2020.ui.faq.model.faq_item;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -112,6 +114,14 @@ public class FAQActivity extends AppCompatActivity implements FAQAdapter.Product
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(FAQActivity.this, NotificationActivity.class));
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

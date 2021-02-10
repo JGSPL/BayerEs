@@ -1,5 +1,6 @@
 package com.procialize.bayer2020.ui.livepoll.view;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -43,11 +44,13 @@ import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.ui.faq.view.FAQActivity;
 import com.procialize.bayer2020.ui.livepoll.adapter.PollGraphAdapter;
 import com.procialize.bayer2020.ui.livepoll.model.FetchLivePoll;
 import com.procialize.bayer2020.ui.livepoll.model.LivePoll;
 import com.procialize.bayer2020.ui.livepoll.model.LivePoll_option;
 import com.procialize.bayer2020.ui.livepoll.model.Logo;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -58,6 +61,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_1;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_2;
@@ -251,6 +255,23 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
             Toast.makeText(PollDetailActivity.this, "Select Option", Toast.LENGTH_SHORT).show();
         }
 
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(PollDetailActivity.this, NotificationActivity.class));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
 
     }
 

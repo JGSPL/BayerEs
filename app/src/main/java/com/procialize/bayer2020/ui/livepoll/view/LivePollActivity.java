@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -42,6 +43,7 @@ import com.procialize.bayer2020.ui.livepoll.model.LivePoll;
 import com.procialize.bayer2020.ui.livepoll.model.LivePoll_option;
 import com.procialize.bayer2020.ui.livepoll.model.Logo;
 import com.procialize.bayer2020.ui.livepoll.viewmodel.LivePollViewModel;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 
 import java.io.Serializable;
@@ -180,6 +182,14 @@ public class LivePollActivity extends AppCompatActivity implements LivePollAdapt
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(LivePollActivity.this, NotificationActivity.class));
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

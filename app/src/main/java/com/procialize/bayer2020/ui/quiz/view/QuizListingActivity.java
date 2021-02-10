@@ -41,6 +41,8 @@ import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.session.SessionManager;
+import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 import com.procialize.bayer2020.ui.quiz.adapter.QuizListAdapter;
 import com.procialize.bayer2020.ui.quiz.model.QuizList;
 import com.procialize.bayer2020.ui.quiz.model.QuizListing;
@@ -137,6 +139,14 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(QuizListingActivity.this, NotificationActivity.class));
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
