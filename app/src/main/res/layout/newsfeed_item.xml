@@ -72,7 +72,7 @@
                     android:layout_alignTop="@+id/imageView"
                     android:paddingLeft="5dp"
                     android:text=""
-                    android:textColor="@color/activetab"
+                    android:textColor="@color/blue"
                     android:textSize="15dp" />
 
                 <LinearLayout
