@@ -50,7 +50,7 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
     TextView tv_title, tv_description;
     ImageView iv_banner;
     UpskillList upskillList;
-    String api_token, eventid;
+    String api_token, eventid,id;
     Button btn_start;
     UpskillContentSubArray upskillContentSubArray;
     public static int click_count = 0;
@@ -80,12 +80,12 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
             }
         });
         setUpToolbar();
-
+        id = upskillList.getId();
         getDataFromApi();
     }
 
     private void getDataFromApi() {
-        ApiUtils.getAPIService().UpskillContent(api_token, eventid, upskillList.getId())
+        ApiUtils.getAPIService().UpskillContent(api_token, eventid, id)
                 .enqueue(new Callback<UpskillContent>() {
                     @Override
                     public void onResponse(Call<UpskillContent> call, Response<UpskillContent> response) {
@@ -162,6 +162,7 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
 
                 try {
                     click_count = 0;
+                    btn_start.setEnabled(false);
                     if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Text")) {
                         startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillDetailsTextActivity.class)
                                 .putExtra("upskillContent", (Serializable) upskillContentSubArray)
