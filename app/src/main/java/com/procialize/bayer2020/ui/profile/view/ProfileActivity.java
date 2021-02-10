@@ -994,8 +994,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
                                 if (profileDetails.get(0).getEnrollleapflag() != null) {
                                     mapProfile.put(ENROLL_LEAP_FLAG, profileDetails.get(0).getEnrollleapflag());
-                                } else {
-                                    mapProfile.put(ENROLL_LEAP_FLAG, "");
                                 }
 
                                 mapProfile.put(IS_LOGIN, "true");
