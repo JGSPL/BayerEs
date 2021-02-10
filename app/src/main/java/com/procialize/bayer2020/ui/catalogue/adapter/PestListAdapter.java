@@ -56,7 +56,7 @@ public class PestListAdapter extends RecyclerView.Adapter<PestListAdapter.Produc
 
         Glide.with(holder.imageIv)
                 .load(imageurl+productType.getPest_image())
-                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).centerCrop()
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
