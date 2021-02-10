@@ -273,13 +273,13 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
                 }
             });
 
-            holder.moreIV.setOnClickListener(new View.OnClickListener() {
+          /*  holder.moreIV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.moreTvFollowOnClick(v, feed_detail.get(position), position);
 
                 }
-            });
+            });*/
 
             holder.iv_share.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -669,6 +669,7 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
             adminTv = itemView.findViewById(R.id.adminTv);
 
             ll__adminswipe = itemView.findViewById(R.id.ll__adminswipe);
+            moreIV.setVisibility(View.GONE);
 
         }
     }
