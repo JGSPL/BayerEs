@@ -348,7 +348,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
            /* URL url = new URL(URLDecoder.decode(dynamicLink.toString(),
                     "UTF-8"));*/
 
-            URL url = new URL(URLDecoder.decode("https://play.google.com/store/apps/details?id=com.procialize.vivoapp_2020&hl=en_IN&gl=US",
+            URL url = new URL(URLDecoder.decode("https://bayer2020.page.link/newsfeed",
                     "UTF-8"));
             Log.i(TAG, "URL = " + url.toString());
             Intent intent = new Intent(Intent.ACTION_SEND);
