@@ -69,11 +69,43 @@ public class Newsfeed_detail implements Serializable {
     @SerializedName("total_comments")
     @Expose
     private String total_comments;
+    @SerializedName("qa_reply")
+    @Expose
+    private String qa_reply;
+    @SerializedName("admin_profile_picture")
+    @Expose
+    private String admin_profile_picture;
+    @SerializedName("approve_flag")
+    @Expose
+    private String approve_flag;
 
     @SerializedName("news_feed_media")
     @Expose
     List<News_feed_media> news_feed_media;
 
+    public String getQa_reply() {
+        return qa_reply;
+    }
+
+    public void setQa_reply(String qa_reply) {
+        this.qa_reply = qa_reply;
+    }
+
+    public String getAdmin_profile_picture() {
+        return admin_profile_picture;
+    }
+
+    public void setAdmin_profile_picture(String admin_profile_picture) {
+        this.admin_profile_picture = admin_profile_picture;
+    }
+
+    public String getApprove_flag() {
+        return approve_flag;
+    }
+
+    public void setApprove_flag(String approve_flag) {
+        this.approve_flag = approve_flag;
+    }
 
     public List<News_feed_media> getNews_feed_media() {
         return news_feed_media;

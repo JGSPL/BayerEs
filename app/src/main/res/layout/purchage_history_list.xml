@@ -94,7 +94,7 @@
         android:textStyle="bold"
         android:textSize="16dp"
         android:text="Purchase history"
-        android:textColor="@color/black" />
+        android:textColor="@color/Darkblue" />
 
     <LinearLayout
         android:id="@+id/linear"
@@ -112,6 +112,7 @@
             android:layout_weight="5"
             android:gravity="left"
             android:text="Total:"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:padding="5dp">
 
