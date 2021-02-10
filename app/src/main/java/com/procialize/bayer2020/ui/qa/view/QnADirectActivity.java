@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -51,12 +52,14 @@ import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.faq.view.FAQActivity;
+import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
 import com.procialize.bayer2020.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.bayer2020.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.bayer2020.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.bayer2020.ui.newsfeed.view.NewsFeedFragment;
 import com.procialize.bayer2020.ui.newsfeed.viewmodel.NewsFeedViewModel;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 import com.procialize.bayer2020.ui.qa.adapter.QnAAdapter;
 import com.procialize.bayer2020.ui.qa.model.QnA;
 import com.procialize.bayer2020.ui.qa.viewmodel.QADirectViewModel;
@@ -178,6 +181,14 @@ public class QnADirectActivity extends AppCompatActivity implements View.OnClick
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(QnADirectActivity.this, NotificationActivity.class));
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

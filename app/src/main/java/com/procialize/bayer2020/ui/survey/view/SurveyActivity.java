@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -31,6 +32,8 @@ import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
+import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 import com.procialize.bayer2020.ui.survey.adapter.SurveyAdapter;
 import com.procialize.bayer2020.ui.survey.model.Survey;
 import com.procialize.bayer2020.ui.survey.viewmodel.SurveyViewModel;
@@ -89,6 +92,14 @@ public class SurveyActivity extends AppCompatActivity implements SurveyAdapter.S
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(SurveyActivity.this, NotificationActivity.class));
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package com.procialize.bayer2020.ui.Privacypolicy;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,8 +25,10 @@ import com.bumptech.glide.request.target.Target;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.ui.EULA.EulaActivity;
 import com.procialize.bayer2020.ui.Privacypolicy.viewmodel.PrivacyPolicyViewModel;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
@@ -80,6 +84,14 @@ public class PrivacypolicyActivity extends AppCompatActivity {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(PrivacypolicyActivity.this, NotificationActivity.class));
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
