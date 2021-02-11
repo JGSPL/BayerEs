@@ -84,14 +84,14 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
 
 
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
-                R.array.amount_array1, android.R.layout.simple_spinner_item);
+                R.array.amount_array1, R.layout.spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinnersqare.setAdapter(adapter2);
 
         ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this,
-                R.array.amount_array, android.R.layout.simple_spinner_item);
+                R.array.amount_array,R.layout.spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -137,7 +137,7 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
             if(product_dosage_detailList.get(0).getInfestation_level().equalsIgnoreCase("0")){
                 // Create an ArrayAdapter using the string array and a default spinner layout
                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                        R.array.any_array, android.R.layout.simple_spinner_item);
+                        R.array.any_array, R.layout.spinner_item);
                 // Specify the layout to use when the list of choices appears
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 // Apply the adapter to the spinner
@@ -146,7 +146,7 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
             }else{
                 // Create an ArrayAdapter using the string array and a default spinner layout
                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                        R.array.high_array, android.R.layout.simple_spinner_item);
+                        R.array.high_array, R.layout.spinner_item);
                 // Specify the layout to use when the list of choices appears
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 // Apply the adapter to the spinner
@@ -157,6 +157,47 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
             txt_quan.setText(product_dosage_detailList.get(0).getAmount_unit());
             txt_quantity.setText(product_dosage_detailList.get(0).getAmount_unit());
             txt_quantitySolu.setText(product_dosage_detailList.get(0).getDiluted_solution_quantity());
+
+            edtAmountConvert.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if ( (actionId == EditorInfo.IME_ACTION_DONE) || ((event.getKeyCode() == KeyEvent.KEYCODE_ENTER) && (event.getAction() == KeyEvent.ACTION_DOWN ))){
+                        try {
+
+                            if (edtAmountConvert.getText().toString().isEmpty()) {
+                                Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
+                                return false;
+                            } else {
+
+                                if (conversionValue.equalsIgnoreCase("Square feet")) {
+                                    try {
+                                        String value = edtAmountConvert.getText().toString();
+                                        // Double fvalue = Float.parseFloat(value)*10.7;
+                                        Double fvalue = Double.parseDouble(value);
+
+                                        txtAmountConvert.setText(String.valueOf(fvalue));
+                                    }catch (Exception e){
+
+                                    }
+
+                                } else if (conversionValue.equalsIgnoreCase("Square meter")) {
+                                    String value = edtAmountConvert.getText().toString();
+                                    Double fvalue = Float.parseFloat(value)/10.7;
+                                    txtAmountConvert.setText(String.valueOf(fvalue));
+                                }
+                                return true;
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                }
+            });
 
             txt_area.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -177,11 +218,11 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
                                 } else {
                                     Double mPointtotal = Double.parseDouble(txt_score) * Double.parseDouble(txt_total);
                                     String s1 = String.valueOf(mPointtotal);
-                                    String res = s1.replace(".", "");
-                                    txt_quantity.setText(res);
+                                    //String res = s1.replace(".", "");
+                                    txt_quantity.setText(s1);
                                 }
                                 //txt_area.setFocusable(false);
-                               // txt_area.setEnabled(false);
+                                // txt_area.setEnabled(false);
                                 return true;
 
                             }

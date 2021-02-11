@@ -22,7 +22,6 @@
     <item>
         <bitmap
             android:gravity="end"
-            android:tint="@color/black"
             android:src="@drawable/qna_arrow" />
     </item>
 </layer-list>

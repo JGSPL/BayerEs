@@ -191,7 +191,7 @@
                     android:imeOptions="actionDone"
 
                     android:layout_gravity="center"
-                    android:layout_marginLeft="2dp"
+                    android:layout_marginLeft="0dp"
                     android:layout_weight="3"
                     android:background="@drawable/cell_border"
 
@@ -353,7 +353,7 @@
             <TextView
                 android:id="@+id/txtAmountConvert"
                 android:layout_margin="10dp"
-                android:background="@drawable/profile_edit_text_bg"
+                android:background="@color/colorwhite"
                 android:padding="10dp"
                 android:layout_width="0dp"
                 android:singleLine="true"
@@ -383,7 +383,7 @@
                 android:background="@drawable/spinner_backcal"
                 android:layout_width="0dp"
                 android:layout_weight="5"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 >
 
             </Spinner>
@@ -396,7 +396,7 @@
 
                 android:layout_width="0dp"
                 android:layout_weight="5"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 >
 
             </Spinner>
