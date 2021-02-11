@@ -99,6 +99,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         android:text="Dosage Calculator"
         android:textSize="20sp">
 

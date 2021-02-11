@@ -110,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="@drawable/gallery_placeholder"
-        android:scaleType="centerCrop" />
+        android:scaleType="fitXY" />
 
     <androidx.fragment.app.FragmentTabHost
         android:id="@+id/tabhost"
