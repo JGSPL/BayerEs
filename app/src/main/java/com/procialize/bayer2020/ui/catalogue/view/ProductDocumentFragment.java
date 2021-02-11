@@ -90,7 +90,7 @@ public class ProductDocumentFragment extends Fragment implements ProductDocument
         //pdfview.putExtra("url", "https://drive.google.com/viewerng/viewer?embedded=true&url=" + ApiConstant.imgURL + "uploads/travel_gallery/" + document.getFile_name());
         pdfview.putExtra("DocId", pollList.getId());
 
-        pdfview.putExtra("url", "https://docs.google.com/gview?embedded=true&url=" + DocumentPath+pollList.getProduct_document_original_filename());
+        pdfview.putExtra("url", "https://docs.google.com/gview?embedded=true&url=" + DocumentPath+pollList.getProduct_document_filename());
        /* pdfview.putExtra("url1", ApiConstant.imgURL + "uploads/travel_gallery/" + document.getFile_name());
         pdfview.putExtra("type",  document.getType());
         pdfview.putExtra("content",  document.getContent());*/

@@ -42,7 +42,6 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_scheame_detail);
 
         new RefreashToken(ScheameOfferDetail_Activity.this).callGetRefreashToken(ScheameOfferDetail_Activity.this);
@@ -60,7 +59,6 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
                 finish();
             }
         });
-
 
         /*String eulaLink = ScheameList.getDescription() ;
         WebSettings webSettings = webView.getSettings();
@@ -98,14 +96,11 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
         getUserActivityReport.userActivityReport();
         //--------------------------------------------------------------------------------------
 
-
-
         webview.clearCache(true);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setPluginState(WebSettings.PluginState.ON);
 
         webview.loadUrl(eulaLink);
-
 
         webview.setWebViewClient(new WebViewClient() {
             boolean checkhasOnPageStarted = false;
@@ -120,8 +115,6 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
                     view.reload();
             }
         });
-
-
     }
     private void setUpToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
