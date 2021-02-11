@@ -203,6 +203,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
     @Override
     public void onContactSelected(Product_item product_item) {
         startActivity(new Intent(this, ProductListDetailActivity.class)
+                .putExtra("Imageurl", Imageurl)
                 .putExtra("Product", (Serializable) product_item));
     }
     private void setUpToolbar() {

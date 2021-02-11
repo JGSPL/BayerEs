@@ -68,7 +68,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
     private FragmentTabHost mTabHostCel;
     Toolbar mToolbar;
     ImageView headerlogoIv;
-    String token, eventid, imageurl, productId = "1";
+    String token, eventid, imageurl, productId = "1", Imageurl;
     List<product_subpoint_detail> product_subpoint_detailList = new ArrayList<>();
     List<Product_document_detail> Product_document_detailList = new ArrayList<>();
     List<product_dosage_detail> product_dosage_detailList = new ArrayList<>();
@@ -105,6 +105,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
         product_item = (Product_item) getIntent().getSerializableExtra("Product");
+        Imageurl = getIntent().getStringExtra("Imageurl");;
         productId = product_item.getId();
 
         mToolbar.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +133,21 @@ public class ProductListDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         //----------------------------------------------------------------------------------
+
+        productTitle.setText(product_item.getProduct_name());
+        Glide.with(ProductListDetailActivity.this)
+                .load(Imageurl+product_item.getProduct_image())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                }).into(imgCover);
        /* mTabHostCel.addTab(
                 mTabHostCel.newTabSpec("Tab1")
                         .setIndicator(createTabView(this, "Details")),
@@ -257,20 +273,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                         );
                                     }
                                 });*/
-                                productTitle.setText(product_item.getProduct_name());
-                                Glide.with(ProductListDetailActivity.this)
-                                        .load(eventLists.getProduct_imagepath()+product_item.getProduct_image())
-                                        .listener(new RequestListener<Drawable>() {
-                                            @Override
-                                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                                return false;
-                                            }
 
-                                            @Override
-                                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                                return false;
-                                            }
-                                        }).into(imgCover);
                             } else {
                                 Utility.createShortSnackBar(linMain, "Failure22");
                             }
