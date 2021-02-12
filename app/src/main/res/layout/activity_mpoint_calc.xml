@@ -57,10 +57,10 @@
                 android:contentDescription=" "
                 android:src="@drawable/bayer" />
             <RelativeLayout
+                android:id="@+id/rl_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
                 android:gravity="center">

@@ -227,6 +227,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_notification.setVisibility(View.VISIBLE);
             ll_notification_count.setVisibility(View.VISIBLE);
         }
+
+        getNotiCount(this);
         getProfileDetails();
         //CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
 //        CommonFunction.showBackgroundImage(this, ll_main);
