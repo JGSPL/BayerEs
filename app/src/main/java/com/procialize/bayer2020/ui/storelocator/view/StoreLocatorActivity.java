@@ -101,9 +101,9 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
             }
         });
 
-        setUpMapIfNeeded();
        clusterManager = new ClusterManager<ClusterMarkerLocation>( this, map );
 
+        setUpMapIfNeeded();
 
     }
 
@@ -124,17 +124,23 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                 public void onMapReady(GoogleMap googlemap) {
                     map = googlemap;
                     if (map != null) {
-                        setUpMap();
+
+                        map.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                            @Override
+                            public void onMapLoaded() {
+                                //Your code where exception occurs goes here...
+                                setUpMap();
 
                         /*LatLng norway = new LatLng(23.63936,97.34466);
 
                         CameraPosition target = CameraPosition.builder().target(norway).zoom(6).build();
                         map.moveCamera(CameraUpdateFactory.newCameraPosition(target));*/
-                        LatLngBounds boundsIndia = new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466));
-                        int padding = 0; // offset from edges of the map in pixels
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(boundsIndia, padding);
-                        map.animateCamera(cameraUpdate);
-
+                                LatLngBounds boundsIndia = new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466));
+                                int padding = 0; // offset from edges of the map in pixels
+                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(boundsIndia, padding);
+                                map.animateCamera(cameraUpdate);
+                            }
+                        });
 
                     }
 
@@ -162,12 +168,16 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
         }else {
             marker.hideInfoWindow();
             myMarker.hideInfoWindow();
+            try {
+                CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(5).build();
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+                String str = marker.getSnippet();
+                String[] splitStr = str.split("\\@+");
+                openMoreDetails(splitStr[0].toString(), splitStr[1].toString(), splitStr[2].toString());
+            }catch (Exception e){
+                Toast.makeText(StoreLocatorActivity.this, "Invalid Lat-Long ", Toast.LENGTH_SHORT).show();
 
-            CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(14).build();
-            map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
-            String str = marker.getSnippet();
-            String[] splitStr = str.split("\\@+");
-            openMoreDetails(splitStr[0].toString(), splitStr[1].toString(), splitStr[2].toString());
+            }
 
         }
 
@@ -238,7 +248,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
 
                         }
                     }catch (Exception e){
-                        Toast.makeText(StoreLocatorActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StoreLocatorActivity.this, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -305,7 +315,8 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
 
                         }
                     }catch (Exception e){
-                        Toast.makeText(StoreLocatorActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StoreLocatorActivity.this, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
+
 
                     }
 

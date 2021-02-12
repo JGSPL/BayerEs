@@ -1,8 +1,10 @@
 package com.procialize.bayer2020.ui.catalogue.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,6 +38,8 @@ import com.procialize.bayer2020.ui.catalogue.model.Pest_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +67,9 @@ public class PestProductDetailsActivity extends AppCompatActivity {
     Toolbar mToolbar;
     PestTypeItem pest_item;
     TextView tv_title;
-    ImageView iv_cover;
+    ImageView iv_cover,imageView2;
     List<CataloguePestRecommendedProducts> recommendedeProductList = new ArrayList<>();
+    private static final String TAG = "DynamicLinks";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,8 @@ public class PestProductDetailsActivity extends AppCompatActivity {
         tv_title = findViewById(R.id.tv_title);
         linMain = findViewById(R.id.linMain);
         iv_cover = findViewById(R.id.iv_cover);
+        imageView2 = findViewById(R.id.imageView2);
+
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
 
@@ -118,7 +125,16 @@ public class PestProductDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         //----------------------------------------------------------------------------------
+
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareLink();
+            }
+        });
     }
+
+
 
     public void getDataFromApi(String token, String eventid) {
 
@@ -219,4 +235,23 @@ public class PestProductDetailsActivity extends AppCompatActivity {
 
         }
     }
+
+    public void shareLink() {
+        try {
+           /* URL url = new URL(URLDecoder.decode(dynamicLink.toString(),
+                    "UTF-8"));*/
+
+            URL url = new URL(URLDecoder.decode("https://bayer2020.page.link/newsfeed",
+                    "UTF-8"));
+            Log.i(TAG, "URL = " + url.toString());
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Firebase Deep Link");
+            intent.putExtra(Intent.EXTRA_TEXT, url.toString());
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.i(TAG, "Could not decode Uri: " + e.getLocalizedMessage());
+        }
+    }
+
 }

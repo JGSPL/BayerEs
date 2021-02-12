@@ -173,6 +173,21 @@ public class ProductListDetailActivity extends AppCompatActivity {
             }
         });
 
+        btnbuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProductListDetailActivity.this, StoreLocatorActivity.class)
+                );
+            }
+        });
+        linBuyNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProductListDetailActivity.this, StoreLocatorActivity.class)
+                );
+            }
+        });
+
         if (cd.isConnectingToInternet()) {
             getDataFromApi(token, eventid);
         }else {
@@ -259,20 +274,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                     }
                                 });
 
-                               /* btnbuy.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(ProductListDetailActivity.this, StoreLocatorActivity.class)
-                                        );
-                                    }
-                                });
-                                linBuyNow.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startActivity(new Intent(ProductListDetailActivity.this, StoreLocatorActivity.class)
-                                        );
-                                    }
-                                });*/
+
 
                             } else {
                                 Utility.createShortSnackBar(linMain, "Failure22");

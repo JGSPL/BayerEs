@@ -22,7 +22,6 @@
         android:id="@+id/navigation_catalogue"
         android:enabled="true"
         android:title="Catalogue"
-
         android:icon="@drawable/attendee_selector"
         app:showAsAction="withText" />
     <item

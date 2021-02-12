@@ -3,6 +3,7 @@ package com.procialize.bayer2020.ui.catalogue.view;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +40,8 @@ import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +63,7 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
     MutableLiveData<FetchPestTypeList> FetchProductTypeList = new MutableLiveData<>();
     String eventid;
     String token;
+
     RelativeLayout relative;
     String Imageurl;
     private APIService eventApi;
@@ -235,5 +239,6 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
                 .putExtra("Imageurl", Imageurl)
        );
     }
+
 }
 

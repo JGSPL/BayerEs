@@ -116,7 +116,7 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
     @NonNull
     @Override
     public QnAAdapter.NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.newsfeed_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.qa_item, parent, false);
         return new QnAAdapter.NewsViewHolder(view);
     }
 
@@ -157,11 +157,15 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
             if(feedData.getQa_reply().equalsIgnoreCase("")){
                 holder.ll__adminswipe.setVisibility(View.GONE);
                 holder.QuestionTv.setVisibility(View.GONE);
-                holder.replyadminTv.setVisibility(View.GONE);
+                holder.replyadminTv.setVisibility(View.VISIBLE);
+                holder.replyadminTv.setText("Answer can only be posted by the admin");
+
             }else{
                 holder.ll__adminswipe.setVisibility(View.VISIBLE);
                 holder.QuestionTv.setVisibility(View.VISIBLE);
                 holder.replyadminTv.setVisibility(View.VISIBLE);
+                holder.replyadminTv.setText("Reply from admin:");
+
                 if (feedData.getAdmin_profile_picture() != null) {
                     Glide.with(context).load((feedData.getAdmin_profile_picture().trim()))
                             .placeholder(R.drawable.profilepic_placeholder)
