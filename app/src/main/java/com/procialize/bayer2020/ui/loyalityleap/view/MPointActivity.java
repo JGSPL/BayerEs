@@ -1,10 +1,12 @@
 package com.procialize.bayer2020.ui.loyalityleap.view;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemStatusBasicData
 import com.procialize.bayer2020.ui.loyalityleap.model.m_points_list;
 import com.procialize.bayer2020.ui.loyalityleap.model.m_points_list;
 import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_status_item;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
@@ -104,6 +108,25 @@ public class MPointActivity extends AppCompatActivity implements MCalculatorAdap
 
 
         }
+
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MPointActivity.this, NotificationActivity.class));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
+
 
     }
 

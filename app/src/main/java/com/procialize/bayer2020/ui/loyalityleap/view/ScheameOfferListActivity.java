@@ -5,8 +5,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +43,8 @@ import com.procialize.bayer2020.ui.document.view.DocumentActivity;
 import com.procialize.bayer2020.ui.loyalityleap.adapter.ScheameOfferAdapter;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchSchemeOffer;
 import com.procialize.bayer2020.ui.loyalityleap.model.Scheme_offer_item;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
+import com.procialize.bayer2020.ui.qa.view.QnADirectActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,6 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.procialize.bayer2020.Utility.CommonFunction.setNotification;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.DOCUMENT_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
@@ -122,6 +127,25 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
                 }
             }
         });
+
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ScheameOfferListActivity.this, NotificationActivity.class));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
+
     }
 
     public MutableLiveData<FetchSchemeOffer> getProductType(String token, String eventid) {
