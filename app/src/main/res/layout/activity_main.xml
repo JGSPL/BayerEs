@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:gravity="left|center"
-                        android:src="@drawable/ic_drawer" />
+                        android:src="@drawable/menuicon" />
 
                     <ImageView
                         android:id="@+id/headerlogoIv"

@@ -2,6 +2,7 @@ package com.procialize.bayer2020.Constants;
 
 
 import com.procialize.bayer2020.GetterSetter.BaseResponse;
+import com.procialize.bayer2020.GetterSetter.LoginOrgamizerToken;
 import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
 import com.procialize.bayer2020.GetterSetter.resendOTP;
 import com.procialize.bayer2020.GetterSetter.validateOTP;
@@ -57,8 +58,8 @@ public interface APIService {
 
     @POST("login_api_call/commonLogin")
     @FormUrlEncoded
-    Call<LoginOrganizer> LoginWithOrganizer(@Field("organizer_id") String organizer_id,
-                                            @Field("username") String username);
+    Call<LoginOrgamizerToken> LoginWithOrganizer(@Field("organizer_id") String organizer_id,
+                                                 @Field("username") String username);
 
     @POST("login_api_call/resendOTP")
     @FormUrlEncoded
@@ -70,7 +71,8 @@ public interface APIService {
     @FormUrlEncoded
     Call<validateOTP> validateOTP(@Field("organizer_id") String organizer_id,
                                   @Field("username") String username,
-                                  @Field("otp") String otp);
+                                  @Field("otp") String otp,
+                                  @Field("vToken") String vToken);
 
     @POST("login_api_call/enrollLeapFlag")
     @FormUrlEncoded

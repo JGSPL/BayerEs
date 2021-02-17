@@ -511,7 +511,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     },
                     new int[]{
                             //Color.parseColor(colorunselect),
-                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)),
+                            Color.parseColor("#ffffff"),
                             Color.parseColor("#ffffff")
 
                     });
@@ -547,6 +547,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });*/
             ImageView iv_drawer = findViewById(R.id.iv_drawer);
+
             iv_drawer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -556,7 +557,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
             int color4 = Color.parseColor(SharedPreference.getPref(MainActivity.this, EVENT_COLOR_4));
-            iv_drawer.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
+            //iv_drawer.setColorFilter(color4, PorterDuff.Mode.SRC_ATOP);
             ColorStateList iconsColorStates = new ColorStateList(
                     new int[][]{
                             new int[]{-android.R.attr.state_checked},
@@ -564,8 +565,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     },
                     new int[]{
                             //Color.parseColor(colorunselect),
-                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)),
-                            Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4))
+                            Color.parseColor( SharedPreference.getPref(this, EVENT_COLOR_4)),
+                            Color.parseColor("#ffffff")
                     });
 
             ColorStateList textColorStates = new ColorStateList(

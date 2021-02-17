@@ -5,12 +5,16 @@ import android.content.Context;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.BR;
 import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
+import com.procialize.bayer2020.GetterSetter.LoginOrgamizerToken;
 import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
+import com.procialize.bayer2020.GetterSetter.loginTokendetail;
 import com.procialize.bayer2020.GetterSetter.resendOTP;
 import com.procialize.bayer2020.GetterSetter.validateOTP;
 import com.procialize.bayer2020.Utility.CommonFunction;
@@ -18,6 +22,7 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.SharedPreferencesConstant;
 import com.procialize.bayer2020.databinding.ActivityLoginBinding;
 import com.procialize.bayer2020.ui.login.model.Login;
+import com.procialize.bayer2020.ui.loyalityleap.model.My_point;
 
 import java.util.HashMap;
 
@@ -39,6 +44,7 @@ public class LoginViewModel extends BaseObservable {
     private String interneterror = "No Internet Connection.";
     APIService mApiService = ApiUtils.getAPIService();
     ConnectionDetector cd;
+    String vToken;
 
     public String getUserEmail() {
         return userEmail;
@@ -213,10 +219,22 @@ public class LoginViewModel extends BaseObservable {
     private void userLogin(String username) {
 
 
-        mApiService.LoginWithOrganizer("1", username).enqueue(new Callback<LoginOrganizer>() {
+        mApiService.LoginWithOrganizer("1", username).enqueue(new Callback<LoginOrgamizerToken>() {
             @Override
-            public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
+            public void onResponse(Call<LoginOrgamizerToken> call, Response<LoginOrgamizerToken> response) {
                 if (response.isSuccessful()) {
+
+                    String strEventList = response.body().getDetail();
+                    RefreashToken refreashToken = new RefreashToken(context);
+                    String data = refreashToken.decryptedData(strEventList);
+
+                    loginTokendetail tokenData = new Gson().fromJson(data, new TypeToken<loginTokendetail>() {
+                    }.getType());
+                    if(tokenData!=null){
+                        vToken = tokenData.getvToken();
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(SharedPreferencesConstant.vToken, vToken);
+                    }
                     activityLoginBinding.btnSubmit.setClickable(true);
                     setToastMessage(response.body().getHeader().get(0).getMsg());
                 } else {
@@ -231,7 +249,7 @@ public class LoginViewModel extends BaseObservable {
             }
 
             @Override
-            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+            public void onFailure(Call<LoginOrgamizerToken> call, Throwable t) {
                 activityLoginBinding.btnSubmit.setClickable(true);
                 setToastMessage(errorMessage);
             }
@@ -240,7 +258,7 @@ public class LoginViewModel extends BaseObservable {
 
     private void otpValidate(String username, final String otp) {
 
-        mApiService.validateOTP("1", username, otp).enqueue(new Callback<validateOTP>() {
+        mApiService.validateOTP("1", username, otp,vToken).enqueue(new Callback<validateOTP>() {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {

@@ -41,12 +41,14 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.TIME;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.TOTAL_EVENT;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.USER_TYPE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.VERIFY_OTP;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.vToken;
 
 public class RefreashToken {
 
     Context context;
     CryptLib cryptLib;
     APIService mApiService;
+    String vtoken;
 
     public RefreashToken(Context context) {
         this.context = context;
@@ -115,7 +117,9 @@ public class RefreashToken {
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
                     if(response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
-                        otpValidate(username, otp);
+                        vtoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
+
+                        otpValidate(username, otp, vtoken);
                     }else {
 
                         RefreashToken refreashToken = new RefreashToken(context);
@@ -175,8 +179,8 @@ public class RefreashToken {
         }
     }
 
-    private void otpValidate(String username, final String otp) {
-        mApiService.validateOTP("0", username, otp).enqueue(new Callback<validateOTP>() {
+    private void otpValidate(String username, final String otp, String vtoken) {
+        mApiService.validateOTP("0", username, otp, vtoken).enqueue(new Callback<validateOTP>() {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
