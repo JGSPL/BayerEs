@@ -98,9 +98,11 @@ public class FAQActivity extends AppCompatActivity implements FAQAdapter.Product
 
 
         if (cd.isConnectingToInternet()) {
-
+            progressBar.setVisibility(View.VISIBLE);
             getFAQ(token,eventid);
         } else {
+            progressBar.setVisibility(View.GONE);
+
             if (productrefresh.isRefreshing()) {
                 productrefresh.setRefreshing(false);
             }
@@ -108,6 +110,26 @@ public class FAQActivity extends AppCompatActivity implements FAQAdapter.Product
 
 
         }
+
+        productrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (cd.isConnectingToInternet()) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    getFAQ(token,eventid);
+                } else {
+                    progressBar.setVisibility(View.GONE);
+
+                    if (productrefresh.isRefreshing()) {
+                        productrefresh.setRefreshing(false);
+                    }
+                    Utility.createShortSnackBar(relative, "No internet connection");
+
+
+                }
+            }
+        });
+
 
         //-----------------------------For Notification count-----------------------------
         try {

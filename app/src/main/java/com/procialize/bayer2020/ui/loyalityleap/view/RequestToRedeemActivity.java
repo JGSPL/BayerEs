@@ -102,9 +102,12 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
 
 
         if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
 
             getProductType(token,eventid);
         } else {
+            progressBar.setVisibility(View.GONE);
+
             Utility.createShortSnackBar(relative, "No internet connection");
         }
 

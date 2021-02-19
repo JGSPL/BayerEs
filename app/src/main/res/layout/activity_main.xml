@@ -160,7 +160,7 @@
                             android:background="@drawable/count_circle"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <TextView
                                 android:id="@+id/tv_notification"

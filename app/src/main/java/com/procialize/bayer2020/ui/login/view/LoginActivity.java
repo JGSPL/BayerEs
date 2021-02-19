@@ -96,7 +96,8 @@ public class LoginActivity extends AppCompatActivity {
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static CountDownTimer countdowntimer;
     public static Dialog passcodeDialog;
-
+    public static ProgressBar progressBar2;
+    public static ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +107,8 @@ public class LoginActivity extends AppCompatActivity {
         activityLoginBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         activityLoginBinding.setViewModel(new LoginViewModel(LoginActivity.this, activityLoginBinding));
         activityLoginBinding.executePendingBindings();
+
+        progressBar2= findViewById(R.id.progressBar2);
 
         if (checkPlayServices()) {
 
@@ -218,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
                 .findViewById(R.id.btn_send_dialog);
         Button btn_resend = (Button) passcodeDialog
                 .findViewById(R.id.btn_resend);
-        ProgressBar progressBar = (ProgressBar) passcodeDialog
+        progressBar = (ProgressBar) passcodeDialog
                 .findViewById(R.id.progressBar);
 
         btn_resend.setOnClickListener(new View.OnClickListener() {
@@ -237,6 +240,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 } else {
                     String passcode = submitPasscode.getText().toString();
+                    progressBar.setVisibility(View.VISIBLE);
 
                     activityLoginBinding.getViewModel().PasscodeValidateOTP(passcode);
 
@@ -265,6 +269,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 passcodeDialog.dismiss();
+                progressBar2.setVisibility(View.GONE);
 
             }
         });
@@ -292,6 +297,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call<Event> call, Response<Event> response) {
                         if (response.isSuccessful()) {
                             refreashToken = new RefreashToken(view.getContext());
+
                             String decrypteventdetail = refreashToken.decryptedData(response.body().getDetail());
                             String strFilePath = CommonFunction.stripquotes(refreashToken.decryptedData(response.body().getFile_path()));
 
@@ -312,6 +318,10 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onResponse(Call<UpdateDeviceInfo> call, Response<UpdateDeviceInfo> response) {
                                             if (response.isSuccessful()) {
                                                 try {
+
+                                                    progressBar.setVisibility(View.GONE);
+                                                    progressBar2.setVisibility(View.GONE);
+
                                                     String decrypteventdetail = refreashToken.decryptedData(response.body().getDetail());
 
                                                     Gson gson = new Gson();

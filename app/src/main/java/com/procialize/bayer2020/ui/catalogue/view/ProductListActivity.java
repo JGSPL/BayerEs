@@ -101,9 +101,12 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         }
         //----------------------------------------------------------------------------------
         if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
 
             getProductType(token,eventid);
         } else {
+            progressBar.setVisibility(View.GONE);
+
             if (productrefresh.isRefreshing()) {
                 productrefresh.setRefreshing(false);
             }
@@ -115,8 +118,12 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
             public void onRefresh() {
                 productrefresh.setRefreshing(false);
                 if (cd.isConnectingToInternet()) {
+                    progressBar.setVisibility(View.VISIBLE);
+
                     getProductType(token,eventid);
                 } else {
+                    progressBar.setVisibility(View.GONE);
+
                     if (productrefresh.isRefreshing()) {
                         productrefresh.setRefreshing(false);
                     }
@@ -152,10 +159,14 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
                                 if(eventLists.size()>0) {
                                      setupEventAdapter(eventLists);
                                 }else{
+                                    Utility.createShortSnackBar(relative, "Data not available");
+
                                     progressBar.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
                                 }
                             }else{
+                                Utility.createShortSnackBar(relative, "Data not available");
+
                                 progressBar.setVisibility(View.GONE);
                             }
                         }

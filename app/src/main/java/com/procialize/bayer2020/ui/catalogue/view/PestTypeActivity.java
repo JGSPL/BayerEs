@@ -87,8 +87,11 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
         relative = findViewById(R.id.relative);
         setUpToolbar();
         if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
             getProductType(token,eventid);
         } else {
+            progressBar.setVisibility(View.GONE);
+
             if (productrefresh.isRefreshing()) {
                 productrefresh.setRefreshing(false);
             }
@@ -100,9 +103,14 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
             @Override
             public void onRefresh() {
                 productrefresh.setRefreshing(false);
+
                 if (cd.isConnectingToInternet()) {
+                    progressBar.setVisibility(View.VISIBLE);
+
                     getProductType(token,eventid);
                 } else {
+                    progressBar.setVisibility(View.GONE);
+
                     if (productrefresh.isRefreshing()) {
                         productrefresh.setRefreshing(false);
                     }
@@ -150,10 +158,14 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
                                 if(eventLists.size()>0) {
                                     setupEventAdapter(eventLists);
                                 }else{
+                                    Utility.createShortSnackBar(relative, "Data not available");
+
                                     progressBar.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
                                 }
                             }else{
+                                Utility.createShortSnackBar(relative, "Data not available");
+
                                 progressBar.setVisibility(View.GONE);
                             }
                         }

@@ -98,9 +98,12 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
 
 
         if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
 
             getProductType(token,eventid);
         } else {
+            progressBar.setVisibility(View.GONE);
+
             Utility.createShortSnackBar(relative, "No internet connection");
 
 

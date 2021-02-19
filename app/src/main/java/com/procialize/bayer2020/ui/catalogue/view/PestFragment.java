@@ -74,11 +74,15 @@ public class PestFragment extends Fragment implements PestListAdapter.ProductAda
         linMain = rootView.findViewById(R.id.linMain);
 
         if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
+
             getProductType(token,eventid);
         } else {
             if (productrefresh.isRefreshing()) {
                 productrefresh.setRefreshing(false);
             }
+            progressBar.setVisibility(View.GONE);
+
             Utility.createShortSnackBar(linMain, "No internet connection");
         }
 
@@ -87,11 +91,15 @@ public class PestFragment extends Fragment implements PestListAdapter.ProductAda
             public void onRefresh() {
                 productrefresh.setRefreshing(false);
                 if (cd.isConnectingToInternet()) {
+                    progressBar.setVisibility(View.VISIBLE);
+
                     getProductType(token,eventid);
                 } else {
                     if (productrefresh.isRefreshing()) {
                         productrefresh.setRefreshing(false);
                     }
+                    progressBar.setVisibility(View.GONE);
+
                     Utility.createShortSnackBar(linMain, "No internet connection");
                 }
             }

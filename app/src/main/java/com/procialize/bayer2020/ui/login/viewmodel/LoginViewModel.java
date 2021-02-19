@@ -1,6 +1,7 @@
 package com.procialize.bayer2020.ui.login.viewmodel;
 
 import android.content.Context;
+import android.view.View;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -133,6 +134,7 @@ public class LoginViewModel extends BaseObservable {
 
         if (isInputDataValid()) {
             if (cd.isConnectingToInternet()) {
+                activityLoginBinding.progressBar2.setVisibility(View.VISIBLE);
                 activityLoginBinding.btnSubmit.setClickable(false);
                 userLogin(getloginEmail());
             } else {
@@ -186,6 +188,8 @@ public class LoginViewModel extends BaseObservable {
         if (cd.isConnectingToInternet()) {
             activityLoginBinding.btnOTPSubmit.setClickable(false);
             otpValidate(getloginEmail(), OTP);
+            activityLoginBinding.progressBar2.setVisibility(View.VISIBLE);
+
         } else {
             setToastMessage(interneterror);
         }
@@ -235,6 +239,8 @@ public class LoginViewModel extends BaseObservable {
                         HashMap<String, String> map = new HashMap<>();
                         map.put(SharedPreferencesConstant.vToken, vToken);
                     }
+                    activityLoginBinding.progressBar2.setVisibility(View.GONE);
+
                     activityLoginBinding.btnSubmit.setClickable(true);
                     setToastMessage(response.body().getHeader().get(0).getMsg());
                 } else {
@@ -262,6 +268,8 @@ public class LoginViewModel extends BaseObservable {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
+                    activityLoginBinding.progressBar2.setVisibility(View.GONE);
+
                     activityLoginBinding.btnOTPSubmit.setClickable(true);
                     setToastMessage(response.body().getHeader().get(0).getMsg());
 

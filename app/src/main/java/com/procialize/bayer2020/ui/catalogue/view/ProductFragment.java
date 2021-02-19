@@ -93,9 +93,13 @@ public class ProductFragment extends Fragment implements ProductTypeAdapter.Prod
         linMain = rootView.findViewById(R.id.linMain);
 
         if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
 
             getProductType(token,eventid);
+
         } else {
+            progressBar.setVisibility(View.GONE);
+
             if (productrefresh.isRefreshing()) {
                 productrefresh.setRefreshing(false);
             }
@@ -107,11 +111,15 @@ public class ProductFragment extends Fragment implements ProductTypeAdapter.Prod
             public void onRefresh() {
                 productrefresh.setRefreshing(false);
                 if (cd.isConnectingToInternet()) {
+                    progressBar.setVisibility(View.VISIBLE);
+
                     getProductType(token,eventid);
                 } else {
                     if (productrefresh.isRefreshing()) {
                         productrefresh.setRefreshing(false);
                     }
+                    progressBar.setVisibility(View.GONE);
+
                     Utility.createShortSnackBar(linMain, "No internet connection");
                 }
 

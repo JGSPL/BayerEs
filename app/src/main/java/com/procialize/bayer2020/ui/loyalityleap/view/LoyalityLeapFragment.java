@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class LoyalityLeapFragment  extends Fragment {
     String api_token;
     TextView txtUnreadCount, txtMyRank,txtMyPoint;
     RelativeLayout relScheame;
+    ProgressBar progressBar;
 
     public static LoyalityLeapFragment newInstance() {
 
@@ -55,6 +57,7 @@ public class LoyalityLeapFragment  extends Fragment {
         txtMyPoint = root.findViewById(R.id.txtMyPoint);
         relScheame = root.findViewById(R.id.relScheame);
         imgCalc = root.findViewById(R.id.imgCalc);
+        progressBar = root.findViewById(R.id.progressBar);
 
         api_token = SharedPreference.getPref(getContext(), AUTHERISATION_KEY);
         getMyPoints();
@@ -103,10 +106,13 @@ public class LoyalityLeapFragment  extends Fragment {
     }
 
     void getMyPoints( ) {
+        progressBar.setVisibility(View.VISIBLE);
         ApiUtils.getAPIService().MyPointFetch(api_token,"1").enqueue(new Callback<FetchAgenda>() {
             @Override
             public void onResponse(Call<FetchAgenda> call, Response<FetchAgenda> response) {
                 if (response.isSuccessful()) {
+                    progressBar.setVisibility(View.GONE);
+
                     String strEventList = response.body().getDetail();
                     RefreashToken refreashToken = new RefreashToken(getContext());
                     String data = refreashToken.decryptedData(strEventList);

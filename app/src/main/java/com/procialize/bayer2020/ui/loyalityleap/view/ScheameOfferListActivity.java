@@ -104,9 +104,12 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
 
 
         if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
 
             getProductType(token,eventid);
         } else {
+            progressBar.setVisibility(View.GONE);
+
             if (productrefresh.isRefreshing()) {
                 productrefresh.setRefreshing(false);
             }
@@ -118,8 +121,12 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
             public void onRefresh() {
                 productrefresh.setRefreshing(false);
                 if (cd.isConnectingToInternet()) {
+                    progressBar.setVisibility(View.VISIBLE);
+
                     getProductType(token,eventid);
                 } else {
+                    progressBar.setVisibility(View.GONE);
+
                     if (productrefresh.isRefreshing()) {
                         productrefresh.setRefreshing(false);
                     }
