@@ -1,6 +1,8 @@
 package com.procialize.bayer2020.ui.loyalityleap.adapter;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +29,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
     private MCalculatorAdapter.ProductAdapterListner listener;
     private LayoutInflater inflater;
     String imageurl;
-    Long mpoints, points, TotalPoints;
+    Double mpoints, points, TotalPoints;
     Long points1;
     String str;
     
@@ -67,6 +69,63 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                 return false;
             }
         });
+        try {
+            holder.txt_noofmpin.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+
+                    try {
+                        points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
+                        mpoints = Double.parseDouble(holder.txt_noofmpin.getText().toString().trim());
+
+                        TotalPoints = points * mpoints;
+                        String s4 = String.valueOf(TotalPoints);
+                       // str = s4.replace(".", "");
+
+//                            Integer result = Integer.valueOf(str) / 10;
+                        holder.txt_total.setText(String.valueOf(s4));
+
+                        points1 = Long.parseLong(holder.txt_noofmpin.getText().toString().trim());
+                        String txt_score = MPointActivity.txt_score.getText().toString().trim();
+                        String txt_total = holder.txt_total.getText().toString().trim();
+
+                        if (txt_score.equalsIgnoreCase("")) {
+//                                txt_score = "0";
+//                                Float mPointtotal = Float.valueOf(txt_score) + Float.valueOf(txt_total);
+                            String s1 = String.valueOf(txt_total);
+                         //   String res = s1.replace(".", "");
+                            MPointActivity.txt_score.setText(s1);
+                        } else {
+                            //Long mPointtotal = Long.parseLong(txt_score) + Long.parseLong(txt_total);
+                          /*  Double mPointtotal = Double.parseDouble(txt_score) +Double.parseDouble(txt_total);
+
+                            String s1 = String.valueOf(mPointtotal);
+                         //   String res = s1.replace(".", "");
+                            MPointActivity.txt_score.setText(s1);*/
+                        }
+                        holder.txt_noofmpin.setFocusable(true);
+                        holder.txt_noofmpin.setEnabled(true);
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         holder.txt_noofmpin.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -81,8 +140,8 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                             Toast.makeText(context, "Please Enter Value", Toast.LENGTH_SHORT).show();
                             return false;
                         } else {
-                            points = Long.parseLong(holder.mpointspermpin.getText().toString().trim());
-                            mpoints = Long.parseLong(holder.txt_noofmpin.getText().toString().trim());
+                            points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
+                            mpoints = Double.parseDouble(holder.txt_noofmpin.getText().toString().trim());
 
                             TotalPoints = points * mpoints;
                             String s = String.valueOf(TotalPoints);
@@ -102,7 +161,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                                 String res = s1.replace(".", "");
                                 MPointActivity.txt_score.setText(res);
                             } else {
-                                Long mPointtotal = Long.parseLong(txt_score) + Long.parseLong(txt_total);
+                                Double mPointtotal = Double.parseDouble(txt_score) +Double.parseDouble(txt_total);
                                 String s1 = String.valueOf(mPointtotal);
                                 String res = s1.replace(".", "");
                                 MPointActivity.txt_score.setText(res);

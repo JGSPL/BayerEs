@@ -4,19 +4,27 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.Settings;
+import android.text.Html;
 import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -98,6 +106,9 @@ public class LoginActivity extends AppCompatActivity {
     public static Dialog passcodeDialog;
     public static ProgressBar progressBar2;
     public static ProgressBar progressBar;
+    public static CheckBox termsCheckBox;
+    public static TextView txttermsCondi;
+    Dialog myDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +120,43 @@ public class LoginActivity extends AppCompatActivity {
         activityLoginBinding.executePendingBindings();
 
         progressBar2= findViewById(R.id.progressBar2);
+        termsCheckBox= findViewById(R.id.termsCheckBox);
+        txttermsCondi= findViewById(R.id.txttermsCondi);
+
+        //Set clickable true
+        txttermsCondi.setClickable(true);
+
+        //Handlle click event
+        txttermsCondi.setPaintFlags(txttermsCondi.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+
+        termsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(termsCheckBox.isChecked()){
+                    activityLoginBinding.btnSubmit.setTextColor(Color.parseColor("#ffffff"));
+
+                    activityLoginBinding.btnSubmit.setEnabled(true);
+                    activityLoginBinding.btnSubmit.setClickable(true);
+                    activityLoginBinding.btnSubmit.setBackgroundResource(R.drawable.login_drawable_blue);
+                }else{
+                    activityLoginBinding.btnSubmit.setTextColor(Color.parseColor("#000000"));
+
+                    activityLoginBinding.btnSubmit.setEnabled(false);
+                    activityLoginBinding.btnSubmit.setClickable(false);
+                    activityLoginBinding.btnSubmit.setBackgroundResource(R.drawable.login_drawable_faint);
+                }
+            }
+        });
+
+        txttermsCondi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPrivacylouge();
+            }
+        });
+
+
+
 
         if (checkPlayServices()) {
 
@@ -552,4 +600,26 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }
+
+    private void showPrivacylouge() {
+
+        myDialog = new Dialog(LoginActivity.this);
+        myDialog.setContentView(R.layout.dialog_term_condition);
+        myDialog.setCancelable(false);
+
+
+        WebView webView = myDialog.findViewById(R.id.webView);
+        ImageView imgClose = myDialog.findViewById(R.id.imgClose);
+        webView.loadUrl("https://www.procialize.live/bayer_knight/" + "terms_and_condition.html");
+        imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+            }
+        });
+
+        myDialog.show();
+
+    }
+
 }

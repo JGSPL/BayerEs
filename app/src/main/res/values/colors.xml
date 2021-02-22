@@ -21,6 +21,8 @@
     <color name="logintxt">#818181</color>
     <color name="red">#f14433</color>
     <color name="loginbutton">#5a9e31</color>
+    <color name="loginbuttonblur">#e6e6e6</color>
+
     <color name="colorwhite">#ffffff</color>
     <color name="colorBackground">#7E57C2</color>
     <color name="colorButton">#d67601</color>

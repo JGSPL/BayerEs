@@ -91,7 +91,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
                 .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                holder.image_reward.setImageResource(R.drawable.profilepic_placeholder);
+                holder.image_reward.setImageResource(R.drawable.gallery_placeholder);
                 return true;
             }
 

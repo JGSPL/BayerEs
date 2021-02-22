@@ -2,6 +2,8 @@ package com.procialize.bayer2020.ui.catalogue.view;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -44,7 +46,7 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
     ImageView headerlogoIv;
     String token, eventid, docurl, productId = "1",productName;
     List<product_dosage_detail> product_dosage_detailList = new ArrayList<>();
-    TextView tvProductTitle ,txt_quan, txt_quantity, txt_quantitySolu, txtAmountConvert;
+    TextView tvProductTitle ,txt_quan, txt_quantity, txt_quantitySolu, txtAmountConvert, tv_area;
     EditText txt_area, edtAmountConvert;
     String high;
     Spinner spinner, spinnersqare, spinnersqare2;
@@ -78,7 +80,7 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
         txt_quantitySolu = findViewById(R.id.txt_quantitySolu);
         txtAmountConvert = findViewById(R.id.txtAmountConvert);
         edtAmountConvert = findViewById(R.id.edtAmountConvert);
-
+        tv_area = findViewById(R.id.tv_area);
         spinnersqare = findViewById(R.id.spinnersqare);
         spinnersqare2 = findViewById(R.id.spinnersqare2);
 
@@ -132,6 +134,52 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
         });
 
 
+        try {
+            edtAmountConvert.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+
+                    try {
+
+                        if (conversionValue.equalsIgnoreCase("Square feet")) {
+                            try {
+                                String value = edtAmountConvert.getText().toString();
+                                // Double fvalue = Float.parseFloat(value)*10.7;
+                                Double fvalue = Double.parseDouble(value);
+
+                                txtAmountConvert.setText(String.valueOf(fvalue));
+                            }catch (Exception e){
+
+                            }
+
+                        } else if (conversionValue.equalsIgnoreCase("Square meter")) {
+                            String value = edtAmountConvert.getText().toString();
+                            Double fvalue = Float.parseFloat(value)/10.7;
+                            txtAmountConvert.setText(String.valueOf(fvalue));
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
         if(product_dosage_detailList!=null){
             if(product_dosage_detailList.get(0).getInfestation_level().equalsIgnoreCase("0")){
@@ -157,6 +205,7 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
             txt_quan.setText(product_dosage_detailList.get(0).getAmount_unit());
             txt_quantity.setText(product_dosage_detailList.get(0).getAmount_unit());
             txt_quantitySolu.setText(product_dosage_detailList.get(0).getDiluted_solution_quantity());
+            tv_area.setText("Area To be treated (sq.mt/sq.ft)");
 
             edtAmountConvert.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -236,6 +285,48 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
                     }
                 }
             });
+
+            try {
+                txt_area.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start,
+                                                  int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start,
+                                              int before, int count) {
+
+                        try {
+
+                                String txt_score = txt_area.getText().toString().trim();
+                                String txt_total = product_dosage_detailList.get(0).getDiluted_solution_quantity();
+
+                                if (txt_score.equalsIgnoreCase("")) {
+                                    Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Double mPointtotal = Double.parseDouble(txt_score) * Double.parseDouble(txt_total);
+                                    String s1 = String.valueOf(mPointtotal);
+                                    //String res = s1.replace(".", "");
+                                    txt_quantity.setText(s1);
+                                }
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
 
         }
 

@@ -66,8 +66,12 @@
     </string-array>
 
     <string-array name="amount_array">
-        <item>Square feet</item>
+
         <item>Square meter</item>
 
     </string-array>
+
+    <string
+        name="messageWithLink"><a href="https://www.procialize.live/bayer_knight/terms_and_condition.html">I consent to share my personal data as per the Privacy Policy with Bayer CropScience Limited and its affiliates in accordance with the applicable laws.
+        I also understand the Privacy Policy and consent to the processing and transfer of personal data in accordance with it.</a></string>
 </resources>

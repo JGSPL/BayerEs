@@ -63,17 +63,17 @@ public class RedeemHistoryAdapter extends RecyclerView.Adapter<RedeemHistoryAdap
             holder.txt_status.setText("Requested");
             holder.txt_status.setTextColor(Color.parseColor("#002e46"));
 
-        }else  if(redeemItem.getStatus().equalsIgnoreCase("1")){
-            holder.txt_status.setText("Completed");
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("4")){
+            holder.txt_status.setText("Delivered");
             holder.txt_status.setTextColor(Color.parseColor("#5a9e31"));
 
 
         }else  if(redeemItem.getStatus().equalsIgnoreCase("2")){
-            holder.txt_status.setText("Redeemed");
+            holder.txt_status.setText("In Process");
             holder.txt_status.setTextColor(Color.parseColor("#f14433"));
 
 
-        }else  if(redeemItem.getStatus().equalsIgnoreCase("3")){
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("1")){
             holder.txt_status.setText("Approved");
             holder.txt_status.setTextColor(Color.parseColor("#008bde"));
 

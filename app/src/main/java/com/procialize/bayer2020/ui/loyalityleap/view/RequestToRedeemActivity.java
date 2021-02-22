@@ -142,7 +142,7 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
                     public void onResponse(Call<FetchRequestToRedeem> call, Response<FetchRequestToRedeem> response) {
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
-                            Imageurl = response.body().getAvailable_redeemable_points();
+                            Imageurl = response.body().getProduct_imagepath();
 
                             String strCommentList =response.body().getDetail();
                             RefreashToken refreashToken = new RefreashToken(RequestToRedeemActivity.this);

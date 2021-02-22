@@ -131,17 +131,22 @@ public class LoginViewModel extends BaseObservable {
     }*/
 
     public void onLoginClicked() {
+        if(activityLoginBinding.termsCheckBox.isChecked()) {
 
-        if (isInputDataValid()) {
-            if (cd.isConnectingToInternet()) {
-                activityLoginBinding.progressBar2.setVisibility(View.VISIBLE);
-                activityLoginBinding.btnSubmit.setClickable(false);
-                userLogin(getloginEmail());
+            if (isInputDataValid()) {
+                if (cd.isConnectingToInternet()) {
+                    activityLoginBinding.progressBar2.setVisibility(View.VISIBLE);
+                    activityLoginBinding.btnSubmit.setClickable(false);
+                    userLogin(getloginEmail());
+                } else {
+                    setToastMessage(interneterror);
+                }
             } else {
-                setToastMessage(interneterror);
+                setToastMessage(errorMessage1);
             }
-        } else {
-            setToastMessage(errorMessage1);
+        }else{
+            setToastMessage("Please check term and condition for continue");
+
         }
     }
 
