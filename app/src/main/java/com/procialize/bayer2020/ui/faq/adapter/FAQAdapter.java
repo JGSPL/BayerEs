@@ -58,7 +58,7 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
         holder.tv_title.setText(productType.getTitle());
         holder.tv_desc.setText(productType.getDescription());
 
-        holder.iv_right_arrow.setOnClickListener(new View.OnClickListener() {
+        holder.tv_title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (holder.tv_desc.getVisibility() == View.VISIBLE) {
@@ -98,7 +98,29 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
         holder.ll_row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onContactSelected(productLists.get(position));
+                //listener.onContactSelected(productLists.get(position));
+                if (holder.tv_desc.getVisibility() == View.VISIBLE) {
+                    Animations.collapse(holder.tv_desc);
+                    // holder.iv_right_arrow.setBackgroundResource(R.drawable.ic_plus);
+                    holder.iv_right_arrow.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_plus));
+
+                } else {
+
+                    //--------------------------------------------------------------------------------------
+                    GetUserActivityReport getUserActivityReport = new GetUserActivityReport(context,token,
+                            eventid,
+                            productType.getId(),
+                            "faq_view",
+                            "faq",
+                            "9");
+                    getUserActivityReport.userActivityReport();
+                    //--------------------------------------------------------------------------------------
+
+                    Animations.expand(holder.tv_desc);
+                    // holder.iv_right_arrow.setBackgroundResource(R.drawable.ic_cross);
+                    holder.iv_right_arrow.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_cross));
+
+                }
             }
         });
 

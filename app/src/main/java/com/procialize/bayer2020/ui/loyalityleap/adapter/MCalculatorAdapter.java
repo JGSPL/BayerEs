@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.CommonFunction;
+import com.procialize.bayer2020.ui.catalogue.view.ProductmCalculator_Activity;
 import com.procialize.bayer2020.ui.loyalityleap.model.m_points_list;
 import com.procialize.bayer2020.ui.loyalityleap.view.MPointActivity;
 
@@ -32,7 +34,8 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
     Double mpoints, points, TotalPoints;
     Long points1;
     String str;
-    
+    Double TotalScore;
+    String txt_score,txt_total;
     public MCalculatorAdapter(Context context, List<m_points_list> productLists, MCalculatorAdapter.ProductAdapterListner listener, String imageurl) {
         this.productLists = productLists;
         this.listener = listener;
@@ -92,31 +95,31 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
 
                         TotalPoints = points * mpoints;
                         String s4 = String.valueOf(TotalPoints);
-                       // str = s4.replace(".", "");
 
-//                            Integer result = Integer.valueOf(str) / 10;
                         holder.txt_total.setText(String.valueOf(s4));
 
                         points1 = Long.parseLong(holder.txt_noofmpin.getText().toString().trim());
-                        String txt_score = MPointActivity.txt_score.getText().toString().trim();
-                        String txt_total = holder.txt_total.getText().toString().trim();
+                         txt_score = MPointActivity.txt_score.getText().toString().trim();
+                         txt_total = holder.txt_total.getText().toString().trim();
+                        TotalScore = Double.parseDouble(txt_total);
 
-                        if (txt_score.equalsIgnoreCase("")) {
+                       /* if (txt_score.equalsIgnoreCase("")) {
 //                                txt_score = "0";
 //                                Float mPointtotal = Float.valueOf(txt_score) + Float.valueOf(txt_total);
                             String s1 = String.valueOf(txt_total);
                          //   String res = s1.replace(".", "");
-                            MPointActivity.txt_score.setText(s1);
+                           // MPointActivity.txt_score.setText(s1);
                         } else {
                             //Long mPointtotal = Long.parseLong(txt_score) + Long.parseLong(txt_total);
-                          /*  Double mPointtotal = Double.parseDouble(txt_score) +Double.parseDouble(txt_total);
-
+                            Double mPointtotal = Double.parseDouble(txt_score) + Double.parseDouble(txt_total);
+                            *//*Double mPointtotal=0.0;
+                             mPointtotal = mPointtotal +Double.parseDouble(txt_total);*//*
+                             TotalScore = Double.parseDouble(txt_total);
                             String s1 = String.valueOf(mPointtotal);
-                         //   String res = s1.replace(".", "");
-                            MPointActivity.txt_score.setText(s1);*/
+                            MPointActivity.txt_score.setText(s1);
                         }
                         holder.txt_noofmpin.setFocusable(true);
-                        holder.txt_noofmpin.setEnabled(true);
+                        holder.txt_noofmpin.setEnabled(true);*/
                     } catch (Exception e) {
 
                     }
@@ -125,6 +128,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
         } catch (Exception e) {
             e.printStackTrace();
         }
+
 
 
         holder.txt_noofmpin.setOnKeyListener(new View.OnKeyListener() {
@@ -140,14 +144,13 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                             Toast.makeText(context, "Please Enter Value", Toast.LENGTH_SHORT).show();
                             return false;
                         } else {
-                            points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
+                           /* points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
                             mpoints = Double.parseDouble(holder.txt_noofmpin.getText().toString().trim());
 
                             TotalPoints = points * mpoints;
                             String s = String.valueOf(TotalPoints);
                             str = s.replace(".", "");
 
-//                            Integer result = Integer.valueOf(str) / 10;
                             holder.txt_total.setText(String.valueOf(str));
 
                             points1 = Long.parseLong(holder.txt_noofmpin.getText().toString().trim());
@@ -155,8 +158,6 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                             String txt_total = holder.txt_total.getText().toString().trim();
 
                             if (txt_score.equalsIgnoreCase("")) {
-//                                txt_score = "0";
-//                                Float mPointtotal = Float.valueOf(txt_score) + Float.valueOf(txt_total);
                                 String s1 = String.valueOf(txt_total);
                                 String res = s1.replace(".", "");
                                 MPointActivity.txt_score.setText(res);
@@ -167,6 +168,12 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                                 MPointActivity.txt_score.setText(res);
                             }
                             holder.txt_noofmpin.setFocusable(false);
+                            holder.txt_noofmpin.setEnabled(false);*/
+                            Double mPointtotal = Double.parseDouble(txt_score) + Double.parseDouble(txt_total);
+                            String s1 = String.valueOf(mPointtotal);
+
+                            MPointActivity.txt_score.setText(s1);
+                            holder.txt_noofmpin.setFocusable(false);
                             holder.txt_noofmpin.setEnabled(false);
                             return true;
 
@@ -174,10 +181,31 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
+                }/*else  if (event.getKeyCode() == KeyEvent.KEYCODE_DEL){
+                    try {
+
+                        if (holder.txt_noofmpin.getText().toString().isEmpty()) {
+                            Toast.makeText(context, "Please Enter Value", Toast.LENGTH_SHORT).show();
+                            return false;
+                        } else {
+
+                            String txt_score = MPointActivity.txt_score.getText().toString().trim();
+                            Double mPointtotal = Double.parseDouble(txt_score) - TotalScore;
+                            String s1 = String.valueOf(mPointtotal);
+                            //   String res = s1.replace(".", "");
+                            MPointActivity.txt_score.setText(s1);
+                            return true;
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }*/
                 return false;
             }
         });
+
 
     }
 

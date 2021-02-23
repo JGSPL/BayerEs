@@ -511,7 +511,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:padding="10dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="25dp"

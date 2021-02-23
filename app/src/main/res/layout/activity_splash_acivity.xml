@@ -11,20 +11,21 @@
             type="com.procialize.bayer2020.ui.splash.viewmodel.SplashViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/splash"
+        android:gravity="center"
         tools:context=".ui.splash.view.SplashAcivity">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/splash"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@drawable/logo_chk"
             bind:layout_constraintBottom_toBottomOf="parent"
             bind:layout_constraintEnd_toEndOf="parent"
             bind:layout_constraintTop_toTopOf="parent"
-            bind:layout_constraintVertical_bias="0.0"
-            />
+            bind:layout_constraintVertical_bias="0.0" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </layout>

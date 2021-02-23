@@ -2,26 +2,74 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
+    android:layout_width="340dp"
     android:layout_gravity="center"
     android:gravity="left"
-    android:layout_height="200dp">
-    <CheckBox
-        android:id="@+id/enrollCheckBox"
+    android:layout_height="320dp">
+
+    <TextView
+        android:id="@+id/txttermsCondin"
         android:layout_width="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:buttonTint="@color/colorPink"
-        android:textColor="@color/black"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
         android:layout_marginTop="20dp"
-        android:text="Enroll in leap now"/>
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:textColor="@color/black"
+        android:text="@string/enrollleap">
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_below="@+id/txttermsCondin"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:id="@+id/linCheck"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/enrollCheckBox"
+            android:layout_width="wrap_content"
+            android:buttonTint="@color/red"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/txttermsCondi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:text="Enroll in leap now"
+            android:layout_marginLeft="0dp">
+
+        </TextView>
+    </LinearLayout>
+
+    <!--
+        <CheckBox
+            android:id="@+id/enrollCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:buttonTint="@color/colorPink"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Enroll in leap now"/>
+    -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_below="@+id/enrollCheckBox"
+            android:layout_below="@+id/linCheck"
             android:orientation="horizontal"
             android:weightSum="2">
             <com.procialize.bayer2020.fonts.RobotoButton

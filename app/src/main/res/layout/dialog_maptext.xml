@@ -72,6 +72,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <com.procialize.bayer2020.fonts.RobotoTextview
+            android:id="@+id/tvcallnow"
+            android:gravity="left"
+            android:padding="@dimen/padding"
+            android:textSize="@dimen/textsizenormal"
+            android:textColor="@color/black"
+            android:text="Call Now"
+            android:paddingLeft="5dp"
+            android:autoLink="phone"
+
+            android:drawableLeft="@drawable/call_icon"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.procialize.bayer2020.fonts.RobotoTextview
+            android:id="@+id/tvmessageWh"
+            android:gravity="left"
+            android:padding="@dimen/padding"
+            android:textSize="@dimen/textsizenormal"
+            android:textColor="@color/black"
+            android:text="Message on WhatsApp"
+            android:paddingLeft="5dp"
+            android:drawableLeft="@drawable/whatsup"
+            android:drawablePadding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <View
             android:background="@color/black"
             android:layout_width="match_parent"

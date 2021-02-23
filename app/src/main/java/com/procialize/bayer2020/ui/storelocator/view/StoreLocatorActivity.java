@@ -4,11 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.location.Location;
 import android.location.LocationListener;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -346,6 +348,8 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
         TextView tvMobile = dialog.findViewById(R.id.tvMobile);
         TextView tvAddress = dialog.findViewById(R.id.tvAddress);
         ImageView ivClose = dialog.findViewById(R.id.ivClose);
+        TextView tvcallnow = dialog.findViewById(R.id.tvcallnow);
+        TextView tvmessageWh = dialog.findViewById(R.id.tvmessageWh);
 
         tvCompanyName.setText(company);
         tvMobile.setText("Mobile: "+mobile);
@@ -354,6 +358,29 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
             @Override
             public void onClick(View v) {
                 dialog.cancel();
+            }
+        });
+
+        tvcallnow.setText("Call Now: "+mobile);
+
+        tvmessageWh.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+                String contact = mobile; // use country code with your phone number
+                String url = "https://api.whatsapp.com/send?phone=" + contact;
+                try {
+                    PackageManager pm = StoreLocatorActivity.this.getPackageManager();
+                    pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+                } catch (PackageManager.NameNotFoundException e) {
+                    Toast.makeText(StoreLocatorActivity.this
+                            , "Whatsapp app not installed in your phone", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             }
         });
         dialog.show();

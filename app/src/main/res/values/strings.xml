@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bayer Rewards</string>
+    <string name="app_name">Pest Expert</string>
 
     <string name="title_home">Newsfeed</string>
     <string name="title_agend">Agenda</string>
@@ -70,6 +70,13 @@
         <item>Square meter</item>
 
     </string-array>
+    <string name="enrollleap">Leap of Fortune (LEAP) is a loyalty program from Bayer Environmental Science, to reward and recognize Pest Control Operators (PCOs) &amp; Retailers for using Bayer products.
+        \nBenefits of joining LEAP:
+
+\n\u25CF Earn mPoints on product purchases
+\n\u25CF Enjoy benefits of seasonal offers
+\n\u25CF Assistance from technical experts
+\n\u25CF Redeem mPoints &amp; get exciting rewards</string>
 
     <string
         name="messageWithLink"><a href="https://www.procialize.live/bayer_knight/terms_and_condition.html">I consent to share my personal data as per the Privacy Policy with Bayer CropScience Limited and its affiliates in accordance with the applicable laws.

@@ -610,7 +610,7 @@ public class LoginActivity extends AppCompatActivity {
 
         WebView webView = myDialog.findViewById(R.id.webView);
         ImageView imgClose = myDialog.findViewById(R.id.imgClose);
-        webView.loadUrl("https://www.procialize.live/bayer_knight/" + "terms_and_condition.html");
+        webView.loadUrl("https://stage-admin.procialize.live/bayer_es/privacypolicy.html");
         imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -361,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
             enrollleapFlag = SharedPreference.getPref(this, ENROLL_LEAP_FLAG);
             if (enrollleapFlag.equalsIgnoreCase("1")) {
+              // showLeepdialouge();
 
             } else {
                 showLeepdialouge();

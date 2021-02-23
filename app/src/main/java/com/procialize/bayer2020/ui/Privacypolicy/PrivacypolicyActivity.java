@@ -72,6 +72,7 @@ public class PrivacypolicyActivity extends AppCompatActivity {
                         String eulaLink = fetchAgenda.getDetail();
                         WebSettings webSettings = webView.getSettings();
                         webSettings.setJavaScriptEnabled(true);
+                        webView.clearHistory();
 
                         webView.loadUrl(eulaLink);
                     }
