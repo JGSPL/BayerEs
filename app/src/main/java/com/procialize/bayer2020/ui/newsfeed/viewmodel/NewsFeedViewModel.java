@@ -229,10 +229,10 @@ public class NewsFeedViewModel extends ViewModel {
 
                             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                             sharingIntent.setType("video/*");
-                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Event app");
-                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Shared via Event app");
+                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Pest Expert");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Shared via Pest Expert");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                            activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+                            activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
 
 
                         }
@@ -857,10 +857,10 @@ public class NewsFeedViewModel extends ViewModel {
                         if(uri!=null) {
                             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                             sharingIntent.setType("image/*");
-                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
                             sharingIntent.putExtra(Intent.EXTRA_TEXT, data);
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                            context.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+                            context.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
                             dialogShare.dismiss();
                         }
                 } catch (Exception e) {
@@ -921,10 +921,10 @@ public class NewsFeedViewModel extends ViewModel {
 
         // Add data to the intent, the receiving app will decide
         // what to do with it.
-        share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+        share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
         share.putExtra(Intent.EXTRA_TEXT, spannedString1.toString() /* + url*/);
 
-        activityVar.startActivity(Intent.createChooser(share, " Shared via Event app"));
+        activityVar.startActivity(Intent.createChooser(share, " Shared via Pest Expert"));
     }
 
     public static Bitmap getBitmapFromURL(String src) {
@@ -989,10 +989,10 @@ public class NewsFeedViewModel extends ViewModel {
                 //String[] str = result.split("#");
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("image/*");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Event app");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
                 //sharingIntent.putExtra(Intent.EXTRA_TEXT, str[0]);
                 sharingIntent.putExtra(Intent.EXTRA_STREAM, result);
-                activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Event app"));
+                activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
             }
         }
     }

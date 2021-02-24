@@ -136,8 +136,10 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
 
                                     if (upskillContentSubArray.getContentInfo().get(0).getContent_desc_quiz().size() == 0 &&
                                             upskillContentSubArray.getContentInfo().get(0).getContent_desc().isEmpty() &&
-                                            upskillContentSubArray.getContentInfo().get(0).getContent_desc_poll().size() == 0) {
+                                            upskillContentSubArray.getContentInfo().get(0).getContent_desc_poll().size() == 0 && !(upskillContentSubArray.getContentInfo().get(0).getContent_type().equalsIgnoreCase("external")) ){
                                         btn_start.setVisibility(View.GONE);
+                                    }else if (upskillContentSubArray.getContentInfo().get(0).getContent_type().equalsIgnoreCase("external")) {
+                                        btn_start.setVisibility(View.VISIBLE);
                                     } else {
                                         btn_start.setVisibility(View.VISIBLE);
                                     }
@@ -170,6 +172,11 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
                         finish();
                     } else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("Survey")) {
                         startActivity(new Intent(UpskillDetailsFirstActivity.this, UpskillSurveyActivity.class)
+                                .putExtra("upskillContent", (Serializable) upskillContentSubArray)
+                                .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
+                        finish();
+                    }else if (upskillContentSubArray.getContentInfo().get(click_count).getContent_type().equalsIgnoreCase("external")) {
+                        startActivity(new Intent(UpskillDetailsFirstActivity.this, UpSkillExternal.class)
                                 .putExtra("upskillContent", (Serializable) upskillContentSubArray)
                                 .putExtra("click_count", click_count).putExtra("upskill_info", (Serializable) upskillList));
                         finish();

@@ -336,6 +336,8 @@ public class UpskillDetailsVideoActivity extends AppCompatActivity implements Vi
                                 .putExtra("upskill_info", (Serializable) upskillList));
                         finish();
                     }
+                }else {
+                    finish();
                 }
             } else {
                 startActivity(new Intent(this, UpskillDetailsFirstActivity.class)

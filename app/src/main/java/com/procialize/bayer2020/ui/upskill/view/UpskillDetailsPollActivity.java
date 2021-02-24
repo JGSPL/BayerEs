@@ -449,6 +449,8 @@ public class UpskillDetailsPollActivity extends AppCompatActivity implements Vie
                                 .putExtra("upskill_info", (Serializable) upskillList));
                         finish();
                     }
+                }else {
+                    finish();
                 }
 
                 //}

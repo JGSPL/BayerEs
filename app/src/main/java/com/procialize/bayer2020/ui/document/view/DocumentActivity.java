@@ -189,20 +189,24 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
                 public void onChanged(Document event) {
                     gsonevent.clear();
                     RefreashToken refreashToken = new RefreashToken(DocumentActivity.this);
-                    String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
-                    String docPath = event.getDocument_path();
+                    if(event!=null) {
+                        String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                        if(event.getDocument_path()!=null) {
+                            String docPath = event.getDocument_path();
 
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(DOCUMENT_MEDIA_PATH, docPath);
-                    SharedPreference.putPref(DocumentActivity.this, map);
+                            HashMap<String, String> map = new HashMap<>();
+                            map.put(DOCUMENT_MEDIA_PATH, docPath);
+                            SharedPreference.putPref(DocumentActivity.this, map);
+                        }
 
 
-                    JsonParser jp = new JsonParser();
-                    JsonElement je = jp.parse(decrypteventdetail);
-                    Gson gson = new Gson();
-                    gsonevent = gson.fromJson(je, new TypeToken<ArrayList<DocumentDetail>>() {
-                    }.getType());
-                    setAdapterlist(gsonevent);
+                        JsonParser jp = new JsonParser();
+                        JsonElement je = jp.parse(decrypteventdetail);
+                        Gson gson = new Gson();
+                        gsonevent = gson.fromJson(je, new TypeToken<ArrayList<DocumentDetail>>() {
+                        }.getType());
+                        setAdapterlist(gsonevent);
+                    }
                 }
             });
         } else {

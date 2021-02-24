@@ -32,10 +32,12 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
     private LayoutInflater inflater;
     String imageurl;
     Double mpoints, points, TotalPoints;
-    Long points1;
+    Double points1;
     String str;
     Double TotalScore;
     String txt_score,txt_total;
+    Double[] intArray; // Array Declared
+
     public MCalculatorAdapter(Context context, List<m_points_list> productLists, MCalculatorAdapter.ProductAdapterListner listener, String imageurl) {
         this.productLists = productLists;
         this.listener = listener;
@@ -57,9 +59,13 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
 
         final m_points_list travel = productLists.get(position);
         holder.txt_product.setText(travel.getProduct_name());
-        holder.txt_packsize.setText(travel.getPack());
+        holder.txt_packsize.setText(travel.getUnit());
         holder.mpointspermpin.setText(travel.getPoints());
-
+        int size = productLists.size();
+        intArray = new Double[size];
+        for (int i = 0; i < intArray.length; i++) {
+            intArray[i] = 0.0;
+        }
         holder.txt_noofmpin.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -90,36 +96,49 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                                           int before, int count) {
 
                     try {
-                        points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
-                        mpoints = Double.parseDouble(holder.txt_noofmpin.getText().toString().trim());
+                        if (holder.txt_noofmpin.getText().toString().isEmpty()) {
+                            points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
+                            mpoints = 0.0;
 
-                        TotalPoints = points * mpoints;
-                        String s4 = String.valueOf(TotalPoints);
+                            TotalPoints = points * mpoints;
+                            String s4 = String.valueOf(TotalPoints);
 
-                        holder.txt_total.setText(String.valueOf(s4));
+                            holder.txt_total.setText(String.valueOf(s4));
 
-                        points1 = Long.parseLong(holder.txt_noofmpin.getText().toString().trim());
-                         txt_score = MPointActivity.txt_score.getText().toString().trim();
-                         txt_total = holder.txt_total.getText().toString().trim();
-                        TotalScore = Double.parseDouble(txt_total);
+                            points1 = 0.0;
+                            txt_score = MPointActivity.txt_score.getText().toString().trim();
+                            txt_total = holder.txt_total.getText().toString().trim();
+                            TotalScore = Double.parseDouble(txt_total);
+                            intArray[position] = TotalScore;
+                            Double TotalFinal = 0.0;
+                            for (int i = 0; i < intArray.length; i++) {
+                                TotalFinal = TotalFinal + intArray[i];
+                            }
+                            String s1 = String.valueOf(TotalFinal);
+                            MPointActivity.txt_score.setText(s1);
+                        }else {
+                            points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
+                            mpoints = Double.parseDouble(holder.txt_noofmpin.getText().toString().trim());
 
-                       /* if (txt_score.equalsIgnoreCase("")) {
-//                                txt_score = "0";
-//                                Float mPointtotal = Float.valueOf(txt_score) + Float.valueOf(txt_total);
-                            String s1 = String.valueOf(txt_total);
-                         //   String res = s1.replace(".", "");
-                           // MPointActivity.txt_score.setText(s1);
-                        } else {
-                            //Long mPointtotal = Long.parseLong(txt_score) + Long.parseLong(txt_total);
-                            Double mPointtotal = Double.parseDouble(txt_score) + Double.parseDouble(txt_total);
-                            *//*Double mPointtotal=0.0;
-                             mPointtotal = mPointtotal +Double.parseDouble(txt_total);*//*
-                             TotalScore = Double.parseDouble(txt_total);
-                            String s1 = String.valueOf(mPointtotal);
+                            TotalPoints = points * mpoints;
+                            String s4 = String.valueOf(TotalPoints);
+
+                            holder.txt_total.setText(String.valueOf(s4));
+
+                            points1 = Double.parseDouble(holder.txt_noofmpin.getText().toString().trim());
+                            txt_score = MPointActivity.txt_score.getText().toString().trim();
+                            txt_total = holder.txt_total.getText().toString().trim();
+                            TotalScore = Double.parseDouble(txt_total);
+                            intArray[position] = TotalScore;
+                            Double TotalFinal = 0.0;
+                            for (int i = 0; i < intArray.length; i++) {
+                                TotalFinal = TotalFinal + intArray[i];
+                            }
+                            String s1 = String.valueOf(TotalFinal);
                             MPointActivity.txt_score.setText(s1);
                         }
-                        holder.txt_noofmpin.setFocusable(true);
-                        holder.txt_noofmpin.setEnabled(true);*/
+
+
                     } catch (Exception e) {
 
                     }
@@ -131,6 +150,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
 
 
 
+/*
         holder.txt_noofmpin.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
@@ -144,7 +164,8 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                             Toast.makeText(context, "Please Enter Value", Toast.LENGTH_SHORT).show();
                             return false;
                         } else {
-                           /* points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
+                           */
+/* points = Double.parseDouble(holder.mpointspermpin.getText().toString().trim());
                             mpoints = Double.parseDouble(holder.txt_noofmpin.getText().toString().trim());
 
                             TotalPoints = points * mpoints;
@@ -168,7 +189,8 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                                 MPointActivity.txt_score.setText(res);
                             }
                             holder.txt_noofmpin.setFocusable(false);
-                            holder.txt_noofmpin.setEnabled(false);*/
+                            holder.txt_noofmpin.setEnabled(false);*//*
+
                             Double mPointtotal = Double.parseDouble(txt_score) + Double.parseDouble(txt_total);
                             String s1 = String.valueOf(mPointtotal);
 
@@ -181,7 +203,8 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }/*else  if (event.getKeyCode() == KeyEvent.KEYCODE_DEL){
+                }*/
+/*else  if (event.getKeyCode() == KeyEvent.KEYCODE_DEL){
                     try {
 
                         if (holder.txt_noofmpin.getText().toString().isEmpty()) {
@@ -201,10 +224,12 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                         e.printStackTrace();
                     }
                     return true;
-                }*/
+                }*//*
+
                 return false;
             }
         });
+*/
 
 
     }
