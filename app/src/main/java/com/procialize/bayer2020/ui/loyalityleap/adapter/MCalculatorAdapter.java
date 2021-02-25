@@ -37,12 +37,17 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
     Double TotalScore;
     String txt_score,txt_total;
     Double[] intArray; // Array Declared
-
+     int size;
     public MCalculatorAdapter(Context context, List<m_points_list> productLists, MCalculatorAdapter.ProductAdapterListner listener, String imageurl) {
         this.productLists = productLists;
         this.listener = listener;
         this.context = context;
         this.imageurl = imageurl;
+        size = productLists.size();
+        intArray = new Double[size];
+        for (int i = 0; i < size; i++) {
+            intArray[i] = 0.0;
+        }
 
     }
 
@@ -61,11 +66,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
         holder.txt_product.setText(travel.getProduct_name());
         holder.txt_packsize.setText(travel.getUnit());
         holder.mpointspermpin.setText(travel.getPoints());
-        int size = productLists.size();
-        intArray = new Double[size];
-        for (int i = 0; i < intArray.length; i++) {
-            intArray[i] = 0.0;
-        }
+
         holder.txt_noofmpin.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -111,7 +112,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                             TotalScore = Double.parseDouble(txt_total);
                             intArray[position] = TotalScore;
                             Double TotalFinal = 0.0;
-                            for (int i = 0; i < intArray.length; i++) {
+                            for (int i = 0; i < size; i++) {
                                 TotalFinal = TotalFinal + intArray[i];
                             }
                             String s1 = String.valueOf(TotalFinal);
@@ -131,7 +132,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
                             TotalScore = Double.parseDouble(txt_total);
                             intArray[position] = TotalScore;
                             Double TotalFinal = 0.0;
-                            for (int i = 0; i < intArray.length; i++) {
+                            for (int i = 0; i < size; i++) {
                                 TotalFinal = TotalFinal + intArray[i];
                             }
                             String s1 = String.valueOf(TotalFinal);

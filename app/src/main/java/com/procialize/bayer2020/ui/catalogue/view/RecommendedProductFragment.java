@@ -1,5 +1,6 @@
 package com.procialize.bayer2020.ui.catalogue.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,7 @@ import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 import com.procialize.bayer2020.ui.upskill.adapter.UpskillAdapter;
 import com.procialize.bayer2020.ui.upskill.model.UpskillList;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class RecommendedProductFragment extends Fragment implements PestRecommendedProductsAdapter.ProductAdapterListner{
@@ -63,6 +65,8 @@ public class RecommendedProductFragment extends Fragment implements PestRecommen
 
     @Override
     public void onContactSelected(CataloguePestRecommendedProducts pollList) {
-
+       /* startActivity(new Intent(getContext(), ProductListDetailActivity.class)
+                .putExtra("Imageurl", Imageurl)
+                .putExtra("Product", (Serializable) product_item));*/
     }
 }

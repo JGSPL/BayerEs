@@ -1,7 +1,10 @@
 package com.procialize.bayer2020.ui.catalogue.view;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,8 @@ import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
 import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 
+import org.jsoup.Jsoup;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +54,8 @@ public class ProductDetailsFragment extends Fragment {
     APIService eventApi;
     String token, eventid, imageurl, pestId = "1";
     LinearLayout linMain;
-
+    String spannedString;
+    String postStatus;
     public ProductDetailsFragment() {
         // Required empty public constructor
     }
@@ -79,8 +85,21 @@ public class ProductDetailsFragment extends Fragment {
 
         tv_details = rootView.findViewById(R.id.tv_details);
         linMain = rootView.findViewById(R.id.linMain);
-        tv_details.setText(pest_item.getProduct_long_description());
+       // tv_details.setText(pest_item.getProduct_long_description());
+        if (pest_item.getProduct_long_description().contains("\n")) {
+            postStatus =pest_item.getProduct_long_description().trim().replace("\n", "<br/>");
+        } else {
+            postStatus = pest_item.getProduct_long_description().trim();
+        }
+        spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            tv_details.setText(Utility.trimTrailingWhitespace(strPost));
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            tv_details.setText(Utility.trimTrailingWhitespace(strPost));
+        }
         getDataFromApi(token, eventid);
         return rootView;
     }

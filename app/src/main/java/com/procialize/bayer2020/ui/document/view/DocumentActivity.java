@@ -82,7 +82,7 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
     RecyclerView recycler_document;
     TextView txt_pullrefresh, tv_header;
     ImageView iv_back,headerlogoIv;
-    ConstraintLayout constraint_main;
+    LinearLayout constraint_main;
     SessionManager session;
     String api_token = "", event_id;
     ConnectionDetector cd;
@@ -107,29 +107,14 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
         tv_header = findViewById(R.id.tv_header);
         iv_back = findViewById(R.id.iv_back);
         constraint_main = findViewById(R.id.constraint_main);
-      /*  image_grid = findViewById(R.id.image_grid);
-        image_list = findViewById(R.id.image_list);
-*/
-        //CommonFunction.showBackgroundImage(DocumentActivity.this, constraint_main);
-        /*tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(DocumentActivity.this, EVENT_COLOR_1)));
-        color = Color.parseColor(SharedPreference.getPref(DocumentActivity.this, EVENT_COLOR_1));
-        color2 = Color.parseColor(SharedPreference.getPref(DocumentActivity.this, EVENT_COLOR_2));
 
-        image_grid.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        image_list.setColorFilter(color2, PorterDuff.Mode.SRC_ATOP);*/
         session = new SessionManager(getApplicationContext());
 
 
         api_token = SharedPreference.getPref(DocumentActivity.this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(DocumentActivity.this, EVENT_ID);
 
-        /*iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);*/
-       /* iv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });*/
+
 
         iv_back = findViewById(R.id.iv_back);
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -218,7 +203,7 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
             public void onRefresh() {
                 documentrefresh.setRefreshing(false);
                 if (cd.isConnectingToInternet()) {
-                    documentviewmodel.getDocumentList(api_token, event_id, "100", "1");
+                    documentviewmodel.getDocumentList(api_token, event_id, "1000", "1");
                     documentviewmodel.getDocumentList().observe(DocumentActivity.this, new Observer<Document>() {
                         @Override
                         public void onChanged(Document event) {
@@ -245,32 +230,10 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
             }
         });
 
-       /* image_grid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                image_grid.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                image_list.setColorFilter(color2, PorterDuff.Mode.SRC_ATOP);
-                setAdapter(gsonevent);
-            }
-        });
 
-        image_list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                image_list.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                image_grid.setColorFilter(color2, PorterDuff.Mode.SRC_ATOP);
-                setAdapterlist(gsonevent);
-            }
-        });*/
     }
 
-/*
-    public void setAdapter(List<DocumentDetail> commentList) {
-        documentAdapter = new DocumentGridAdapter(DocumentActivity.this, commentList);
-        recycler_document.setLayoutManager(new GridLayoutManager(this, 2));
-        recycler_document.setAdapter(documentAdapter);
-    }
-*/
+
 
     public void setAdapterlist(List<DocumentDetail> commentList) {
 
