@@ -21,12 +21,21 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
+import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.ui.catalogue.model.ProductType;
+import com.procialize.bayer2020.ui.loyalityleap.model.My_point;
 import com.procialize.bayer2020.ui.loyalityleap.model.Scheme_offer_item;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
@@ -96,6 +105,8 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
         getUserActivityReport.userActivityReport();
         //--------------------------------------------------------------------------------------
 
+        getMyPoints();
+
         webview.clearCache(true);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setPluginState(WebSettings.PluginState.ON);
@@ -143,6 +154,38 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
                     }).into(headerlogoIv);
 
         }
+    }
+    void getMyPoints( ) {
+        ApiUtils.getAPIService().SchemeAndOfferRead(api_token,"1",ScheameList.getId()).enqueue(new Callback<LoginOrganizer>() {
+            @Override
+            public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
+                if (response.isSuccessful()) {
+
+                  /*  String strEventList = response.body().getDetail();
+                    RefreashToken refreashToken = new RefreashToken(this);
+                    String data = refreashToken.decryptedData(strEventList);*/
+                  /*  My_point pincodeLists = new Gson().fromJson(data, new TypeToken<My_point>() {
+                    }.getType());
+                    if(pincodeLists!=null){
+                        txtMyPoint.setText(pincodeLists.getMypoint());
+                        txtMyRank.setText(pincodeLists.getRank());
+                        txtUnreadCount.setText(pincodeLists.getSchemeUnreadCount());
+                    }*/
+
+
+                } else {
+                    // Toast.makeText(getContext(), "Internal server error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
+                try {
+                    //  Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                }
+            }
+        });
     }
 
 }

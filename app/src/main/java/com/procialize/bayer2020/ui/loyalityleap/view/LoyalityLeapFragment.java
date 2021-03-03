@@ -20,6 +20,7 @@ import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.loyalityleap.model.My_point;
 import com.procialize.bayer2020.ui.profile.model.Pincode_item;
@@ -60,6 +61,8 @@ public class LoyalityLeapFragment  extends Fragment {
         progressBar = root.findViewById(R.id.progressBar);
 
         api_token = SharedPreference.getPref(getContext(), AUTHERISATION_KEY);
+        new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
+
         getMyPoints();
 
         relScheame.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +132,7 @@ public class LoyalityLeapFragment  extends Fragment {
 
 
                 } else {
-                    Toast.makeText(getContext(), "Internal server error", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getContext(), "Internal server error", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -142,5 +145,10 @@ public class LoyalityLeapFragment  extends Fragment {
             }
         });
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getMyPoints();
 
+    }
 }

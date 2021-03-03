@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,6 +51,7 @@ import com.procialize.bayer2020.ui.attendee.roomDB.TableAttendee;
 import com.procialize.bayer2020.ui.attendee.viewmodel.AttendeeDatabaseViewModel;
 import com.procialize.bayer2020.ui.newsFeedPost.adapter.ViewPagerMultimediaAdapter;
 import com.procialize.bayer2020.ui.newsFeedPost.model.SelectedImages;
+import com.procialize.bayer2020.ui.newsFeedPost.networking.PostNewsFeedRepository;
 import com.procialize.bayer2020.ui.newsFeedPost.viewModel.PostNewsFeedViewModel;
 import com.procialize.bayer2020.ui.newsfeed.model.Mention;
 import com.procialize.bayer2020.ui.tagging.adapter.UsersAdapter;
@@ -381,6 +383,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                                 //btn_post.setEnabled(true);
                                                 String status = result.getHeader().get(0).getType();
                                                 String message = result.getHeader().get(0).getMsg();
+                                                Toast.makeText(PostNewActivity.this, result.getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
 
                                                 Utility.createShortSnackBar(linear, message);
                                                 postNewsFeedViewModel.startNewsFeedFragment(PostNewActivity.this);

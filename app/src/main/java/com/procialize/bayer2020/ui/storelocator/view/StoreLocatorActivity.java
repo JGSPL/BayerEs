@@ -368,7 +368,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
             @Override
             public void onClick(View arg0) {
                 // TODO Auto-generated method stub
-                String contact = mobile; // use country code with your phone number
+                String contact =  "+91"+  mobile; // use country code with your phone number
                 String url = "https://api.whatsapp.com/send?phone=" + contact;
                 try {
                     PackageManager pm = StoreLocatorActivity.this.getPackageManager();

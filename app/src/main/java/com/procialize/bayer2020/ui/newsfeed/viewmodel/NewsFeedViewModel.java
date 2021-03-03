@@ -230,7 +230,8 @@ public class NewsFeedViewModel extends ViewModel {
                             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                             sharingIntent.setType("video/*");
                             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Pest Expert");
-                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Shared via Pest Expert");
+                            //sharingIntent.putExtra(Intent.EXTRA_TEXT, "Shared via Pest Expert");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://bayer2020.page.link/newsfeed");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                             activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
 
@@ -859,6 +860,7 @@ public class NewsFeedViewModel extends ViewModel {
                             sharingIntent.setType("image/*");
                             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
                             sharingIntent.putExtra(Intent.EXTRA_TEXT, data);
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://bayer2020.page.link/newsfeed");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
                             context.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
                             dialogShare.dismiss();
@@ -922,8 +924,7 @@ public class NewsFeedViewModel extends ViewModel {
         // Add data to the intent, the receiving app will decide
         // what to do with it.
         share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
-        share.putExtra(Intent.EXTRA_TEXT, spannedString1.toString() /* + url*/);
-
+        share.putExtra(Intent.EXTRA_TEXT, spannedString1.toString()+" "  + "https://bayer2020.page.link/newsfeed");
         activityVar.startActivity(Intent.createChooser(share, " Shared via Pest Expert"));
     }
 

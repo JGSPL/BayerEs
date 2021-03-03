@@ -31,7 +31,7 @@ public class ProductSubPointFragment extends Fragment implements ProductSubPoint
     RecyclerView rv_recommended_product;
     private List<product_subpoint_detail> ProductSubpointList;
     ProductSubPointAdapter productDocumetAdapter;
-    String DocumentPath;
+    String DocumentPath, productDescription;
     TextView txtDescription;
     Product_item product_item;
 
@@ -52,19 +52,24 @@ public class ProductSubPointFragment extends Fragment implements ProductSubPoint
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_product_subpoint, container, false);
+        try {
 
-        ProductSubpointList = (List<product_subpoint_detail>) getArguments().getSerializable("productSubPoint");
-        DocumentPath = getArguments().getString("DocumentPath");
-        product_item = (Product_item)getArguments().getSerializable("ProductType");
+            ProductSubpointList = (List<product_subpoint_detail>) getArguments().getSerializable("productSubPoint");
+            DocumentPath = getArguments().getString("DocumentPath");
+            //product_item = (Product_item) getArguments().getSerializable("ProductType");
+            productDescription = getArguments().getString("productDescription");
+        }catch (Exception e){
+
+        }
 
         rv_recommended_product = rootView.findViewById(R.id.rv_recommended_product);
         txtDescription = rootView.findViewById(R.id.txtDescription);
 
 
-        if (product_item.getProduct_long_description().contains("\n")) {
-            postStatus =product_item.getProduct_long_description().trim().replace("\n", "<br/>");
+        if (productDescription.contains("\n")) {
+            postStatus =productDescription.trim().replace("\n", "<br/>");
         } else {
-            postStatus = product_item.getProduct_long_description().trim();
+            postStatus = productDescription.trim();
         }
         spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
 

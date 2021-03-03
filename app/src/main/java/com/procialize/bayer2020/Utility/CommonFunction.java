@@ -458,7 +458,10 @@ public class CommonFunction {
                 String notificationCount = SharedPreference.getPref(context, notification_count);
                 tv_notification.setText(notificationCount);
 
-                if (notificationCount.equalsIgnoreCase("0")) {
+                if (notificationCount.equalsIgnoreCase("")) {
+                    tv_notification.setVisibility(View.GONE);
+                    ll_notification_count.setVisibility(View.GONE);
+                }else if (notificationCount.equalsIgnoreCase("0")) {
                     tv_notification.setVisibility(View.GONE);
                     ll_notification_count.setVisibility(View.GONE);
                 } else {

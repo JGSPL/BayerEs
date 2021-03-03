@@ -556,6 +556,13 @@ public interface APIService {
     Call<FetchAgenda> MyPointFetch(@Header("authorization") String authkey,
                                               @Field("event_id") String event_id);
 
+    @POST("Loyalty_api/SchemeAndOfferRead")
+    @FormUrlEncoded
+    Call<LoginOrganizer> SchemeAndOfferRead(@Header("authorization") String authkey,
+                                              @Field("event_id") String event_id,
+                                              @Field("scheme_id") String scheme_id);
+
+
     @POST("Loyalty_api/SchemeAndOfferList")
     @FormUrlEncoded
     Call<FetchSchemeOffer> SchemeAndOfferList(@Header("authorization") String authkey,
@@ -563,7 +570,6 @@ public interface APIService {
                                               @Field("search_text") String search_text,
                                               @Field("pageNumber") String pageNumber,
                                               @Field("pageSize") String pageSize);
-
 
     @POST("Loyalty_api/RedemptionHistory")
     @FormUrlEncoded

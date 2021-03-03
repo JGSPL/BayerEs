@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,20 +29,16 @@ import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
-import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
-import com.procialize.bayer2020.ui.catalogue.model.CataloguePestDetails;
 import com.procialize.bayer2020.ui.catalogue.model.CataloguePestRecommendedProducts;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductDetail;
-import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
 import com.procialize.bayer2020.ui.catalogue.model.Product_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Product_document_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Product_item;
 import com.procialize.bayer2020.ui.catalogue.model.product_dosage_detail;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
-import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
 import com.procialize.bayer2020.ui.storelocator.view.StoreLocatorActivity;
 
 import java.io.Serializable;
@@ -62,7 +57,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_I
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LIST_MEDIA_PATH;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_LOGO;
 
-public class ProductListDetailActivity extends AppCompatActivity {
+public class RecommendedproductListDetailActivity extends AppCompatActivity {
 
     private APIService eventApi;
     private FragmentTabHost mTabHostCel;
@@ -76,7 +71,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
     LinearLayout linMain;
     ImageView imgCover;
     TextView productTitle;
-    Product_item product_item;
+    CataloguePestRecommendedProducts product_item;
     LinearLayout linCalc,linShare, linBuyNow;
     Button imgCalc,btnbuy,btnShare;
     private Uri dynamicLink = null;
@@ -104,7 +99,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
 
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
-        product_item = (Product_item) getIntent().getSerializableExtra("Product");
+        product_item = (CataloguePestRecommendedProducts) getIntent().getSerializableExtra("Product");
         Imageurl = getIntent().getStringExtra("Imageurl");;
         productId = product_item.getId();
 
@@ -135,7 +130,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
         //----------------------------------------------------------------------------------
 
         productTitle.setText(product_item.getProduct_name());
-        Glide.with(ProductListDetailActivity.this)
+        Glide.with(RecommendedproductListDetailActivity.this)
                 .load(Imageurl+product_item.getProduct_image())
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -155,8 +150,8 @@ public class ProductListDetailActivity extends AppCompatActivity {
        /* mTabHostCel.addTab(
                 mTabHostCel.newTabSpec("Tab2")
                         .setIndicator(createTabView(this, "Downloads")),
-                ProductListDetailActivity.class, null);*/
-                //PestFragment.class, null);
+                RecommendedproductListDetailActivity.class, null);*/
+        //PestFragment.class, null);
         getLink();
 
         linShare.setOnClickListener(new View.OnClickListener() {
@@ -176,14 +171,14 @@ public class ProductListDetailActivity extends AppCompatActivity {
         btnbuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProductListDetailActivity.this, StoreLocatorActivity.class)
+                startActivity(new Intent(RecommendedproductListDetailActivity.this, StoreLocatorActivity.class)
                 );
             }
         });
         linBuyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProductListDetailActivity.this, StoreLocatorActivity.class)
+                startActivity(new Intent(RecommendedproductListDetailActivity.this, StoreLocatorActivity.class)
                 );
             }
         });
@@ -208,12 +203,12 @@ public class ProductListDetailActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
 
                             String strCommentList = response.body().getDetail();
-                            RefreashToken refreashToken = new RefreashToken(ProductListDetailActivity.this);
+                            RefreashToken refreashToken = new RefreashToken(RecommendedproductListDetailActivity.this);
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
                             Product_detail eventLists = gson.fromJson(data, new TypeToken<Product_detail>() {
                             }.getType());
-                           // List<Product_detail> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Product_detail>>() {}.getType());
+                            // List<Product_detail> eventLists = gson.fromJson(data, new TypeToken<ArrayList<Product_detail>>() {}.getType());
 
                             //Fetch Livepoll list
                             if (eventLists != null) {
@@ -223,24 +218,23 @@ public class ProductListDetailActivity extends AppCompatActivity {
 
                                 String DocumentPath = eventLists.getProduct_documentpath();
                                 Bundle bb = new Bundle();
-                                bb.putSerializable("ProductType", (Serializable) product_item);
+                                //bb.putSerializable("ProductType", (Serializable) product_item);
                                 bb.putString("DocumentPath", DocumentPath);
+                                bb.putSerializable("productDescription", product_item.getProduct_long_description());
 
                                 bb.putSerializable("productSubPoint", (Serializable) product_subpoint_detailList);
                                 mTabHostCel.addTab(
                                         mTabHostCel.newTabSpec("Tab1")
-                                                .setIndicator(createTabView(ProductListDetailActivity.this, "Details")),
+                                                .setIndicator(createTabView(RecommendedproductListDetailActivity.this, "Details")),
                                         ProductSubPointFragment.class, bb);
 
                                 Bundle b = new Bundle();
                                // b.putSerializable("ProductType", (Serializable) product_item);
                                 b.putString("DocumentPath", DocumentPath);
-                                bb.putSerializable("productDescription", product_item.getProduct_long_description());
-
                                 b.putSerializable("productDocumentList", (Serializable) Product_document_detailList);
                                 mTabHostCel.addTab(
                                         mTabHostCel.newTabSpec("Tab2")
-                                                .setIndicator(createTabView(ProductListDetailActivity.this, "Downloads")),
+                                                .setIndicator(createTabView(RecommendedproductListDetailActivity.this, "Downloads")),
                                         ProductDocumentFragment.class, b);
 
 
@@ -249,7 +243,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                     public void onClick(View v) {
 
                                         if(product_dosage_detailList.size()>0) {
-                                            startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class)
+                                            startActivity(new Intent(RecommendedproductListDetailActivity.this, ProductmCalculator_Activity.class)
                                                     .putExtra("ProductDosage", (Serializable) product_dosage_detailList)
                                                     .putExtra("ProductName", product_item.getProduct_name())
                                             );
@@ -265,7 +259,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
                                     public void onClick(View v) {
                                         if(product_dosage_detailList.size()>0) {
 
-                                            startActivity(new Intent(ProductListDetailActivity.this, ProductmCalculator_Activity.class)
+                                            startActivity(new Intent(RecommendedproductListDetailActivity.this, ProductmCalculator_Activity.class)
                                                     .putExtra("ProductDosage", (Serializable) product_dosage_detailList)
                                                     .putExtra("ProductName", product_item.getProduct_name())
                                             );
@@ -314,9 +308,9 @@ public class ProductListDetailActivity extends AppCompatActivity {
             mToolbar.showOverflowMenu();*/
             headerlogoIv = findViewById(R.id.headerlogoIv);
 
-            String eventLogo = SharedPreference.getPref(ProductListDetailActivity.this, EVENT_LOGO);
-            String eventListMediaPath = SharedPreference.getPref(ProductListDetailActivity.this, EVENT_LIST_MEDIA_PATH);
-            Glide.with(ProductListDetailActivity.this)
+            String eventLogo = SharedPreference.getPref(RecommendedproductListDetailActivity.this, EVENT_LOGO);
+            String eventListMediaPath = SharedPreference.getPref(RecommendedproductListDetailActivity.this, EVENT_LIST_MEDIA_PATH);
+            Glide.with(RecommendedproductListDetailActivity.this)
                     .load(eventListMediaPath + eventLogo)
                     .listener(new RequestListener<Drawable>() {
                         @Override

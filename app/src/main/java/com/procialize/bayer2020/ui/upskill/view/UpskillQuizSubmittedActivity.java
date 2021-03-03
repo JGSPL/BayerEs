@@ -145,8 +145,8 @@ public class UpskillQuizSubmittedActivity extends AppCompatActivity implements V
                         btnNext.setVisibility(View.GONE);
                         submit.setVisibility(View.VISIBLE);
                         if (upskillContentSubArray.getContentInfo().size() == click_count + 1) {
-                            btnNext.setText("Submit");
-                            submit.setText("Submit");
+                            btnNext.setText("Close");
+                            submit.setText("Close");
                         } else {
                             btnNext.setText("Next");
                             submit.setText("Next");
@@ -313,6 +313,8 @@ public class UpskillQuizSubmittedActivity extends AppCompatActivity implements V
                                 .putExtra("upskill_info", (Serializable) upskillList));
                         finish();
                     }
+                }else {
+                    finish();
                 }
             } else {
                 startActivity(new Intent(UpskillQuizSubmittedActivity.this, UpskillDetailsFirstActivity.class)

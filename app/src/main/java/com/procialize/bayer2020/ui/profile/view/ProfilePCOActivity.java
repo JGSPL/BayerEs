@@ -145,7 +145,6 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     String api_token, first_name, last_name, designation, company_name, city, email,
             mobile, is_god, alternate_no, alternate_no2, alternate_no3, license, pincode = "",
             no_of_technician = "", no_of_pco_served = "", associated_since = "", sap_code = "", attendee_id = "", user_type = "", state = "";
-    ArrayList pincodeData = new ArrayList();
     MultipartBody.Part body;
     RadioGroup radiogroupPCOType, radiogroupDesig;
     RadioButton radioPCO, radioOwer, radioother, radioOwner, radioTech, radioManager;
@@ -453,11 +452,15 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String searchString = atv_pincode.getText().toString();
+                try {
+                    String searchString = atv_pincode.getText().toString();
 
-                if (!(searchString.equalsIgnoreCase("") || searchString.equalsIgnoreCase(null))) {
+                    if (!(searchString.equalsIgnoreCase("") || searchString.equalsIgnoreCase(null))) {
 
-                    getPincode(searchString);
+                        getPincode(searchString);
+                    }
+                }catch (Exception e){
+
                 }
 
 
@@ -713,11 +716,16 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 specialization = arrSpecializtion.toString();
                                 specialization = specialization.substring(1, specialization.length() - 1);
 
+                                btn_save.setEnabled(false);
+                                btn_save.setClickable(false);
+
                                 saveProfilePCO(first_name, last_name, designation, company_name, city, email, mobile, profile_pic, alternate_no,
                                         user_type, state, no_of_technician, specialization, turnOver, pincode, altno2,
                                         altNO3);
                             }
                         } else {
+                            btn_save.setEnabled(false);
+                            btn_save.setClickable(false);
                             saveProfilePCO(first_name, last_name, designation, company_name, city, email, mobile, profile_pic, alternate_no,
                                     user_type, state, no_of_technician, specialization, turnOver, pincode, altno2,
                                     altNO3);
@@ -740,6 +748,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
 
                         } else {
+                            btn_save.setEnabled(false);
+                            btn_save.setClickable(false);
                             saveProfileHO(first_name, last_name, mobile, email, pincode, city, state, profile_pic, user_type);
                         }
 
@@ -760,6 +770,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
 
                         } else {
+                            btn_save.setEnabled(false);
+                            btn_save.setClickable(false);
                             saveProfileHO(first_name, last_name, mobile, email, pincode, city, state, profile_pic, user_type);
                         }
                     }
@@ -887,7 +899,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
         Glide.with(getApplicationContext()).load(bm)
                 .apply(RequestOptions.skipMemoryCacheOf(true))
-                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).circleCrop()
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -928,7 +940,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
         Glide.with(getApplicationContext()).load(tempUri)
                 .apply(RequestOptions.skipMemoryCacheOf(true))
-                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).circleCrop()
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -1034,7 +1046,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
             Glide.with(this).load(tempUri)
                     .apply(RequestOptions.skipMemoryCacheOf(true))
-                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE)).circleCrop()
+                    .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.NONE))
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -1149,6 +1161,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
                         if (response != null) {
                             if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                                btn_save.setEnabled(true);
+                                btn_save.setClickable(true);
 
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
@@ -1215,6 +1229,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
                         if (response.body() != null) {
                             if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+                                btn_save.setEnabled(true);
+                                btn_save.setClickable(true);
 
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
@@ -1306,6 +1322,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         if (response != null) {
                             if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
 
+                                btn_save.setEnabled(true);
+                                btn_save.setClickable(true);
+
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
                                 String strEventList = response.body().getProfileDetailsEncrypted();
@@ -1368,6 +1387,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
                         if (response.body() != null) {
                             if (response.body().getHeader().get(0).getType().equalsIgnoreCase("success")) {
+
+                                btn_save.setEnabled(true);
+                                btn_save.setClickable(true);
 
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
@@ -1647,6 +1669,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                         }.getType());
 
                         // List<ProfileDetails> profileDetails = profile.getProfileDetails();
+                        ArrayList pincodeData = new ArrayList();
 
                         if (profileDetails.size() > 0) {
 

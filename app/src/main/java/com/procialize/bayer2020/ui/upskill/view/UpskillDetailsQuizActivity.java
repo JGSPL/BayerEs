@@ -113,7 +113,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
         if (quizList.size() == 1 && upskillContentSubArray.getContentInfo().size() == 1) {
             btn_next.setVisibility(View.VISIBLE);
             btn_quiz_next.setVisibility(View.GONE);
-            btn_next.setText("Submit");
+            btn_next.setText("Close");
         } else if (quizList.size() > 1 && upskillContentSubArray.getContentInfo().size() == 1) {
             btn_quiz_next.setVisibility(View.VISIBLE);
             btn_next.setVisibility(View.GONE);
@@ -121,7 +121,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
         } else if (upskillContentSubArray.getContentInfo().size() == click_count + 1) {
             btn_next.setVisibility(View.VISIBLE);
             btn_quiz_next.setVisibility(View.GONE);
-            btn_next.setText("Submit");
+            btn_next.setText("Close");
         } else if (quizList.size() > 1) {
             btn_quiz_next.setVisibility(View.VISIBLE);
             btn_next.setVisibility(View.GONE);
@@ -148,7 +148,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
                     if (upskillContentSubArray.getContentInfo().size() == 1) {
                         btn_next.setVisibility(View.VISIBLE);
                         btn_quiz_next.setVisibility(View.GONE);
-                        btn_next.setText("Submit");
+                        btn_next.setText("Close");
 
                         submitAnswer();
 

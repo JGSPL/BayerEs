@@ -220,13 +220,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String notificationCount = SharedPreference.getPref(this, notification_count);
         //tv_notification.setText(notificationCount);
-        if (notificationCount.equalsIgnoreCase("0")) {
-            tv_notification.setVisibility(View.GONE);
-            ll_notification_count.setVisibility(View.GONE);
-        } else {
-            tv_notification.setVisibility(View.VISIBLE);
-            ll_notification_count.setVisibility(View.VISIBLE);
-        }
+
 
         getNotiCount(this);
         getProfileDetails();
@@ -241,7 +235,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-
+        if (notificationCount.equalsIgnoreCase("0")) {
+            tv_notification.setVisibility(View.GONE);
+            ll_notification_count.setVisibility(View.GONE);
+        }else if (notificationCount.equalsIgnoreCase(null)) {
+            tv_notification.setVisibility(View.GONE);
+            ll_notification_count.setVisibility(View.GONE);
+        }else if (notificationCount.equalsIgnoreCase("null")) {
+            tv_notification.setVisibility(View.GONE);
+            ll_notification_count.setVisibility(View.GONE);
+        }else if (notificationCount.equalsIgnoreCase("")) {
+            tv_notification.setVisibility(View.GONE);
+            ll_notification_count.setVisibility(View.GONE);
+        }  else {
+            tv_notification.setVisibility(View.VISIBLE);
+            ll_notification_count.setVisibility(View.VISIBLE);
+        }
         String device_token = SharedPreference.getPref(this, KEY_GCM_ID);;
         Log.e("device_token===>",device_token);
         LinearLayout outer = findViewById(R.id.my);
@@ -952,7 +961,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     myDialog.dismiss();
 
                 } else {
-                    Utility.createShortSnackBar(mDrawerLayout, "Please checked this box");
+                    Utility.createShortSnackBar(mDrawerLayout, "Please check the box");
                 }
             }
         });

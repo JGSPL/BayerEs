@@ -205,7 +205,7 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
             txt_quan.setText(product_dosage_detailList.get(0).getAmount_unit());
             txt_quantity.setText(product_dosage_detailList.get(0).getAmount_unit());
             txt_quantitySolu.setText(product_dosage_detailList.get(0).getDiluted_solution_quantity());
-            tv_area.setText("Area To be treated (sq.mt/sq.ft)");
+            tv_area.setText("Area To be treated (sq.mt)");
 
             edtAmountConvert.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override

@@ -118,7 +118,7 @@ public class UpSkillExternal extends AppCompatActivity implements View.OnClickLi
        // webView.loadUrl(strUrl);
 
         if (upskillContentSubArray.getContentInfo().size() ==  click_count+1) {
-            btn_next.setText("Submit");
+            btn_next.setText("Close");
         } else {
             btn_next.setText("Next");
         }

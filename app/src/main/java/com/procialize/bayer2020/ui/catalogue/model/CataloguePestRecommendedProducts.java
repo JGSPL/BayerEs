@@ -3,7 +3,9 @@ package com.procialize.bayer2020.ui.catalogue.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CataloguePestRecommendedProducts {
+import java.io.Serializable;
+
+public class CataloguePestRecommendedProducts implements Serializable {
 
     @SerializedName("pest_id")
     @Expose

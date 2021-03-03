@@ -55,8 +55,8 @@ public class PestRecommendedProductsAdapter  extends RecyclerView.Adapter<PestRe
         final CataloguePestRecommendedProducts productType = productLists.get(position);
 
         Glide.with(holder.imageIv)
-                .load(imageurl+productType.getProduct_image())
-                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).centerCrop()
+                .load(imageurl+productType.getProduct_thumb_image())
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

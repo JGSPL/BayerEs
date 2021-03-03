@@ -65,8 +65,8 @@ public class RecommendedProductFragment extends Fragment implements PestRecommen
 
     @Override
     public void onContactSelected(CataloguePestRecommendedProducts pollList) {
-       /* startActivity(new Intent(getContext(), ProductListDetailActivity.class)
-                .putExtra("Imageurl", Imageurl)
-                .putExtra("Product", (Serializable) product_item));*/
+       startActivity(new Intent(getContext(), RecommendedproductListDetailActivity.class)
+                .putExtra("Imageurl", strRecommendedPath)
+                .putExtra("Product", (Serializable) pollList));
     }
 }

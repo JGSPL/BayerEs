@@ -94,7 +94,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT);*/
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
-                R.drawable.app_icon);
+                R.drawable.notify_icon);
 
         if (remoteMessage.getData().size() > 0) {
             Log.d("Payload===>", "Message data payload: " + remoteMessage.getData());
@@ -132,7 +132,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                         if (remoteMessage.getData().get("mediaType").equalsIgnoreCase("image")) {
                             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.app_icon)
+                                    .setSmallIcon(R.drawable.notify_icon)
                                     .setContentTitle(remoteMessage.getData().get("event_name"))
                                     .setContentText(Utility.trimTrailingWhitespace(strPost))
                                     .setAutoCancel(true)
@@ -147,7 +147,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
                         } else {
                             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.app_icon)
+                                    .setSmallIcon(R.drawable.notify_icon)
                                     .setContentTitle(remoteMessage.getData().get("event_name"))
                                     .setContentText(Utility.trimTrailingWhitespace(strPost))
                                     .setAutoCancel(true).setContentIntent(contentIntent);
@@ -180,7 +180,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     contentIntent =
                             stackBuilder.getPendingIntent(new Random().nextInt(), PendingIntent.FLAG_UPDATE_CURRENT);
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                            .setSmallIcon(R.drawable.app_icon)
+                            .setSmallIcon(R.drawable.notify_icon)
                             //.setLargeIcon(largeIcon)
                             //.setLargeIcon(bitmap)
                             .setContentTitle(remoteMessage.getData().get("event_name"))
@@ -204,7 +204,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_UPDATE_CURRENT);
 
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                            .setSmallIcon(R.drawable.app_icon)
+                            .setSmallIcon(R.drawable.notify_icon)
                             //.setLargeIcon(largeIcon)
                             //.setLargeIcon(bitmap)
                             .setContentTitle(remoteMessage.getData().get("event_name"))
@@ -239,7 +239,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 new Random().nextInt(), notificationIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                                .setSmallIcon(R.drawable.app_icon)
+                                .setSmallIcon(R.drawable.notify_icon)
                                 .setContentTitle(remoteMessage.getData().get("event_name"))
                                 .setContentText(Utility.trimTrailingWhitespace(strPost))
                                 .setAutoCancel(true).setContentIntent(contentIntent);
@@ -270,7 +270,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 PendingIntent.FLAG_UPDATE_CURRENT);
 
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                                .setSmallIcon(R.drawable.app_icon)
+                                .setSmallIcon(R.drawable.notify_icon)
                                 //.setLargeIcon(largeIcon)
                                 //.setLargeIcon(bitmap)
                                 .setContentTitle(remoteMessage.getData().get("event_name"))
@@ -297,7 +297,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                            .setSmallIcon(R.drawable.app_icon)
+                            .setSmallIcon(R.drawable.notify_icon)
                             //.setLargeIcon(largeIcon)
                             //.setLargeIcon(bitmap)
                             .setContentTitle(remoteMessage.getData().get("event_name"))
@@ -332,7 +332,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_UPDATE_CURRENT);
 
                     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
-                            .setSmallIcon(R.drawable.app_icon)
+                            .setSmallIcon(R.drawable.notify_icon)
                             //.setLargeIcon(largeIcon)
                             //.setLargeIcon(bitmap)
                             .setContentTitle(remoteMessage.getData().get("event_name"))

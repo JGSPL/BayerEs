@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -397,6 +398,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
                                                 //btn_post.setEnabled(true);
                                                 String status = result.getHeader().get(0).getType();
                                                 String message = result.getHeader().get(0).getMsg();
+                                                Toast.makeText(PostNewActivity.this, result.getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
 
                                                 Utility.createShortSnackBar(linear, message);
                                                 postNewsFeedViewModel.startNewsFeedFragment(PostNewActivity.this);
@@ -471,6 +473,7 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
 
                                                 Log.d("PostResponse", response.body().getHeader().get(0).getMsg());
                                                 if (response != null) {
+                                                    Toast.makeText(PostNewActivity.this, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
 
                                                     Utility.createShortSnackBar(linear, response.body().getHeader().get(0).getMsg());
                                                     postNewsFeedViewModel.startNewsFeedFragment(PostNewActivity.this);
