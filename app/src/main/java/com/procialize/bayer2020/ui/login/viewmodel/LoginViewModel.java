@@ -304,7 +304,7 @@ public class LoginViewModel extends BaseObservable {
             @Override
             public void onFailure(Call<validateOTP> call, Throwable t) {
                 activityLoginBinding.btnOTPSubmit.setClickable(true);
-               // setToastMessage(errorMessage);
+                setToastMessage(errorMessage);
             }
         });
     }

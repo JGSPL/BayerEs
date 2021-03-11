@@ -621,5 +621,11 @@ public class LoginActivity extends AppCompatActivity {
         myDialog.show();
 
     }
+    @Override
+    protected void onDestroy () {
+        super.onDestroy();
+        passcodeDialog.dismiss();
+    }
+
 
 }

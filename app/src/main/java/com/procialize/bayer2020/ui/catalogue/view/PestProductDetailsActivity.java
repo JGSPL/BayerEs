@@ -140,7 +140,7 @@ public class PestProductDetailsActivity extends AppCompatActivity {
 
         eventApi = ApiUtils.getAPIService();
 
-        eventApi.PestDetails(token, eventid, pestId)
+        eventApi.PestDetails(token, eventid, pest_item.getId())
                 .enqueue(new Callback<FetchPestDetail>() {
                     @Override
                     public void onResponse(Call<FetchPestDetail> call, Response<FetchPestDetail> response) {

@@ -961,7 +961,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     myDialog.dismiss();
 
                 } else {
-                    Utility.createShortSnackBar(mDrawerLayout, "Please check the box");
+                    Utility.createShortSnackBar(mDrawerLayout, "Please checked the box");
                 }
             }
         });

@@ -167,6 +167,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
 
             map.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
             getDistributerNameList(api_token, "1", marker.getTitle());
+            marker.setVisible(false);
         }else {
             marker.hideInfoWindow();
             myMarker.hideInfoWindow();
