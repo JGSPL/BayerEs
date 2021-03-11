@@ -10,9 +10,11 @@
     android:layout_marginLeft="15dp">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.procialize.bayer2020.fonts.RobotoTextview
         android:id="@+id/tv_details"
         android:layout_width="match_parent"
+        android:textColor="@color/black"
+        android:textSize="12sp"
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
 </LinearLayout>

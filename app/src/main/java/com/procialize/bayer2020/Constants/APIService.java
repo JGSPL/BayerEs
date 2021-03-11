@@ -754,4 +754,7 @@ public interface APIService {
                                              @Field("page_name") String page_name,
                                              @Field("page_id") String page_id);
 
+    @POST("event_api_call/logout")
+    @FormUrlEncoded
+    Call<BaseResponse> logout(@Header("authorization") String api_access_token);
 }

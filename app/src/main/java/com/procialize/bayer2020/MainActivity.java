@@ -65,6 +65,7 @@ import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.Constant;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.Database.EventAppDB;
+import com.procialize.bayer2020.GetterSetter.BaseResponse;
 import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
 import com.procialize.bayer2020.Utility.CommonFirebase;
 import com.procialize.bayer2020.Utility.CommonFunction;
@@ -76,6 +77,7 @@ import com.procialize.bayer2020.session.SessionManager;
 import com.procialize.bayer2020.ui.Contactus.ContactUsActivity;
 import com.procialize.bayer2020.ui.EULA.EulaActivity;
 import com.procialize.bayer2020.ui.Privacypolicy.PrivacypolicyActivity;
+import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.agenda.view.AgendaFragment;
 import com.procialize.bayer2020.ui.attendee.model.Attendee;
 import com.procialize.bayer2020.ui.attendee.model.FetchAttendee;
@@ -89,6 +91,7 @@ import com.procialize.bayer2020.ui.faq.view.FAQActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.login.view.LoginActivity;
 import com.procialize.bayer2020.ui.loyalityleap.model.FetchRedeemStatusBasicData;
+import com.procialize.bayer2020.ui.loyalityleap.model.My_point;
 import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_item;
 import com.procialize.bayer2020.ui.loyalityleap.model.redeem_history_status_item;
 import com.procialize.bayer2020.ui.loyalityleap.view.LoyalityLeapFragment;
@@ -454,12 +457,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_logout:
                         //Logout from app
-                        JzvdStd.releaseAllVideos();
+                        LogoutFun();
+                        /*JzvdStd.releaseAllVideos();
                         EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
                         EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
                         EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        finishAffinity();
+                        finishAffinity();*/
                         break;
 
                 }
@@ -1024,6 +1028,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.e("Error: ", e.getMessage());
             }
 
+    }
+    void LogoutFun( ) {
+        ApiUtils.getAPIService().logout(api_token).enqueue(new Callback<BaseResponse>() {
+            @Override
+            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                if (response.isSuccessful()) {
+                    JzvdStd.releaseAllVideos();
+                    EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
+                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finishAffinity();
+
+                } else { }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse> call, Throwable t) {
+                try {
+                    JzvdStd.releaseAllVideos();
+                    EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
+                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finishAffinity();
+                    //  Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                }
+            }
+        });
     }
 
 

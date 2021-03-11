@@ -68,7 +68,7 @@ public class ProductSubPointAdapter extends RecyclerView.Adapter<ProductSubPoint
             }
         });
 */
-        holder.iv_right_arrow.setOnClickListener(new View.OnClickListener() {
+        holder.ll_row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (holder.tv_desc.getVisibility() == View.VISIBLE) {
@@ -94,12 +94,12 @@ public class ProductSubPointAdapter extends RecyclerView.Adapter<ProductSubPoint
             }
         });
 
-        holder.ll_row.setOnClickListener(new View.OnClickListener() {
+       /* holder.ll_row.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onContactSelected(productLists.get(position));
             }
-        });
+        });*/
 
     }
 

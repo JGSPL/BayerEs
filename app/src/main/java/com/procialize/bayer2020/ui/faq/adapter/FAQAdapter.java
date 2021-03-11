@@ -1,6 +1,9 @@
 package com.procialize.bayer2020.ui.faq.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,10 @@ import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.Animations;
 import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
+import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.faq.model.faq_item;
+
+import org.jsoup.Jsoup;
 
 import java.util.List;
 
@@ -31,7 +37,8 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
     private LayoutInflater inflater;
     String imageurl,token,eventid;
     int i = 0;
-
+    String spannedString;
+    String postStatus;
     public FAQAdapter(Context context, List<faq_item> productLists,
                       FAQAdapter.ProductAdapterListner listener, String imageurl) {
         this.productLists = productLists;
@@ -56,8 +63,20 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.ProductViewHolde
 
         final faq_item productType = productLists.get(position);
         holder.tv_title.setText(productType.getTitle());
-        holder.tv_desc.setText(productType.getDescription());
-
+        //holder.tv_desc.setText(productType.getDescription());
+        if (productType.getDescription().contains("\n")) {
+            postStatus =productType.getDescription().trim().replace("\n", "<br/>");
+        } else {
+            postStatus = productType.getDescription().trim();
+        }
+        spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+            holder.tv_desc.setText(Utility.trimTrailingWhitespace(strPost));
+        } else {
+            Spanned strPost = Html.fromHtml(spannedString);
+            holder.tv_desc.setText(Utility.trimTrailingWhitespace(strPost));
+        }
         holder.tv_title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

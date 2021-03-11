@@ -19,7 +19,7 @@
     <com.procialize.bayer2020.fonts.RobotoTextview
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="12sp"
         android:scrollbars="vertical"
         android:padding="10dp"
         android:textColor="@color/black"
