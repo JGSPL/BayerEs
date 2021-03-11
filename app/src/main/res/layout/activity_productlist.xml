@@ -82,10 +82,20 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <com.procialize.bayer2020.fonts.RobotoTextview
+        android:id="@+id/productTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/app_bar_layout"
+        android:padding="5dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="14sp"></com.procialize.bayer2020.fonts.RobotoTextview>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/productTitle"
         android:id="@+id/relMain"
         android:background="@color/colorwhite"
 

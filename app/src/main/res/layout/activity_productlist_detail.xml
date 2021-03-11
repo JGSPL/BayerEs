@@ -98,7 +98,7 @@
         <ImageView
             android:id="@+id/imgCover"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="180dp"
             android:scaleType="fitXY"
             android:src="@drawable/gallery_placeholder"></ImageView>
 

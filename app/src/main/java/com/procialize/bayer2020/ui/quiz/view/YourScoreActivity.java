@@ -107,7 +107,6 @@ public class YourScoreActivity extends AppCompatActivity {
         tv_header = findViewById(R.id.tv_header);
 //        tv_score = findViewById(R.id.tv_score);
         relativeMain = findViewById(R.id.relativeMain);
-
         String api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         String event_id = SharedPreference.getPref(this, EVENT_ID);
 
@@ -147,6 +146,8 @@ public class YourScoreActivity extends AppCompatActivity {
         Page = intent.getStringExtra("Page");
         if (Page.equalsIgnoreCase("Question")) {
             viewResult.setVisibility(View.VISIBLE);
+            txt_title.setTextColor(Color.parseColor("#e4004b"));
+
         } else {
             viewResult.setVisibility(View.GONE);
         }

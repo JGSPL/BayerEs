@@ -23,6 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
         <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/empty"
             android:layout_width="match_parent"
@@ -35,9 +37,11 @@
             android:textSize="18sp" />
 
 
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/productrefresh"
             android:layout_width="match_parent"
+            android:layout_below="@+id/productTitle"
             android:layout_height="wrap_content"
             >
 

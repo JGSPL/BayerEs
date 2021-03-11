@@ -91,6 +91,9 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
             }
         });
 
+        TextView productTitle = findViewById(R.id.productTitle);
+        productTitle.setText(productType.getProduct_type_name());
+
         //-----------------------------For Notification count-----------------------------
         try {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);

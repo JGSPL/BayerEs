@@ -20,6 +20,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,6 +57,7 @@ import com.procialize.bayer2020.ui.quiz.model.QuizQuestion;
 import com.procialize.bayer2020.ui.quiz.model.QuizSubmit;
 import com.procialize.bayer2020.ui.quiz.viewmodel.QuizDetailViewModel;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
@@ -253,7 +255,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                 int i = pagerAdapter.getItemCount();
 
                 if (option == pager.getCurrentItem()) {
-                    Utility.createShortSnackBar(ll_main, "Please select Answer.");
+                    Utility.createShortSnackBar(ll_main, "Please select an answer.");
                 } else {
                     pager.setCurrentItem(pager.getCurrentItem() + 1, true);
                     countpage = pager.getCurrentItem();
@@ -436,7 +438,8 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
             String[] data = pagerAdapter.getselectedOption();
             String[] question = pagerAdapter.getselectedquestion();
 
-            if (data != null) {
+            if (data != null || !(data.toString().equalsIgnoreCase(null))) {
+
                 for (int i = 0; i < data.length; i++) {
                     if (i != 0) {
                         question_id[0] = question_id[0] + "$#";
@@ -468,8 +471,11 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                             question_ans[0] = question_ans[0] + questionList.get(i).getQuiz_option().get(j).getOption_id();
                                         }
                                     }
+
                                 } else {
-                                    String idno = questionList.get(i).getId();
+                                    submitflag = false;
+                                    Utility.createShortSnackBar(ll_main, "Please select an answer.");
+                                   /* String idno = questionList.get(i).getId();
 
                                     for (int j = 0; j < questionList.get(i).getQuiz_option().size(); j++) {
                                         if (questionList.get(i).getQuiz_option().get(j).getQuiz_id().equals(idno)) {
@@ -479,7 +485,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                                 flag1 = false;
                                             }
                                         }
-                                    }
+                                    }*/
                                 }
                             }
                         } else {
@@ -494,7 +500,9 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                     }
                                 }
                             } else {
-                                String idno = questionList.get(i).getId();
+                                submitflag = false;
+                                Utility.createShortSnackBar(ll_main, "Please select an answer.");
+                                /*String idno = questionList.get(i).getId();
 
                                 for (int j = 0; j < questionList.get(i).getQuiz_option().size(); j++) {
                                     if (questionList.get(i).getQuiz_option().get(j).getQuiz_id().equals(idno)) {
@@ -504,11 +512,13 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                             flag2 = false;
                                         }
                                     }
-                                }
+                                }*/
                             }
                         }
                     } else {
-                        String idno = questionList.get(i).getId();
+                        submitflag = false;
+                        Utility.createShortSnackBar(ll_main, "Please select an answer.");
+                        /*String idno = questionList.get(i).getId();
 
 
                         for (int j = 0; j < questionList.get(i).getQuiz_option().size(); j++) {
@@ -519,7 +529,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                     flag = false;
                                 }
                             }
-                        }
+                        }*/
                     }
                 }
 
@@ -580,7 +590,9 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                 } /*else {
                     Toast.makeText(getApplicationContext(), "Please answer all questions", Toast.LENGTH_SHORT).show();
                 }*/
-            }
+            }/*else {
+                Toast.makeText(getApplicationContext(), "Please answer all questions", Toast.LENGTH_SHORT).show();
+            }*/
         }
         else if (v.getId() == R.id.txtSkip) {
             Boolean valid = false;
@@ -800,6 +812,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                 flag = true;
                 flag1 = true;
                 flag2 = true;
+                submitflag = false;
                 if (data[i] != null) {
                     if (questionList.get(i).getReplied() != null) {
                         if (questionList.get(i).getReplied().equalsIgnoreCase("0")) {
@@ -819,8 +832,12 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                         question_ans[0] = question_ans[0] + questionList.get(i).getQuiz_option().get(j).getOption_id();
                                     }
                                 }
+                                submitflag = true;
                             } else {
-                                String idno = questionList.get(i).getId();
+                                submitflag = false;
+                                Utility.createShortSnackBar(ll_main, "Please select an answer.");
+
+                                /*String idno = questionList.get(i).getId();
 
                                 for (int j = 0; j < questionList.get(i).getQuiz_option().size(); j++) {
                                     if (questionList.get(i).getQuiz_option().get(j).getQuiz_id().equals(idno)) {
@@ -829,7 +846,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                             flag1 = false;
                                         }
                                     }
-                                }
+                                }*/
                             }
                         }
                     } else {
@@ -843,8 +860,13 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                     question_ans[0] = question_ans[0] + questionList.get(i).getQuiz_option().get(j).getOption_id();
                                 }
                             }
+                            submitflag = true;
+
                         } else {
-                            String idno = questionList.get(i).getId();
+                            submitflag = false;
+                            Utility.createShortSnackBar(ll_main, "Please select an answer.");
+
+                            /*String idno = questionList.get(i).getId();
 
                             for (int j = 0; j < questionList.get(i).getQuiz_option().size(); j++) {
                                 if (questionList.get(i).getQuiz_option().get(j).getQuiz_id().equals(idno)) {
@@ -853,11 +875,14 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                         flag2 = false;
                                     }
                                 }
-                            }
+                            }*/
                         }
                     }
                 } else {
-                    String idno = questionList.get(i).getId();
+                    submitflag = false;
+                    Utility.createShortSnackBar(ll_main, "Please select an answer.");
+
+                    /*String idno = questionList.get(i).getId();
 
 
                     for (int j = 0; j < questionList.get(i).getQuiz_option().size(); j++) {
@@ -867,7 +892,7 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                                 flag = false;
                             }
                         }
-                    }
+                    }*/
                 }
             }
 
@@ -920,9 +945,9 @@ public class QuizDetailActivity extends AppCompatActivity implements View.OnClic
                         }
                     }
                 });
-            } /*else {
+            } else {
                     Toast.makeText(getApplicationContext(), "Please answer all questions", Toast.LENGTH_SHORT).show();
-                }*/
+                }
         }
 
         pager.setCurrentItem(pager.getCurrentItem() + 1, true);
