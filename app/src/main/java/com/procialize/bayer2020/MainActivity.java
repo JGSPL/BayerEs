@@ -143,6 +143,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_LNA
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_MOBILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.USER_TYPE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.notification_count;
 
 
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Menu mMenu;
     Dialog myDialog;
     MutableLiveData<LoginOrganizer> FetchenleepStatusList = new MutableLiveData<>();
-
+    TextView tv_designation;
     public static NotificationCountReciever notificationCountReciever;
     public static IntentFilter notificationCountFilter;
 
@@ -207,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.e("token===>", api_token);
         CommonFirebase.crashlytics("MainActivity", api_token);
         CommonFirebase.firbaseAnalytics(this, "MainActivity", api_token);
+        getProfileDetails();
 
         String profilePic = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_PROFILE_PIC);
         fName = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_FNAME);
@@ -218,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String attendee_id = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_ATTENDEE_ID);
         String tot_event = SharedPreference.getPref(this, SharedPreferencesConstant.TOTAL_EVENT);
         company = SharedPreference.getPref(this, SharedPreferencesConstant.KEY_COMPANY);
-        userType = SharedPreference.getPref(this, SharedPreferencesConstant.USER_TYPE);
+        userType = SharedPreference.getPref(this, USER_TYPE);
         enrollleapFlag = SharedPreference.getPref(this, ENROLL_LEAP_FLAG);
 
         String notificationCount = SharedPreference.getPref(this, notification_count);
@@ -226,7 +228,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         getNotiCount(this);
-        getProfileDetails();
         //CommonFunction.saveBackgroundImage(MainActivity.this, SharedPreference.getPref(this, SharedPreferencesConstant.EVENT_BACKGROUD));
 //        CommonFunction.showBackgroundImage(this, ll_main);
 
@@ -261,8 +262,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView tv_name = outer.findViewById(R.id.tv_name);
         ImageView iv_edit = outer.findViewById(R.id.iv_edit);
         iv_edit.setOnClickListener(this);
-        TextView tv_designation = outer.findViewById(R.id.tv_designation);
+         tv_designation = outer.findViewById(R.id.tv_designation);
         TextView tv_city = outer.findViewById(R.id.tv_city);
+        String userType = SharedPreference.getPref(this, USER_TYPE);;
 
         if(!fName.equalsIgnoreCase("false")&&!lName.equalsIgnoreCase("false")) {
             tv_name.setText(fName + " " + lName);
@@ -271,8 +273,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             tv_name.setText("");
         }
-        tv_designation.setText(designation);
-        tv_designation.setText(company);
+       // tv_designation.setText(designation);
+        if(userType.equalsIgnoreCase("PO") || userType.equalsIgnoreCase("D")) {
+            tv_designation.setText(company);
+        }else{
+            tv_designation.setVisibility(View.INVISIBLE);
+        }
 
         /*if (enrollleapFlag.equalsIgnoreCase("1")) {
 
@@ -823,12 +829,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                             map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                             map.put(ENROLL_LEAP_FLAG, profileDetails.get(0).getEnrollleapflag());
+                            map.put(USER_TYPE, profileDetails.get(0).getUser_type());
+
                             map.put(IS_LOGIN, "true");
 
                             SharedPreference.putPref(MainActivity.this, map);
 
                             //  tv_name.setText(profileDetails.get(0).getFirst_name() + " " + profileDetails.get(0).getLast_name());
                             //tv_designation.setText(profileDetails.get(0).getDesignation() + " - " + profileDetails.get(0).getCity());
+
+                            if(profileDetails.get(0).getUser_type().equalsIgnoreCase("PO") || profileDetails.get(0).getUser_type().equalsIgnoreCase("D")) {
+                                tv_designation.setText(profileDetails.get(0).getCompany_name());
+                            }else{
+                                tv_designation.setVisibility(View.INVISIBLE);
+                            }
+
                            /* Glide.with(getApplicationContext())
                                     .load(profileDetails.get(0).getProfile_picture())
                                     .skipMemoryCache(true)

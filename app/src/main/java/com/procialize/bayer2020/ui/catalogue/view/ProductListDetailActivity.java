@@ -361,7 +361,8 @@ public class ProductListDetailActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, "Firebase Deep Link");
-            intent.putExtra(Intent.EXTRA_TEXT, url.toString());
+            intent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+url.toString() +
+            ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
             startActivity(intent);
         } catch (Exception e) {
             Log.i(TAG, "Could not decode Uri: " + e.getLocalizedMessage());

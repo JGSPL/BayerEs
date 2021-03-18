@@ -1,6 +1,7 @@
 package com.procialize.bayer2020.ui.loyalityleap.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,27 @@ public class RedeemHistoryStatusAdapter extends RecyclerView.Adapter<RedeemHisto
 
         final redeem_history_status_item redeemItem = productLists.get(position);
         int pos = position+1;
-        holder.txt_status.setText("Status "+pos+ " : "+ redeemItem.getStatus());
+       // holder.txt_status.setText("Status "+pos+ " : "+ redeemItem.getStatus());
+        if(redeemItem.getStatus().equalsIgnoreCase("0")){
+            holder.txt_status.setText("Status "+pos+ " : "+ "Requested");
+            holder.txt_status.setTextColor(Color.parseColor("#002e46"));
+
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("4")){
+            holder.txt_status.setText("Status "+pos+"  :" + "Delivered");
+            holder.txt_status.setTextColor(Color.parseColor("#5a9e31"));
+
+
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("2")){
+            holder.txt_status.setText( "Status "+pos+ " : "+ "In Process");
+            holder.txt_status.setTextColor(Color.parseColor("#f14433"));
+
+
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("1")){
+            holder.txt_status.setText("Status "+pos+ " : "+"Approved");
+            holder.txt_status.setTextColor(Color.parseColor("#008bde"));
+
+
+        }
 
     }
 

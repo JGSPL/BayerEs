@@ -23,6 +23,7 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.SharedPreferencesConstant;
 import com.procialize.bayer2020.databinding.ActivityLoginBinding;
 import com.procialize.bayer2020.ui.login.model.Login;
+import com.procialize.bayer2020.ui.login.view.LoginActivity;
 import com.procialize.bayer2020.ui.loyalityleap.model.My_point;
 
 import java.util.HashMap;
@@ -38,8 +39,8 @@ public class LoginViewModel extends BaseObservable {
     Context context;
     ActivityLoginBinding activityLoginBinding;
     private String successMessage = "Login was successful";
-    private String errorMessage = "Please enter valid Email ID/Mobile no";
-    private String errorMessage1 = "Please enter valid Email ID/Mobile no.";
+    private String errorMessage = "Please enter valid Mobile no";
+    private String errorMessage1 = "Please enter valid Mobile no.";
     private String errorMessage2 = "Please enter valid OTP";
     private String termsandconditions = "Please Agreed to the terms and conditions";
     private String interneterror = "No Internet Connection.";
@@ -254,7 +255,7 @@ public class LoginViewModel extends BaseObservable {
                         setToastMessage(response.body().getHeader().get(0).getMsg());
                     } else {
                         activityLoginBinding.btnSubmit.setClickable(true);
-                        setToastMessage("Please enter valid Email ID/Mobile no");
+                        setToastMessage("Please enter valid Mobile no");
                     }
                 }
             }
@@ -291,12 +292,16 @@ public class LoginViewModel extends BaseObservable {
                     if (response.body() != null) {
                         if (response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
                             setToastMessage("Invalid OTP");
+                            LoginActivity.progressBar.setVisibility(View.GONE);
+                            activityLoginBinding.progressBar2.setVisibility(View.GONE);
                         } else {
                             setToastMessage(response.body().getHeader().get(0).getMsg());
                         }
 
                     } else {
                         setToastMessage("Invalid OTP");
+                        LoginActivity.progressBar.setVisibility(View.GONE);
+                        activityLoginBinding.progressBar2.setVisibility(View.GONE);
                     }
                 }
             }

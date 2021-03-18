@@ -216,7 +216,9 @@ public class LoginActivity extends AppCompatActivity {
                 Utility.displayToast(view.getContext(), message);
                 countdowntimer = new CountDownTimerClass(30000, 1000);
                 countdowntimer.start();
-            } else {
+            } else if(message.equalsIgnoreCase("Invalid OTP")){
+                Utility.displayToast(view.getContext(), message);
+            }  else {
 //                Constant.displayToast(view.getContext(), message);
                 Utility.hideKeyboard(view);
 //                Utility.createShortSnackBar(view, message);

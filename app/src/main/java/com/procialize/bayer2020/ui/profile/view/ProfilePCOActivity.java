@@ -1184,6 +1184,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 //map.put(KEY_TOKEN, "");
                                 map.put(KEY_CITY, profileDetails.get(0).getCity());
                                 //map.put(KEY_GCM_ID, "");
+                                map.put(USER_TYPE, "PO");
+
                                 map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
@@ -1256,6 +1258,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
+                                map.put(USER_TYPE, "PO");
+
                                 SharedPreference.putPref(ProfilePCOActivity.this, map);
                                 final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
@@ -1348,9 +1352,19 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
+                                map.put(USER_TYPE, profileDetails.get(0).getUser_type());
+
                                 map.put(IS_LOGIN, "true");
                                 SharedPreference.putPref(ProfilePCOActivity.this, map);
-                                final Handler handler = new Handler();
+                              final Handler handler = new Handler();
+                                /*  handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        profileActivityViewModel.openMainActivity(ProfilePCOActivity.this);
+                                        profileActivityViewModel.updateProfileFlag(ProfilePCOActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                    }
+                                }, 500);*/
                                 handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -1425,6 +1439,14 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                         profileActivityViewModel.updateProfileFlag(ProfilePCOActivity.this, "1", profileDetails.get(0).getAttendee_id());
                                     }
                                 }, 500);
+                                /*handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        profileActivityViewModel.openMainActivity(ProfilePCOActivity.this);
+                                        profileActivityViewModel.updateProfileFlag(ProfilePCOActivity.this, "1", profileDetails.get(0).getAttendee_id());
+                                    }
+                                }, 500);*/
                                 Utility.createShortSnackBar(ll_main, response.body().getHeader().get(0).getMsg());
 
 

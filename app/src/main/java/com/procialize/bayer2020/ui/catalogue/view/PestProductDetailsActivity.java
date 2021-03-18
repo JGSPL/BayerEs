@@ -236,10 +236,13 @@ public class PestProductDetailsActivity extends AppCompatActivity {
         }
     }
 
+/*
     public void shareLink() {
         try {
-           /* URL url = new URL(URLDecoder.decode(dynamicLink.toString(),
-                    "UTF-8"));*/
+           */
+/* URL url = new URL(URLDecoder.decode(dynamicLink.toString(),
+                    "UTF-8"));*//*
+
 
             URL url = new URL(URLDecoder.decode("https://bayer2020.page.link/newsfeed",
                     "UTF-8"));
@@ -253,5 +256,25 @@ public class PestProductDetailsActivity extends AppCompatActivity {
             Log.i(TAG, "Could not decode Uri: " + e.getLocalizedMessage());
         }
     }
+*/
+public void shareLink() {
+    try {
+           /* URL url = new URL(URLDecoder.decode(dynamicLink.toString(),
+                    "UTF-8"));*/
+
+        URL url = new URL(URLDecoder.decode("https://bayer2020.page.link/newsfeed",
+                "UTF-8"));
+        Log.i(TAG, "URL = " + url.toString());
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Firebase Deep Link");
+        intent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+url.toString() +
+                ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
+        startActivity(intent);
+    } catch (Exception e) {
+        Log.i(TAG, "Could not decode Uri: " + e.getLocalizedMessage());
+    }
+}
+
 
 }

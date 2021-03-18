@@ -149,9 +149,9 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
             }
 
             if (feedData.getCity_id() != null && !(feedData.getCity_id().equalsIgnoreCase(""))) {
-                holder.designationTv.setText(feedData.getDesignation() + " - " + feedData.getCity_id());
+                holder.designationTv.setText(feedData.getCity_id() /*+ " - " + feedData.getCity_id()*/);
             } else {
-                holder.designationTv.setText(feedData.getDesignation());
+                holder.designationTv.setText(feedData.getCity_id());
             }
 
             if(feedData.getQa_reply().equalsIgnoreCase("")){

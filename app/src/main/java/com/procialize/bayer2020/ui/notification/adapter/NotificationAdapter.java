@@ -107,7 +107,27 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             if (!comments.getMedia_type().isEmpty()) {
                 holder.fl_gif.setVisibility(View.VISIBLE);
-                holder.tv_comment.setVisibility(View.GONE);
+                if (comments.getContent() != null) {
+                    holder.tv_comment.setVisibility(View.VISIBLE);
+                    if (comments.getContent().contains("\n")) {
+                        postStatus = comments.getContent().trim().replace("\n", "<br/>");
+                    } else {
+                        postStatus = comments.getContent().trim();
+                    }
+                    spannedString = String.valueOf(Jsoup.parse(postStatus)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Spanned strPost = Html.fromHtml(spannedString, Html.FROM_HTML_MODE_COMPACT);
+                        holder.testdata.setText(Utility.trimTrailingWhitespace(strPost));
+                        holder.tv_comment.setText(Utility.trimTrailingWhitespace(strPost));
+
+                    } else {
+                        Spanned strPost = Html.fromHtml(spannedString);
+                        holder.testdata.setText(Utility.trimTrailingWhitespace(strPost));
+                        holder.tv_comment.setText(Utility.trimTrailingWhitespace(strPost));
+
+                    }
+                }
                 name1 = comments.getFirst_name() + " " + comments.getLast_name();
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                     holder.tv_name.setText(Html.fromHtml(name1));

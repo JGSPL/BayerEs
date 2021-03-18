@@ -231,7 +231,9 @@ public class NewsFeedViewModel extends ViewModel {
                             sharingIntent.setType("video/*");
                             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Pest Expert");
                             //sharingIntent.putExtra(Intent.EXTRA_TEXT, "Shared via Pest Expert");
-                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://bayer2020.page.link/newsfeed");
+                           // sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://bayer2020.page.link/newsfeed");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+"https://bayer2020.page.link/newsfeed" +
+                                    ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                             activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
 
@@ -860,7 +862,9 @@ public class NewsFeedViewModel extends ViewModel {
                             sharingIntent.setType("image/*");
                             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
                             sharingIntent.putExtra(Intent.EXTRA_TEXT, data);
-                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://bayer2020.page.link/newsfeed");
+                           // sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://bayer2020.page.link/newsfeed");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+"https://bayer2020.page.link/newsfeed" +
+                                    ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
                             context.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
                             dialogShare.dismiss();
