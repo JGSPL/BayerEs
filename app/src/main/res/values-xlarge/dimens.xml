@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="design_navigation_separator_vertical_padding">8dp</dimen>
+    <dimen name="round_corner_radius">5dp</dimen>
 
     <dimen name="textsizesmall">18sp</dimen>
     <dimen name="textsizesmaller">14sp</dimen>

@@ -7,4 +7,7 @@ public interface Splash {
     void openLoginActivity(Context context);
 
     void openMainActivity(Context context);
+    void openProfilePCOActivity(Context context);
+    void openProfileActivity(Context context);
+
 }

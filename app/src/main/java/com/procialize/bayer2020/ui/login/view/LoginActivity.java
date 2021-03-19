@@ -2,6 +2,7 @@ package com.procialize.bayer2020.ui.login.view;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -108,6 +109,8 @@ public class LoginActivity extends AppCompatActivity {
     public static ProgressBar progressBar;
     public static CheckBox termsCheckBox;
     public static TextView txttermsCondi;
+    public static ProgressDialog progressdialog ;
+
     Dialog myDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -290,8 +293,13 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 } else {
                     String passcode = submitPasscode.getText().toString();
-                    progressBar.setVisibility(View.VISIBLE);
+                   // progressBar.setVisibility(View.VISIBLE);
+              progressdialog = new ProgressDialog(activity);
 
+                    progressdialog.setMessage("Please Wait....");
+                    LoginActivity.progressdialog.setCancelable(false);
+
+                    progressdialog.show();
                     activityLoginBinding.getViewModel().PasscodeValidateOTP(passcode);
 
 //                    if (passwordkey.equalsIgnoreCase(passcode)) {
@@ -371,6 +379,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                     progressBar.setVisibility(View.GONE);
                                                     progressBar2.setVisibility(View.GONE);
+                                                    progressdialog.dismiss();
 
                                                     String decrypteventdetail = refreashToken.decryptedData(response.body().getDetail());
 
@@ -627,6 +636,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy () {
         super.onDestroy();
         passcodeDialog.dismiss();
+        progressdialog.dismiss();
     }
 
 

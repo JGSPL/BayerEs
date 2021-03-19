@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -54,6 +55,7 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
     Button btn_start;
     UpskillContentSubArray upskillContentSubArray;
     public static int click_count = 0;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,8 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
         tv_title = findViewById(R.id.tv_title);
         iv_banner = findViewById(R.id.iv_banner);
         tv_description = findViewById(R.id.tv_description);
+        progressBar = findViewById(R.id.progressBar);
+
         btn_start = findViewById(R.id.btn_start);
         btn_start.setOnClickListener(this);
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
@@ -125,11 +129,14 @@ public class UpskillDetailsFirstActivity extends AppCompatActivity implements Vi
                                             .listener(new RequestListener<Drawable>() {
                                                 @Override
                                                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                    progressBar.setVisibility(View.GONE);
                                                     return false;
                                                 }
 
                                                 @Override
                                                 public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                    progressBar.setVisibility(View.GONE);
+
                                                     return false;
                                                 }
                                             }).into(iv_banner);

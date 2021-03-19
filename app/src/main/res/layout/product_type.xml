@@ -23,7 +23,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="top|center"
-                android:background="@drawable/img_border"
 
                 android:orientation="vertical">
                 <ImageView
@@ -38,7 +37,7 @@
                     android:src="@drawable/gallery_placeholder"
                     android:layout_marginRight="0dp"
                     android:contentDescription="TODO"
-                     android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"/>
 
                 <ProgressBar
                     android:id="@+id/progressBar"

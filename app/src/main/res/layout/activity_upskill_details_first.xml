@@ -137,7 +137,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -148,15 +148,24 @@
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/image_placeholder" />
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:background="@drawable/loader"
+                android:visibility="visible" />
 
             <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/tv_description"
+                android:layout_below="@+id/iv_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="TextView"
                 android:textColor="@color/black" />
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 
     <com.procialize.bayer2020.fonts.RobotoButton

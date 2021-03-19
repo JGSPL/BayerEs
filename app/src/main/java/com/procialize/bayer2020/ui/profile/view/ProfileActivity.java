@@ -94,6 +94,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_C
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ISPROFILE_COMPLETE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_CITY;
@@ -995,6 +996,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                                 if (profileDetails.get(0).getEnrollleapflag() != null) {
                                     mapProfile.put(ENROLL_LEAP_FLAG, profileDetails.get(0).getEnrollleapflag());
                                 }
+                                mapProfile.put(ISPROFILE_COMPLETE, "true");
 
                                 mapProfile.put(IS_LOGIN, "true");
                                 SharedPreference.putPref(ProfileActivity.this, mapProfile);

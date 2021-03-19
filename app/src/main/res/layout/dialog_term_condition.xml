@@ -23,7 +23,7 @@
             android:gravity="left"
             android:textStyle="bold"
             android:textSize="16dp"
-            android:text="Terms and condition"
+            android:text="Terms and conditions"
             android:textColor="@color/colorwhite" />
 
         <ImageView

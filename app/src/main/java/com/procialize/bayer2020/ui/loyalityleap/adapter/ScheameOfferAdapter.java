@@ -44,7 +44,7 @@ public class ScheameOfferAdapter extends RecyclerView.Adapter<ScheameOfferAdapte
     @NonNull
     @Override
     public ScheameOfferAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.product_type_row, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.product_type, parent, false);
         return new ScheameOfferAdapter.ProductViewHolder(view);
     }
 

@@ -8,6 +8,9 @@
     android:layout_marginBottom="10dp"
     android:layout_marginRight="15dp"
     android:layout_marginLeft="15dp">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <!-- TODO: Update blank fragment layout -->
     <com.procialize.bayer2020.fonts.RobotoTextview
@@ -15,6 +18,8 @@
         android:layout_width="match_parent"
         android:textColor="@color/black"
         android:textSize="12sp"
+        android:scrollbars="vertical"
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

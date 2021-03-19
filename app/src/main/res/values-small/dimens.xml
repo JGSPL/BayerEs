@@ -6,6 +6,8 @@
     <dimen name="textsizesmaller">4sp</dimen>
     <dimen name="textsizenormal">12sp</dimen>
     <dimen name="textsizebigger">18sp</dimen>
+    <dimen name="img_padding">8dp</dimen>
+    <dimen name="round_corner_radius">5dp</dimen>
 
     <dimen name="margin">8dp</dimen>
     <dimen name="padding">5dp</dimen>

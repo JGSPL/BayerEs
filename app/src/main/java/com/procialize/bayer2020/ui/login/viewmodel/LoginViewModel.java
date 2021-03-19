@@ -1,5 +1,6 @@
 package com.procialize.bayer2020.ui.login.viewmodel;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.View;
 
@@ -47,7 +48,6 @@ public class LoginViewModel extends BaseObservable {
     APIService mApiService = ApiUtils.getAPIService();
     ConnectionDetector cd;
     String vToken;
-
     public String getUserEmail() {
         return userEmail;
     }
@@ -136,7 +136,12 @@ public class LoginViewModel extends BaseObservable {
 
             if (isInputDataValid()) {
                 if (cd.isConnectingToInternet()) {
-                    activityLoginBinding.progressBar2.setVisibility(View.VISIBLE);
+                    //activityLoginBinding.progressBar2.setVisibility(View.VISIBLE);
+                    LoginActivity.progressdialog = new ProgressDialog(context);
+
+                    LoginActivity.progressdialog.setMessage("Please Wait....");
+                    LoginActivity.progressdialog.show();
+                    LoginActivity.progressdialog.setCancelable(false);
                     activityLoginBinding.btnSubmit.setClickable(false);
                     userLogin(getloginEmail());
                 } else {
@@ -237,6 +242,7 @@ public class LoginViewModel extends BaseObservable {
                     String strEventList = response.body().getDetail();
                     RefreashToken refreashToken = new RefreashToken(context);
                     String data = refreashToken.decryptedData(strEventList);
+                    LoginActivity.progressdialog.dismiss();
 
                     loginTokendetail tokenData = new Gson().fromJson(data, new TypeToken<loginTokendetail>() {
                     }.getType());
@@ -293,6 +299,7 @@ public class LoginViewModel extends BaseObservable {
                         if (response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
                             setToastMessage("Invalid OTP");
                             LoginActivity.progressBar.setVisibility(View.GONE);
+                            LoginActivity.progressdialog.dismiss();
                             activityLoginBinding.progressBar2.setVisibility(View.GONE);
                         } else {
                             setToastMessage(response.body().getHeader().get(0).getMsg());
@@ -301,6 +308,8 @@ public class LoginViewModel extends BaseObservable {
                     } else {
                         setToastMessage("Invalid OTP");
                         LoginActivity.progressBar.setVisibility(View.GONE);
+                        LoginActivity.progressdialog.dismiss();
+
                         activityLoginBinding.progressBar2.setVisibility(View.GONE);
                     }
                 }

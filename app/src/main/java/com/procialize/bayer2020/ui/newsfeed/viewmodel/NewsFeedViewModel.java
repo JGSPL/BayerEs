@@ -464,14 +464,14 @@ public class NewsFeedViewModel extends ViewModel {
         reportTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge(v.getContext(), token, "reportPost", feed.getNews_feed_id(), feed.getAttendee_id(), eventId);
+                showratedialouge(v.getContext(), token, "reportPost", feed.getNews_feed_id(), feed.getAttendee_id(), eventId,"Report Post");
             }
         });
 
         reportuserTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showratedialouge(v.getContext(), token, "reportUser", feed.getNews_feed_id(), feed.getAttendee_id(), eventId);
+                showratedialouge(v.getContext(), token, "reportUser", feed.getNews_feed_id(), feed.getAttendee_id(), eventId, "Report User");
             }
         });
 
@@ -584,7 +584,7 @@ public class NewsFeedViewModel extends ViewModel {
         return mIsUpdating;
     }
 
-    private void showratedialouge(Context context, final String api_token, final String from, final String id, final String attnId, final String eventId) {
+    private void showratedialouge(Context context, final String api_token, final String from, final String id, final String attnId, final String eventId, final String heading) {
 
         myDialog = new Dialog(activityVar);
         myDialog.setContentView(R.layout.dialouge_msg_layout);
@@ -598,6 +598,8 @@ public class NewsFeedViewModel extends ViewModel {
         LinearLayout ll_main = myDialog.findViewById(R.id.ll_main);
         final TextView counttv = myDialog.findViewById(R.id.counttv);
         final EditText etmsg = myDialog.findViewById(R.id.etmsg);
+
+        title.setText(heading);
 
         ll_main.setBackgroundColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_2)));
         title.setTextColor(Color.parseColor(SharedPreference.getPref(context, EVENT_COLOR_3)));

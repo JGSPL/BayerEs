@@ -7,7 +7,9 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.session.SessionManager;
 import com.procialize.bayer2020.ui.splash.view.SplashAcivity;
 
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ISPROFILE_COMPLETE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_LOGIN;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.USER_TYPE;
 
 public class SplashViewModel extends SplashAcivity{
 
@@ -28,8 +30,23 @@ public class SplashViewModel extends SplashAcivity{
                 // This method will be executed once the timer is over
                 // Start your app main activity
                 String isLogin = SharedPreference.getPref(context,IS_LOGIN);
+                String iscomplete = SharedPreference.getPref(context,ISPROFILE_COMPLETE);
+                String userType = SharedPreference.getPref(context,USER_TYPE);
+
                 if(isLogin.equalsIgnoreCase("true")) {
-                    openMainActivity(context);
+
+                    if(iscomplete.equalsIgnoreCase("true")) {
+                        openMainActivity(context);
+
+                    }else{
+                        if(userType.equalsIgnoreCase("D")){
+                            openProfileActivity(context);
+                        }else {
+                            openProfilePCOActivity(context);
+                        }
+
+                    }
+
                 }else{
                     openLoginActivity(context);
 

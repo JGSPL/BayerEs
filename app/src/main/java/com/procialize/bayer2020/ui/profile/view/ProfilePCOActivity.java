@@ -96,6 +96,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_C
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_3;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_COLOR_4;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ISPROFILE_COMPLETE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_ATTENDEE_ID;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_CITY;
@@ -1113,9 +1114,34 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        if (connectionDetector.isConnectingToInternet()) {
 
-        startActivity(new Intent(ProfilePCOActivity.this, MainActivity.class));
-        finish();
+            if (et_first_name.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
+
+            } else if (et_last_name.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
+            }else if(user_type.equalsIgnoreCase("")||user_type.equalsIgnoreCase(null)){
+                Toast.makeText(this, "Please fill form to continue", Toast.LENGTH_SHORT).show();
+
+            }else if (atv_pincode.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please enter pincode for proceed", Toast.LENGTH_SHORT).show();
+
+            } else if (et_emailid.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please enter emailId for proceed", Toast.LENGTH_SHORT).show();
+
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(et_emailid.getText().toString().trim()).matches()) {
+                Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
+
+            }
+            else{
+                startActivity(new Intent(ProfilePCOActivity.this, MainActivity.class));
+                finish();
+            }
+        }
+
+
+
     }
 
 
@@ -1190,6 +1216,9 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
+                                map.put(ISPROFILE_COMPLETE, "true");
+
+
                                 SharedPreference.putPref(ProfilePCOActivity.this, map);
                                 final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
@@ -1259,6 +1288,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
                                 map.put(USER_TYPE, "PO");
+                                map.put(ISPROFILE_COMPLETE, "true");
 
                                 SharedPreference.putPref(ProfilePCOActivity.this, map);
                                 final Handler handler = new Handler();
@@ -1352,7 +1382,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
-                                map.put(USER_TYPE, profileDetails.get(0).getUser_type());
+                              //  map.put(USER_TYPE, profileDetails.get(0).getUser_type());
+                                map.put(ISPROFILE_COMPLETE, "true");
 
                                 map.put(IS_LOGIN, "true");
                                 SharedPreference.putPref(ProfilePCOActivity.this, map);
@@ -1429,6 +1460,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                 map.put(KEY_ATTENDEE_ID, profileDetails.get(0).getAttendee_id());
                                 map.put(ATTENDEE_STATUS, profileDetails.get(0).getIs_god());
                                 map.put(IS_LOGIN, "true");
+                                map.put(ISPROFILE_COMPLETE, "true");
+
                                 SharedPreference.putPref(ProfilePCOActivity.this, map);
                                 final Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {

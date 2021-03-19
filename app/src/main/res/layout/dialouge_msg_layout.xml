@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="8.5"
                 android:paddingLeft="10dp"
-                android:text="@string/sendmsg"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/textsizenormal"
                 android:layout_marginLeft="10dp"/>

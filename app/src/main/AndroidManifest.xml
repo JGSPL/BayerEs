@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.procialize.bayer2020">
 
-    <uses-permission
+    <!--<uses-permission
         android:name="android.permission.GET_ACCOUNTS"
-        android:maxSdkVersion="22" />
+        android:maxSdkVersion="29" />-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -25,10 +25,12 @@
     <uses-permission
         android:name="android.permission.CAPTURE_VIDEO_OUTPUT"
         tools:ignore="ProtectedPermissions" /> <!-- android:name="android.hardware.camera" -->
-    <uses-feature
+    <!--<uses-feature
         android:name="android.permission.CAMERA"
         android:required="true"
-        android:requiredFeature="true" />
+        android:requiredFeature="true" />-->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
 
     <application
         android:name=".App"
