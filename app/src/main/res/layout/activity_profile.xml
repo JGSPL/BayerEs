@@ -38,8 +38,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:contentDescription=" "
-                android:padding="10dp"
-                android:src="@mipmap/ic_back"
+                android:padding="0dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/ic_back"
                 android:visibility="visible" />
 
             <ImageView

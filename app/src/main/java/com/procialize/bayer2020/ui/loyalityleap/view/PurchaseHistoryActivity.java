@@ -152,13 +152,17 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
 
                                 progressBar.setVisibility(View.GONE);
 
+                                TextView txtEmpty = findViewById(R.id.txtEmpty);
 
                                 if(eventLists.size()>0) {
 
 
+                                    txtEmpty.setVisibility(View.GONE);
 
                                     setupEventAdapter(eventLists);
                                 }else{
+                                    txtEmpty.setVisibility(View.VISIBLE);
+
                                     progressBar.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
 
@@ -183,14 +187,18 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
 
 
     public void setupEventAdapter(List<PurchaseHistory_row> productList) {
-        PurchageHistoryAdapter productypeAdapter = new PurchageHistoryAdapter(this, productList, this, Imageurl);
-        //recycler_mpointcalc.setLayoutManager(new LinearLayoutManager(getContext()));
-        // use a linear layout manager
-        int columns = 1;
-        recycler_mpointcalc.setLayoutManager(new GridLayoutManager(this, columns));
 
-        recycler_mpointcalc.setAdapter(productypeAdapter);
-        productypeAdapter.notifyDataSetChanged();
+        if(productList.size()>0) {
+
+            PurchageHistoryAdapter productypeAdapter = new PurchageHistoryAdapter(this, productList, this, Imageurl);
+            //recycler_mpointcalc.setLayoutManager(new LinearLayoutManager(getContext()));
+            // use a linear layout manager
+            int columns = 1;
+            recycler_mpointcalc.setLayoutManager(new GridLayoutManager(this, columns));
+
+            recycler_mpointcalc.setAdapter(productypeAdapter);
+            productypeAdapter.notifyDataSetChanged();
+        }
     }
 
 

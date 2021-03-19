@@ -9,9 +9,10 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
+
         android:layout_height="?android:attr/actionBarSize"
-        app:navigationIcon="@mipmap/ic_back"
-        android:background="@android:color/transparent"
+        app:navigationIcon="@drawable/ic_back"
+        android:background="@color/colorwhite"
         android:elevation="10dp"
         >
 
@@ -19,7 +20,8 @@
             android:id="@+id/avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_back"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/ic_back"
             android:visibility="gone"
             android:layout_marginEnd="@dimen/spacing_double"
             android:layout_marginRight="@dimen/spacing_double"

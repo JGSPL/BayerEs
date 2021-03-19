@@ -48,10 +48,10 @@
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="left|center"
                 android:contentDescription=" "
-                android:paddingLeft="15dp"
                 android:paddingRight="10dp"
-                android:src="@mipmap/ic_back"
-                android:tint="@color/colorPink" />
+                android:padding="0dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/ic_back"/>
 
             <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                 android:id="@+id/title"

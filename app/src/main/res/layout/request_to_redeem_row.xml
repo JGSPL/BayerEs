@@ -15,7 +15,7 @@
         android:id="@+id/linear1"
         android:background="@drawable/reward_back"
         android:orientation="horizontal"
-        android:paddingBottom="5dp">
+        android:paddingBottom="0dp">
 
         <ImageView
             android:id="@+id/image_reward"
@@ -64,7 +64,7 @@
                 android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/profile_edit_text_bg"
                 android:gravity="right"
@@ -82,7 +82,7 @@
                 android:layout_height="30dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/btn_submit"
                 android:gravity="right"

@@ -27,9 +27,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:contentDescription=" "
-                android:padding="10dp"
-                android:tint="@color/colorPink"
-                android:src="@mipmap/ic_back"
+                android:padding="0dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/ic_back"
                 android:visibility="visible" />
 
             <ImageView
@@ -47,7 +47,7 @@
                 android:layout_gravity="right"
 
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="15dp"
                 android:gravity="center">
 
                 <ImageView
@@ -84,7 +84,7 @@
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
-    <com.procialize.bayer2020.fonts.RobotoTextview
+    <com.procialize.bayer2020.fonts.RobotoTextViewHeader
         android:layout_width="match_parent"
         android:id="@+id/txtTitle"
         android:layout_below="@+id/appBarLayout"
@@ -93,7 +93,7 @@
         android:textSize="15sp"
         android:padding="5dp"
         android:textColor="@color/black"
-        android:layout_height="wrap_content"></com.procialize.bayer2020.fonts.RobotoTextview>
+        android:layout_height="wrap_content"></com.procialize.bayer2020.fonts.RobotoTextViewHeader>
 
     <RelativeLayout
         android:layout_width="match_parent"

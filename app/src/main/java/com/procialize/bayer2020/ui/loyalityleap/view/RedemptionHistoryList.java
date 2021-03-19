@@ -323,6 +323,7 @@ public class RedemptionHistoryList extends AppCompatActivity implements RedeemHi
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
                             List<FetchRedeemStatusBasicData> eventLists = gson.fromJson(data, new TypeToken<ArrayList<FetchRedeemStatusBasicData>>() {}.getType());
+                            TextView txtEmpty = findViewById(R.id.txtEmpty);
 
                             //Fetch Livepoll list
                             if(eventLists!=null) {
@@ -331,17 +332,31 @@ public class RedemptionHistoryList extends AppCompatActivity implements RedeemHi
 
 
                                 if(eventLists.size()>0) {
+                                    txtEmpty.setVisibility(View.GONE);
+                                    recycler_mpoinStatus.setVisibility(View.VISIBLE);
 
                                     List<redeem_history_status_item> productList = eventLists.get(0).getRedeemHistoryStatusList();
+                                    if(productList.size()>0) {
 
-                                    setupEventStatusAdapter(productList);
+                                        setupEventStatusAdapter(productList);
+                                    }else{
+                                        txtEmpty.setVisibility(View.VISIBLE);
+                                        recycler_mpoinStatus.setVisibility(View.GONE);
+
+                                        progressBar.setVisibility(View.GONE);
+                                        progressBar.setVisibility(View.GONE);
+                                    }
                                 }else{
+                                    txtEmpty.setVisibility(View.VISIBLE);
+                                    recycler_mpoinStatus.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
 
                                 }
 
                             }else{
+                                txtEmpty.setVisibility(View.VISIBLE);
+                                recycler_mpoinStatus.setVisibility(View.GONE);
 
                                 progressBar.setVisibility(View.GONE);
 
@@ -360,12 +375,16 @@ public class RedemptionHistoryList extends AppCompatActivity implements RedeemHi
 
 
     public void setupEventStatusAdapter(List<redeem_history_status_item> productList) {
+
+
         RedeemHistoryStatusAdapter productypeAdapter = new RedeemHistoryStatusAdapter(this, productList, this );
         int columns = 1;
         recycler_mpoinStatus.setLayoutManager(new GridLayoutManager(this, columns));
 
         recycler_mpoinStatus.setAdapter(productypeAdapter);
         productypeAdapter.notifyDataSetChanged();
+
+
     }
 
     @Override

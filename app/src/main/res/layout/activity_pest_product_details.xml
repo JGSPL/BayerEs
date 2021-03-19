@@ -25,8 +25,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:contentDescription=" "
+                android:padding="0dp"
                 android:layout_marginLeft="15dp"
-                android:tint="@color/colorPink"
                 android:src="@drawable/ic_back"
                 android:visibility="visible" />
 
@@ -94,7 +94,7 @@
         android:padding="10dp">
 
 
-        <TextView
+        <com.procialize.bayer2020.fonts.RobotoTextViewHeader
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
