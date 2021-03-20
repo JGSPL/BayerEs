@@ -156,7 +156,7 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
 
             if(feedData.getQa_reply().equalsIgnoreCase("")){
                 holder.ll__adminswipe.setVisibility(View.GONE);
-                holder.QuestionTv.setVisibility(View.GONE);
+                holder.QuestionTv.setVisibility(View.VISIBLE);
                 holder.replyadminTv.setVisibility(View.VISIBLE);
                 holder.replyadminTv.setText("Answer can only be posted by the admin");
 

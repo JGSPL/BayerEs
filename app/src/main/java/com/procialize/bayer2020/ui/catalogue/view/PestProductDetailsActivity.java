@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -70,6 +71,7 @@ public class PestProductDetailsActivity extends AppCompatActivity {
     ImageView iv_cover,imageView2;
     List<CataloguePestRecommendedProducts> recommendedeProductList = new ArrayList<>();
     private static final String TAG = "DynamicLinks";
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class PestProductDetailsActivity extends AppCompatActivity {
         linMain = findViewById(R.id.linMain);
         iv_cover = findViewById(R.id.iv_cover);
         imageView2 = findViewById(R.id.imageView2);
+        progressBar = findViewById(R.id.progressBar);
 
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
@@ -171,11 +174,15 @@ public class PestProductDetailsActivity extends AppCompatActivity {
                                         .listener(new RequestListener<Drawable>() {
                                             @Override
                                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                progressBar.setVisibility(View.GONE);
+
                                                 return false;
                                             }
 
                                             @Override
                                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                progressBar.setVisibility(View.GONE);
+
                                                 return false;
                                             }
                                         }).into(iv_cover);

@@ -592,6 +592,13 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
                             }
 
+                            if(first_name.equalsIgnoreCase("")){
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put(ISPROFILE_COMPLETE, "false");
+                                SharedPreference.putPref(ProfilePCOActivity.this, map);
+
+                            }
+
 
                             if (profileDetails.get(0).getProfile_picture().trim() != null) {
                                 Glide.with(getApplicationContext())
@@ -704,12 +711,12 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                             Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
 
                         } else if (et_organisation.getText().toString().isEmpty()) {
-                            Toast.makeText(this, "Please enter company name for proceed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Please enter organization name for proceed", Toast.LENGTH_SHORT).show();
 
                         } else if (isCheckeddesignation == false) {
                             Toast.makeText(this, "Please select designation", Toast.LENGTH_SHORT).show();
 
-                        } else if (isSpecializationChanged) {
+                        } else if (isSpecializationChanged || arrSpecializtion.size()==0) {
                             if (arrSpecializtion.isEmpty()) {
                                 Toast.makeText(this, "Please select any specialization", Toast.LENGTH_SHORT).show();
 
@@ -1115,6 +1122,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     public void onBackPressed() {
         //super.onBackPressed();
         if (connectionDetector.isConnectingToInternet()) {
+            String iscomplete = SharedPreference.getPref(this,ISPROFILE_COMPLETE);
 
             if (et_first_name.getText().toString().isEmpty()) {
                 Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
@@ -1122,7 +1130,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             } else if (et_last_name.getText().toString().isEmpty()) {
                 Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
             }else if(user_type.equalsIgnoreCase("")||user_type.equalsIgnoreCase(null)){
-                Toast.makeText(this, "Please fill form to continue", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please select user type to continue", Toast.LENGTH_SHORT).show();
 
             }else if (atv_pincode.getText().toString().isEmpty()) {
                 Toast.makeText(this, "Please enter pincode for proceed", Toast.LENGTH_SHORT).show();
@@ -1132,6 +1140,10 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
             } else if (!Patterns.EMAIL_ADDRESS.matcher(et_emailid.getText().toString().trim()).matches()) {
                 Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
+
+            }else if(!(iscomplete.equalsIgnoreCase("true"))) {
+                Toast.makeText(this, "Please save form to continue", Toast.LENGTH_SHORT).show();
+
 
             }
             else{

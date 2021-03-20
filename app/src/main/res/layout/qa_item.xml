@@ -166,7 +166,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:text="Question:"
-        android:visibility="gone"
+        android:visibility="visible"
         android:textColor="@color/linecolor"
         android:textSize="12dp" />
     <TextView

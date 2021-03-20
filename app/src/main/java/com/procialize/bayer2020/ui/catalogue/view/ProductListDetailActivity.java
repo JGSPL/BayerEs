@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -82,6 +83,8 @@ public class ProductListDetailActivity extends AppCompatActivity {
     private Uri dynamicLink = null;
     private static final String TAG = "DynamicLinks";
     private ConnectionDetector cd;
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +120,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
 
         linMain = findViewById(R.id.linMain);
         imgCover = findViewById(R.id.imgCover);
+        progressBar = findViewById(R.id.progressBar);
         productTitle= findViewById(R.id.productTitle);
         linCalc = findViewById(R.id.linCalc);
         linShare = findViewById(R.id.linShare);
@@ -140,11 +144,15 @@ public class ProductListDetailActivity extends AppCompatActivity {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+
                         return false;
                     }
                 }).into(imgCover);
