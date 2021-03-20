@@ -337,7 +337,7 @@ public class RedemptionHistoryList extends AppCompatActivity implements RedeemHi
                                     recycler_mpoinStatus.setVisibility(View.VISIBLE);
 
                                     List<redeem_history_status_item> productList = eventLists.get(0).getRedeemHistoryStatusList();
-                                    if(productList!=null) {
+                                    if(productList.size()>0) {
 
                                         setupEventStatusAdapter(productList);
                                     }else{
