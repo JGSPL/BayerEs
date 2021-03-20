@@ -118,7 +118,7 @@ public class UpskillDetailsQuizActivity extends AppCompatActivity implements Vie
             btn_quiz_next.setVisibility(View.VISIBLE);
             btn_next.setVisibility(View.GONE);
             btn_next.setText("Next");
-        } else if (upskillContentSubArray.getContentInfo().size() == click_count + 1) {
+        } else if (upskillContentSubArray.getContentInfo().size() == click_count + 1 && quizList.size() == 1) {
             btn_next.setVisibility(View.VISIBLE);
             btn_quiz_next.setVisibility(View.GONE);
             btn_next.setText("Close");

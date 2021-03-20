@@ -100,7 +100,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="left|center"
                 android:contentDescription=" "
-                android:paddingLeft="15dp"
                 android:layout_marginLeft="15dp"
                 android:src="@drawable/ic_back"
                  />

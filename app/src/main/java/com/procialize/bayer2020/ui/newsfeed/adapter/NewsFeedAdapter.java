@@ -125,7 +125,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsVi
             } else {
                 holder.root.setVisibility(View.VISIBLE);
             }
-            /*if (feedData.getFirst_name().equalsIgnoreCase("null") || (feedData.getFirst_name().equalsIgnoreCase("") || (feedData == null))) {
+           /* if (feedData.getFirst_name().equalsIgnoreCase("null") || (feedData.getFirst_name().equalsIgnoreCase("") || (feedData == null) || feedData.getAttendee_id()==null) || (feedData.getFirst_name().equalsIgnoreCase(null))) {
                 holder.root.setVisibility(View.GONE);
             } else {
                 holder.root.setVisibility(View.VISIBLE);

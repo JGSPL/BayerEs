@@ -696,6 +696,8 @@ public class PostNewActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        //finish();
+        postNewsFeedViewModel.startNewsFeedFragment(PostNewActivity.this);
         finish();
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
