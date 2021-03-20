@@ -78,6 +78,11 @@ public class RedeemHistoryAdapter extends RecyclerView.Adapter<RedeemHistoryAdap
             holder.txt_status.setTextColor(Color.parseColor("#008bde"));
 
 
+        }else  if(redeemItem.getStatus().equalsIgnoreCase("4")){
+            holder.txt_status.setText("Complete");
+            holder.txt_status.setTextColor(Color.parseColor("#008bde"));
+
+
         }
         String dateTime = redeemItem.getRedemption_date();
         if (!dateTime.isEmpty()) {

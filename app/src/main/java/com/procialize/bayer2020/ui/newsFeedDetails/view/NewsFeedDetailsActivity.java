@@ -134,7 +134,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
         iv_right.setOnClickListener(this);
 
         int color = Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4));
-        iv_back.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+       // iv_back.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
 
        /* btn_save.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));
         btn_share.setBackgroundColor(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_2)));

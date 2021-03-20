@@ -154,7 +154,7 @@ public class PollDetailActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
+     //   iv_back.setColorFilter(Color.parseColor(SharedPreference.getPref(this, EVENT_COLOR_4)), PorterDuff.Mode.SRC_ATOP);
 
 
        // CommonFunction.showBackgroundImage(PollDetailActivity.this, relative);

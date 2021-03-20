@@ -103,6 +103,18 @@
         android:background="@color/colorwhite"
 
         android:orientation="vertical">
+        <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+            android:layout_width="wrap_content"
+            android:id="@+id/txtEmpty"
+            android:layout_height="wrap_content"
+            android:text="Data not available"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+        </com.procialize.bayer2020.fonts.RobotoTextViewHeader>
+
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="20dp"

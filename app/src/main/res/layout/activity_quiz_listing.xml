@@ -89,8 +89,8 @@
                 android:contentDescription=" "
                 android:paddingLeft="15dp"
                 android:paddingRight="10dp"
-                android:src="@mipmap/ic_back"
-                android:tint="@color/colorPink" />
+                android:src="@drawable/ic_back"
+                />
 
             <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                 android:id="@+id/title"

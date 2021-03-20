@@ -170,6 +170,7 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
                             FetchProductTypeList.setValue(response.body());
                             Imageurl = response.body().getImagepath();
                             fileurl =  response.body().getFilepath();
+                            TextView txtEmpty = findViewById(R.id.txtEmpty);
 
                             String strCommentList =response.body().getDetail();
                             RefreashToken refreashToken = new RefreashToken(ScheameOfferListActivity.this);
@@ -186,6 +187,7 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
                                 if(eventLists.size()>0) {
 
 
+                                    txtEmpty.setVisibility(View.GONE);
 
                                     setupEventAdapter(eventLists);
                                 }else{
@@ -195,7 +197,8 @@ public class ScheameOfferListActivity extends AppCompatActivity implements Schea
                                 }
 
                             }else{
-
+                                txtEmpty.setText(response.body().getHeader().get(0).getMsg());
+                                txtEmpty.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
 
                             }

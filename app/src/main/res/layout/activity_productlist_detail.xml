@@ -40,6 +40,7 @@
                 android:contentDescription=" " />
 
             <RelativeLayout
+                android:id="@+id/rl_notification"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
@@ -98,7 +99,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="top|center"
-            android:background="@drawable/img_border"
 
             android:orientation="vertical">
             <ImageView

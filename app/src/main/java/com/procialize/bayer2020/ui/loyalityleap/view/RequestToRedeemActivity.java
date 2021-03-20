@@ -143,6 +143,7 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
                             Imageurl = response.body().getProduct_imagepath();
+                            TextView txtEmpty = findViewById(R.id.txtEmpty);
 
                             String strCommentList =response.body().getDetail();
                             RefreashToken refreashToken = new RefreashToken(RequestToRedeemActivity.this);
@@ -161,6 +162,7 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
                                 if(eventLists.size()>0) {
 
 
+                                    txtEmpty.setVisibility(View.GONE);
 
                                     setupEventAdapter(eventLists);
                                 }else{
@@ -170,7 +172,8 @@ public class RequestToRedeemActivity extends AppCompatActivity implements Reques
                                 }
 
                             }else{
-
+                                txtEmpty.setText(response.body().getHeader().get(0).getMsg());
+                                txtEmpty.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
 
                             }

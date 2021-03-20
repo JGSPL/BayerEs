@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -39,6 +41,8 @@ import com.procialize.bayer2020.ui.catalogue.model.Product_document_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Product_item;
 import com.procialize.bayer2020.ui.catalogue.model.product_dosage_detail;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
+import com.procialize.bayer2020.ui.loyalityleap.view.PurchaseHistoryActivity;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 import com.procialize.bayer2020.ui.storelocator.view.StoreLocatorActivity;
 
 import java.io.Serializable;
@@ -77,6 +81,8 @@ public class RecommendedproductListDetailActivity extends AppCompatActivity {
     private Uri dynamicLink = null;
     private static final String TAG = "DynamicLinks";
     private ConnectionDetector cd;
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,14 +125,33 @@ public class RecommendedproductListDetailActivity extends AppCompatActivity {
         imgCalc = findViewById(R.id.imgCalc);
         btnbuy = findViewById(R.id.btnbuy);
         btnShare = findViewById(R.id.btnShare);
+        progressBar = findViewById(R.id.progressBar);
+
 //-----------------------------For Notification count-----------------------------
-        try {
+        /*try {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
         } catch (Exception e) {
             e.printStackTrace();
+        }*/
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(RecommendedproductListDetailActivity.this, NotificationActivity.class));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        //----------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------
 
         productTitle.setText(product_item.getProduct_name());
@@ -135,11 +160,15 @@ public class RecommendedproductListDetailActivity extends AppCompatActivity {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+
                         return false;
                     }
                 }).into(imgCover);

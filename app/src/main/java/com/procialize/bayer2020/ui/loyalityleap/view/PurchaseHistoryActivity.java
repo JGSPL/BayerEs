@@ -138,6 +138,8 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
                     @Override
                     public void onResponse(Call<FetchPurchageHistory> call, Response<FetchPurchageHistory> response) {
                         if (response.isSuccessful()) {
+                            TextView txtEmpty = findViewById(R.id.txtEmpty);
+
                             FetchProductTypeList.setValue(response.body());
                             Imageurl = response.body().getTotalRecords();
 
@@ -152,16 +154,17 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
 
                                 progressBar.setVisibility(View.GONE);
 
-                                TextView txtEmpty = findViewById(R.id.txtEmpty);
 
                                 if(eventLists.size()>0) {
 
+                                    recycler_mpointcalc.setVisibility(View.VISIBLE);
 
                                     txtEmpty.setVisibility(View.GONE);
 
                                     setupEventAdapter(eventLists);
                                 }else{
                                     txtEmpty.setVisibility(View.VISIBLE);
+                                   // recycler_mpointcalc.setVisibility(View.GONE);
 
                                     progressBar.setVisibility(View.GONE);
                                     progressBar.setVisibility(View.GONE);
@@ -169,6 +172,9 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
                                 }
 
                             }else{
+                                txtEmpty.setText(response.body().getHeader().get(0).getMsg());
+                                txtEmpty.setVisibility(View.VISIBLE);
+                               // recycler_mpointcalc.setVisibility(View.GONE);
 
                                 progressBar.setVisibility(View.GONE);
 

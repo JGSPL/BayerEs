@@ -101,9 +101,9 @@
                 android:layout_gravity="left|center"
                 android:contentDescription=" "
                 android:paddingLeft="15dp"
-                android:paddingRight="10dp"
-                android:src="@mipmap/ic_back"
-                android:tint="@color/colorPink" />
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/ic_back"
+                 />
 
             <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                 android:id="@+id/title"
@@ -133,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="15dp"
                 android:gravity="center">
 
                 <ImageView

@@ -113,6 +113,7 @@
             android:gravity="left"
             android:text="Redeemable Points:"
             android:textSize="18sp"
+            android:layout_marginLeft="5dp"
             android:padding="5dp"
             android:textColor="@color/black">
 
@@ -124,6 +125,7 @@
             android:gravity="right"
             android:id="@+id/txtRedeemPoint"
             android:text=""
+            android:layout_marginRight="5dp"
             android:textStyle="bold"
             android:textColor="@color/blue"
             android:textSize="18sp"
@@ -140,6 +142,17 @@
         android:layout_below="@+id/linear1">
 
     </androidx.recyclerview.widget.RecyclerView>
+    <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+        android:layout_width="wrap_content"
+        android:id="@+id/txtEmpty"
+        android:layout_height="wrap_content"
+        android:text="Data not available"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:layout_centerInParent="true">
+
+    </com.procialize.bayer2020.fonts.RobotoTextViewHeader>
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -36,6 +36,8 @@ import com.procialize.bayer2020.ui.catalogue.adapter.ProductListAdapter;
 import com.procialize.bayer2020.ui.catalogue.model.FetchProductList;
 import com.procialize.bayer2020.ui.catalogue.model.ProductType;
 import com.procialize.bayer2020.ui.catalogue.model.Product_item;
+import com.procialize.bayer2020.ui.loyalityleap.view.PurchaseHistoryActivity;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -95,13 +97,30 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         productTitle.setText(productType.getProduct_type_name());
 
         //-----------------------------For Notification count-----------------------------
-        try {
+       /* try {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
         } catch (Exception e) {
             e.printStackTrace();
+        }*/
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ProductListActivity.this, NotificationActivity.class));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        //----------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------
         if (cd.isConnectingToInternet()) {
             progressBar.setVisibility(View.VISIBLE);

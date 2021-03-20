@@ -53,6 +53,7 @@ import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.faq.view.FAQActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
+import com.procialize.bayer2020.ui.loyalityleap.view.RequestToRedeemActivity;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
 import com.procialize.bayer2020.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.bayer2020.ui.newsfeed.PaginationUtils.PaginationScrollListener;
@@ -146,6 +147,24 @@ public class QnADirectActivity extends AppCompatActivity implements View.OnClick
 
        // CommonFunction.showBackgroundImage(QnADirectActivity.this, ll_main);
         newsfeedViewModel = ViewModelProviders.of(this).get(NewsFeedViewModel.class);
+
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(QnADirectActivity.this, NotificationActivity.class));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //----------------------------------------------------------------------------------
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         rv_qna.setLayoutManager(mLayoutManager);

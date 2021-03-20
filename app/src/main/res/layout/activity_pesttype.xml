@@ -96,6 +96,19 @@
             android:layout_gravity="center"
             android:background="@drawable/loader"
             android:visibility="gone" />
+
+        <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+            android:layout_width="wrap_content"
+            android:id="@+id/txtEmpty"
+            android:layout_height="wrap_content"
+            android:text="Data not available"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+        </com.procialize.bayer2020.fonts.RobotoTextViewHeader>
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/productrefresh"
             android:layout_width="match_parent"

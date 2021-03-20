@@ -550,14 +550,26 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
 
                             specialization = profileDetails.get(0).getSpecialization();
 
-                            if (specialization.contains("0"))
+                            if (specialization.contains("0")) {
                                 checkMosquito.setChecked(true);
-                            if (specialization.contains("1"))
+                                arrSpecializtion.add("0");
+                            }
+
+                            if (specialization.contains("1")) {
                                 checkResPest.setChecked(true);
-                            if (specialization.contains("2"))
+                                arrSpecializtion.add("1");
+                            }
+
+                            if (specialization.contains("2")) {
                                 checkcomPest.setChecked(true);
-                            if (specialization.contains("3"))
+                                arrSpecializtion.add("2");
+                            }
+
+                            if (specialization.contains("3")) {
                                 checkTermite.setChecked(true);
+                                arrSpecializtion.add("3");
+                            }
+
 
                             et_first_name.setText(first_name);
                             et_last_name.setText(last_name);

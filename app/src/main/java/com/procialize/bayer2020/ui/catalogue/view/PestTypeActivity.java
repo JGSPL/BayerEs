@@ -38,6 +38,8 @@ import com.procialize.bayer2020.ui.catalogue.model.FetchPestList;
 import com.procialize.bayer2020.ui.catalogue.model.FetchPestTypeList;
 import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
+import com.procialize.bayer2020.ui.loyalityleap.view.PurchaseHistoryActivity;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -120,13 +122,31 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
         });
 
         //-----------------------------For Notification count-----------------------------
-        try {
+      /*  try {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
         } catch (Exception e) {
             e.printStackTrace();
+        }*/
+
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(PestTypeActivity.this, NotificationActivity.class));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        //----------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------
         
     }
@@ -145,6 +165,7 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
                         if (response.isSuccessful()) {
                             FetchProductTypeList.setValue(response.body());
                             Imageurl = response.body().getPest_imagepath();
+                            TextView txtEmpty = findViewById(R.id.txtEmpty);
 
                             String strCommentList =response.body().getDetail();
                             RefreashToken refreashToken = new RefreashToken(PestTypeActivity.this);
@@ -157,15 +178,18 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
                                 progressBar.setVisibility(View.GONE);
                                 if(eventLists.size()>0) {
                                     setupEventAdapter(eventLists);
-                                }else{
-                                    Utility.createShortSnackBar(relative, "Data not available");
+                                    txtEmpty.setVisibility(View.GONE);
 
-                                    progressBar.setVisibility(View.GONE);
+                                }else{
+                                  //  Utility.createShortSnackBar(relative, "Data not available");
+                                    txtEmpty.setText(response.body().getHeader().get(0).getMsg());
+                                    txtEmpty.setVisibility(View.VISIBLE);
                                     progressBar.setVisibility(View.GONE);
                                 }
                             }else{
-                                Utility.createShortSnackBar(relative, "Data not available");
-
+                               // Utility.createShortSnackBar(relative, "Data not available");
+                                txtEmpty.setText(response.body().getHeader().get(0).getMsg());
+                                txtEmpty.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
                             }
                         }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -37,6 +38,8 @@ import com.procialize.bayer2020.ui.catalogue.model.FetchPestDetail;
 import com.procialize.bayer2020.ui.catalogue.model.PestTypeItem;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Pest_item;
+import com.procialize.bayer2020.ui.loyalityleap.view.PurchaseHistoryActivity;
+import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -120,13 +123,31 @@ public class PestProductDetailsActivity extends AppCompatActivity {
         }
 
         //-----------------------------For Notification count-----------------------------
-        try {
+       /* try {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
             setNotification(this, tv_notification, ll_notification_count);
         } catch (Exception e) {
             e.printStackTrace();
+        }*/
+        //-----------------------------For Notification count-----------------------------
+        try {
+            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
+            TextView tv_notification = findViewById(R.id.tv_notification);
+            setNotification(this, tv_notification, ll_notification_count);
+
+            RelativeLayout rl_notification = findViewById(R.id.rl_notification);
+            rl_notification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(PestProductDetailsActivity.this, NotificationActivity.class));
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        //----------------------------------------------------------------------------------
+
         //----------------------------------------------------------------------------------
 
         imageView2.setOnClickListener(new View.OnClickListener() {
@@ -274,7 +295,7 @@ public void shareLink() {
         Log.i(TAG, "URL = " + url.toString());
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Firebase Deep Link");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Pest Expert");
         intent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+url.toString() +
                 ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
         startActivity(intent);
