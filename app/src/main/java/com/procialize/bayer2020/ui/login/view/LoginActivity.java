@@ -15,7 +15,10 @@ import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -127,10 +130,10 @@ public class LoginActivity extends AppCompatActivity {
         txttermsCondi= findViewById(R.id.txttermsCondi);
 
         //Set clickable true
-        txttermsCondi.setClickable(true);
+       // txttermsCondi.setClickable(true);
 
         //Handlle click event
-        txttermsCondi.setPaintFlags(txttermsCondi.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+      //  txttermsCondi.setPaintFlags(txttermsCondi.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
 
         termsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -151,17 +154,32 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        txttermsCondi.setOnClickListener(new View.OnClickListener() {
+        SpannableString ss = new SpannableString("I consent to share my personal data as per the Privacy Policy with Bayer CropScience Limited and its affiliates in accordance with the applicable laws. I also understand the Privacy Policy and consent to the processing and transfer of personal data in accordance with it.");
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                showPrivacylouge();
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+        ss.setSpan(clickableSpan, 47, 61, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+       // txttermsCondi.setPaintFlags(txttermsCondi.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+        txttermsCondi.setText(ss);
+        txttermsCondi.setMovementMethod(LinkMovementMethod.getInstance());
+        txttermsCondi.setHighlightColor(Color.TRANSPARENT);
+
+       /* txttermsCondi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPrivacylouge();
             }
-        });
+        });*/
 
-
-
-
-        if (checkPlayServices()) {
+        if(checkPlayServices()) {
 
 
             device_token = SharedPreference.getPref(this, KEY_GCM_ID);;

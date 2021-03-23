@@ -40,6 +40,7 @@ import com.procialize.bayer2020.ui.newsfeed.model.Newsfeed_detail;
 import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 
 import java.io.InputStream;
@@ -134,6 +135,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                                     .setSmallIcon(R.drawable.notify_icon)
                                     .setContentTitle(remoteMessage.getData().get("event_name"))
+                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
                                     .setContentText(Utility.trimTrailingWhitespace(strPost))
                                     .setAutoCancel(true)
                                     .setSound(notificationSoundUri).setStyle(new NotificationCompat.BigPictureStyle()
@@ -149,6 +151,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                                     .setSmallIcon(R.drawable.notify_icon)
                                     .setContentTitle(remoteMessage.getData().get("event_name"))
+                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
                                     .setContentText(Utility.trimTrailingWhitespace(strPost))
                                     .setAutoCancel(true).setContentIntent(contentIntent);
 
@@ -184,6 +187,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             //.setLargeIcon(largeIcon)
                             //.setLargeIcon(bitmap)
                             .setContentTitle(remoteMessage.getData().get("event_name"))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
                             .setContentText(Utility.trimTrailingWhitespace(strPost))
                             .setAutoCancel(true).setContentIntent(contentIntent);
                     //Set notification color to match your app color template
@@ -208,6 +212,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             //.setLargeIcon(largeIcon)
                             //.setLargeIcon(bitmap)
                             .setContentTitle(remoteMessage.getData().get("event_name"))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
                             .setContentText(Utility.trimTrailingWhitespace(strPost))
                             .setAutoCancel(true).setContentIntent(contentIntent);
                     //Set notification color to match your app color template
@@ -241,6 +246,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                                 .setSmallIcon(R.drawable.notify_icon)
                                 .setContentTitle(remoteMessage.getData().get("event_name"))
+                                .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
                                 .setContentText(Utility.trimTrailingWhitespace(strPost))
                                 .setAutoCancel(true).setContentIntent(contentIntent);
                         if (bitmap != null) {
@@ -274,6 +280,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 //.setLargeIcon(largeIcon)
                                 //.setLargeIcon(bitmap)
                                 .setContentTitle(remoteMessage.getData().get("event_name"))
+                                .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
                                 .setContentText(Utility.trimTrailingWhitespace(strPost))
                                 .setAutoCancel(true).setContentIntent(contentIntent);
                         //Set notification color to match your app color template
@@ -301,6 +308,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             //.setLargeIcon(largeIcon)
                             //.setLargeIcon(bitmap)
                             .setContentTitle(remoteMessage.getData().get("event_name"))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
                             .setContentText(Utility.trimTrailingWhitespace(strPost))
                             .setAutoCancel(true).setContentIntent(contentIntent);
                     //Set notification color to match your app color template
@@ -336,6 +344,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             //.setLargeIcon(largeIcon)
                             //.setLargeIcon(bitmap)
                             .setContentTitle(remoteMessage.getData().get("event_name"))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
                             .setContentText(Utility.trimTrailingWhitespace(strPost))
                             .setAutoCancel(true).setContentIntent(contentIntent);
                     //Set notification color to match your app color template

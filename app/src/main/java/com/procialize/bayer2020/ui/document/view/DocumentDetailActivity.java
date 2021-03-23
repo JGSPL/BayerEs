@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -149,6 +151,20 @@ public class DocumentDetailActivity extends AppCompatActivity {
         });
         String path = SharedPreference.getPref(this, DOCUMENT_MEDIA_PATH);
         webview.loadUrl("https://docs.google.com/gview?embedded=true&url=" +path+url1);
+
+        webview.setWebViewClient(new WebViewClient() {
+            boolean checkhasOnPageStarted = false;
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                checkhasOnPageStarted = true;
+            }
+
+            public void onPageFinished(WebView view, String url) {
+                if (view.getTitle().equals(""))
+                    view.reload();
+            }
+        });
 
         btn_share.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -119,8 +119,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="9sp"
-                        android:textColor="@color/blue"
-                        android:text="I consent to share my personal data as per the Privacy Policy with Bayer CropScience Limited and its affiliates in accordance with the applicable laws. I also understand the Privacy Policy and consent to the processing and transfer of personal data in accordance with it."
+                        android:textColor="@color/black"
+                        android:textColorLink = "@color/blue"
+                        android:text=""
                         android:layout_marginLeft="0dp">
 
                     </TextView>

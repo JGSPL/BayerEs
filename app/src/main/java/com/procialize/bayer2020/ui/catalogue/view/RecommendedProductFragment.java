@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.ui.catalogue.adapter.PestRecommendedProductsAdapter;
@@ -33,7 +34,7 @@ public class RecommendedProductFragment extends Fragment implements PestRecommen
     public RecommendedProductFragment() {
         // Required empty public constructor
     }
-
+    TextView txtEmpty;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,17 +50,23 @@ public class RecommendedProductFragment extends Fragment implements PestRecommen
         cataloguePestRecommendedProducts = (List<CataloguePestRecommendedProducts>) getArguments().getSerializable("recommendedeProductList");
         strRecommendedPath = getArguments().getString("strRecommendedPath");
         rv_recommended_product = rootView.findViewById(R.id.rv_recommended_product);
+         txtEmpty = rootView.findViewById(R.id.txtEmpty);
 
         setupEventAdapter(cataloguePestRecommendedProducts);
         return  rootView;
     }
 
     public void setupEventAdapter(List<CataloguePestRecommendedProducts> commentList) {
+
         if (commentList != null) {
+            txtEmpty.setVisibility(View.GONE);
+
             pestRecommendedProductsAdapter = new PestRecommendedProductsAdapter(getActivity(), commentList, this,strRecommendedPath);
             rv_recommended_product.setLayoutManager(new GridLayoutManager(getActivity(),2));
             rv_recommended_product.setAdapter(pestRecommendedProductsAdapter);
             pestRecommendedProductsAdapter.notifyDataSetChanged();
+        }else{
+            txtEmpty.setVisibility(View.VISIBLE);
         }
     }
 
