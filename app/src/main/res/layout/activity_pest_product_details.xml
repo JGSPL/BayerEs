@@ -79,6 +79,10 @@
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/bottom_shadow" />
 
     </com.google.android.material.appbar.AppBarLayout>
    <!-- <LinearLayout
