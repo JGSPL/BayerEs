@@ -37,28 +37,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:layout_marginLeft="15dp"
                 android:contentDescription=" "
                 android:padding="0dp"
-                android:layout_marginLeft="15dp"
                 android:src="@drawable/ic_back"
                 android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/headerlogoIv"
                 android:layout_width="150dp"
-                android:src="@drawable/header_logo"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:contentDescription=" " />
+                android:contentDescription=" "
+                android:src="@drawable/header_logo" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:visibility="invisible"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="right"
                 android:layout_marginRight="15dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:visibility="invisible">
 
                 <ImageView
                     android:id="@+id/notificationlogoIv"
@@ -104,16 +104,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <com.procialize.bayer2020.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                 android:id="@+id/tv_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="0dp"
                 android:text="Edit Profile"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:textSize="18dp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -152,6 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:adjustViewBounds="true"
@@ -262,13 +263,24 @@
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:paddingLeft="20dp"
-                android:paddingTop="20dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="180dp">
+
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:text="Profile Picture"
+                    android:textColor="@color/black" />
+
+                <com.procialize.bayer2020.fonts.RobotoTextview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:paddingTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text=" I am a*"
                     android:textColor="@color/textcolorLight" />
@@ -278,6 +290,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:weightSum="1"
+
                     android:id="@+id/radiogroupPCOType">
 
                 <RadioButton
@@ -285,7 +298,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/radioPCO"
                     android:backgroundTint="@color/textcolorLight"
-                    android:buttonTint="@color/green"
+                    android:buttonTint="@color/activetab"
                     android:text="Pest Control Operator"
                     android:textColor="@color/textcolorLight"  />
 
@@ -294,7 +307,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/radioOwer"
                     android:backgroundTint="@color/textcolorLight"
-                    android:buttonTint="@color/green"
+                    android:buttonTint="@color/activetab"
                     android:text="Home/office owner"
                     android:textColor="@color/textcolorLight"  />
 
@@ -303,7 +316,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/radioother"
                     android:backgroundTint="@color/textcolorLight"
-                    android:buttonTint="@color/green"
+                    android:buttonTint="@color/activetab"
                     android:text="Other"
                     android:textColor="@color/textcolorLight"  />
                 </RadioGroup>
@@ -543,7 +556,7 @@
                         android:layout_gravity="center"
                         android:padding="3dp"
                         android:layout_weight="1"
-                        android:src="@drawable/add_icon"
+                        android:src="@drawable/ic_plus"
                         android:visibility="visible" />
                 </LinearLayout>
                 <LinearLayout
@@ -551,6 +564,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:visibility="gone"
                     android:background="@color/transperent"
                     android:orientation="horizontal"
                     android:weightSum="10"
@@ -577,7 +591,7 @@
                         android:layout_gravity="center"
                         android:padding="3dp"
                         android:layout_weight="1"
-                        android:src="@drawable/add_icon"
+                        android:src="@drawable/ic_plus"
                         android:visibility="visible" />
                 </LinearLayout>
 
@@ -589,6 +603,8 @@
                     android:background="@color/transperent"
                     android:orientation="horizontal"
                     android:weightSum="10"
+                    android:visibility="gone"
+
                     android:gravity="center_vertical">
 
 
@@ -679,7 +695,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/radioOwner"
                     android:backgroundTint="@color/textcolorLight"
-                    android:buttonTint="@color/green"
+                    android:buttonTint="@color/activetab"
                     android:text="Owner"
                     android:textColor="@color/textcolorLight"  />
 
@@ -688,7 +704,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/radioTech"
                     android:backgroundTint="@color/textcolorLight"
-                    android:buttonTint="@color/green"
+                    android:buttonTint="@color/activetab"
                     android:text="Technician"
                     android:textColor="@color/textcolorLight"  />
 
@@ -697,7 +713,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/radioManager"
                     android:backgroundTint="@color/textcolorLight"
-                    android:buttonTint="@color/green"
+                    android:buttonTint="@color/activetab"
                     android:text="Manager/Admin/Other"
                     android:textColor="@color/textcolorLight"  />
                 </RadioGroup>
@@ -889,7 +905,7 @@
                         android:layout_marginLeft="0dp"
                         android:layout_marginTop="5dp"
                         android:text="Mosquito Control"
-                        android:buttonTint="@color/green"
+                        android:buttonTint="@color/activetab"
                         android:textColor="@color/black"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -900,12 +916,23 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="0dp"
                         android:layout_marginTop="5dp"
-                        android:buttonTint="@color/green"
+                        android:buttonTint="@color/activetab"
                         android:text="Residential Pest Control"
                         android:textColor="@color/black"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/checkBox" />
 
+                    <CheckBox
+                        android:id="@+id/checkTermite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="5dp"
+                        android:buttonTint="@color/activetab"
+                        android:text="Commercial Pest Control"
+                        android:textColor="@color/black"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
                     <CheckBox
                         android:id="@+id/checkcomPest"
                         android:layout_width="wrap_content"
@@ -913,18 +940,7 @@
                         android:layout_marginLeft="0dp"
                         android:layout_marginTop="5dp"
                         android:text="Termite Control"
-                        android:buttonTint="@color/green"
-                        android:textColor="@color/black"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
-                    <CheckBox
-                        android:id="@+id/checkTermite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginTop="5dp"
-                        android:buttonTint="@color/green"
-                        android:text="Commercial Pest Control"
+                        android:buttonTint="@color/activetab"
                         android:textColor="@color/black"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
@@ -961,7 +977,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton1"
                         android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/green"
+                        android:buttonTint="@color/activetab"
                         android:text="Less than Rs. 10 lacs"
                         android:textColor="@color/textcolorLight"  />
 
@@ -970,7 +986,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton2"
                         android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/green"
+                        android:buttonTint="@color/activetab"
                         android:text="Rs. 10 to 25 lacs"
                         android:textColor="@color/textcolorLight"  />
 
@@ -979,7 +995,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton3"
                         android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/green"
+                        android:buttonTint="@color/activetab"
                         android:text="Rs. 25 to 50 lacs"
                         android:textColor="@color/textcolorLight"  />
 
@@ -988,7 +1004,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton4"
                         android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/green"
+                        android:buttonTint="@color/activetab"
                         android:text="Rs. 50 lacs to 1 crore"
                         android:textColor="@color/textcolorLight"  />
                     <RadioButton
@@ -996,7 +1012,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton5"
                         android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/green"
+                        android:buttonTint="@color/activetab"
                         android:text="Rs. 1 crore to 1.5 crore"
                         android:textColor="@color/textcolorLight"  />
                     <RadioButton
@@ -1004,7 +1020,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton6"
                         android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/green"
+                        android:buttonTint="@color/activetab"
                         android:text="Above Rs. 2 crore"
                         android:textColor="@color/textcolorLight"  />
 
@@ -1020,8 +1036,8 @@
                     android:layout_marginTop="20dp"
                     android:minHeight="0dp"
                     android:padding="10dp"
-                    android:text="Save"
-                    android:background="@drawable/login_drawable"
+                    android:text="Submit"
+                    android:background="@drawable/btn_submit"
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>

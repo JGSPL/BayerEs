@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -76,6 +77,9 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
        // webView.loadUrl(eulaLink);
         webView.loadData(eulaLink, "text/html", "UTF-8");*/
         docurl = getIntent().getStringExtra("url");
+
+        TextView txtTitle = findViewById(R.id.txtTitle);
+        txtTitle.setText(ScheameList.getTitle());
 
         String eulaLink = docurl+ScheameList.getDescription() ;
 

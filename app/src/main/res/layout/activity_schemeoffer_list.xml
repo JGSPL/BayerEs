@@ -91,7 +91,7 @@
         android:text="Schemes and offers"
         android:textStyle="bold"
         android:textSize="15sp"
-        android:padding="5dp"
+        android:padding="10dp"
         android:textColor="@color/black"
         android:layout_height="wrap_content"></com.procialize.bayer2020.fonts.RobotoTextViewHeader>
 

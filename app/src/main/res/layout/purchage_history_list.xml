@@ -89,7 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appBarLayout"
-        android:layout_margin="10dp"
+        android:padding="10dp"
         android:gravity="left"
         android:textStyle="bold"
         android:textSize="16dp"
@@ -114,10 +114,10 @@
             android:text="Total:"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:padding="5dp">
+            android:padding="10dp">
 
         </com.procialize.bayer2020.fonts.RobotoTextview>
-        <com.procialize.bayer2020.fonts.RobotoTextview
+        <com.procialize.bayer2020.fonts.RobotoTextViewHeader
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
@@ -127,9 +127,9 @@
             android:textStyle="bold"
             android:textColor="@color/blue"
             android:textSize="18sp"
-            android:padding="5dp">
+            android:padding="10dp">
 
-        </com.procialize.bayer2020.fonts.RobotoTextview>
+        </com.procialize.bayer2020.fonts.RobotoTextViewHeader>
 
     </LinearLayout>
 

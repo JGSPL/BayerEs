@@ -42,6 +42,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
@@ -60,8 +61,10 @@ import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.R;
+import com.procialize.bayer2020.Utility.Animations;
 import com.procialize.bayer2020.Utility.CommonFirebase;
 import com.procialize.bayer2020.Utility.CommonFunction;
+import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.profile.model.FetchPincode;
@@ -156,7 +159,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     ArrayList arrSpecializtion = new ArrayList();
     boolean isCheckedPCO = false, isSpecializationChanged = false;
     String specialization = "";
-
+    ImageView iv_plus, iv_plus2, iv_plus3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,6 +198,12 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         txtaltno = findViewById(R.id.txtaltno);
         ll_alternetmobno2 = findViewById(R.id.ll_alternetmobno2);
         ll_alternetmobno3 = findViewById(R.id.ll_alternetmobno3);
+        iv_plus = findViewById(R.id.iv_plus);
+        iv_plus2 = findViewById(R.id.iv_plus2);
+        iv_plus3 = findViewById(R.id.iv_plus3);
+
+
+
         txtAnnualOrg = findViewById(R.id.txtAnnualOrg);
         txtDomain = findViewById(R.id.txtDomain);
         txttectcount = findViewById(R.id.txttectcount);
@@ -247,6 +256,44 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         iv_back.setOnClickListener(this);
         atv_pincode = findViewById(R.id.atv_pincode);
         atv_pincode.setThreshold(0);
+
+        iv_plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ll_alternetmobno2.getVisibility() == View.VISIBLE) {
+                    Animations.collapse(ll_alternetmobno2);
+                    // holder.iv_right_arrow.setBackgroundResource(R.drawable.ic_plus);
+                    iv_plus.setImageDrawable(ContextCompat.getDrawable(ProfilePCOActivity.this, R.drawable.ic_plus));
+
+                } else {
+
+
+                    Animations.expand(ll_alternetmobno2);
+                    // holder.iv_right_arrow.setBackgroundResource(R.drawable.ic_cross);
+                    iv_plus.setImageDrawable(ContextCompat.getDrawable(ProfilePCOActivity.this, R.drawable.ic_cross));
+
+                }
+            }
+        });
+
+        iv_plus2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ll_alternetmobno3.getVisibility() == View.VISIBLE) {
+                    Animations.collapse(ll_alternetmobno3);
+                    // holder.iv_right_arrow.setBackgroundResource(R.drawable.ic_plus);
+                    iv_plus2.setImageDrawable(ContextCompat.getDrawable(ProfilePCOActivity.this, R.drawable.ic_plus));
+
+                } else {
+
+
+                    Animations.expand(ll_alternetmobno3);
+                    // holder.iv_right_arrow.setBackgroundResource(R.drawable.ic_cross);
+                    iv_plus2.setImageDrawable(ContextCompat.getDrawable(ProfilePCOActivity.this, R.drawable.ic_cross));
+
+                }
+            }
+        });
 
         checkMosquito.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -390,8 +437,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                     if (user_typeText.equalsIgnoreCase("Pest Control Operator")) {
                         ll_alternetmobno.setVisibility(View.VISIBLE);
 
-                        ll_alternetmobno2.setVisibility(View.VISIBLE);
-                        ll_alternetmobno3.setVisibility(View.VISIBLE);
+                      //  ll_alternetmobno2.setVisibility(View.VISIBLE);
+                      //  ll_alternetmobno3.setVisibility(View.VISIBLE);
                         ll_organisation.setVisibility(View.VISIBLE);
                         txtaltno.setVisibility(View.VISIBLE);
                         ll_aspociated.setVisibility(View.VISIBLE);

@@ -89,10 +89,20 @@
 
         </com.google.android.material.appbar.AppBarLayout>
     </LinearLayout>
+    <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+        android:layout_width="match_parent"
+        android:id="@+id/txtTitle"
+        android:layout_below="@+id/linear"
+        android:text="Schemes and offers"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content"></com.procialize.bayer2020.fonts.RobotoTextViewHeader>
 
     <WebView
         android:id="@+id/webview_scheame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linear"/>
+        android:layout_below="@+id/txtTitle"/>
 </RelativeLayout>

@@ -51,7 +51,7 @@
                 android:visibility="visible">
 
 
-                <com.procialize.bayer2020.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                     android:id="@+id/txt_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginRight="30dp"
                     android:gravity="left"
-                    android:text="*Mobile No."
+                    android:text="*Mobile Number"
                     android:textColor="@color/txtcolor"
                     android:textSize="13dp" />
 

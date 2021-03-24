@@ -195,6 +195,9 @@ public class LoginActivity extends AppCompatActivity {
 
         CommonFirebase.crashlytics("Login Screen", "");
         CommonFirebase.firbaseAnalytics(this, "Login Screen", "");
+
+       // passcodeDialog(this);
+
     }
 
     @BindingAdapter({"toastMessage"})
@@ -290,10 +293,25 @@ public class LoginActivity extends AppCompatActivity {
 
         Button submit = (Button) passcodeDialog
                 .findViewById(R.id.btn_send_dialog);
-        Button btn_resend = (Button) passcodeDialog
+        final Button btn_resend = (Button) passcodeDialog
                 .findViewById(R.id.btn_resend);
         progressBar = (ProgressBar) passcodeDialog
                 .findViewById(R.id.progressBar);
+
+        btn_resend.setClickable(false);
+        btn_resend.setEnabled(false);
+        new CountDownTimer(60000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                btn_resend.setText("" + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                btn_resend.setText("Resend OTP");
+                btn_resend.setClickable(true);
+                btn_resend.setEnabled(true);
+            }
+        }.start();
 
         btn_resend.setOnClickListener(new View.OnClickListener() {
             @Override
