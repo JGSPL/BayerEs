@@ -8,7 +8,7 @@
         android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/colorwhite"
         android:orientation="horizontal">
 
@@ -19,7 +19,8 @@
             android:layout_gravity="center"
             android:layout_weight="3"
             android:gravity="center"
-            android:textColor="@color/black" />
+            android:textSize="12sp"
+            android:textColor="@color/fontcolo" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/txt_packsize"
@@ -29,7 +30,8 @@
             android:layout_marginLeft="2dp"
             android:layout_weight="2"
             android:gravity="center"
-            android:textColor="@color/black" />
+            android:textSize="12sp"
+            android:textColor="@color/fontcolo" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/mpointspermpin"
@@ -38,8 +40,9 @@
             android:layout_gravity="center"
             android:layout_marginLeft="2dp"
             android:layout_weight="3"
+            android:textSize="12sp"
             android:gravity="center"
-            android:textColor="@color/black" />
+            android:textColor="@color/fontcolo" />
 
         <com.procialize.bayer2020.fonts.RobotoEditext
             android:id="@+id/txt_noofmpin"
@@ -48,9 +51,12 @@
             android:layout_gravity="center"
             android:layout_marginLeft="2dp"
             android:layout_weight="2"
+            android:hint="Enter"
+            android:textSize="12sp"
+            android:padding="2dp"
             android:background="#ebedec"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/fontcolo"
             android:inputType="numberDecimal"
             android:maxLength="10"/>
 
@@ -61,8 +67,9 @@
             android:layout_gravity="center"
             android:layout_marginLeft="2dp"
             android:layout_weight="3"
+            android:textSize="12sp"
             android:gravity="center"
-            android:textColor="@color/blue" />
+            android:textColor="@color/fontcolo" />
 
     </LinearLayout>
 

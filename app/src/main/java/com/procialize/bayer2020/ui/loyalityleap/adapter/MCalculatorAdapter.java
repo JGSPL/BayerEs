@@ -64,7 +64,7 @@ public class MCalculatorAdapter extends RecyclerView.Adapter<MCalculatorAdapter.
 
         final m_points_list travel = productLists.get(position);
         holder.txt_product.setText(travel.getProduct_name());
-        holder.txt_packsize.setText(travel.getUnit());
+        holder.txt_packsize.setText(travel.getPack()+travel.getUnit());
         holder.mpointspermpin.setText(travel.getPoints());
 
         holder.txt_noofmpin.setOnKeyListener(new View.OnKeyListener() {

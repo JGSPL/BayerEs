@@ -97,6 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/black"
             android:textSize="16sp"></com.procialize.bayer2020.fonts.RobotoTextViewHeader>
         <RelativeLayout
@@ -150,7 +151,7 @@
 
                 <com.procialize.bayer2020.fonts.RobotoButton
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:background="@color/colorwhite"
                     android:drawableTop="@drawable/ic_buynow"
                     android:drawablePadding="5dp"
@@ -159,7 +160,7 @@
                     android:text="Buy Now"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="8sp"></com.procialize.bayer2020.fonts.RobotoButton>
+                    android:textSize="10sp"></com.procialize.bayer2020.fonts.RobotoButton>
             </LinearLayout>
 
             <LinearLayout
@@ -175,7 +176,7 @@
                 <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/imgCalc"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@color/colorwhite"
                     android:drawableTop="@drawable/ic_dosage"
@@ -184,7 +185,7 @@
                     android:text="Dosage Calculator"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="8sp"></com.procialize.bayer2020.fonts.RobotoButton>
+                    android:textSize="10sp"></com.procialize.bayer2020.fonts.RobotoButton>
             </LinearLayout>
 
             <LinearLayout
@@ -199,7 +200,7 @@
 
                 <com.procialize.bayer2020.fonts.RobotoButton
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:layout_margin="5dp"
                     android:background="@color/colorwhite"
                     android:drawableTop="@drawable/ic_share"
@@ -209,7 +210,7 @@
                     android:text="Share"
                     android:textAllCaps="false"
                     android:textColor="@color/black"
-                    android:textSize="8sp"></com.procialize.bayer2020.fonts.RobotoButton>
+                    android:textSize="10sp"></com.procialize.bayer2020.fonts.RobotoButton>
             </LinearLayout>
 
         </LinearLayout>

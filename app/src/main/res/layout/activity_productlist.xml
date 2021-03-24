@@ -94,16 +94,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/app_bar_layout"
         android:padding="5dp"
+        android:layout_marginLeft="10dp"
         android:text=""
         android:textColor="@color/black"
-        android:textSize="14sp"></com.procialize.bayer2020.fonts.RobotoTextViewHeader>
+        android:textSize="16sp"></com.procialize.bayer2020.fonts.RobotoTextViewHeader>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/productTitle"
         android:id="@+id/relMain"
-        android:background="@color/colorwhite"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
 
         android:orientation="vertical">
         <ProgressBar

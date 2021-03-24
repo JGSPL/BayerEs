@@ -72,7 +72,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
     private FragmentTabHost mTabHostCel;
     Toolbar mToolbar;
     ImageView headerlogoIv;
-    String token, eventid, imageurl, productId = "1", Imageurl;
+    String token, eventid, imageurl, productId = "1", Imageurl, product_type;
     List<product_subpoint_detail> product_subpoint_detailList = new ArrayList<>();
     List<Product_document_detail> Product_document_detailList = new ArrayList<>();
     List<product_dosage_detail> product_dosage_detailList = new ArrayList<>();
@@ -111,7 +111,8 @@ public class ProductListDetailActivity extends AppCompatActivity {
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
         product_item = (Product_item) getIntent().getSerializableExtra("Product");
-        Imageurl = getIntent().getStringExtra("Imageurl");;
+        Imageurl = getIntent().getStringExtra("Imageurl");
+        product_type  = getIntent().getStringExtra("product_type");
         productId = product_item.getId();
 
         mToolbar.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +159,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
         //----------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------
 
-        productTitle.setText(product_item.getProduct_name());
+        productTitle.setText("Catalogue - "+ product_type + " - " + product_item.getProduct_name());
         Glide.with(ProductListDetailActivity.this)
                 .load(Imageurl+product_item.getProduct_image())
                 .listener(new RequestListener<Drawable>() {

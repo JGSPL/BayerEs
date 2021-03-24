@@ -94,7 +94,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
         });
 
         TextView productTitle = findViewById(R.id.productTitle);
-        productTitle.setText(productType.getProduct_type_name());
+        productTitle.setText("Catalogue - "+ productType.getProduct_type_name());
 
         //-----------------------------For Notification count-----------------------------
        /* try {
@@ -237,6 +237,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductLis
     public void onContactSelected(Product_item product_item) {
         startActivity(new Intent(this, ProductListDetailActivity.class)
                 .putExtra("Imageurl", Imageurl)
+                .putExtra("product_type", productType.getProduct_type_name())
                 .putExtra("Product", (Serializable) product_item));
     }
     private void setUpToolbar() {

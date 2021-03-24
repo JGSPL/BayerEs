@@ -31,5 +31,7 @@
     <color name="green">#5a9e31</color>
     <color name="Darkblue">#002e46</color>
     <color name="feedwhtsmindbg">#DCDCDC</color>
+    <color name="fontcolo">#234b5f</color>
+
 
 </resources>

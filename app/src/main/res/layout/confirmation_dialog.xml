@@ -18,21 +18,21 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="top"
-            android:background="@color/Darkblue"
+            android:background="#00739c"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="0dp">
 
-            <com.procialize.bayer2020.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="8.5"
-                android:paddingLeft="10dp"
+                android:paddingLeft="0dp"
                 android:text="Confirmation"
                 android:textColor="@color/colorwhite"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
 
         </LinearLayout>
@@ -43,16 +43,17 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
-            <com.procialize.bayer2020.fonts.RobotoTextview
+            <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textSize="@dimen/textsizesmall" />
+                android:textSize="16dp" />
 
             <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/txtValue"
                 android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:textSize="@dimen/textsizesmall" />
@@ -60,7 +61,7 @@
             <com.procialize.bayer2020.fonts.RobotoTextview
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:text="Confirm Quantity"
                 android:textColor="@color/black"
                 android:textSize="@dimen/textsizesmall" />
@@ -98,7 +99,27 @@
                 android:text="Address"
                 android:textColor="@color/black"
                 android:textSize="@dimen/textsizesmall" />
+            <EditText
+                android:id="@+id/edit_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
 
+                android:layout_centerInParent="true"
+                android:gravity="top|left"
+                android:imeOptions="actionSend|flagNoEnterAction"
+                android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
+                android:maxLength="500"
+                android:maxLines="5"
+                android:minHeight="70dp"
+                android:background="@drawable/edt_profile_white"
+                android:minLines="4"
+                android:padding="5dp"
+                android:scrollbars="vertical"
+                android:textColorHint="@color/black"
+                android:textSize="@dimen/textsizesmall" />
+
+<!--
             <com.procialize.bayer2020.fonts.RobotoEditext
                 android:id="@+id/edit_address"
                 android:layout_width="match_parent"
@@ -107,10 +128,13 @@
                 android:background="@drawable/edt_profile_white"
                 android:inputType="text"
                 android:padding="5dp" />
+-->
 
             <com.procialize.bayer2020.fonts.RobotoTextview
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="Are you sure you want to redeem this coupon?"
                 android:textColor="@color/black" />
 
@@ -123,7 +147,7 @@
                 <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/btn_submit"
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
+                    android:layout_height="35dp"
                     android:layout_margin="10dp"
                     android:layout_weight="5"
                     android:background="@drawable/btn_submit"
@@ -134,7 +158,7 @@
                 <com.procialize.bayer2020.fonts.RobotoButton
                     android:id="@+id/btn_cancel"
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
+                    android:layout_height="35dp"
                     android:layout_margin="10dp"
                     android:layout_weight="5"
                     android:background="@drawable/btn_next_quiz"
