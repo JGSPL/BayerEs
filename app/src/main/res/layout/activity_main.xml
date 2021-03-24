@@ -207,12 +207,13 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:layout_marginTop="0dp"
         android:background="@android:color/white"
         android:fitsSystemWindows="false">
         <!-- app:menu="@menu/drawer" -->
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="0dp"
             android:background="@color/white"
             android:layout_height="match_parent">
 
@@ -236,8 +237,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
 
                     android:src="@drawable/ic_home"
                     android:tint="@color/black" />
@@ -263,8 +264,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_name"
                     android:tint="@color/black" />
 
@@ -288,8 +289,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@mipmap/ic_event_info"
                     android:tint="@color/black" />
 
@@ -312,8 +313,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/dwnload_icon"
                     android:tint="@color/black" />
 
@@ -336,8 +337,8 @@
                 android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_storelocat"
                     android:tint="@color/black" />
 
@@ -385,8 +386,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_livepoll"
                     android:tint="@color/black" />
 
@@ -409,8 +410,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/quizsidemenu"
                     android:tint="@color/black" />
 
@@ -433,8 +434,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_inactive_live_qa"
                     android:tint="@color/black" />
 
@@ -458,8 +459,8 @@
                 android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_survey"
                     android:tint="@color/black" />
 
@@ -484,10 +485,10 @@
                 android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_privacy"
-                    android:tint="@color/black" />
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_con"
+                    />
 
                 <TextView
                     android:id="@+id/tv_contact_us"
@@ -518,8 +519,8 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_eula"
                     android:tint="@color/black" />
 
@@ -544,8 +545,8 @@
                 android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
 
                     android:src="@drawable/ic_privacy"
                     android:tint="@color/black" />
@@ -570,8 +571,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
 
                     android:src="@drawable/ic_switch_event"
                     android:tint="@color/black" />
@@ -596,8 +597,8 @@
                 android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
 
                     android:src="@drawable/ic_logout"
                     android:tint="@color/black" />
@@ -624,9 +625,8 @@
                 android:text="Version 1.0.0"
                 android:textColor="@color/black"
                 android:textFontWeight="1"
-                android:textSize="15dp"
-                android:id="@+id/txt_version"
-                android:textStyle="bold" />
+                android:textSize="10dp"
+                android:id="@+id/txt_version" />
 
         </LinearLayout>
         </androidx.core.widget.NestedScrollView>

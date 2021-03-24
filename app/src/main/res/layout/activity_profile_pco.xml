@@ -26,6 +26,7 @@
             android:contentInsetLeft="0dp"
             android:contentInsetEnd="0dp"
             android:contentInsetRight="0dp"
+            android:elevation="3dp"
             android:minHeight="?attr/actionBarSize"
             app:contentInsetEnd="0dp"
             app:contentInsetLeft="0dp"
@@ -152,15 +153,15 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="22dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:adjustViewBounds="true"
                     android:gravity="center">
 
-                    <ImageView
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
+                    <com.procialize.bayer2020.Utility.RoundCornersImageView
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
                         android:visibility="gone"
                         android:layout_centerInParent="true"
                         android:adjustViewBounds="true"
@@ -171,8 +172,8 @@
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/myCardView"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         >
@@ -269,17 +270,17 @@
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:layout_gravity="center"
-                    android:gravity="center"
+                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
+                    android:gravity="center"
                     android:text="Profile Picture"
                     android:textColor="@color/black" />
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="0dp"
                     android:paddingTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text=" I am a*"

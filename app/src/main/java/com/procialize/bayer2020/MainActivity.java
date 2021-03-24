@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_storeLocator = findViewById(R.id.tr_storeLocator);
         tr_qna = findViewById(R.id.tr_qna);
 
-        txt_version.setText(BuildConfig.VERSION_NAME);
+        txt_version.setText("Version: "+ BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
         tr_home.setOnClickListener(this);
         tr_profile.setOnClickListener(this);

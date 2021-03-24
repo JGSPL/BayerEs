@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="130dp"
     android:padding="20dp"
     android:background="@color/colorPink"
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/myCardView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
         app:cardCornerRadius="5dp">
 
-        <ImageView
+        <com.procialize.bayer2020.Utility.RoundCornersImageView
             android:id="@+id/iv_profile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:background="@color/white"
             android:layout_gravity="center"
             android:scaleType="centerCrop" />
@@ -32,19 +32,19 @@
         android:orientation="vertical"
         android:layout_weight="1">
 
-        <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+        <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/tv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="16dp"
+            android:textSize="18dp"
             android:textColor="@color/colorwhite" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
             android:id="@+id/tv_designation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="10dp"
             android:text=""
             android:textSize="14dp"
             android:textColor="@color/colorwhite" />

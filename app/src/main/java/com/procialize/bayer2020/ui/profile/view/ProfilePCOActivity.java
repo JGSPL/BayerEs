@@ -3,6 +3,7 @@ package com.procialize.bayer2020.ui.profile.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -257,7 +259,45 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         atv_pincode = findViewById(R.id.atv_pincode);
         atv_pincode.setThreshold(0);
 
-        iv_plus.setOnClickListener(new View.OnClickListener() {
+
+
+        if (Build.VERSION.SDK_INT >= 21) {
+
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]{
+
+                            new int[]{-android.R.attr.state_checked}, //disabled
+                            new int[]{android.R.attr.state_checked} //enabled
+                    },
+                    new int[]{
+
+                            Color.parseColor("#898989")//disabled
+                            , Color.parseColor("#e4004b")//enabled
+
+                    }
+            );
+
+
+            radioButton5.setButtonTintList(colorStateList);//set the color tint list
+            radioButton6.setButtonTintList(colorStateList);
+            radioButton4.setButtonTintList(colorStateList);
+            radioButton3.setButtonTintList(colorStateList);
+            radioButton2.setButtonTintList(colorStateList);
+            radioButton1.setButtonTintList(colorStateList);
+            radioPCO.setButtonTintList(colorStateList);
+            radioOwer.setButtonTintList(colorStateList);
+            radioOwner.setButtonTintList(colorStateList);
+            radioTech.setButtonTintList(colorStateList);
+            radioManager.setButtonTintList(colorStateList);
+            checkResPest.setButtonTintList(colorStateList);
+            checkcomPest.setButtonTintList(colorStateList);
+            checkTermite.setButtonTintList(colorStateList);
+            checkMosquito.setButtonTintList(colorStateList);
+            radioother.setButtonTintList(colorStateList);
+
+        }
+
+            iv_plus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ll_alternetmobno2.getVisibility() == View.VISIBLE) {
