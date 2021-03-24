@@ -176,8 +176,11 @@
                 </LinearLayout>
 
             </androidx.appcompat.widget.Toolbar>
-
         </com.google.android.material.appbar.AppBarLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/top_shadow_gradient" />
 
         <include
             android:layout_width="match_parent"
@@ -185,6 +188,10 @@
             layout="@layout/content_main"
             android:layout_weight="1"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/bottom_shadow" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"

@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
@@ -37,8 +38,9 @@ public class LoyalityLeapFragment  extends Fragment {
     ImageView imgScheame,imgredeemHistory,imgrequestRedeem,imgPuchageHistory, imgCalc;
     String api_token;
     TextView txtUnreadCount, txtMyRank,txtMyPoint;
-    RelativeLayout relScheame;
+    RelativeLayout relScheame, relMain;
     ProgressBar progressBar;
+    ConnectionDetector cd;
 
     public static LoyalityLeapFragment newInstance() {
 
@@ -52,6 +54,7 @@ public class LoyalityLeapFragment  extends Fragment {
         imgredeemHistory = root.findViewById(R.id.imgredeemHistory);
         imgrequestRedeem = root.findViewById(R.id.imgrequestRedeem);
         imgPuchageHistory = root.findViewById(R.id.imgPuchageHistory);
+        cd = ConnectionDetector.getInstance(getContext());
 
         txtUnreadCount = root.findViewById(R.id.txtUnreadCount);
         txtMyRank = root.findViewById(R.id.txtMyRank);
@@ -59,11 +62,22 @@ public class LoyalityLeapFragment  extends Fragment {
         relScheame = root.findViewById(R.id.relScheame);
         imgCalc = root.findViewById(R.id.imgCalc);
         progressBar = root.findViewById(R.id.progressBar);
-
+        relMain = root.findViewById(R.id.relMain);
         api_token = SharedPreference.getPref(getContext(), AUTHERISATION_KEY);
         new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
+        if (cd.isConnectingToInternet()) {
+            progressBar.setVisibility(View.VISIBLE);
 
-        getMyPoints();
+            getMyPoints();
+
+        } else {
+            progressBar.setVisibility(View.GONE);
+
+            Utility.createShortSnackBar(relMain, "No internet connection");
+
+
+        }
+
 
         relScheame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,9 +139,20 @@ public class LoyalityLeapFragment  extends Fragment {
                     My_point pincodeLists = new Gson().fromJson(data, new TypeToken<My_point>() {
                     }.getType());
                     if(pincodeLists!=null){
-                       txtMyPoint.setText(pincodeLists.getMypoint());
-                       txtMyRank.setText(pincodeLists.getRank());
-                       txtUnreadCount.setText(pincodeLists.getSchemeUnreadCount());
+                        try {
+                            int rank = Integer.parseInt(pincodeLists.getSchemeUnreadCount());
+                            if(rank<10 && rank!=0){
+                                txtUnreadCount.setText("0"+pincodeLists.getSchemeUnreadCount());
+
+                            }else{
+                                txtUnreadCount.setText(pincodeLists.getSchemeUnreadCount());
+                            }
+                            txtMyPoint.setText(pincodeLists.getMypoint());
+                            txtMyRank.setText(pincodeLists.getRank());
+                        }catch (Exception e){
+                            Utility.createShortSnackBar(relMain, e.getMessage());
+
+                        }
                     }
 
 
