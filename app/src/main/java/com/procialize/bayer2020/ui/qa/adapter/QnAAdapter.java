@@ -90,7 +90,7 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
     String spannedString;
     String postStatus;
     NewsFeedDatabaseViewModel newsFeedDatabaseViewModel;
-
+    String postStatus1, spannedString1;
     public QnAAdapter() {
 
     }
@@ -186,11 +186,30 @@ public class QnAAdapter extends RecyclerView.Adapter<QnAAdapter.NewsViewHolder> 
 
                 }
                 if (!feedData.getQa_reply().isEmpty() && feedData.getQa_reply() != null) {
-                    holder.adminTv.setText(StringEscapeUtils.unescapeJava(feedData.getQa_reply()));
+                    if (feedData.getQa_reply().contains("\n")) {
+                        postStatus1 =feedData.getQa_reply().trim().replace("\n", "<br/>");
+                    } else {
+                        postStatus1 = feedData.getQa_reply().trim();
+                    }
+                    spannedString1 = String.valueOf(Jsoup.parse(postStatus1)).trim();//Html.fromHtml(feedData.getPost_status(), Html.FROM_HTML_MODE_COMPACT).toString();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Spanned strPost = Html.fromHtml(spannedString1, Html.FROM_HTML_MODE_COMPACT);
+                        holder.adminTv.setText(Utility.trimTrailingWhitespace(strPost));
+                    } else {
+                        Spanned strPost = Html.fromHtml(spannedString1);
+                        holder.adminTv.setText(Utility.trimTrailingWhitespace(strPost));
+                    }
+                    // holder.adminTv.setText(StringEscapeUtils.unescapeJava(feedData.getQa_reply()));
                     holder.adminTv.setVisibility(View.VISIBLE);
                 } else {
                     holder.adminTv.setVisibility(View.GONE);
                 }
+               /* if (!feedData.getQa_reply().isEmpty() && feedData.getQa_reply() != null) {
+                    holder.adminTv.setText(StringEscapeUtils.unescapeJava(feedData.getQa_reply()));
+                    holder.adminTv.setVisibility(View.VISIBLE);
+                } else {
+                    holder.adminTv.setVisibility(View.GONE);
+                }*/
             }
 
 

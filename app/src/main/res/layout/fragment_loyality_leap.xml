@@ -92,7 +92,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/leap_scheame"
                     >
-                <com.procialize.bayer2020.costumTools.ScaledImageView
+                <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
@@ -101,7 +101,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_height="180dp">
 
-                </com.procialize.bayer2020.costumTools.ScaledImageView>
+                </ImageView>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
 
                     </TextView>
                 </RelativeLayout>
-                <com.procialize.bayer2020.costumTools.ScaledImageView
+                <ImageView
                     android:id="@+id/imgPuchageHistory"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -125,7 +125,7 @@
                     android:src="@drawable/leap_purchage"
                     android:layout_height="180dp">
 
-                </com.procialize.bayer2020.costumTools.ScaledImageView>
+                </ImageView>
 
             </LinearLayout>
             <LinearLayout
@@ -135,19 +135,19 @@
                 android:weightSum="2"
                 android:layout_height="wrap_content">
 
-                <com.procialize.bayer2020.costumTools.ScaledImageView
+                <ImageView
                     android:id="@+id/imgrequestRedeem"
                     android:layout_width="0dp"
                     android:layout_height="180dp"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:layout_marginRight="5dp"
-                    android:scaleType="fitCenter"
+                    android:scaleType="fitXY"
                     android:src="@drawable/leap_redeem">
 
-                </com.procialize.bayer2020.costumTools.ScaledImageView>
+                </ImageView>
 
-                <com.procialize.bayer2020.costumTools.ScaledImageView
+                <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:id="@+id/imgCalc"
@@ -157,7 +157,7 @@
                     android:src="@drawable/leap_calcu"
                     android:layout_height="180dp">
 
-                </com.procialize.bayer2020.costumTools.ScaledImageView>
+                </ImageView>
 
             </LinearLayout>
             <LinearLayout
@@ -168,7 +168,7 @@
                 android:weightSum="2"
                 android:layout_height="wrap_content">
 
-                <com.procialize.bayer2020.costumTools.ScaledImageView
+                <ImageView
                     android:id="@+id/imgredeemHistory"
                     android:layout_width="0dp"
                     android:layout_height="180dp"
@@ -178,8 +178,8 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/leap_history">
 
-                </com.procialize.bayer2020.costumTools.ScaledImageView>
-                <com.procialize.bayer2020.costumTools.ScaledImageView
+                </ImageView>
+                <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:scaleType="fitXY"
@@ -189,7 +189,7 @@
                     android:layout_height="180dp"
                     android:visibility="invisible">
 
-                </com.procialize.bayer2020.costumTools.ScaledImageView>
+                </ImageView>
 
             </LinearLayout>
 
