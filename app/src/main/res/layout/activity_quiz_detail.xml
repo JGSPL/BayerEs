@@ -214,7 +214,7 @@
                     android:layout_weight="1"
                     android:gravity="left"
                     android:text=""
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="5dp"/>
 
                 <com.procialize.bayer2020.costumTools.CircleDisplay
                     android:id="@+id/progressbar"

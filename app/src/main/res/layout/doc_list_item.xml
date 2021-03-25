@@ -23,6 +23,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="right|center"
             android:paddingLeft="30dp"
+            android:layout_margin="5dp"
             android:paddingRight="30dp"
             android:gravity="right|center"
             android:background="@color/blue">
@@ -65,8 +66,8 @@
             android:gravity="right|center">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/dwnload_icon"
                 android:id="@+id/img_dwnload"
                 android:tint="@color/activetab"/>

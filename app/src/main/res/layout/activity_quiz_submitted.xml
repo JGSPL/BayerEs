@@ -192,7 +192,7 @@
                 android:gravity="top"
                 android:orientation="vertical">
 
-                <com.procialize.bayer2020.fonts.RobotoTextview
+                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
                     android:id="@+id/questionTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

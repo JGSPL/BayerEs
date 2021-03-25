@@ -32,6 +32,7 @@ import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
+import com.procialize.bayer2020.ui.document.view.DocumentDetailActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.notification.view.NotificationActivity;
 import com.procialize.bayer2020.ui.survey.adapter.SurveyAdapter;
@@ -175,9 +176,15 @@ public class SurveyActivity extends AppCompatActivity implements SurveyAdapter.S
 
     @Override
     public void onContactSelected(Survey survey) {
-        Uri webpage = Uri.parse(survey.getSurvey_url());
+       /* Uri webpage = Uri.parse(survey.getSurvey_url());
         Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
-        startActivity(webIntent);
+        startActivity(webIntent);*/
+        Intent pdfview = new Intent(this, DocumentDetailActivity.class);
+        pdfview.putExtra("url",  survey.getSurvey_url());
+        //pdfview.putExtra("url1", doc.getDocument_file_name());
+       // pdfview.putExtra("DocId", doc.getDoc_id());
+
+       startActivity(pdfview);
     }
 
     private void setUpToolbar() {

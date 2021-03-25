@@ -160,7 +160,7 @@ public class QuizPagerAdapter extends PagerAdapter {
                     rdbtn.setText(StringEscapeUtils.unescapeJava(quizSpecificOptionListnew.get(i - 1).getOption()));
 //                    rdbtn.setTextColor(Color.BLACK);
                     rdbtn.setTextSize(14);
-//                    rdbtn.setBackgroundResource(R.drawable.livepollback);
+                    rdbtn.setBackgroundResource(R.drawable.livepollback);
                     if (Build.VERSION.SDK_INT >= 21) {
 
                         ColorStateList colorStateList = new ColorStateList(
@@ -306,14 +306,14 @@ public class QuizPagerAdapter extends PagerAdapter {
                     rdbtn.setTextColor(Color.BLACK);
                     // rdbtn.setTextColor(Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_3)));
                     rdbtn.setTextSize(14);
-//                    rdbtn.setBackgroundResource(R.drawable.livepollback);
+                    rdbtn.setBackgroundResource(R.drawable.livepollback);
                     GradientDrawable border = new GradientDrawable();
-                    border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity
+                   /* border.setStroke(1, Color.parseColor(SharedPreference.getPref(activity, EVENT_COLOR_1))); //black border with full opacity
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                         rdbtn.setBackgroundDrawable(border);
                     } else {
                         rdbtn.setBackground(border);
-                    }
+                    }*/
                     RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
                             width,
                             height

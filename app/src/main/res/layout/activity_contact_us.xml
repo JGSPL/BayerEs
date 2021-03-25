@@ -96,12 +96,25 @@
 
         </com.google.android.material.appbar.AppBarLayout>
     </LinearLayout>
+    <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:padding="8dp"
+        android:layout_below="@+id/linear"
+        android:layout_marginLeft="7dp"
+        android:text="Contact Us"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="visible"
+        />
 
     <WebView
         android:id="@+id/webview_contactus"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linear"/>
+        android:layout_below="@+id/header"/>
 
     <!--<TextView
         android:id="@+id/tv_contact_us"

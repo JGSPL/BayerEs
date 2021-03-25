@@ -172,6 +172,7 @@
         android:layout_height="wrap_content"
         android:gravity="left"
         android:padding="8dp"
+        android:layout_marginLeft="7dp"
         android:text="Quiz"
         android:textColor="@color/black"
         android:textSize="16sp"
@@ -195,7 +196,7 @@
         <RelativeLayout
             android:id="@+id/layoutBottom"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="80dp"
             android:layout_below="@id/layoutTop">
 
         </RelativeLayout>

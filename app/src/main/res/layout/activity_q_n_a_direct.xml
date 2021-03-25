@@ -178,11 +178,27 @@
 
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+        android:layout_below="@+id/linear"
+        android:layout_marginLeft="7dp"
+        android:text="Ask Question"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:visibility="visible"
+        />
+
     <LinearLayout
         android:id="@+id/ll_ask_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical"
         android:padding="15dp">
 
@@ -205,6 +221,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:text="Asked Questions"
+        android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="15dp" />
 

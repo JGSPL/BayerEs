@@ -112,6 +112,8 @@ public class ContactUsActivity extends AppCompatActivity {
 
                                 webview_contactus.clearCache(true);
                                 webview_contactus.loadData(content, "text/html", "UTF-8");
+                              //  webview_contactus.loadData(content, "text/html", null);
+
                                 webview_contactus.setWebViewClient(new CustomWebViewClient());
                             }
                         } catch (Exception e) {

@@ -127,7 +127,7 @@
         android:background="@color/colorwhite"
         android:textColor="@color/black"
         android:text="Please fill in the details below"
-        android:textSize="20sp">
+        android:textSize="16sp">
 
     </com.procialize.bayer2020.fonts.RobotoTextview>
         <TableRow
@@ -143,6 +143,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="7"
+                android:paddingLeft="10dp"
                 android:layout_gravity="center"
                 android:text="Infestation Level"
                 android:textColor="@color/black"
@@ -150,7 +151,7 @@
 
             <Spinner
                 android:id="@+id/spinner"
-                android:background="@drawable/spinner_backcal"
+                android:background="@drawable/spinner_back_grey"
                 android:padding="5dp"
 
                 android:layout_width="0dp"
@@ -197,7 +198,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="0dp"
                     android:layout_weight="3"
-                    android:background="@drawable/cell_border"
+                    android:background="@drawable/cell_border_grey"
 
                     android:gravity="center"
                     android:textColor="@color/black"
@@ -213,6 +214,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:layout_marginTop="10dp"
+
             android:background="@color/green"
             android:textColor="@color/colorwhite"
             android:text="Recommended dosage &amp; application"
@@ -243,7 +246,7 @@
                 android:layout_weight="3"
                 android:text="10"
                 android:textColor="@color/black"
-
+                android:gravity="center"
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
                 android:layout_height="40dp">
@@ -274,6 +277,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="3"
                 android:textColor="@color/black"
+                android:gravity="center"
 
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
@@ -310,6 +314,7 @@
                 android:background="@drawable/cell_border"
                 android:padding="5dp"
                 android:textColor="@color/black"
+                android:gravity="center"
 
                 android:lines="2"
                 android:layout_height="55dp"
@@ -348,6 +353,8 @@
                 android:layout_weight="5"
                 android:layout_gravity="center"
                 android:hint="0"
+                android:gravity="center"
+
                 android:inputType="number"
                 android:imeOptions="actionDone"
                 android:text="0"
@@ -361,6 +368,7 @@
                 android:padding="10dp"
                 android:layout_width="0dp"
                 android:singleLine="true"
+                android:gravity="center"
 
                 android:layout_height="wrap_content"
                 android:layout_weight="5"

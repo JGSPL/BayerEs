@@ -53,7 +53,7 @@
                     android:paddingLeft="10dp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="18sp"/>
+                    android:textSize="14sp"/>
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
                     android:id="@+id/statusTv"
