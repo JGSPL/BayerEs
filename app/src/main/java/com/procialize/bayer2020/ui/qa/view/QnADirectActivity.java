@@ -55,6 +55,7 @@ import com.procialize.bayer2020.ui.faq.view.FAQActivity;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
 import com.procialize.bayer2020.ui.loyalityleap.view.RequestToRedeemActivity;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
+import com.procialize.bayer2020.ui.newsFeedDetails.view.NewsFeedDetailsActivity;
 import com.procialize.bayer2020.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.bayer2020.ui.newsfeed.PaginationUtils.PaginationScrollListener;
 import com.procialize.bayer2020.ui.newsfeed.model.Newsfeed_detail;
@@ -67,6 +68,7 @@ import com.procialize.bayer2020.ui.qa.viewmodel.QADirectViewModel;
 import com.procialize.bayer2020.ui.qapost.view.PostNewActivity;
 import com.procialize.bayer2020.ui.spotQnA.model.FetchSpotQnA;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -690,7 +692,11 @@ public class QnADirectActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onSliderClick(Newsfeed_detail feed, int position) {
-        newsfeedViewModel.openFeedDetails(this, feed, position);
+       // newsfeedViewModel.openFeedDetails(this, feed, position);
+        startActivity(new Intent(QnADirectActivity.this, NewsFeedDetailsActivity.class)
+                .putExtra("Newsfeed_detail", (Serializable) feed)
+                .putExtra("page", "QnA")
+                .putExtra("position", "" + position));
     }
 
     @Override

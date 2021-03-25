@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tv_designation;
     public static NotificationCountReciever notificationCountReciever;
     public static IntentFilter notificationCountFilter;
-
+    TextView tv_city;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageView iv_edit = outer.findViewById(R.id.iv_edit);
         iv_edit.setOnClickListener(this);
          tv_designation = outer.findViewById(R.id.tv_designation);
-        TextView tv_city = outer.findViewById(R.id.tv_city);
+         tv_city = outer.findViewById(R.id.tv_city);
         String userType = SharedPreference.getPref(this, USER_TYPE);;
 
         if(!fName.equalsIgnoreCase("false")&&!lName.equalsIgnoreCase("false")) {
@@ -275,9 +275,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
        // tv_designation.setText(designation);
         if(userType.equalsIgnoreCase("PO") || userType.equalsIgnoreCase("D")) {
+            tv_designation.setVisibility(View.VISIBLE);
+
             tv_designation.setText(company);
         }else{
-            tv_designation.setVisibility(View.INVISIBLE);
+            tv_designation.setVisibility(View.GONE);
         }
 
         /*if (enrollleapFlag.equalsIgnoreCase("1")) {
@@ -840,8 +842,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             if(profileDetails.get(0).getUser_type().equalsIgnoreCase("PO") || profileDetails.get(0).getUser_type().equalsIgnoreCase("D")) {
                                 tv_designation.setText(profileDetails.get(0).getCompany_name());
+                                tv_designation.setVisibility(View.VISIBLE);
+
                             }else{
-                                tv_designation.setVisibility(View.INVISIBLE);
+                                tv_designation.setVisibility(View.GONE);
+                            }
+                            if(profileDetails.get(0).getCity()!=null) {
+                                tv_city.setText(profileDetails.get(0).getCity());
                             }
 
                            /* Glide.with(getApplicationContext())

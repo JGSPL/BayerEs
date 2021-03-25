@@ -99,7 +99,8 @@ public class PestTypeActivity extends AppCompatActivity implements PestTypeAdapt
             }
             Utility.createShortSnackBar(relative, "No internet connection");
         }
-
+        TextView productTitle = findViewById(R.id.productTitle);
+        productTitle.setText("Catalogue - "+ pestType.getPest_name());
 
         productrefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

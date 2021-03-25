@@ -97,13 +97,7 @@ public class PestProductDetailsActivity extends AppCompatActivity {
         pest_item = (PestTypeItem) getIntent().getSerializableExtra("PestType");
         Imageurl =  getIntent().getStringExtra("Imageurl");
 
-        Bundle b = new Bundle();
-        b.putSerializable("PestType", (Serializable) pest_item);
-        b.putSerializable("recommendedeProductList", (Serializable) recommendedeProductList);
-        mTabHostCel.addTab(
-                mTabHostCel.newTabSpec("Tab1")
-                        .setIndicator(createTabView(this, "Details")),
-                ProductDetailsFragment.class, b);
+
 
         setUpToolbar();
 
@@ -122,15 +116,7 @@ public class PestProductDetailsActivity extends AppCompatActivity {
             Utility.createShortSnackBar(linMain, "No internet connection");
         }
 
-        //-----------------------------For Notification count-----------------------------
-       /* try {
-            LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
-            TextView tv_notification = findViewById(R.id.tv_notification);
-            setNotification(this, tv_notification, ll_notification_count);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-        //-----------------------------For Notification count-----------------------------
+
         try {
             LinearLayout ll_notification_count = findViewById(R.id.ll_notification_count);
             TextView tv_notification = findViewById(R.id.tv_notification);
@@ -181,15 +167,37 @@ public class PestProductDetailsActivity extends AppCompatActivity {
                             //Fetch Livepoll list
                             if (eventLists != null) {
                                 recommendedeProductList = eventLists.getPest_recommended_product();
-                                Bundle b = new Bundle();
-                                b.putSerializable("PestType", (Serializable) pest_item);
-                                b.putSerializable("recommendedeProductList", (Serializable) recommendedeProductList);
-                                b.putString("strRecommendedPath",eventLists.getRecommended_product_imagepath());
+
+                                Bundle b1 = new Bundle();
+                                b1.putSerializable("PestType", (Serializable) pest_item);
+                                b1.putSerializable("recommendedeProductList", (Serializable) recommendedeProductList);
                                 mTabHostCel.addTab(
-                                        mTabHostCel.newTabSpec("Tab2")
-                                                .setIndicator(createTabView(PestProductDetailsActivity.this, "Recommended products")),
-                                        RecommendedProductFragment.class, b);
-                                tv_title.setText(pest_item.getProduct_name());
+                                        mTabHostCel.newTabSpec("Tab1")
+                                                .setIndicator(createTabView(PestProductDetailsActivity.this, "Details")),
+                                        ProductDetailsFragment.class, b1);
+                                if(recommendedeProductList.size()>0) {
+
+
+                                    Bundle b = new Bundle();
+                                    b.putSerializable("PestType", (Serializable) pest_item);
+                                    b.putSerializable("recommendedeProductList", (Serializable) recommendedeProductList);
+                                    b.putString("strRecommendedPath", eventLists.getRecommended_product_imagepath());
+                                    mTabHostCel.addTab(
+                                            mTabHostCel.newTabSpec("Tab2")
+                                                    .setIndicator(createTabView(PestProductDetailsActivity.this, "Recommended products")),
+                                            RecommendedProductFragment.class, b);
+
+
+                                }else{
+                                    Bundle b = new Bundle();
+                                    b.putString("Empty","No Products found");
+                                    mTabHostCel.addTab(
+                                            mTabHostCel.newTabSpec("Tab2")
+                                                    .setIndicator(createTabView(PestProductDetailsActivity.this, "Recommended products")),
+                                            PestEmptyFragment.class, b);
+                                }
+
+                                tv_title.setText("Catalogue - Pest - "+ pest_item.getProduct_name());
                                 Glide.with(PestProductDetailsActivity.this)
                                         .load(eventLists.getPest_imagepath()+pest_item.getProduct_image())
                                         .listener(new RequestListener<Drawable>() {
@@ -208,7 +216,8 @@ public class PestProductDetailsActivity extends AppCompatActivity {
                                             }
                                         }).into(iv_cover);
                             } else {
-                                Utility.createShortSnackBar(linMain, "Failure22");
+
+                                //Utility.createShortSnackBar(linMain, "Failure22");
                             }
                         }
                     }

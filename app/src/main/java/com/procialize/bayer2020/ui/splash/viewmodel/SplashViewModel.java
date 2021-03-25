@@ -9,6 +9,7 @@ import com.procialize.bayer2020.ui.splash.view.SplashAcivity;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ISPROFILE_COMPLETE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_LOGIN;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_FNAME;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.USER_TYPE;
 
 public class SplashViewModel extends SplashAcivity{
@@ -32,11 +33,20 @@ public class SplashViewModel extends SplashAcivity{
                 String isLogin = SharedPreference.getPref(context,IS_LOGIN);
                 String iscomplete = SharedPreference.getPref(context,ISPROFILE_COMPLETE);
                 String userType = SharedPreference.getPref(context,USER_TYPE);
+                String fName = SharedPreference.getPref(context,KEY_FNAME);
 
                 if(isLogin.equalsIgnoreCase("true")) {
 
                     if(iscomplete.equalsIgnoreCase("true")) {
-                        openMainActivity(context);
+                        if(fName.equalsIgnoreCase("")|| fName.equalsIgnoreCase("null")|| fName.equalsIgnoreCase(null)){
+                            if(userType.equalsIgnoreCase("D")){
+                                openProfileActivity(context);
+                            }else {
+                                openProfilePCOActivity(context);
+                            }
+                        }else{
+                            openMainActivity(context);
+                        }
 
                     }else{
                         if(userType.equalsIgnoreCase("D")){

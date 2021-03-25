@@ -83,12 +83,24 @@
             android:background="@drawable/bottom_shadow" />
 
     </com.google.android.material.appbar.AppBarLayout>
+    <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+        android:id="@+id/productTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appBarLayout"
+        android:padding="5dp"
+        android:layout_marginLeft="10dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="16sp"></com.procialize.bayer2020.fonts.RobotoTextViewHeader>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/appBarLayout"
+        android:layout_below="@+id/productTitle"
         android:id="@+id/relMain"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@color/colorwhite"
 
         android:orientation="vertical">

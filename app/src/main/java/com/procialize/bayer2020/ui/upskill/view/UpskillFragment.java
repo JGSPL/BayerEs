@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -58,6 +59,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
     UpskillAdapter upskillAdapter;
     LinearLayout ll_main;
     ConnectionDetector cd;
+    ProgressBar progressView;
 
     public static UpskillFragment newInstance() {
         return new UpskillFragment();
@@ -80,6 +82,8 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
         tv_info = rootView.findViewById(R.id.tv_info);
         srl_upskill = rootView.findViewById(R.id.srl_upskill);
         rv_upskill = rootView.findViewById(R.id.rv_upskill);
+        progressView = rootView.findViewById(R.id.progressView);
+
         api_token = SharedPreference.getPref(getActivity(), AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(getActivity(), EVENT_ID);
 
@@ -130,11 +134,14 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
                                             .listener(new RequestListener<Drawable>() {
                                                 @Override
                                                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                                    progressView.setVisibility(View.INVISIBLE);
                                                     return false;
                                                 }
 
                                                 @Override
                                                 public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                                    progressView.setVisibility(View.INVISIBLE);
+
                                                     return false;
                                                 }
                                             }).into(iv_banner);

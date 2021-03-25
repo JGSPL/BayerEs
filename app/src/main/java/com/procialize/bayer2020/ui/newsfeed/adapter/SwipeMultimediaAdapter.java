@@ -231,7 +231,9 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
 
                     Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
                     edit.putExtra("position", position);
+                    edit.putExtra("page", "newsfeed");
                     edit.putExtra("media_list", (Serializable) news_feed_media);
+
                     context.startActivity(edit);
                 }
                 //}
@@ -245,6 +247,7 @@ public class SwipeMultimediaAdapter extends PagerAdapter implements CacheListene
                 if (news_feed_media.size() > 0) {
                     Intent edit = new Intent(context, NewsFeedDetailsActivity.class);
                     edit.putExtra("position", position);
+                    edit.putExtra("page", "newsfeed");
                     edit.putExtra("media_list", (Serializable) news_feed_media);
                     context.startActivity(edit);
                 }

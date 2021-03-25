@@ -96,6 +96,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
     ImageView headerlogoIv, iv_back, iv_left, iv_right;
     ArrayList<String> imagesSelectednew;
     ArrayList<String> imagesSelectednew1;
+    String page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +110,7 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             // newsfeed_detail = (Newsfeed_detail) getIntent().getSerializableExtra("Newsfeed_detail");
             news_feed_media = (ArrayList<News_feed_media>) getIntent().getSerializableExtra("media_list");
             mediaPosition = getIntent().getIntExtra("position", 0);
+            page = getIntent().getStringExtra("page");
             shareOrSaveImagePosition = mediaPosition;
         } catch (Exception e) {
             e.printStackTrace();
@@ -630,8 +632,13 @@ public class NewsFeedDetailsActivity extends AppCompatActivity implements View.O
             return;
         }
         finish();
-        newsfeedAdapter.notifyDataSetChanged();
-        JzvdStd.goOnPlayOnPause();
+        if(page.equalsIgnoreCase("newsfeed")){
+            newsfeedAdapter.notifyDataSetChanged();
+
+            JzvdStd.goOnPlayOnPause();
+        }else {
+            JzvdStd.goOnPlayOnPause();
+        }
     }
 
     public static Bitmap getBitmapFromURL(String src) {

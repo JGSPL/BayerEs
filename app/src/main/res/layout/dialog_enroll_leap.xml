@@ -79,6 +79,8 @@
                 android:text="Submit"
                 android:layout_marginRight="10dp"
                 android:id="@+id/btnSubmit"
+                android:textAllCaps="false"
+
                 android:background="@drawable/btn_submit"
                 android:textColor="@color/colorwhite">
 
@@ -89,6 +91,8 @@
                 android:layout_weight="1"
                 android:layout_marginLeft="10dp"
                 android:text="Cancel"
+                android:textAllCaps="false"
+
                 android:id="@+id/btnCancel"
                 android:textColor="@color/black"
                 android:background="@drawable/edittexthmbg">

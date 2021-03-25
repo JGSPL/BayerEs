@@ -457,7 +457,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             v_divider = itemView.findViewById(R.id.v_divider);
             tv_comment = itemView.findViewById(R.id.tv_comment);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            ll_main.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onMoreSelected(notificationLists.get(getAdapterPosition()), getAdapterPosition());

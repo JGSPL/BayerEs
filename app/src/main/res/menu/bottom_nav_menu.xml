@@ -15,7 +15,7 @@
         android:enabled="true"
         android:icon="@drawable/newsfeed_selector"
         app:showAsAction="withText"
-        android:title="Newsfeed" />
+        android:title="News Feed" />
 
 
     <item

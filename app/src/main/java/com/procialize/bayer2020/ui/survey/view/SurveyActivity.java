@@ -179,10 +179,9 @@ public class SurveyActivity extends AppCompatActivity implements SurveyAdapter.S
        /* Uri webpage = Uri.parse(survey.getSurvey_url());
         Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
         startActivity(webIntent);*/
-        Intent pdfview = new Intent(this, DocumentDetailActivity.class);
+        Intent pdfview = new Intent(this, SurveyDetailActivity.class);
         pdfview.putExtra("url",  survey.getSurvey_url());
-        //pdfview.putExtra("url1", doc.getDocument_file_name());
-       // pdfview.putExtra("DocId", doc.getDoc_id());
+
 
        startActivity(pdfview);
     }

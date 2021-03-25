@@ -128,11 +128,13 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.procialize.bayer2020.fonts.RobotoTextview
+    <com.procialize.bayer2020.fonts.RobotoTextViewHeader
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:textSize="16sp"
+        android:layout_marginLeft="5dp"
         android:text="TextView"
         android:textColor="@color/black" />
 
@@ -148,9 +150,9 @@
 
             <ImageView
                 android:id="@+id/iv_banner"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="200dp"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 android:src="@drawable/image_placeholder" />
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -167,6 +169,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="14sp"
                 android:text="TextView"
                 android:textColor="@color/black" />
         </RelativeLayout>
@@ -175,13 +179,15 @@
     <com.procialize.bayer2020.fonts.RobotoButton
         android:id="@+id/btn_start"
         style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/btn_submit"
         android:paddingLeft="30dp"
         android:paddingTop="10dp"
+        android:textAllCaps="false"
         android:paddingRight="30dp"
         android:paddingBottom="10dp"
         android:text="Start"

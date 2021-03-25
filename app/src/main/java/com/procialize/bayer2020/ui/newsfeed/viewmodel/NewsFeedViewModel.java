@@ -139,6 +139,7 @@ public class NewsFeedViewModel extends ViewModel {
     public void openNewsFeedDetails(Activity activity, Newsfeed_detail feed, int position) {
         activity.startActivity(new Intent(activity, NewsFeedDetailsActivity.class)
                 .putExtra("Newsfeed_detail", (Serializable) feed)
+                .putExtra("page", "Newsfeed")
                 .putExtra("position", "" + position));
     }
 
@@ -146,6 +147,7 @@ public class NewsFeedViewModel extends ViewModel {
     public void openFeedDetails(Activity activity, Newsfeed_detail feed, int position) {
         activity.startActivity(new Intent(activity, NewsFeedDetailsActivity.class)
                 .putExtra("Newsfeed_detail", (Serializable) feed)
+                .putExtra("page", "Newsfeed")
                 .putExtra("position", "" + position));
     }
 

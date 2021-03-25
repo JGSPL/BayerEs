@@ -339,6 +339,8 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             getNewsfeedDetails(comment.getParent_id());
         } else if (comment.getType().equalsIgnoreCase("LivePoll")) {
             startActivity(new Intent(this, LivePollActivity.class));
+        }else if (comment.getType().equalsIgnoreCase("Reply") ) {
+            startActivity(new Intent(this, MainActivity.class).putExtra("from","postNewsFeed"));
         }
     }
 

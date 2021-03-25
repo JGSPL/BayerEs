@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginLeft="15dp">
+
+        <!-- TODO: Update blank fragment layout -->
+        <com.procialize.bayer2020.fonts.RobotoTextview
+            android:id="@+id/tv_details"
+            android:layout_width="match_parent"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:scrollbars="vertical"
+            android:layout_height="match_parent"
+            android:text="@string/hello_blank_fragment" />
+</RelativeLayout>

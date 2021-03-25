@@ -1043,6 +1043,7 @@
                     android:minHeight="0dp"
                     android:padding="10dp"
                     android:text="Submit"
+                    android:textAllCaps="false"
                     android:background="@drawable/btn_submit"
                     android:textColor="@color/white" />
             </LinearLayout>

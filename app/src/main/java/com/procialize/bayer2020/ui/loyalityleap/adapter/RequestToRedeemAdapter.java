@@ -198,7 +198,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
             public void onClick(View v) {
 
                 if (edit_quantity.getText().toString().isEmpty()) {
-                    Toast.makeText(context, "Please enter any value for proceed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please enter quantity for proceed", Toast.LENGTH_SHORT).show();
 
                 }else if (edit_address.getText().toString().isEmpty()) {
                     Toast.makeText(context, "Please enter address for proceed", Toast.LENGTH_SHORT).show();

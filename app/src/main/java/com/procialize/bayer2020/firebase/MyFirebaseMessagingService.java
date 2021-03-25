@@ -166,6 +166,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                         Intent broadcastIntent = new Intent(Constant.BROADCAST_NEW_POST_RECEIVED_ACTION);
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+                    }else{
+
                     }
                 } else if (remoteMessage.getData().get("type").equalsIgnoreCase("Quiz")) {
                     Intent notificationIntent = new Intent(getApplicationContext(),
@@ -321,6 +323,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         bitmap = getBitmapfromUrl(imageUri);
                         notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
                                 .bigPicture(bitmap));
+                    }
+
+
+                    notificationManager.notify(notificationID, notificationBuilder.build());
+                    Intent broadcastIntent = new Intent(Constant.BROADCAST_ACTION_FOR_EVENT_Chat);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(broadcastIntent);
+
+                }else if (remoteMessage.getData().get("type").equalsIgnoreCase("Reply") ) {
+                    Intent notificationIntent = new Intent(getApplicationContext(),
+                            MainActivity.class);
+                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    contentIntent = PendingIntent.getActivity(getApplicationContext(),
+                            new Random().nextInt(), notificationIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
+                            .setSmallIcon(R.drawable.notify_icon)
+                            //.setLargeIcon(largeIcon)
+                            //.setLargeIcon(bitmap)
+                            .setContentTitle(remoteMessage.getData().get("event_name"))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(Utility.trimTrailingWhitespace(strPost)))
+                            .setContentText(Utility.trimTrailingWhitespace(strPost))
+                            .setAutoCancel(true).setContentIntent(contentIntent);
+                    //Set notification color to match your app color template
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        notificationBuilder.setColor(getResources().getColor(R.color.colorPrimaryDark));
                     }
 
 
