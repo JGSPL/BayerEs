@@ -80,7 +80,6 @@
             android:textColor="@color/black"
             android:text="Call Now"
             android:paddingLeft="5dp"
-            android:autoLink="phone"
 
             android:drawableLeft="@drawable/call_icon"
             android:drawablePadding="10dp"

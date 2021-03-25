@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_weight="1"
-            android:textColor="@color/black"
+            android:textColor="#10384f"
             android:text="TextView"
             android:textSize="15dp"
             android:textStyle="bold"/>
@@ -39,7 +39,7 @@
             android:layout_below="@+id/tv_title"
             android:visibility="gone"
 
-            android:textColor="@color/black"
+            android:textColor="#10384f"
             android:text="TextView"
             android:textSize="14dp" />
     </RelativeLayout>

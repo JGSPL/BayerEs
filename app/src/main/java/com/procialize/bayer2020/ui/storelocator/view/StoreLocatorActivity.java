@@ -13,8 +13,11 @@ import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -172,7 +175,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
             marker.hideInfoWindow();
             myMarker.hideInfoWindow();
             try {
-                CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(5).build();
+                CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(10).build();
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
                 String str = marker.getSnippet();
                 String[] splitStr = str.split("\\@+");
@@ -353,7 +356,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
         TextView tvmessageWh = dialog.findViewById(R.id.tvmessageWh);
 
         tvCompanyName.setText(company);
-        tvMobile.setText("Mobile: "+mobile);
+        tvMobile.setText("Mobile: "+ mobile);
         tvAddress.setText("Address: "+ address);
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -363,6 +366,11 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
         });
 
         tvcallnow.setText("Call Now: "+mobile);
+
+        if(tvcallnow != null){
+            Linkify.addLinks(tvcallnow, Patterns.PHONE,"tel:",Linkify.sPhoneNumberMatchFilter,Linkify.sPhoneNumberTransformFilter);
+            tvcallnow.setMovementMethod(LinkMovementMethod.getInstance());
+        }
 
         tvmessageWh.setOnClickListener(new View.OnClickListener() {
 
