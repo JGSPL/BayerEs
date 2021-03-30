@@ -53,7 +53,7 @@
                 android:src="@drawable/profilepic_placeholder" />
 
            <!-- </androidx.cardview.widget.CardView>-->
-            <TextView
+            <com.procialize.bayer2020.fonts.RobotoTextview
                 android:id="@+id/tv_whats_on_mind"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
+    <com.procialize.bayer2020.fonts.RobotoTextview
         android:id="@+id/tv_uploding_multimedia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

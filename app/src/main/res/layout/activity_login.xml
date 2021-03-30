@@ -72,7 +72,7 @@
                     android:layout_marginRight="30dp"
                     android:gravity="left"
                     android:text="*Mobile Number"
-                    android:textColor="@color/txtcolor"
+                    android:textColor="@color/fontColorlogin"
                     android:textSize="13dp" />
 
 
@@ -92,7 +92,7 @@
                     android:singleLine="true"
                     android:text="@={viewModel.userEmail}"
                     android:textCursorDrawable="@drawable/cursor_drawable"
-                    android:textColor="@color/txtcolor"
+                    android:textColor="@color/fontColorlogin"
                     android:textSize="13dp"
                     android:inputType="number"/>
                 <LinearLayout
@@ -119,7 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="9sp"
-                        android:textColor="@color/black"
+                        android:textColor="@color/fontColorlogin"
                         android:textColorLink = "@color/blue"
                         android:text=""
                         android:layout_marginLeft="0dp">
@@ -145,7 +145,7 @@
                     android:enabled="false"
                     android:clickable="false"
                     android:textAllCaps="false"
-                    android:textColor="@color/black"
+                    android:textColor="@color/fontColorlogin"
                     bind:toastMessage="@{viewModel.toastMessage}" />
 
                 <com.procialize.bayer2020.fonts.RobotoTextview

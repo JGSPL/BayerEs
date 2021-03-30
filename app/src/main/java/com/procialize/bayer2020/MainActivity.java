@@ -322,6 +322,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_storeLocator = findViewById(R.id.tr_storeLocator);
         tr_qna = findViewById(R.id.tr_qna);
 
+        new RefreashToken(this).callGetRefreashToken(this);
+
+
         txt_version.setText("Version: "+ BuildConfig.VERSION_NAME);
         tr_switch_event.setOnClickListener(this);
         tr_home.setOnClickListener(this);
@@ -868,6 +871,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
 
 
+                    }else {
+                        if (response.body() != null) {
+                        } else {
+                            SessionManager.clearCurrentEvent(MainActivity.this);
+                            SessionManager.logoutUser(MainActivity.this);
+                            //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                            EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
+                            EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        }
                     }
                 }
 

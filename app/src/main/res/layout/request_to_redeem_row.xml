@@ -1,11 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:paddingLeft="5dp"
+    android:paddingBottom="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="5dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/mainLL"
+        android:padding="5dp"
+        android:background="@drawable/reward_back"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <RelativeLayout
+            android:gravity="center"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/image_reward"
+                android:layout_centerInParent="true"
+                android:src="@drawable/gallery_placeholder"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="TODO"
+                android:scaleType="centerInside" />
+
+            <ProgressBar
+                android:visibility="visible"
+                android:id="@+id/progressBar"
+                android:layout_centerInParent="true"
+                android:layout_width="20dp"
+                android:layout_height="20dp" android:background="@drawable/loader"/>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="top"
+            android:layout_weight="8"
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.procialize.bayer2020.fonts.RobotoTextViewHeader
+                    android:id="@+id/txt_rewardname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/fontColorlogin"
+                    android:textSize="14sp"
+                    android:layout_marginTop="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginLeft="0dp"
+                    android:weightSum="10"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="4">
+                        <com.procialize.bayer2020.fonts.RobotoTextview
+                            android:id="@+id/txt_points"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="0dp"
+                            android:layout_marginBottom="0dp"
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txt_needed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_weight="6">
+                        <Button
+                            android:id="@+id/btn_reedemnot"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="30dp"
+                            android:layout_marginBottom="0dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="0dp"
+                            android:background="@drawable/profile_edit_text_bg"
+                            android:gravity="center"
+                            android:singleLine="false"
+                            android:layout_gravity="center"
+                            android:padding="3dp"
+                            android:enabled="false"
+                            android:text="Request to Redeem"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            android:visibility="visible" />
+                        <Button
+                            android:id="@+id/btn_reedem"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="0dp"
+                            android:minHeight="30dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="0dp"
+                            android:background="@drawable/btn_submit"
+                            android:gravity="center"
+                            android:singleLine="false"
+
+                            android:layout_gravity="center"
+                            android:padding="3dp"
+                            android:text="Request to Redeem"
+                            android:textAllCaps="false"
+                            android:textColor="@color/colorwhite"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="10dp"
-     android:paddingBottom="10dp"
+     android:paddingBottom="5dp"
     android:paddingRight="10dp"
-    android:paddingTop="10dp">
+    android:paddingTop="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +190,7 @@
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:gravity="center"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:orientation="vertical">
         <ImageView
             android:id="@+id/image_reward"
@@ -37,7 +206,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical">
 
             <com.procialize.bayer2020.fonts.RobotoTextViewHeader
@@ -45,14 +214,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
-                android:textColor="@color/black"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/fontColorlogin"
                 android:textSize="14sp"
                 android:layout_marginTop="10dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_gravity="center"
+                android:gravity="bottom"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="0dp"
                 android:weightSum="10"
                 android:orientation="horizontal">
@@ -61,7 +232,8 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_marginTop="5dp"
-                    android:gravity="top"
+                    android:gravity="bottom"
+
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
                     android:layout_marginRight="5dp"
@@ -71,6 +243,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="0dp"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
                 </LinearLayout>
@@ -87,10 +260,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:gravity="center|top"
+                    android:gravity="center|bottom"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="5dp"
                     android:layout_weight="6">
             <Button
                 android:id="@+id/btn_reedemnot"
@@ -105,7 +278,7 @@
                 android:gravity="center"
                 android:singleLine="false"
                 android:layout_gravity="center"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:enabled="false"
                 android:text="Request to Redeem"
                 android:textAllCaps="false"
@@ -126,7 +299,7 @@
                 android:singleLine="false"
 
                 android:layout_gravity="center"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:text="Request to Redeem"
                 android:textAllCaps="false"
                 android:textColor="@color/colorwhite"
@@ -140,4 +313,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</RelativeLayout>-->

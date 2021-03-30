@@ -252,7 +252,7 @@
 
                     android:layout_marginBottom="5dp"
                     android:text="First Name"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_name"
@@ -281,7 +281,7 @@
                         android:clickable="false"
                         android:editable="false"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -291,7 +291,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Last Name"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_last_name"
@@ -322,7 +322,7 @@
                         android:clickable="false"
                         android:editable="false"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -332,7 +332,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Organization Name"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_organisation"
@@ -362,7 +362,7 @@
                         android:clickable="false"
                         android:editable="false"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -395,7 +395,7 @@
                         android:editable="false"
                         android:hint=""
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -405,7 +405,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Mobile Number"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_mobno"
@@ -437,7 +437,7 @@
                         android:focusableInTouchMode="false"
                         android:imeOptions="actionDone"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -447,7 +447,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Alternate mobile number"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_alternetmobno"
@@ -478,7 +478,7 @@
                         android:editable="false"
                         android:hint="Email"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -488,7 +488,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Email Id"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_emailid"
@@ -519,7 +519,7 @@
                         android:editable="false"
                         android:hint="Email Id"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -529,7 +529,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Pincode"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_location"
@@ -551,7 +551,7 @@
                         android:clickable="false"
                         android:editable="false"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -561,7 +561,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="City"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_City"
@@ -584,7 +584,7 @@
                         android:editable="false"
                         android:hint=""
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -594,7 +594,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="State"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_state"
@@ -616,7 +616,7 @@
                         android:clickable="false"
                         android:editable="false"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -626,7 +626,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="SAP Code"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_sapcode"
@@ -648,7 +648,7 @@
                         android:clickable="false"
                         android:editable="false"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -658,7 +658,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Associated with Bayer since"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_aspociated"
@@ -690,7 +690,7 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp"
                         android:visibility="gone" />
 
@@ -702,7 +702,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Number of PCOs served"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <com.whygraphics.multilineradiogroup.MultiLineRadioGroup xmlns:multi_line_radio_group="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/radiogroupPCO"
@@ -715,37 +715,37 @@
                         android:id="@+id/radioButton1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
+                        android:buttonTint="@color/fontColorlogin1"
                         android:text="Less than 50"
-                        android:textColor="@color/textcolorLight" />
+                        android:textColor="@color/fontColorlogin1" />
 
                     <RadioButton
                         android:id="@+id/radioButton2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
+                        android:buttonTint="@color/fontColorlogin1"
                         android:text="101-200"
-                        android:textColor="@color/textcolorLight" />
+                        android:textColor="@color/fontColorlogin1" />
 
                     <RadioButton
                         android:id="@+id/radioButton3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
+                        android:buttonTint="@color/fontColorlogin1"
                         android:text="50-100"
-                        android:textColor="@color/textcolorLight" />
+                        android:textColor="@color/fontColorlogin1" />
 
                     <RadioButton
                         android:id="@+id/radioButton4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/textcolorLight"
-                        android:buttonTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
+                        android:buttonTint="@color/fontColorlogin1"
                         android:text="Above 200"
-                        android:textColor="@color/textcolorLight" />
+                        android:textColor="@color/fontColorlogin1" />
                     />
                 </com.whygraphics.multilineradiogroup.MultiLineRadioGroup>
                 <!--
@@ -761,37 +761,37 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:id="@+id/radioButton1"
-                                        android:backgroundTint="@color/textcolorLight"
-                                        android:buttonTint="@color/textcolorLight"
+                                        android:backgroundTint="@color/fontColorlogin1"
+                                        android:buttonTint="@color/fontColorlogin1"
                                         android:text="Less than 50"
-                                        android:textColor="@color/textcolorLight"  />
+                                        android:textColor="@color/fontColorlogin1"  />
 
                                     <RadioButton
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:id="@+id/radioButton2"
-                                        android:backgroundTint="@color/textcolorLight"
-                                        android:buttonTint="@color/textcolorLight"
+                                        android:backgroundTint="@color/fontColorlogin1"
+                                        android:buttonTint="@color/fontColorlogin1"
                                         android:text="101-200"
-                                        android:textColor="@color/textcolorLight"  />
+                                        android:textColor="@color/fontColorlogin1"  />
 
                                     <RadioButton
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:id="@+id/radioButton3"
-                                        android:backgroundTint="@color/textcolorLight"
-                                        android:buttonTint="@color/textcolorLight"
+                                        android:backgroundTint="@color/fontColorlogin1"
+                                        android:buttonTint="@color/fontColorlogin1"
                                         android:text="50-100"
-                                        android:textColor="@color/textcolorLight"  />
+                                        android:textColor="@color/fontColorlogin1"  />
 
                                     <RadioButton
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:id="@+id/radioButton4"
-                                        android:backgroundTint="@color/textcolorLight"
-                                        android:buttonTint="@color/textcolorLight"
+                                        android:backgroundTint="@color/fontColorlogin1"
+                                        android:buttonTint="@color/fontColorlogin1"
                                         android:text="Above 200"
-                                        android:textColor="@color/textcolorLight"  />
+                                        android:textColor="@color/fontColorlogin1"  />
                                 </RadioGroup>
                 -->
 

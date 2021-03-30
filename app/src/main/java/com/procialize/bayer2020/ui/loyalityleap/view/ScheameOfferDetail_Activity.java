@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -31,6 +33,7 @@ import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.ui.catalogue.model.ProductType;
+import com.procialize.bayer2020.ui.document.view.DocumentDetailActivity;
 import com.procialize.bayer2020.ui.loyalityleap.model.My_point;
 import com.procialize.bayer2020.ui.loyalityleap.model.Scheme_offer_item;
 
@@ -48,6 +51,7 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
     Toolbar mToolbar;
     ImageView headerlogoIv;
     Scheme_offer_item ScheameList;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,8 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
         docurl = getIntent().getStringExtra("url");
 
         TextView txtTitle = findViewById(R.id.txtTitle);
+        progressBar = findViewById(R.id.progressBar);
+
         txtTitle.setText(ScheameList.getTitle());
 
         String eulaLink = docurl+ScheameList.getDescription() ;
@@ -114,6 +120,23 @@ public class ScheameOfferDetail_Activity extends AppCompatActivity {
         webview.clearCache(true);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setPluginState(WebSettings.PluginState.ON);
+
+        webview.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public void onProgressChanged(WebView view, int progress) {
+                if (!ScheameOfferDetail_Activity.this.isFinishing()) {
+                    if (progressBar.getVisibility() == View.GONE) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    if (progress == 100) {
+                        if (progressBar.getVisibility() == View.VISIBLE) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+        });
 
         webview.loadUrl(eulaLink);
 

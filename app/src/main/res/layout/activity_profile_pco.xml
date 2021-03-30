@@ -289,7 +289,7 @@
                     android:paddingTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text=" I am a*"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <RadioGroup
                     android:layout_width="fill_parent"
@@ -303,28 +303,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioPCO"
-                    android:backgroundTint="@color/textcolorLight"
+                    android:backgroundTint="@color/fontColorlogin1"
                     android:buttonTint="@color/activetab"
                     android:text="Pest Control Operator"
-                    android:textColor="@color/textcolorLight"  />
+                    android:textColor="@color/fontColorlogin1"  />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioOwer"
-                    android:backgroundTint="@color/textcolorLight"
+                    android:backgroundTint="@color/fontColorlogin1"
                     android:buttonTint="@color/activetab"
                     android:text="Home/office owner"
-                    android:textColor="@color/textcolorLight"  />
+                    android:textColor="@color/fontColorlogin1"  />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioother"
-                    android:backgroundTint="@color/textcolorLight"
+                    android:backgroundTint="@color/fontColorlogin1"
                     android:buttonTint="@color/activetab"
                     android:text="Other"
-                    android:textColor="@color/textcolorLight"  />
+                    android:textColor="@color/fontColorlogin1"  />
                 </RadioGroup>
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
@@ -333,7 +333,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:text="First Name*"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_name"
@@ -360,7 +360,7 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -370,7 +370,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Last Name*"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_last_name"
@@ -399,7 +399,7 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -410,7 +410,7 @@
                     android:id="@+id/tvOrgnisation"
                     android:layout_marginBottom="5dp"
                     android:text="Organization Name*"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_organisation"
@@ -438,7 +438,7 @@
                         android:layout_marginLeft="5dp"
                         android:background="@color/transperent"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -469,7 +469,7 @@
                         android:background="@color/transperent"
                         android:hint="Company Name"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -479,7 +479,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Mobile Number"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_mobno"
@@ -510,7 +510,7 @@
                         android:singleLine="true"
                         android:textSize="13dp"
                         android:imeOptions="actionDone"
-                        android:textColor="@color/textcolorLight" />
+                        android:textColor="@color/fontColorlogin1" />
                 </LinearLayout>
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
@@ -520,7 +520,7 @@
                     android:id="@+id/txtaltno"
                     android:layout_marginBottom="5dp"
                     android:text="Alternate mobile number(Up to 3)"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_alternetmobno"
@@ -553,7 +553,7 @@
                         android:singleLine="true"
                         android:inputType="number"
                         android:maxLength="10"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                     <ImageView
                         android:id="@+id/iv_plus"
@@ -588,7 +588,7 @@
                         android:maxLength="10"
                         android:inputType="number"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                     <ImageView
                         android:id="@+id/iv_plus2"
@@ -626,7 +626,7 @@
                         android:background="@drawable/edt_profile_white"
                         android:layout_weight="9"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
 
                     <ImageView
@@ -648,7 +648,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Email Id*"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_emailid"
@@ -678,7 +678,7 @@
 
                         android:hint="Email Id"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
                 <com.procialize.bayer2020.fonts.RobotoTextview
@@ -688,7 +688,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Designation*"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
                 <RadioGroup
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -700,28 +700,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioOwner"
-                    android:backgroundTint="@color/textcolorLight"
+                    android:backgroundTint="@color/fontColorlogin1"
                     android:buttonTint="@color/activetab"
                     android:text="Owner"
-                    android:textColor="@color/textcolorLight"  />
+                    android:textColor="@color/fontColorlogin1"  />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioTech"
-                    android:backgroundTint="@color/textcolorLight"
+                    android:backgroundTint="@color/fontColorlogin1"
                     android:buttonTint="@color/activetab"
                     android:text="Technician"
-                    android:textColor="@color/textcolorLight"  />
+                    android:textColor="@color/fontColorlogin1"  />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioManager"
-                    android:backgroundTint="@color/textcolorLight"
+                    android:backgroundTint="@color/fontColorlogin1"
                     android:buttonTint="@color/activetab"
                     android:text="Manager/Admin/Other"
-                    android:textColor="@color/textcolorLight"  />
+                    android:textColor="@color/fontColorlogin1"  />
                 </RadioGroup>
 
                 <com.procialize.bayer2020.fonts.RobotoTextview
@@ -730,7 +730,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Area Pincode*"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_location"
@@ -783,7 +783,7 @@
                         android:hint=""
                         android:visibility="gone"
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
 
                 </LinearLayout>
@@ -794,7 +794,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="City"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_City"
@@ -817,7 +817,7 @@
                         android:editable="false"
                         android:hint=""
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
                 <com.procialize.bayer2020.fonts.RobotoTextview
@@ -826,7 +826,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="State"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_state"
@@ -849,7 +849,7 @@
                         android:editable="false"
                         android:hint=""
                         android:singleLine="true"
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -860,7 +860,7 @@
                     android:id="@+id/txttectcount"
                     android:layout_marginBottom="5dp"
                     android:text="How many technicians work in your organization?"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_sapcode"
@@ -882,7 +882,7 @@
                         android:singleLine="true"
                         android:inputType="number"
 
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -893,7 +893,7 @@
                     android:layout_marginBottom="5dp"
                     android:id="@+id/txtDomain"
                     android:text="Domain specialization*"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <LinearLayout
                     android:id="@+id/ll_aspociated"
@@ -961,7 +961,7 @@
                         android:clickable="false"
                         android:visibility="gone"
 
-                        android:textColor="@color/textcolorLight"
+                        android:textColor="@color/fontColorlogin1"
                         android:textSize="13dp" />
                 </LinearLayout>
 
@@ -972,7 +972,7 @@
                     android:layout_marginBottom="5dp"
                     android:id="@+id/txtAnnualOrg"
                     android:text="Annual organization turnover"
-                    android:textColor="@color/textcolorLight" />
+                    android:textColor="@color/fontColorlogin1" />
 
                 <RadioGroup
                     android:layout_width="match_parent"
@@ -982,53 +982,53 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton1"
-                        android:backgroundTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
                         android:buttonTint="@color/activetab"
                         android:text="Less than Rs. 10 lacs"
-                        android:textColor="@color/textcolorLight"  />
+                        android:textColor="@color/fontColorlogin1"  />
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton2"
-                        android:backgroundTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
                         android:buttonTint="@color/activetab"
                         android:text="Rs. 10 to 25 lacs"
-                        android:textColor="@color/textcolorLight"  />
+                        android:textColor="@color/fontColorlogin1"  />
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton3"
-                        android:backgroundTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
                         android:buttonTint="@color/activetab"
                         android:text="Rs. 25 to 50 lacs"
-                        android:textColor="@color/textcolorLight"  />
+                        android:textColor="@color/fontColorlogin1"  />
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton4"
-                        android:backgroundTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
                         android:buttonTint="@color/activetab"
                         android:text="Rs. 50 lacs to 1 crore"
-                        android:textColor="@color/textcolorLight"  />
+                        android:textColor="@color/fontColorlogin1"  />
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton5"
-                        android:backgroundTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
                         android:buttonTint="@color/activetab"
                         android:text="Rs. 1 crore to 1.5 crore"
-                        android:textColor="@color/textcolorLight"  />
+                        android:textColor="@color/fontColorlogin1"  />
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/radioButton6"
-                        android:backgroundTint="@color/textcolorLight"
+                        android:backgroundTint="@color/fontColorlogin1"
                         android:buttonTint="@color/activetab"
                         android:text="Above Rs. 2 crore"
-                        android:textColor="@color/textcolorLight"  />
+                        android:textColor="@color/fontColorlogin1"  />
 
                     />
                 </RadioGroup>

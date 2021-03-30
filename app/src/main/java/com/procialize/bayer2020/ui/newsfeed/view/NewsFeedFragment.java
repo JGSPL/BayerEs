@@ -52,6 +52,8 @@ import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.SharedPreferencesConstant;
 import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.session.SessionManager;
+import com.procialize.bayer2020.ui.login.view.LoginActivity;
 import com.procialize.bayer2020.ui.newsFeedComment.model.LikePost;
 import com.procialize.bayer2020.ui.newsFeedPost.roomDB.UploadMultimedia;
 import com.procialize.bayer2020.ui.newsFeedPost.view.PostNewActivity;
@@ -416,6 +418,18 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
+                            }else{
+
+                                    if (response.body() != null) {
+                                    } else {
+                                        SessionManager.clearCurrentEvent(getContext());
+                                        SessionManager.logoutUser(getContext());
+                                        //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                                        EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeed();
+                                        EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeedMedia();
+                                        startActivity(new Intent(getContext(), LoginActivity.class));
+                                    }
+
                             }
 
                             // setupRecyclerView();

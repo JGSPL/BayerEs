@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -31,6 +32,7 @@ import com.procialize.bayer2020.ui.Contactus.ContactUsActivity;
 import com.procialize.bayer2020.ui.catalogue.model.Product_document_detail;
 import com.procialize.bayer2020.ui.catalogue.model.Product_item;
 import com.procialize.bayer2020.ui.catalogue.model.product_subpoint_detail;
+import com.procialize.bayer2020.ui.loyalityleap.view.ScheameOfferDetail_Activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,7 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
     Toolbar mToolbar;
     ImageView headerlogoIv;
     String token, eventid, docurl, productId = "1", DocId;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,10 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
         });
         token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         eventid = SharedPreference.getPref(this, EVENT_ID);
+
+        TextView txtTitle = findViewById(R.id.txtTitle);
+        txtTitle.setVisibility(View.GONE);
+        progressBar = findViewById(R.id.progressBar);
 
 
         docurl = getIntent().getStringExtra("url");
@@ -105,6 +112,22 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
         getUserActivityReport.userActivityReport();
         //--------------------------------------------------------------------------------------
 
+        webview.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public void onProgressChanged(WebView view, int progress) {
+                if (!ProductDocumentDetailActivity.this.isFinishing()) {
+                    if (progressBar.getVisibility() == View.GONE) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                    if (progress == 100) {
+                        if (progressBar.getVisibility() == View.VISIBLE) {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
+        });
 
 
         webview.setWebViewClient(new WebViewClient() {

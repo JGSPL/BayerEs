@@ -96,11 +96,11 @@ public class QuizListingActivity extends AppCompatActivity implements QuizListAd
             }
         });
         tv_header = findViewById(R.id.tv_header);
-        layoutBottom = findViewById(R.id.layoutBottom);
+      //  layoutBottom = findViewById(R.id.layoutBottom);
         //CommonFunction.showBackgroundImage(QuizListingActivity.this, ll_main);
        // tv_header.setTextColor(Color.parseColor(SharedPreference.getPref(QuizListingActivity.this, EVENT_COLOR_3)));
         session = new SessionManager(getApplicationContext());
-        layoutBottom.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizListingActivity.this, EVENT_COLOR_2)));
+        //layoutBottom.setBackgroundColor(Color.parseColor(SharedPreference.getPref(QuizListingActivity.this, EVENT_COLOR_2)));
         api_token = SharedPreference.getPref(QuizListingActivity.this, AUTHERISATION_KEY);
         event_id = SharedPreference.getPref(QuizListingActivity.this, EVENT_ID);
 

@@ -92,11 +92,14 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 holder.image_reward.setImageResource(R.drawable.gallery_placeholder);
+                holder.progressBar.setVisibility(View.GONE);
                 return true;
             }
 
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.progressBar.setVisibility(View.GONE);
+
                 return false;
             }
         }).into(holder.image_reward);
@@ -151,6 +154,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
         ImageView image_reward;
         Button btn_reedem, btn_reedemnot;
         LinearLayout linear1;
+        ProgressBar progressBar;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_rewardname = itemView.findViewById(R.id.txt_rewardname);
@@ -158,6 +162,7 @@ public class RequestToRedeemAdapter extends RecyclerView.Adapter<RequestToRedeem
             btn_reedemnot = itemView.findViewById(R.id.btn_reedemnot);
             btn_reedem = itemView.findViewById(R.id.btn_reedem);
             image_reward = itemView.findViewById(R.id.image_reward);
+            progressBar = itemView.findViewById(R.id.progressBar);
 
             linear1 = itemView.findViewById(R.id.linear1);
         }

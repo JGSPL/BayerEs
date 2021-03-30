@@ -302,6 +302,7 @@ public class LoginViewModel extends BaseObservable {
                             LoginActivity.progressdialog.dismiss();
                             activityLoginBinding.progressBar2.setVisibility(View.GONE);
                         } else {
+                            LoginActivity.progressdialog.dismiss();
                             setToastMessage(response.body().getHeader().get(0).getMsg());
                         }
 
@@ -309,8 +310,8 @@ public class LoginViewModel extends BaseObservable {
                         setToastMessage("Invalid OTP");
                         LoginActivity.progressBar.setVisibility(View.GONE);
                         LoginActivity.progressdialog.dismiss();
-
                         activityLoginBinding.progressBar2.setVisibility(View.GONE);
+
                     }
                 }
             }
@@ -318,6 +319,9 @@ public class LoginViewModel extends BaseObservable {
             @Override
             public void onFailure(Call<validateOTP> call, Throwable t) {
                 activityLoginBinding.btnOTPSubmit.setClickable(true);
+                LoginActivity.progressBar.setVisibility(View.GONE);
+                LoginActivity.progressdialog.dismiss();
+                errorMessage = t.getMessage();
                 setToastMessage(errorMessage);
             }
         });

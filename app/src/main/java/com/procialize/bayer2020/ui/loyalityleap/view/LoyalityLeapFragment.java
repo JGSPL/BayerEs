@@ -19,10 +19,13 @@ import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
+import com.procialize.bayer2020.Database.EventAppDB;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.session.SessionManager;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
+import com.procialize.bayer2020.ui.login.view.LoginActivity;
 import com.procialize.bayer2020.ui.loyalityleap.model.My_point;
 import com.procialize.bayer2020.ui.profile.model.Pincode_item;
 import com.procialize.bayer2020.ui.profile.view.ProfilePCOActivity;
@@ -157,6 +160,15 @@ public class LoyalityLeapFragment  extends Fragment {
 
 
                 } else {
+                    if (response.body() != null) {
+                    } else {
+                        SessionManager.clearCurrentEvent(getContext());
+                        SessionManager.logoutUser(getContext());
+                        //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                        EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeed();
+                        EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeedMedia();
+                       startActivity(new Intent(getContext(), LoginActivity.class));
+                    }
                    // Toast.makeText(getContext(), "Internal server error", Toast.LENGTH_SHORT).show();
                 }
             }
