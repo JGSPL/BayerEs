@@ -24,7 +24,7 @@ public class PurchageHistoryAdapter extends RecyclerView.Adapter<PurchageHistory
     private PurchageHistoryAdapter.ProductAdapterListner listener;
     private LayoutInflater inflater;
     String imageurl;
-    int Tot = 0;
+
     public PurchageHistoryAdapter(Context context, List<PurchaseHistory_row> productLists, PurchageHistoryAdapter.ProductAdapterListner listener, String imageurl) {
         this.productLists = productLists;
         this.listener = listener;
@@ -54,8 +54,19 @@ public class PurchageHistoryAdapter extends RecyclerView.Adapter<PurchageHistory
             String convertedDate = CommonFunction.convertYear(dateTime);
             holder.txtyear.setText(convertedDate);
         }
-         Tot = Tot + Integer.parseInt(redeemItem.getMpoint());
-        PurchaseHistoryActivity.txtPurchagePoint.setText(String.valueOf(Tot));
+        if(productLists.size()>0){
+            int Tot = 0;
+            if(position==0) {
+                for (int j = 0; j < productLists.size(); j++) {
+                    Tot = Tot + Integer.parseInt(productLists.get(j).getMpoint());
+
+                }
+                PurchaseHistoryActivity.txtPurchagePoint.setText(String.valueOf(Tot));
+
+            }
+
+        }
+        // Tot = Tot + Integer.parseInt(redeemItem.getMpoint());
 
     }
 

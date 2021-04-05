@@ -82,7 +82,7 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
     RecyclerView recycler_document;
     TextView txt_pullrefresh, tv_header;
     ImageView iv_back,headerlogoIv;
-    LinearLayout constraint_main;
+    RelativeLayout constraint_main;
     SessionManager session;
     String api_token = "", event_id;
     ConnectionDetector cd;
@@ -90,7 +90,7 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
     public static List<DocumentDetail> gsonevent = new ArrayList<>();
     DocumentGridAdapter documentAdapter;
     DocumentListAdapter documentAdapterlist;
-
+    TextView txtEmpty;
     //ImageView image_list, image_grid;
     int color, color2;
 
@@ -107,7 +107,7 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
         tv_header = findViewById(R.id.tv_header);
         iv_back = findViewById(R.id.iv_back);
         constraint_main = findViewById(R.id.constraint_main);
-
+        txtEmpty = findViewById(R.id.txtEmpty);
         session = new SessionManager(getApplicationContext());
 
 
@@ -168,30 +168,46 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
 
 
         if (cd.isConnectingToInternet()) {
-            documentviewmodel.getDocumentList(api_token, event_id, "100", "1");
+            documentviewmodel.getDocumentList(api_token, event_id, "1000", "1");
             documentviewmodel.getDocumentList().observe(this, new Observer<Document>() {
                 @Override
                 public void onChanged(Document event) {
-                    gsonevent.clear();
-                    RefreashToken refreashToken = new RefreashToken(DocumentActivity.this);
-                    if(event!=null) {
-                        String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
-                        if(event.getDocument_path()!=null) {
-                            String docPath = event.getDocument_path();
-
-                            HashMap<String, String> map = new HashMap<>();
-                            map.put(DOCUMENT_MEDIA_PATH, docPath);
-                            SharedPreference.putPref(DocumentActivity.this, map);
-                        }
-
-
-                        JsonParser jp = new JsonParser();
-                        JsonElement je = jp.parse(decrypteventdetail);
-                        Gson gson = new Gson();
-                        gsonevent = gson.fromJson(je, new TypeToken<ArrayList<DocumentDetail>>() {
-                        }.getType());
-                        setAdapterlist(gsonevent);
+                    if(gsonevent!=null) {
+                        gsonevent.clear();
                     }
+
+                        RefreashToken refreashToken = new RefreashToken(DocumentActivity.this);
+                        if (event != null) {
+                            txtEmpty.setVisibility(View.GONE);
+
+                            //String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                            if (event.getDocument_path() != null) {
+                                String docPath = event.getDocument_path();
+
+                                HashMap<String, String> map = new HashMap<>();
+                                map.put(DOCUMENT_MEDIA_PATH, docPath);
+                                SharedPreference.putPref(DocumentActivity.this, map);
+                            }
+
+                            if (event.getDetail() != null) {
+                                txtEmpty.setVisibility(View.GONE);
+
+                                String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+                                JsonParser jp = new JsonParser();
+                                JsonElement je = jp.parse(decrypteventdetail);
+                                Gson gson = new Gson();
+                                gsonevent = gson.fromJson(je, new TypeToken<ArrayList<DocumentDetail>>() {
+                                }.getType());
+                                setAdapterlist(gsonevent);
+                            }else{
+                                txtEmpty.setVisibility(View.VISIBLE);
+                            }
+                        }else{
+                            txtEmpty.setVisibility(View.VISIBLE);
+                        }
+                   /* }else{
+                        txtEmpty.setVisibility(View.VISIBLE);
+                    }*/
                 }
             });
         } else {
@@ -207,21 +223,39 @@ public class DocumentActivity extends AppCompatActivity implements DocumentListA
                     documentviewmodel.getDocumentList().observe(DocumentActivity.this, new Observer<Document>() {
                         @Override
                         public void onChanged(Document event) {
+                            if(gsonevent!=null) {
+                                gsonevent.clear();
+                            }
+                            if (event != null) {
 
-                            gsonevent.clear();
-                            RefreashToken refreashToken = new RefreashToken(DocumentActivity.this);
-                            String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
-                            String docPath = event.getDocument_path();
-                            HashMap<String, String> map = new HashMap<>();
-                            map.put(DOCUMENT_MEDIA_PATH, docPath);
-                            SharedPreference.putPref(DocumentActivity.this, map);
+                                RefreashToken refreashToken = new RefreashToken(DocumentActivity.this);
+                                if (event.getDocument_path() != null) {
+                                    String docPath = event.getDocument_path();
+                                    HashMap<String, String> map = new HashMap<>();
+                                    map.put(DOCUMENT_MEDIA_PATH, docPath);
+                                    SharedPreference.putPref(DocumentActivity.this, map);
+                                }
+                                if (event.getDetail() != null) {
+                                    txtEmpty.setVisibility(View.GONE);
 
-                            JsonParser jp = new JsonParser();
-                            JsonElement je = jp.parse(decrypteventdetail);
-                            Gson gson = new Gson();
-                            gsonevent = gson.fromJson(je, new TypeToken<ArrayList<DocumentDetail>>() {
-                            }.getType());
-                            setAdapterlist(gsonevent);
+                                    String decrypteventdetail = refreashToken.decryptedData(event.getDetail());
+
+                                    JsonParser jp = new JsonParser();
+                                    JsonElement je = jp.parse(decrypteventdetail);
+                                    Gson gson = new Gson();
+                                    gsonevent = gson.fromJson(je, new TypeToken<ArrayList<DocumentDetail>>() {
+                                    }.getType());
+                                    setAdapterlist(gsonevent);
+                                }else{
+                                    txtEmpty.setVisibility(View.VISIBLE);
+
+                                }
+                            }else{
+                                txtEmpty.setVisibility(View.VISIBLE);
+                            }
+                            /*}else{
+                                txtEmpty.setVisibility(View.VISIBLE);
+                            }*/
                         }
                     });
                 } else {

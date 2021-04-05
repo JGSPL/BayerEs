@@ -87,7 +87,12 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
 
     @Override
     public int getItemCount() {
-        return docList.size();
+        if(docList!=null) {
+            return docList.size();
+        }else{
+            return 0;
+        }
+
     }
 
 
