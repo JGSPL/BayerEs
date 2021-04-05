@@ -10,6 +10,7 @@ import com.procialize.bayer2020.ui.splash.view.SplashAcivity;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.ISPROFILE_COMPLETE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.IS_LOGIN;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_FNAME;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.USER_TYPE;
 
 public class SplashViewModel extends SplashAcivity{
@@ -34,6 +35,7 @@ public class SplashViewModel extends SplashAcivity{
                 String iscomplete = SharedPreference.getPref(context,ISPROFILE_COMPLETE);
                 String userType = SharedPreference.getPref(context,USER_TYPE);
                 String fName = SharedPreference.getPref(context,KEY_FNAME);
+                String token = SharedPreference.getPref(context,KEY_TOKEN);
 
                 if(isLogin.equalsIgnoreCase("true")) {
 

@@ -148,7 +148,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
                             String data = refreashToken.decryptedData(strCommentList);
                             Gson gson = new Gson();
                             List<PurchaseHistory_row> eventLists = gson.fromJson(data, new TypeToken<ArrayList<PurchaseHistory_row>>() {}.getType());
-                            txtPurchagePoint.setText(response.body().getTotalRecords());
+                            //txtPurchagePoint.setText(response.body().getTotalRecords());
                             //Fetch Livepoll list
                             if(eventLists!=null) {
 
@@ -204,6 +204,8 @@ public class PurchaseHistoryActivity extends AppCompatActivity implements Purcha
 
             recycler_mpointcalc.setAdapter(productypeAdapter);
             productypeAdapter.notifyDataSetChanged();
+
+
         }
     }
 

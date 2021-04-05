@@ -420,7 +420,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                 }
                             }else{
 
-                                    if (response.body() != null) {
+                                  /*  if (response.body() != null) {
                                     } else {
                                         SessionManager.clearCurrentEvent(getContext());
                                         SessionManager.logoutUser(getContext());
@@ -428,7 +428,7 @@ public class NewsFeedFragment extends Fragment implements NewsFeedAdapter.FeedAd
                                         EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeed();
                                         EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeedMedia();
                                         startActivity(new Intent(getContext(), LoginActivity.class));
-                                    }
+                                    }*/
 
                             }
 

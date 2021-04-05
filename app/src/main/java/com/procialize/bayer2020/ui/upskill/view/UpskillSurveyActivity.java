@@ -1,6 +1,7 @@
 package com.procialize.bayer2020.ui.upskill.view;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -102,6 +104,20 @@ public class UpskillSurveyActivity extends AppCompatActivity implements View.OnC
 
         String strUrl = upskillContentSubArray.getContentInfo().get(click_count).getLink();
         webView.loadUrl(strUrl);
+
+        webView.setWebViewClient(new WebViewClient() {
+            boolean checkhasOnPageStarted = false;
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                checkhasOnPageStarted = true;
+            }
+
+            public void onPageFinished(WebView view, String url) {
+                if (view.getTitle().equals(""))
+                    view.reload();
+            }
+        });
 
         if (upskillContentSubArray.getContentInfo().size() ==  click_count+1) {
             btn_next.setText("Close");

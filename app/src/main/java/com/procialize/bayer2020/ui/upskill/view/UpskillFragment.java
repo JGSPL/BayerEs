@@ -156,7 +156,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
                                 e.printStackTrace();
                             }
                         }else {
-                            if (response.body() != null) {
+                           /* if (response.body() != null) {
                             } else {
                                 SessionManager.clearCurrentEvent(getContext());
                                 SessionManager.logoutUser(getContext());
@@ -164,7 +164,7 @@ public class UpskillFragment extends Fragment implements UpskillAdapter.UpskillL
                                 EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeed();
                                 EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeedMedia();
                                 startActivity(new Intent(getContext(), LoginActivity.class));
-                            }
+                            }*/
                         }
                     }
 

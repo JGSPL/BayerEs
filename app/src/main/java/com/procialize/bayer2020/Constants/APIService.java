@@ -211,8 +211,8 @@ public interface APIService {
     @POST("login_api_call/refreshToken")
     @FormUrlEncoded
     Call<validateOTP> getRefreashToken(@Field("organizer_id") String organizer_id,
-                                       @Field("username") String username,
-                                       @Field("otp") String otp,
+                                       /*@Field("username") String username,
+                                       @Field("otp") String otp,*/
                                        @Field("access_token") String access_token);
 
     @POST("event_api_call/eventList")

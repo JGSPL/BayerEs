@@ -59,6 +59,17 @@ public class PurchageHistoryAdapter extends RecyclerView.Adapter<PurchageHistory
 
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     @Override
     public int getItemCount() {
         return productLists.size();

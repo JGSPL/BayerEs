@@ -67,7 +67,7 @@ public class LoyalityLeapFragment  extends Fragment {
         progressBar = root.findViewById(R.id.progressBar);
         relMain = root.findViewById(R.id.relMain);
         api_token = SharedPreference.getPref(getContext(), AUTHERISATION_KEY);
-        new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
+        //new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
         if (cd.isConnectingToInternet()) {
             progressBar.setVisibility(View.VISIBLE);
 
@@ -160,7 +160,7 @@ public class LoyalityLeapFragment  extends Fragment {
 
 
                 } else {
-                    if (response.body() != null) {
+                   /* if (response.body() != null) {
                     } else {
                         SessionManager.clearCurrentEvent(getContext());
                         SessionManager.logoutUser(getContext());
@@ -168,7 +168,7 @@ public class LoyalityLeapFragment  extends Fragment {
                         EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeed();
                         EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeedMedia();
                        startActivity(new Intent(getContext(), LoginActivity.class));
-                    }
+                    }*/
                    // Toast.makeText(getContext(), "Internal server error", Toast.LENGTH_SHORT).show();
                 }
             }

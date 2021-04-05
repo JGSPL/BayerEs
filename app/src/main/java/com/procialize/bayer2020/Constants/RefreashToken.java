@@ -112,7 +112,7 @@ public class RefreashToken {
         Toast.makeText(context, "otp ====> "+otp, Toast.LENGTH_SHORT).show();
         Toast.makeText(context, "access_token ====> "+access_token, Toast.LENGTH_SHORT).show();*/
 
-        mApiService.getRefreashToken("0", username, otp, access_token).enqueue(new Callback<validateOTP>() {
+        ApiUtils.getAPIService().getRefreashToken("0", /*username, otp,*/ access_token).enqueue(new Callback<validateOTP>() {
             @Override
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
@@ -120,6 +120,10 @@ public class RefreashToken {
                         vtoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
 
                         otpValidate(username, otp, vtoken);
+                    }else if(response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
+                        /*vtoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
+
+                        otpValidate(username, otp, vtoken);*/
                     }else {
 
                         RefreashToken refreashToken = new RefreashToken(context);
@@ -128,16 +132,18 @@ public class RefreashToken {
                         Log.e("token===>", data);
                     }
                 } else {
-                    if (response.body() != null) {
+                    /*if (response.body() != null) {
                         Toast.makeText(context, response.body().toString(), Toast.LENGTH_SHORT).show();
                     } else {
+                        Toast.makeText(context, "Hi....I am coming", Toast.LENGTH_SHORT).show();
+
                         SessionManager.clearCurrentEvent(context);
                         SessionManager.logoutUser(context);
                         //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
                         EventAppDB.getDatabase(context).newsFeedDao().deleteNewsFeed();
                         EventAppDB.getDatabase(context).newsFeedDao().deleteNewsFeedMedia();
                         context.startActivity(new Intent(context, LoginActivity.class));
-                    }
+                    }*/
                 }
             }
 
@@ -165,14 +171,15 @@ public class RefreashToken {
             if (isvalidtoken == false) {
                 String username = SharedPreference.getPref(context, SharedPreferencesConstant.KEY_EMAIL);
                 String otp = SharedPreference.getPref(context, SharedPreferencesConstant.OTP);
+                String token = SharedPreference.getPref(context,KEY_TOKEN);
                 String accesstoken2 = SharedPreference.getPref(context, KEY_TOKEN);
                 mApiService = ApiUtils.getAPIService();
 
 
                 String api_token = SharedPreference.getPref(context, AUTHERISATION_KEY);
                 JWT jwt = new JWT(api_token);
-                accesstoken2 = jwt.getClaim("refresh_token").asString();
-                GetRefreashToken(username, otp, accesstoken2);
+                //accesstoken2 = jwt.getClaim("refresh_token").asString();
+                GetRefreashToken(username, otp, token);
             } else {
                 Log.d("TAG", "Token is already refreashed");
             }

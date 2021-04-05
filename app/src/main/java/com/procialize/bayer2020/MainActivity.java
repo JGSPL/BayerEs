@@ -143,6 +143,7 @@ import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_LNA
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_MOBILE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PASSWORD;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_PROFILE_PIC;
+import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.KEY_TOKEN;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.USER_TYPE;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.notification_count;
 
@@ -322,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_storeLocator = findViewById(R.id.tr_storeLocator);
         tr_qna = findViewById(R.id.tr_qna);
 
-        new RefreashToken(this).callGetRefreashToken(this);
+       // new RefreashToken(this).callGetRefreashToken(this);
 
 
         txt_version.setText("Version: "+ BuildConfig.VERSION_NAME);
@@ -754,13 +755,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.tr_logout:
                 JzvdStd.releaseAllVideos();
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                SessionManager.clearCurrentEvent(MainActivity.this);
+                LogoutFun();
+              /*  SessionManager.clearCurrentEvent(MainActivity.this);
                 SessionManager.logoutUser(MainActivity.this);
                 SharedPreference.clearPref(this, AUTHERISATION_KEY);
                 SharedPreference.clearPref(this, IS_LOGIN);
                 EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                finish();
+                finish();*/
                 break;
         }
     }
@@ -827,7 +829,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             map.put(KEY_DESIGNATION, profileDetails.get(0).getDesignation());
                             map.put(KEY_COMPANY, profileDetails.get(0).getCompany_name());
                             map.put(KEY_MOBILE, profileDetails.get(0).getMobile());
-                            //map.put(KEY_TOKEN, "");
+                            map.put(KEY_TOKEN, profileDetails.get(0).getAccess_token());
                             map.put(KEY_CITY, profileDetails.get(0).getCity());
                             //map.put(KEY_GCM_ID, "");
                             map.put(KEY_PROFILE_PIC, profileDetails.get(0).getProfile_picture());
@@ -872,7 +874,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                     }else {
-                        if (response.body() != null) {
+                       /* if (response.body() != null) {
                         } else {
                             SessionManager.clearCurrentEvent(MainActivity.this);
                             SessionManager.logoutUser(MainActivity.this);
@@ -880,7 +882,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
                             EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                             startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        }
+                        }*/
                     }
                 }
 
