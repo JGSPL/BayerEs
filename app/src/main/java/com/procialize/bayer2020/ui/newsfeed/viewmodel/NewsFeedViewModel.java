@@ -231,13 +231,15 @@ public class NewsFeedViewModel extends ViewModel {
 
                             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                             sharingIntent.setType("video/*");
-                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Pest Expert");
+                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, "Shared via Pest Expert 360");
                             //sharingIntent.putExtra(Intent.EXTRA_TEXT, "Shared via Pest Expert");
                            // sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://bayer2020.page.link/newsfeed");
-                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+"https://bayer2020.page.link/newsfeed" +
-                                    ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Pest Management Professionals are discussing this post on Pest Expert 360° app! \n" +
+                                    "Join them to learn & discuss pest management tips and best practices. \n" +
+                                    "\n" +
+                                    "Click on the link to see it now or to download the app."+"https://bayer2020.page.link/newsfeed");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                            activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
+                            activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert 360"));
 
 
                         }
@@ -864,13 +866,15 @@ public class NewsFeedViewModel extends ViewModel {
                         if(uri!=null) {
                             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                             sharingIntent.setType("image/*");
-                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
+                            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert 360");
                             sharingIntent.putExtra(Intent.EXTRA_TEXT, data);
                            // sharingIntent.putExtra(Intent.EXTRA_TEXT, "https://bayer2020.page.link/newsfeed");
-                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+"https://bayer2020.page.link/newsfeed" +
-                                    ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
+                            sharingIntent.putExtra(Intent.EXTRA_TEXT, "Pest Management Professionals are discussing this post on Pest Expert 360° app! \n" +
+                                    "Join them to learn & discuss pest management tips and best practices. \n" +
+                                    "\n" +
+                                    "Click on the link to see it now or to download the app."+"https://bayer2020.page.link/newsfeed");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                            context.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
+                            context.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert 360"));
                             dialogShare.dismiss();
                         }
                 } catch (Exception e) {
@@ -931,9 +935,12 @@ public class NewsFeedViewModel extends ViewModel {
 
         // Add data to the intent, the receiving app will decide
         // what to do with it.
-        share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
-        share.putExtra(Intent.EXTRA_TEXT, spannedString1.toString()+" "  + "https://bayer2020.page.link/newsfeed");
-        activityVar.startActivity(Intent.createChooser(share, " Shared via Pest Expert"));
+        share.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert 360");
+        share.putExtra(Intent.EXTRA_TEXT, spannedString1.toString()+" \n Pest Management Professionals are discussing this post on Pest Expert 360° app! \n" +
+                "Join them to learn & discuss pest management tips and best practices. \n" +
+                "\n" +
+                "Click on the link to see it now or to download the app. "  + "https://bayer2020.page.link/newsfeed");
+        activityVar.startActivity(Intent.createChooser(share, " Shared via Pest Expert 360"));
     }
 
     public static Bitmap getBitmapFromURL(String src) {
@@ -998,10 +1005,10 @@ public class NewsFeedViewModel extends ViewModel {
                 //String[] str = result.split("#");
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("image/*");
-                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, " Shared via Pest Expert 360");
                 //sharingIntent.putExtra(Intent.EXTRA_TEXT, str[0]);
                 sharingIntent.putExtra(Intent.EXTRA_STREAM, result);
-                activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert"));
+                activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert 360"));
             }
         }
     }

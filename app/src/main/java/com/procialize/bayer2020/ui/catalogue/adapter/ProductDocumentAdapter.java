@@ -58,7 +58,7 @@ public class ProductDocumentAdapter extends RecyclerView.Adapter<ProductDocument
     public void onBindViewHolder(@NonNull final ProductDocumentAdapter.ProductViewHolder holder, final int position) {
 
         final Product_document_detail productType = productLists.get(position);
-        holder.quiz_title_txt.setText(productType.getProduct_document_filename());
+        holder.quiz_title_txt.setText(productType.getProduct_document_original_filename());
 
         holder.doc_list_layout.setOnClickListener(new View.OnClickListener() {
             @Override

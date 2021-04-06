@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -42,6 +45,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -82,15 +86,16 @@ import retrofit2.Response;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 
-public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.OnMarkerClickListener
-{
+public class StoreLocatorActivity extends FragmentActivity implements LocationListener, GoogleMap.OnMarkerClickListener {
     private Marker myMarker;
     Dialog dialog;
 
-    private  String api_token;
+    private String api_token;
     ImageView iv_back;
     protected GoogleMap map;
+    LocationManager locationManager;
     ClusterManager<ClusterMarkerLocation> clusterManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,11 +110,52 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                 onBackPressed();
             }
         });
+        //  ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        marshmallowGPSPremissionCheck();
 
-       clusterManager = new ClusterManager<ClusterMarkerLocation>( this, map );
+
+        clusterManager = new ClusterManager<ClusterMarkerLocation>(this, map);
 
         setUpMapIfNeeded();
 
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    marshmallowGPSPremissionCheck();
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    private void marshmallowGPSPremissionCheck() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && StoreLocatorActivity.this.checkSelfPermission(
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && StoreLocatorActivity.this.checkSelfPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+        } else {
+            //   gps functions.
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
     }
 
     @Override
@@ -136,14 +182,30 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
                                 //Your code where exception occurs goes here...
                                 setUpMap();
 
-                        /*LatLng norway = new LatLng(23.63936,97.34466);
 
-                        CameraPosition target = CameraPosition.builder().target(norway).zoom(6).build();
-                        map.moveCamera(CameraUpdateFactory.newCameraPosition(target));*/
                                 LatLngBounds boundsIndia = new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466));
+
                                 int padding = 0; // offset from edges of the map in pixels
                                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(boundsIndia, padding);
                                 map.animateCamera(cameraUpdate);
+
+
+
+                                //Check code
+                               // map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker").snippet("Snippet"));
+                                if (ActivityCompat.checkSelfPermission(StoreLocatorActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(StoreLocatorActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    // TODO: Consider calling
+                                    //    ActivityCompat#requestPermissions
+                                    // here to request the missing permissions, and then overriding
+                                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                    //                                          int[] grantResults)
+                                    // to handle the case where the user grants the permission. See the documentation
+                                    // for ActivityCompat#requestPermissions for more details.
+                                    return;
+                                }
+                                map.setMyLocationEnabled(true);
+
+
                             }
                         });
 
@@ -175,7 +237,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
             marker.hideInfoWindow();
             myMarker.hideInfoWindow();
             try {
-                CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(10).build();
+                CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(8).build();
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
                 String str = marker.getSnippet();
                 String[] splitStr = str.split("\\@+");
@@ -186,6 +248,7 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
             }
 
         }
+
 
        // }
         return true;
@@ -216,6 +279,46 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
 
                         // List<ProfileDetails> profileDetails = profile.getProfileDetails();
 
+
+                        //Check code currrent location
+                        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        Criteria criteria = new Criteria();
+                        String provider = locationManager.getBestProvider(criteria, true);
+                        if (ActivityCompat.checkSelfPermission(StoreLocatorActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(StoreLocatorActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        Location location = locationManager.getLastKnownLocation(provider);
+
+
+                        if (location != null) {
+
+                            LatLng target = new LatLng(location.getLatitude(), location.getLongitude());
+                            CameraPosition position = map.getCameraPosition();
+
+                            try {
+                                CameraPosition target1 = CameraPosition.builder().target(target).zoom(8).build();
+                                map.moveCamera(CameraUpdateFactory.newCameraPosition(target1));
+                                map.addCircle(new CircleOptions()
+                                        .center(target)
+                                        .radius(250000)
+                                        .strokeWidth(0f)
+                                        /*.fillColor(0x550000FF)*/);
+                                map.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude())).title("You are here!").snippet("Consider yourself located"));
+
+
+                            }catch (Exception e){
+
+                            }
+
+                            CameraPosition.Builder builder = new CameraPosition.Builder();
+                            builder.zoom(8);
+                            builder.target(target);
+
+                          //  map.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
+                        }
+
+
+                        ////////////////////////////////////////////
                         if (profileDetails.size() > 0) {
 
 
@@ -408,6 +511,27 @@ public class StoreLocatorActivity extends FragmentActivity implements GoogleMap.
         view.draw(canvas);
 
         return bitmap;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Toast.makeText(StoreLocatorActivity.this,  String.valueOf(location.getLatitude()) + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }
 

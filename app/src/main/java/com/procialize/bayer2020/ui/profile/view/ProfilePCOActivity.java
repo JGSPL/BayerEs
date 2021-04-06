@@ -1,5 +1,6 @@
 package com.procialize.bayer2020.ui.profile.view;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -69,6 +70,7 @@ import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.ui.login.view.LoginActivity;
 import com.procialize.bayer2020.ui.profile.model.FetchPincode;
 import com.procialize.bayer2020.ui.profile.model.Pincode_item;
 import com.procialize.bayer2020.ui.profile.model.Profile;
@@ -162,6 +164,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
     boolean isCheckedPCO = false, isSpecializationChanged = false;
     String specialization = "";
     ImageView iv_plus, iv_plus2, iv_plus3;
+    ProgressBar progressBar;
+    ProgressDialog progressdialog ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,7 +207,7 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
         iv_plus = findViewById(R.id.iv_plus);
         iv_plus2 = findViewById(R.id.iv_plus2);
         iv_plus3 = findViewById(R.id.iv_plus3);
-
+        progressBar = findViewById(R.id.progressBar);
 
 
         txtAnnualOrg = findViewById(R.id.txtAnnualOrg);
@@ -544,8 +548,16 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                     String searchString = atv_pincode.getText().toString();
 
                     if (!(searchString.equalsIgnoreCase("") || searchString.equalsIgnoreCase(null))) {
+                        if(s.length()>2) {
+                            /*progressdialog = new ProgressDialog(ProfilePCOActivity.this);
 
-                        getPincode(searchString);
+                            progressdialog.setMessage("Please Wait....");
+                            progressdialog.setCancelable(false);
+
+                            progressdialog.show();*/
+                            getPincode(searchString);
+                        }
+                        //progressBar.setVisibility(View.VISIBLE);
                     }
                 }catch (Exception e){
 
@@ -564,6 +576,19 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             public void afterTextChanged(Editable s) {
                 // TODO Auto-generated method stub
 
+            }
+        });
+
+        atv_pincode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                    long id) {
+                Toast.makeText(ProfilePCOActivity.this, " selected", Toast.LENGTH_LONG).show();
+                pincode = atv_pincode.getText().toString();
+
+                if (!pincode.isEmpty() && pincode != null)
+                    getState(atv_pincode.getText().toString());
             }
         });
 
@@ -1826,6 +1851,8 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             public void onResponse(Call<FetchPincode> call, Response<FetchPincode> response) {
                 if (response.isSuccessful()) {
                     try {
+
+                        progressBar.setVisibility(View.GONE);
                         String strEventList = response.body().getDetail();
                         RefreashToken refreashToken = new RefreashToken(ProfilePCOActivity.this);
                         String data = refreashToken.decryptedData(strEventList);
@@ -1848,8 +1875,10 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                     (ProfilePCOActivity.this, android.R.layout.select_dialog_item, pincodeData);
 
                             atv_pincode.setAdapter(adapter);
+                           // progressdialog.dismiss();
 
-                            atv_pincode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                           /* atv_pincode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View arg1, int pos,
@@ -1860,9 +1889,12 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                     if (!pincode.isEmpty() && pincode != null)
                                         getState(atv_pincode.getText().toString());
                                 }
-                            });
+                            });*/
 
                         }
+                       /* if(pincodeData.size()>0)
+                            pincodeData.clear();*/
+
                     } catch (Exception e) {
                         Toast.makeText(ProfilePCOActivity.this, "Please try again", Toast.LENGTH_SHORT).show();
                         atv_pincode.setText("");
