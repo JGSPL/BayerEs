@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tr_storeLocator = findViewById(R.id.tr_storeLocator);
         tr_qna = findViewById(R.id.tr_qna);
 
-       // new RefreashToken(this).callGetRefreashToken(this);
+        new RefreashToken(this).callGetRefreashToken(this);
 
 
         txt_version.setText("Version: "+ BuildConfig.VERSION_NAME);

@@ -2,6 +2,7 @@ package com.procialize.bayer2020.ui.loyalityleap.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.Database.EventAppDB;
+import com.procialize.bayer2020.GetterSetter.APIError;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
@@ -159,7 +161,31 @@ public class LoyalityLeapFragment  extends Fragment {
                     }
 
 
-                } else {
+                } else if(response.errorBody()!=null){
+                    Utility.createShortSnackBar(relMain, "Session expired");
+
+                    /*SessionManager.clearCurrentEvent(getContext());
+                    SessionManager.logoutUser(getContext());
+                    //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                    EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeed();
+                    EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeedMedia();
+                    startActivity(new Intent(getContext(), LoginActivity.class));*/
+                    /*APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
+
+                    if(message.getHeader().get(0).getType().equalsIgnoreCase("error")){
+                        Log.e("error msg====", message.getHeader().get(0).getMsg());
+                        if(message.getHeader().get(0).getMsg().equalsIgnoreCase("invalid credentials")) {
+                            SessionManager.clearCurrentEvent(getContext());
+                            SessionManager.logoutUser(getContext());
+                            //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                            EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeed();
+                            EventAppDB.getDatabase(getContext()).newsFeedDao().deleteNewsFeedMedia();
+                            startActivity(new Intent(getContext(), LoginActivity.class));
+                        }
+                    }*/
+
+                }
+                else {
                    /* if (response.body() != null) {
                     } else {
                         SessionManager.clearCurrentEvent(getContext());

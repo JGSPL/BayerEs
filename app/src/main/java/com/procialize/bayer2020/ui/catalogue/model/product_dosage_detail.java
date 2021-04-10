@@ -76,6 +76,176 @@ public class product_dosage_detail implements Serializable {
     @Expose
     private String modified;
 
+    @SerializedName("app_type1_deposition_rate")
+    @Expose
+    private String app_type1_deposition_rate;
+    @SerializedName("app_type2_deposition_rate")
+    @Expose
+    private String app_type2_deposition_rate;
+    @SerializedName("app_type3_deposition_rate")
+    @Expose
+    private String app_type3_deposition_rate;
+    @SerializedName("app_type4_deposition_rate")
+    @Expose
+    private String app_type4_deposition_rate;
+    @SerializedName("app_type5_deposition_rate")
+    @Expose
+    private String app_type5_deposition_rate;
+    @SerializedName("app_type1_label")
+    @Expose
+    private String app_type1_label;
+
+    @SerializedName("app_type2_label")
+    @Expose
+    private String app_type2_label;
+    @SerializedName("app_type3_label")
+    @Expose
+    private String app_type3_label;
+    @SerializedName("app_type4_label")
+    @Expose
+    private String app_type4_label;
+    @SerializedName("app_type5_label")
+    @Expose
+    private String app_type5_label;
+
+    @SerializedName("diluted_quantity_1")
+    @Expose
+    private String diluted_quantity_1;
+
+    @SerializedName("diluted_quantity_2")
+    @Expose
+    private String diluted_quantity_2;
+    @SerializedName("diluted_quantity_3")
+    @Expose
+    private String diluted_quantity_3;
+    @SerializedName("diluted_quantity_4")
+    @Expose
+    private String diluted_quantity_4;
+    @SerializedName("diluted_quantity_5")
+    @Expose
+    private String diluted_quantity_5;
+
+
+    public String getApp_type1_deposition_rate() {
+        return app_type1_deposition_rate;
+    }
+
+    public void setApp_type1_deposition_rate(String app_type1_deposition_rate) {
+        this.app_type1_deposition_rate = app_type1_deposition_rate;
+    }
+
+    public String getApp_type2_deposition_rate() {
+        return app_type2_deposition_rate;
+    }
+
+    public void setApp_type2_deposition_rate(String app_type2_deposition_rate) {
+        this.app_type2_deposition_rate = app_type2_deposition_rate;
+    }
+
+    public String getApp_type3_deposition_rate() {
+        return app_type3_deposition_rate;
+    }
+
+    public void setApp_type3_deposition_rate(String app_type3_deposition_rate) {
+        this.app_type3_deposition_rate = app_type3_deposition_rate;
+    }
+
+    public String getApp_type4_deposition_rate() {
+        return app_type4_deposition_rate;
+    }
+
+    public void setApp_type4_deposition_rate(String app_type4_deposition_rate) {
+        this.app_type4_deposition_rate = app_type4_deposition_rate;
+    }
+
+    public String getApp_type5_deposition_rate() {
+        return app_type5_deposition_rate;
+    }
+
+    public void setApp_type5_deposition_rate(String app_type5_deposition_rate) {
+        this.app_type5_deposition_rate = app_type5_deposition_rate;
+    }
+
+    public String getApp_type1_label() {
+        return app_type1_label;
+    }
+
+    public void setApp_type1_label(String app_type1_label) {
+        this.app_type1_label = app_type1_label;
+    }
+
+    public String getApp_type2_label() {
+        return app_type2_label;
+    }
+
+    public void setApp_type2_label(String app_type2_label) {
+        this.app_type2_label = app_type2_label;
+    }
+
+    public String getApp_type3_label() {
+        return app_type3_label;
+    }
+
+    public void setApp_type3_label(String app_type3_label) {
+        this.app_type3_label = app_type3_label;
+    }
+
+    public String getApp_type4_label() {
+        return app_type4_label;
+    }
+
+    public void setApp_type4_label(String app_type4_label) {
+        this.app_type4_label = app_type4_label;
+    }
+
+    public String getApp_type5_label() {
+        return app_type5_label;
+    }
+
+    public void setApp_type5_label(String app_type5_label) {
+        this.app_type5_label = app_type5_label;
+    }
+
+    public String getDiluted_quantity_1() {
+        return diluted_quantity_1;
+    }
+
+    public void setDiluted_quantity_1(String diluted_quantity_1) {
+        this.diluted_quantity_1 = diluted_quantity_1;
+    }
+
+    public String getDiluted_quantity_2() {
+        return diluted_quantity_2;
+    }
+
+    public void setDiluted_quantity_2(String diluted_quantity_2) {
+        this.diluted_quantity_2 = diluted_quantity_2;
+    }
+
+    public String getDiluted_quantity_3() {
+        return diluted_quantity_3;
+    }
+
+    public void setDiluted_quantity_3(String diluted_quantity_3) {
+        this.diluted_quantity_3 = diluted_quantity_3;
+    }
+
+    public String getDiluted_quantity_4() {
+        return diluted_quantity_4;
+    }
+
+    public void setDiluted_quantity_4(String diluted_quantity_4) {
+        this.diluted_quantity_4 = diluted_quantity_4;
+    }
+
+    public String getDiluted_quantity_5() {
+        return diluted_quantity_5;
+    }
+
+    public void setDiluted_quantity_5(String diluted_quantity_5) {
+        this.diluted_quantity_5 = diluted_quantity_5;
+    }
+
     public String getId() {
         return id;
     }

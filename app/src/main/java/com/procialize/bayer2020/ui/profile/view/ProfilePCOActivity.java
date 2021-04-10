@@ -62,6 +62,8 @@ import com.google.gson.reflect.TypeToken;
 import com.procialize.bayer2020.ConnectionDetector;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
+import com.procialize.bayer2020.Database.EventAppDB;
+import com.procialize.bayer2020.GetterSetter.APIError;
 import com.procialize.bayer2020.MainActivity;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.Animations;
@@ -70,6 +72,7 @@ import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.GetUserActivityReport;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
+import com.procialize.bayer2020.session.SessionManager;
 import com.procialize.bayer2020.ui.login.view.LoginActivity;
 import com.procialize.bayer2020.ui.profile.model.FetchPincode;
 import com.procialize.bayer2020.ui.profile.model.Pincode_item;
@@ -77,6 +80,8 @@ import com.procialize.bayer2020.ui.profile.model.Profile;
 import com.procialize.bayer2020.ui.profile.model.ProfileDetails;
 import com.procialize.bayer2020.ui.profile.viewModel.ProfileActivityViewModel;
 import com.yalantis.ucrop.UCrop;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -742,7 +747,23 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
                                         }).into(iv_profile);
                             }
                         }
-                    } else {
+                    }else if(response.errorBody()!=null){
+                        APIError message = new Gson().fromJson(response.errorBody().charStream(), APIError.class);
+
+                        if(message.getHeader().get(0).getType().equalsIgnoreCase("error")){
+                            Log.e("error msg====", message.getHeader().get(0).getMsg());
+                            if(message.getHeader().get(0).getMsg().equalsIgnoreCase("invalid credentials")) {
+                                SessionManager.clearCurrentEvent(ProfilePCOActivity.this);
+                                SessionManager.logoutUser(ProfilePCOActivity.this);
+                                //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                                EventAppDB.getDatabase(ProfilePCOActivity.this).newsFeedDao().deleteNewsFeed();
+                                EventAppDB.getDatabase(ProfilePCOActivity.this).newsFeedDao().deleteNewsFeedMedia();
+                                startActivity(new Intent(ProfilePCOActivity.this, LoginActivity.class));
+                            }
+                        }
+
+                    }
+                    else {
                         Toast.makeText(ProfilePCOActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
                     }
                 }

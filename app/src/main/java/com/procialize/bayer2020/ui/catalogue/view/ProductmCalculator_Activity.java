@@ -46,12 +46,14 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
     ImageView headerlogoIv;
     String token, eventid, docurl, productId = "1",productName;
     List<product_dosage_detail> product_dosage_detailList = new ArrayList<>();
-    TextView tvProductTitle ,txt_quan, txt_quantity, txt_quantitySolu, txtAmountConvert, tv_area;
+    TextView tvProductTitle ,txt_quan, txt_quantity, txt_quantitySolu, txtAmountConvert, tv_area, tv_QuantityWater,tv_QuantitySolu;
     EditText txt_area, edtAmountConvert;
     String high;
     Spinner spinner, spinnersqare, spinnersqare2;
     String conversionValue;
     LinearLayout linear;
+   // String spinnerLevel[];
+    List<String> spinnerLevel = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +82,22 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
         txt_quantitySolu = findViewById(R.id.txt_quantitySolu);
         txtAmountConvert = findViewById(R.id.txtAmountConvert);
         edtAmountConvert = findViewById(R.id.edtAmountConvert);
+
+        tv_QuantityWater = findViewById(R.id.tv_QuantityWater);
+        tv_QuantitySolu = findViewById(R.id.tv_QuantitySolu);
+
         tv_area = findViewById(R.id.tv_area);
         spinnersqare = findViewById(R.id.spinnersqare);
         spinnersqare2 = findViewById(R.id.spinnersqare2);
+
+        if(productName.equalsIgnoreCase("Maxforce Forte") || productName.equalsIgnoreCase("Maxforce Quantum")){
+           // tv_QuantityWater.setText("");
+            tv_QuantitySolu.setText("Number of Gel placements to be applied in infested area");
+        }else if(productName.equalsIgnoreCase("Barcelo Granules")){
+             tv_QuantityWater.setText("Amount of water to be treated (ml)");
+        }else if(productName.contains("Kingfog")){
+            tv_QuantityWater.setText("Amount of Diesel required (ml)");
+        }
 
 
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
@@ -191,14 +206,40 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
                 // Apply the adapter to the spinner
                 spinner.setAdapter(adapter);
                 spinner.setOnItemSelectedListener(this);
-            }else{
+                high = "any";
+            }else if(product_dosage_detailList.get(0).getInfestation_level().equalsIgnoreCase("1")){
                 // Create an ArrayAdapter using the string array and a default spinner layout
                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                         R.array.high_array, R.layout.spinner_item);
                 // Specify the layout to use when the list of choices appears
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                high = "high";
                 // Apply the adapter to the spinner
                 spinner.setAdapter(adapter);
+                spinner.setOnItemSelectedListener(this);
+            }else if(product_dosage_detailList.get(0).getInfestation_level().equalsIgnoreCase("2")){
+                if(!(product_dosage_detailList.get(0).getApp_type1_label().equalsIgnoreCase(""))){
+                    spinnerLevel.add(product_dosage_detailList.get(0).getApp_type1_label());
+                    high = product_dosage_detailList.get(0).getApp_type1_label();
+                } if(!(product_dosage_detailList.get(0).getApp_type2_label().equalsIgnoreCase(""))){
+                    spinnerLevel.add(product_dosage_detailList.get(0).getApp_type2_label());
+                } if(!(product_dosage_detailList.get(0).getApp_type3_label().equalsIgnoreCase(""))){
+                    spinnerLevel.add(product_dosage_detailList.get(0).getApp_type3_label());
+                } if(!(product_dosage_detailList.get(0).getApp_type4_label().equalsIgnoreCase(""))){
+                    spinnerLevel.add(product_dosage_detailList.get(0).getApp_type4_label());
+                } if(!(product_dosage_detailList.get(0).getApp_type5_label().equalsIgnoreCase(""))){
+                    spinnerLevel.add(product_dosage_detailList.get(0).getApp_type5_label());
+                }
+                // Create an ArrayAdapter using the string array and a default spinner layout
+               /* ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                        spinnerLevel, R.layout.spinner_item);*/
+                ArrayAdapter dataAdapter = new ArrayAdapter(this, R.layout.spinner_item, spinnerLevel);
+
+                // Specify the layout to use when the list of choices appears
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                // Apply the adapter to the spinner
+                spinner.setAdapter(dataAdapter);
                 spinner.setOnItemSelectedListener(this);
             }
             tvProductTitle.setText(productName);
@@ -258,6 +299,8 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
                                 Toast.makeText(ProductmCalculator_Activity.this, "Please Enter Value", Toast.LENGTH_SHORT).show();
                                 return false;
                             } else {
+                                spinner.setOnItemSelectedListener(ProductmCalculator_Activity.this);
+
 
                                 String txt_score = txt_area.getText().toString().trim();
                                 String txt_total = product_dosage_detailList.get(0).getDiluted_solution_quantity();
@@ -269,7 +312,74 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
                                     String s1 = String.valueOf(mPointtotal);
                                     //String res = s1.replace(".", "");
                                     txt_quantity.setText(s1);
-                                }
+
+
+                                    Float area ;
+                                    if(txt_area.getText().toString().isEmpty()){
+                                        area = 0f;
+                                    }else{
+                                        area =  Float.parseFloat(txt_area.getText().toString());
+                                    }
+                                    if(high.equalsIgnoreCase("High")){
+                                        // Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getHigh_amount());
+                                        Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getHigh_deposition_rate());
+                                        Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                        Float quantity = amountReq/contentProduct;
+                                        txt_quan.setText(String.valueOf(quantity));
+
+
+                                    }else if(high.equalsIgnoreCase("Low")){
+                                        //Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getLow_amount());
+                                        Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getLow_deposition_rate());
+
+                                        Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                        Float quantity = amountReq/contentProduct;
+                                        txt_quan.setText(String.valueOf(quantity));
+                                    }else if(high.equalsIgnoreCase("any")){
+                                        //Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getAny_amount());
+                                        Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getAny_deposition_rate());
+
+                                        Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                        Float quantity = amountReq/contentProduct;
+                                        txt_quan.setText(String.valueOf(quantity));
+                                    }     else if(product_dosage_detailList.get(0).getInfestation_level().equalsIgnoreCase("2")){
+                                        if(product_dosage_detailList.get(0).getApp_type1_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type1_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }else  if(product_dosage_detailList.get(0).getApp_type2_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type2_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }else  if(product_dosage_detailList.get(0).getApp_type3_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type3_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }else  if(product_dosage_detailList.get(0).getApp_type4_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type4_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }else  if(product_dosage_detailList.get(0).getApp_type5_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type5_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }
+                                    }
+
+                            }
                                 //txt_area.setFocusable(false);
                                 // txt_area.setEnabled(false);
                                 return true;
@@ -315,6 +425,71 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
                                     String s1 = String.valueOf(mPointtotal);
                                     //String res = s1.replace(".", "");
                                     txt_quantity.setText(s1);
+
+                                    Float area ;
+                                    if(txt_area.getText().toString().isEmpty()){
+                                        area = 0f;
+                                    }else{
+                                        area =  Float.parseFloat(txt_area.getText().toString());
+                                    }
+                                    if(high.equalsIgnoreCase("High")){
+                                        // Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getHigh_amount());
+                                        Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getHigh_deposition_rate());
+                                        Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                        Float quantity = amountReq/contentProduct;
+                                        txt_quan.setText(String.valueOf(quantity));
+
+
+                                    }else if(high.equalsIgnoreCase("Low")){
+                                        //Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getLow_amount());
+                                        Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getLow_deposition_rate());
+
+                                        Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                        Float quantity = amountReq/contentProduct;
+                                        txt_quan.setText(String.valueOf(quantity));
+                                    }else if(high.equalsIgnoreCase("any")){
+                                        //Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getAny_amount());
+                                        Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getAny_deposition_rate());
+
+                                        Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                        Float quantity = amountReq/contentProduct;
+                                        txt_quan.setText(String.valueOf(quantity));
+                                    }else if(product_dosage_detailList.get(0).getInfestation_level().equalsIgnoreCase("2")){
+                                        if(product_dosage_detailList.get(0).getApp_type1_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type1_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }else  if(product_dosage_detailList.get(0).getApp_type2_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type2_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }else  if(product_dosage_detailList.get(0).getApp_type3_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type3_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }else  if(product_dosage_detailList.get(0).getApp_type4_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type4_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }else  if(product_dosage_detailList.get(0).getApp_type5_label().equalsIgnoreCase(high)){
+                                            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type5_deposition_rate());
+                                            Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                                            Float quantity = amountReq/contentProduct;
+                                            txt_quan.setText(String.valueOf(quantity));
+                                        }
+                                    }
                                 }
 
 
@@ -371,9 +546,16 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Float area ;
         high = parent.getItemAtPosition(position).toString();
+        if(txt_area.getText().toString().isEmpty()){
+            area = 0f;
+        }else{
+           area =  Float.parseFloat(txt_area.getText().toString());
+        }
         if(high.equalsIgnoreCase("High")){
-            Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getHigh_amount());
+           // Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getHigh_amount());
+            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getHigh_deposition_rate());
             Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
 
             Float quantity = amountReq/contentProduct;
@@ -381,17 +563,63 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
 
 
         }else if(high.equalsIgnoreCase("Low")){
-            Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getLow_amount());
+            //Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getLow_amount());
+            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getLow_deposition_rate());
+
             Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
 
             Float quantity = amountReq/contentProduct;
             txt_quan.setText(String.valueOf(quantity));
         }else if(high.equalsIgnoreCase("any")){
-            Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getAny_amount());
+            //Float amountReq = Float.parseFloat(product_dosage_detailList.get(0).getAny_amount());
+            Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getAny_deposition_rate());
+
             Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
 
             Float quantity = amountReq/contentProduct;
             txt_quan.setText(String.valueOf(quantity));
+        }else if(product_dosage_detailList.get(0).getInfestation_level().equalsIgnoreCase("2")){
+            if(position==0){
+                high = product_dosage_detailList.get(0).getApp_type1_label();
+
+                Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type1_deposition_rate());
+                Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                Float quantity = amountReq/contentProduct;
+                txt_quan.setText(String.valueOf(quantity));
+            }else  if(position==1){
+                high = product_dosage_detailList.get(0).getApp_type2_label();
+
+                Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type2_deposition_rate());
+                Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                Float quantity = amountReq/contentProduct;
+                txt_quan.setText(String.valueOf(quantity));
+            }else  if(position==2){
+                high = product_dosage_detailList.get(0).getApp_type3_label();
+
+                Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type3_deposition_rate());
+                Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                Float quantity = amountReq/contentProduct;
+                txt_quan.setText(String.valueOf(quantity));
+            }else  if(position==3){
+                high = product_dosage_detailList.get(0).getApp_type4_label();
+
+                Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type4_deposition_rate());
+                Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                Float quantity = amountReq/contentProduct;
+                txt_quan.setText(String.valueOf(quantity));
+            }else  if(position==4){
+                high = product_dosage_detailList.get(0).getApp_type5_label();
+
+                Float amountReq = area* Float.parseFloat(product_dosage_detailList.get(0).getApp_type5_deposition_rate());
+                Float contentProduct = Float.parseFloat(product_dosage_detailList.get(0).getContent_of_product());
+
+                Float quantity = amountReq/contentProduct;
+                txt_quan.setText(String.valueOf(quantity));
+            }
         }
 
     }

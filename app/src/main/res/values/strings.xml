@@ -60,6 +60,11 @@
     <string-array name="any_array">
         <item>Any</item>
     </string-array>
+    <string-array name="clean_array">
+    <item>High</item>
+    <item>Low</item>
+    </string-array>
+
     <string-array name="amount_array1">
         <item>Square feet</item>
 

@@ -132,6 +132,10 @@ public class RefreashToken {
                         Log.e("token===>", data);
                     }
                 } else {
+
+                   vtoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
+
+                    otpValidate(username, otp, vtoken);
                     /*if (response.body() != null) {
                         Toast.makeText(context, response.body().toString(), Toast.LENGTH_SHORT).show();
                     } else {
