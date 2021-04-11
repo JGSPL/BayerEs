@@ -92,7 +92,7 @@ public class ProductmCalculator_Activity extends AppCompatActivity implements Ad
 
         if(productName.equalsIgnoreCase("Maxforce Forte") || productName.equalsIgnoreCase("Maxforce Quantum")){
            // tv_QuantityWater.setText("");
-            tv_QuantitySolu.setText("Number of Gel placements to be applied in infested area");
+            tv_QuantityWater.setText("Number of Gel placements to be applied in infested area");
         }else if(productName.equalsIgnoreCase("Barcelo Granules")){
              tv_QuantityWater.setText("Amount of water to be treated (ml)");
         }else if(productName.contains("Kingfog")){

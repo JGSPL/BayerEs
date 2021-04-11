@@ -6,7 +6,7 @@
     android:layout_height="40dp"
     style="?android:attr/spinnerDropDownItemStyle"
     android:ellipsize="marquee"
-    android:textSize="15dp"
+    android:textSize="13dp"
     android:gravity="left"
     android:textColor="#000000"
     android:padding="5dip"

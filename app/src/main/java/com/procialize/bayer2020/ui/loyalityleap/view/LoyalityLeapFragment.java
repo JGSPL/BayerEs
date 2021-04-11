@@ -163,6 +163,7 @@ public class LoyalityLeapFragment  extends Fragment {
 
                 } else if(response.errorBody()!=null){
                     Utility.createShortSnackBar(relMain, "Session expired");
+                    progressBar.setVisibility(View.GONE);
 
                     /*SessionManager.clearCurrentEvent(getContext());
                     SessionManager.logoutUser(getContext());
