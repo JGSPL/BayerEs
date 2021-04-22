@@ -162,9 +162,9 @@ public class LoyalityLeapFragment  extends Fragment {
 
 
                 } else if(response.errorBody()!=null){
-                    Utility.createShortSnackBar(relMain, "Session expired");
+                   // Utility.createShortSnackBar(relMain, "Session expired");
                     progressBar.setVisibility(View.GONE);
-
+                    //new RefreashToken(getActivity()).callGetRefreashToken(getActivity());
                     /*SessionManager.clearCurrentEvent(getContext());
                     SessionManager.logoutUser(getContext());
                     //EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
@@ -203,6 +203,7 @@ public class LoyalityLeapFragment  extends Fragment {
             @Override
             public void onFailure(Call<FetchAgenda> call, Throwable t) {
                 try {
+                    progressBar.setVisibility(View.GONE);
                   //  Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                 }

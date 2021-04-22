@@ -50,7 +50,7 @@ public class ProductDocumentAdapter extends RecyclerView.Adapter<ProductDocument
     @NonNull
     @Override
     public ProductDocumentAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.doc_list_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.product_doc_list, parent, false);
         return new ProductDocumentAdapter.ProductViewHolder(view);
     }
 
@@ -59,6 +59,15 @@ public class ProductDocumentAdapter extends RecyclerView.Adapter<ProductDocument
 
         final Product_document_detail productType = productLists.get(position);
         holder.quiz_title_txt.setText(productType.getProduct_document_original_filename());
+
+        if(productType.getProduct_document_filename().contains("pdf")){
+            holder.img_pdf.setVisibility(View.VISIBLE);
+            holder.img_pdf2.setVisibility(View.GONE);
+
+        }else{
+            holder.img_pdf.setVisibility(View.GONE);
+            holder.img_pdf2.setVisibility(View.VISIBLE);
+        }
 
         holder.doc_list_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +98,7 @@ public class ProductDocumentAdapter extends RecyclerView.Adapter<ProductDocument
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         public TextView quiz_title_txt;
         LinearLayout doc_list_layout;
-        ImageView img_pdf, img_dwnload;
+        ImageView img_pdf, img_dwnload, img_pdf2;
         RelativeLayout rl_download;
 
         public ProductViewHolder(@NonNull View itemView) {
@@ -99,6 +108,7 @@ public class ProductDocumentAdapter extends RecyclerView.Adapter<ProductDocument
             img_dwnload = itemView.findViewById(R.id.img_dwnload);
             img_pdf = itemView.findViewById(R.id.img_pdf);
             rl_download = itemView.findViewById(R.id.rl_download);
+            img_pdf2 = itemView.findViewById(R.id.img_pdf2);
 
 
         }

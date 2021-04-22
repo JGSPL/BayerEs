@@ -102,12 +102,14 @@ public class RefreashToken {
         SharedPreference.putPref(context, map);
     }
 
-    public void GetRefreashToken(final String username, final String otp, String access_token) {
+    public void GetRefreashToken(final String username, final String otp, final String access_token) {
 
         Log.e("Refresh Token===>", access_token);
-        Log.e("username===>", username);
+
         Log.e("otp===>", otp);
         Log.e("access_token===>", access_token);
+        final String mobile = SharedPreference.getPref(context, KEY_MOBILE);
+        Log.e("username===>", username);
        /* Toast.makeText(context, "username ====> "+username, Toast.LENGTH_SHORT).show();
         Toast.makeText(context, "otp ====> "+otp, Toast.LENGTH_SHORT).show();
         Toast.makeText(context, "access_token ====> "+access_token, Toast.LENGTH_SHORT).show();*/
@@ -117,9 +119,10 @@ public class RefreashToken {
             public void onResponse(Call<validateOTP> call, Response<validateOTP> response) {
                 if (response.isSuccessful()) {
                     if(response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
-                        vtoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
+                        //vtoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
+                        vtoken = access_token;
 
-                        otpValidate(username, otp, vtoken);
+                        otpValidate(mobile, otp, vtoken);
                     }else if(response.body().getHeader().get(0).getType().equalsIgnoreCase("error")) {
                         /*vtoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
 
@@ -133,9 +136,9 @@ public class RefreashToken {
                     }
                 } else {
 
-                   vtoken = SharedPreference.getPref(context, AUTHERISATION_KEY);
+                   vtoken = access_token;
 
-                    otpValidate(username, otp, vtoken);
+                    otpValidate(mobile, otp, vtoken);
                     /*if (response.body() != null) {
                         Toast.makeText(context, response.body().toString(), Toast.LENGTH_SHORT).show();
                     } else {
@@ -170,6 +173,8 @@ public class RefreashToken {
             String timestamp_expiry = Utility.getDate(Long.parseLong(expirytime));
             boolean isvalidtoken = Utility.isTimeGreater(String.valueOf(timestamp_expiry));
             String accesstoken = SharedPreference.getPref(context, KEY_TOKEN);
+            String otp2 = SharedPreference.getPref(context, SharedPreferencesConstant.OTP);
+            Log.e("otp===>", otp2);
             Log.e("Access Token===>", accesstoken);
             String accesstoken1 = accesstoken;
             if (isvalidtoken == false) {

@@ -47,7 +47,7 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
 
     Toolbar mToolbar;
     ImageView headerlogoIv;
-    String token, eventid, docurl, productId = "1", DocId;
+    String token, eventid, docurl, productId = "1", DocId, urlother;
     ProgressBar progressBar;
 
     @Override
@@ -75,6 +75,8 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
 
         docurl = getIntent().getStringExtra("url");
         DocId = getIntent().getStringExtra("DocId");
+        urlother = getIntent().getStringExtra("urlother");
+
         String eulaLink = docurl ;
 
         final WebView webview = (WebView) findViewById(R.id.webview_scheame);
@@ -99,8 +101,13 @@ public class ProductDocumentDetailActivity extends AppCompatActivity {
             webview.clearCache(true);
             webview.getSettings().setJavaScriptEnabled(true);
             webview.getSettings().setPluginState(WebSettings.PluginState.ON);
+            if(eulaLink.contains("pdf")){
+                webview.loadUrl(eulaLink);
+            }else{
+                webview.loadUrl(urlother);
+            }
 
-        webview.loadUrl(eulaLink);
+
 
         //--------------------------------------------------------------------------------------
         GetUserActivityReport getUserActivityReport = new GetUserActivityReport(this,token,

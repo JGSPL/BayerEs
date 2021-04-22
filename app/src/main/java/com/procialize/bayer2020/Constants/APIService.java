@@ -747,7 +747,7 @@ public interface APIService {
 
     @POST("analytics_api/all_analytics")
     @FormUrlEncoded
-    Call<BaseResponse> getUserActivityReport(@Header("authorization") String api_access_token,
+    Call<LoginOrganizer> getUserActivityReport(@Header("authorization") String api_access_token,
                                              @Field("event_id") String event_id,
                                              @Field("object_id") String file_id,
                                              @Field("activity_type") String event_type,
@@ -756,5 +756,6 @@ public interface APIService {
 
     @POST("event_api_call/logout")
     @FormUrlEncoded
-    Call<BaseResponse> logout(@Header("authorization") String api_access_token);
+    Call<LoginOrganizer> logout(@Header("authorization") String api_access_token,
+                                @Field("event_id") String event_id);
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.procialize.bayer2020.Constants.APIService;
 import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.GetterSetter.BaseResponse;
+import com.procialize.bayer2020.GetterSetter.LoginOrganizer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,9 +59,9 @@ public class GetUserActivityReport {
                 page_id
 
 )
-                .enqueue(new Callback<BaseResponse>() {
+                .enqueue(new Callback<LoginOrganizer>() {
                     @Override
-                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                    public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 if (response.isSuccessful()) {
@@ -81,7 +82,7 @@ public class GetUserActivityReport {
                     }
 
                     @Override
-                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                    public void onFailure(Call<LoginOrganizer> call, Throwable t) {
                         //fetchSpotQnAList.setValue(null);
                     }
                 });

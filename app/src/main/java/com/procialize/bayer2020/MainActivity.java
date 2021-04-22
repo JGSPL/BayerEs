@@ -1067,9 +1067,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
     void LogoutFun( ) {
-        ApiUtils.getAPIService().logout(api_token).enqueue(new Callback<BaseResponse>() {
+        ApiUtils.getAPIService().logout(api_token,"1").enqueue(new Callback<LoginOrganizer>() {
             @Override
-            public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+            public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
                     JzvdStd.releaseAllVideos();
                     EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
@@ -1078,11 +1078,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finishAffinity();
 
-                } else { }
+                } else {
+                    JzvdStd.releaseAllVideos();
+                    EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
+                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
+                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finishAffinity();
+                }
             }
 
             @Override
-            public void onFailure(Call<BaseResponse> call, Throwable t) {
+            public void onFailure(Call<LoginOrganizer> call, Throwable t) {
                 try {
                     JzvdStd.releaseAllVideos();
                     EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
