@@ -40,7 +40,7 @@ public class SplashViewModel extends SplashAcivity{
                 if(isLogin.equalsIgnoreCase("true")) {
 
                     if(iscomplete.equalsIgnoreCase("true")) {
-                        if(fName.equalsIgnoreCase("")|| fName.equalsIgnoreCase("null")|| fName.equalsIgnoreCase(null)){
+                        if(fName.equalsIgnoreCase("")|| fName.equalsIgnoreCase("null")|| fName==null){
                             if(userType.equalsIgnoreCase("D")){
                                 openProfileActivity(context);
                             }else {

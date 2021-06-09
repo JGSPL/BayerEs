@@ -125,6 +125,40 @@ public class product_dosage_detail implements Serializable {
     @Expose
     private String diluted_quantity_5;
 
+    @SerializedName("quantity_of_product_label")
+    @Expose
+    private String quantity_of_product_label;
+    @SerializedName("require_for_mixing_label")
+    @Expose
+    private String require_for_mixing_label;
+    @SerializedName("infestation_level_label")
+    @Expose
+    private String infestation_level_label;
+
+
+    public String getQuantity_of_product_label() {
+        return quantity_of_product_label;
+    }
+
+    public void setQuantity_of_product_label(String quantity_of_product_label) {
+        this.quantity_of_product_label = quantity_of_product_label;
+    }
+
+    public String getRequire_for_mixing_label() {
+        return require_for_mixing_label;
+    }
+
+    public void setRequire_for_mixing_label(String require_for_mixing_label) {
+        this.require_for_mixing_label = require_for_mixing_label;
+    }
+
+    public String getInfestation_level_label() {
+        return infestation_level_label;
+    }
+
+    public void setInfestation_level_label(String infestation_level_label) {
+        this.infestation_level_label = infestation_level_label;
+    }
 
     public String getApp_type1_deposition_rate() {
         return app_type1_deposition_rate;

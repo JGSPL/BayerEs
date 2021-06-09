@@ -18,26 +18,17 @@ import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,33 +51,21 @@ import com.procialize.bayer2020.Constants.ApiUtils;
 import com.procialize.bayer2020.Constants.RefreashToken;
 import com.procialize.bayer2020.R;
 import com.procialize.bayer2020.Utility.SharedPreference;
-import com.procialize.bayer2020.ui.EULA.EulaActivity;
-import com.procialize.bayer2020.ui.EULA.viewmodel.EulaViewModel;
 import com.procialize.bayer2020.ui.agenda.model.FetchAgenda;
 import com.procialize.bayer2020.ui.storelocator.model.ClusterMarkerLocation;
 import com.procialize.bayer2020.ui.storelocator.model.distributerProfile;
 import com.procialize.bayer2020.ui.storelocator.model.distributer_item;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.AUTHERISATION_KEY;
-import static com.procialize.bayer2020.Utility.SharedPreferencesConstant.EVENT_ID;
 
-public class StoreLocatorActivity extends FragmentActivity implements LocationListener, GoogleMap.OnMarkerClickListener {
+public class StorelocatorMoveActivity  extends FragmentActivity implements LocationListener, GoogleMap.OnMarkerClickListener {
     private Marker myMarker;
     Dialog dialog;
 
@@ -101,7 +80,7 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_locator);
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
-        new RefreashToken(StoreLocatorActivity.this).callGetRefreashToken(StoreLocatorActivity.this);
+        new RefreashToken(StorelocatorMoveActivity.this).callGetRefreashToken(StorelocatorMoveActivity.this);
         api_token = SharedPreference.getPref(this, AUTHERISATION_KEY);
         iv_back = findViewById(R.id.iv_back);
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -142,9 +121,9 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
 
     private void marshmallowGPSPremissionCheck() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && StoreLocatorActivity.this.checkSelfPermission(
+                && StorelocatorMoveActivity.this.checkSelfPermission(
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && StoreLocatorActivity.this.checkSelfPermission(
+                && StorelocatorMoveActivity.this.checkSelfPermission(
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -192,8 +171,8 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
 
 
                                 //Check code
-                               // map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker").snippet("Snippet"));
-                                if (ActivityCompat.checkSelfPermission(StoreLocatorActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(StoreLocatorActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker").snippet("Snippet"));
+                                if (ActivityCompat.checkSelfPermission(StorelocatorMoveActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(StorelocatorMoveActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                     // TODO: Consider calling
                                     //    ActivityCompat#requestPermissions
                                     // here to request the missing permissions, and then overriding
@@ -209,7 +188,20 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                             }
                         });
 
+                        map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                            @Override
+                            public void onCameraChange(CameraPosition cameraPosition) {
+
+                                //Log.i("centerLat",cameraPosition.target.latitude);
+
+                               // Log.i("centerLong",cameraPosition.target.longitude);
+                            }
+                        });
+
                     }
+
+
+
                 }
             });
 
@@ -221,7 +213,7 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
 
        /* if (marker.equals(myMarker))
         {*/
-            //handle click here
+        //handle click here
 
         if(marker.getSnippet().equalsIgnoreCase("main")) {
             myMarker.hideInfoWindow();
@@ -234,20 +226,22 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
             marker.hideInfoWindow();
             myMarker.hideInfoWindow();
             try {
-                CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(8).build();
+
+                CameraPosition target = CameraPosition.builder().target(marker.getPosition()).zoom(10).build();
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
                 String str = marker.getSnippet();
                 String[] splitStr = str.split("\\@+");
                 openMoreDetails(splitStr[0].toString(), splitStr[1].toString(), splitStr[2].toString());
+
             }catch (Exception e){
-                Toast.makeText(StoreLocatorActivity.this, "Invalid Lat-Long ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(StorelocatorMoveActivity.this, "Invalid Lat-Long ", Toast.LENGTH_SHORT).show();
 
             }
 
         }
 
 
-       // }
+        // }
         return true;
 
     }
@@ -267,7 +261,7 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                 if (response.isSuccessful()) {
                     try {
                         String strEventList = response.body().getDetail();
-                        RefreashToken refreashToken = new RefreashToken(StoreLocatorActivity.this);
+                        RefreashToken refreashToken = new RefreashToken(StorelocatorMoveActivity.this);
                         String data = refreashToken.decryptedData(strEventList);
 
                         JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
@@ -281,7 +275,7 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                         Criteria criteria = new Criteria();
                         String provider = locationManager.getBestProvider(criteria, true);
-                        if (ActivityCompat.checkSelfPermission(StoreLocatorActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(StoreLocatorActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.checkSelfPermission(StorelocatorMoveActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(StorelocatorMoveActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             return;
                         }
                         Location location = locationManager.getLastKnownLocation(provider);
@@ -294,12 +288,12 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                             CameraPosition position = map.getCameraPosition();
 
                             try {
-                                CameraPosition target1 = CameraPosition.builder().target(target).zoom(0).build();
+                                CameraPosition target1 = CameraPosition.builder().target(target).zoom(8).build();
                                 map.moveCamera(CameraUpdateFactory.newCameraPosition(target1));
                                 map.addCircle(new CircleOptions()
-                                        .center(target)
-                                        .radius(250000)
-                                        .strokeWidth(0f)
+                                                .center(target)
+                                                .radius(250000)
+                                                .strokeWidth(0f)
                                         */
 /*.fillColor(0x550000FF)*//*
 );
@@ -311,10 +305,10 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                             }
 
                             CameraPosition.Builder builder = new CameraPosition.Builder();
-                            builder.zoom(0);
+                            builder.zoom(8);
                             builder.target(target);
 
-                          //  map.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
+                            //  map.animateCamera(CameraUpdateFactory.newCameraPosition(builder.build()));
                         }
 */
 
@@ -336,7 +330,7 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                                         ))
                                 );*/
 
-                                View marker = ((LayoutInflater)StoreLocatorActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
+                                View marker = ((LayoutInflater)StorelocatorMoveActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
                                 TextView tv_marker_text = (TextView) marker.findViewById(R.id.tv_marker_text);
                                 tv_marker_text.setText(profileDetails.get(i).getDistributor_count());
 
@@ -346,9 +340,9 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                                                 Double.parseDouble(profileDetails.get(i).getLongitude())))
                                         .title(profileDetails.get(i).getState())
                                         .snippet("main")
-                                        .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(StoreLocatorActivity.this, marker))));
-                                       // .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                                map.setOnMarkerClickListener(StoreLocatorActivity.this);
+                                        .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(StorelocatorMoveActivity.this, marker))));
+                                // .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                map.setOnMarkerClickListener(StorelocatorMoveActivity.this);
                                 myMarker.hideInfoWindow();
 
 
@@ -358,19 +352,19 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
 
                         }
                     }catch (Exception e){
-                        Toast.makeText(StoreLocatorActivity.this, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StorelocatorMoveActivity.this, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
 
                     }
 
                 } else {
-                    Toast.makeText(StoreLocatorActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StorelocatorMoveActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FetchAgenda> call, Throwable t) {
                 try {
-                    Toast.makeText(StoreLocatorActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StorelocatorMoveActivity.this, "Failure", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                 }
             }
@@ -384,7 +378,7 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                 if (response.isSuccessful()) {
                     try {
                         String strEventList = response.body().getDetail();
-                        RefreashToken refreashToken = new RefreashToken(StoreLocatorActivity.this);
+                        RefreashToken refreashToken = new RefreashToken(StorelocatorMoveActivity.this);
                         String data = refreashToken.decryptedData(strEventList);
 
                         JsonArray jsonArray = new JsonParser().parse(data).getAsJsonArray();
@@ -399,13 +393,13 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                             for (int i = 0; i < profileDetails.size(); i++) {
                                 // Create a marker for each city in the JSON data.
 
-                                View marker = ((LayoutInflater)StoreLocatorActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
+                                View marker = ((LayoutInflater)StorelocatorMoveActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.custom_marker, null);
                                 TextView tv_marker_text = (TextView) marker.findViewById(R.id.tv_marker_text);
                                 tv_marker_text.setText("1");
 
                                 map.addMarker(new MarkerOptions()
                                         .title(profileDetails.get(i).getState())
-                                        .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(StoreLocatorActivity.this, marker)))
+                                        .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(StorelocatorMoveActivity.this, marker)))
                                         .snippet(profileDetails.get(i).getCompany_name()+ "@" + profileDetails.get(i).getMobile()+ "@" + profileDetails.get(i).getAddress())
                                         .position(new LatLng(
                                                 Double.parseDouble(profileDetails.get(i).getLatitude()),
@@ -416,7 +410,7 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
 
 
 
-                               // clusterManager.addItem( new ClusterMarkerLocation( new LatLng(  Double.parseDouble(profileDetails.get(i).getLatitude()), Double.parseDouble(profileDetails.get(i).getLongitude() ) )));
+                                // clusterManager.addItem( new ClusterMarkerLocation( new LatLng(  Double.parseDouble(profileDetails.get(i).getLatitude()), Double.parseDouble(profileDetails.get(i).getLongitude() ) )));
 
 
 
@@ -425,20 +419,20 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
 
                         }
                     }catch (Exception e){
-                        Toast.makeText(StoreLocatorActivity.this, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StorelocatorMoveActivity.this, response.body().getHeader().get(0).getMsg(), Toast.LENGTH_SHORT).show();
 
 
                     }
 
                 } else {
-                    Toast.makeText(StoreLocatorActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StorelocatorMoveActivity.this, "Internal server error", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FetchAgenda> call, Throwable t) {
                 try {
-                    Toast.makeText(StoreLocatorActivity.this, "Failure", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StorelocatorMoveActivity.this, "Failure", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                 }
             }
@@ -484,13 +478,13 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
                 String contact =  "+91"+  mobile; // use country code with your phone number
                 String url = "https://api.whatsapp.com/send?phone=" + contact;
                 try {
-                    PackageManager pm = StoreLocatorActivity.this.getPackageManager();
+                    PackageManager pm = StorelocatorMoveActivity.this.getPackageManager();
                     pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     startActivity(i);
                 } catch (PackageManager.NameNotFoundException e) {
-                    Toast.makeText(StoreLocatorActivity.this
+                    Toast.makeText(StorelocatorMoveActivity.this
                             , "Whatsapp app not installed in your phone", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
@@ -516,7 +510,7 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
 
     @Override
     public void onLocationChanged(Location location) {
-       // Toast.makeText(StoreLocatorActivity.this,  String.valueOf(location.getLatitude()) + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
+        // Toast.makeText(StorelocatorMoveActivity.this,  String.valueOf(location.getLatitude()) + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -535,4 +529,3 @@ public class StoreLocatorActivity extends FragmentActivity implements LocationLi
 
     }
 }
-

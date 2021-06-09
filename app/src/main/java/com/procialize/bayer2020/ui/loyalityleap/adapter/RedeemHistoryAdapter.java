@@ -69,7 +69,7 @@ public class RedeemHistoryAdapter extends RecyclerView.Adapter<RedeemHistoryAdap
 
 
         }else  if(redeemItem.getStatus().equalsIgnoreCase("2")){
-            holder.txt_status.setText("In Process");
+            holder.txt_status.setText("Processed");
             holder.txt_status.setTextColor(Color.parseColor("#f14433"));
 
 

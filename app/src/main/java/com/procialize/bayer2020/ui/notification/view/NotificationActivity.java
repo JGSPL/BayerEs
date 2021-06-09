@@ -38,6 +38,7 @@ import com.procialize.bayer2020.Utility.CommonFunction;
 import com.procialize.bayer2020.Utility.SharedPreference;
 import com.procialize.bayer2020.Utility.Utility;
 import com.procialize.bayer2020.ui.livepoll.view.LivePollActivity;
+import com.procialize.bayer2020.ui.loyalityleap.view.RedemptionHistoryList;
 import com.procialize.bayer2020.ui.newsFeedComment.view.CommentActivity;
 import com.procialize.bayer2020.ui.newsFeedComment.viewModel.CommentViewModel;
 import com.procialize.bayer2020.ui.newsfeed.PaginationUtils.PaginationAdapterCallback;
@@ -341,6 +342,8 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             startActivity(new Intent(this, LivePollActivity.class));
         }else if (comment.getType().equalsIgnoreCase("Reply") ) {
             startActivity(new Intent(this, MainActivity.class).putExtra("from","postNewsFeed"));
+        }else  if (comment.getType().equalsIgnoreCase("RedeemStatus")) {
+            startActivity(new Intent(this, RedemptionHistoryList.class));
         }
     }
 

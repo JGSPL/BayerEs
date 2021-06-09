@@ -154,7 +154,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        SpannableString ss = new SpannableString("I consent to share my personal data as per the Privacy Policy with Bayer CropScience Limited and its affiliates in accordance with the applicable laws. I also understand the Privacy Policy and consent to the processing and transfer of personal data in accordance with it.");
+
+        SpannableString ss = new SpannableString("I consent to share my personal data with Bayer CropScience Limited and its affiliates in accordance with the Privacy Policy and/or applicable laws. I have read and understand the Privacy Policy and hereby consent to the processing and transfer of personal data in accordance with it.");
+
+
+        //SpannableString ss = new SpannableString("I consent to share my personal data as per the Privacy Policy with Bayer CropScience Limited and its affiliates in accordance with the applicable laws. I also understand the Privacy Policy and consent to the processing and transfer of personal data in accordance with it.");
+
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View textView) {
@@ -166,7 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                 ds.setUnderlineText(false);
             }
         };
-        ss.setSpan(clickableSpan, 47, 61, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        ss.setSpan(clickableSpan, 107, 122, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
        // txttermsCondi.setPaintFlags(txttermsCondi.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         txttermsCondi.setText(ss);
         txttermsCondi.setMovementMethod(LinkMovementMethod.getInstance());
@@ -444,7 +450,6 @@ public class LoginActivity extends AppCompatActivity {
                                                     map.put(EVENT_ID, eventId);
                                                     SharedPreference.putPref(context, map);
 
-
                                                     EventAppDB eventAppDB = EventAppDB.getDatabase(context);
 
                                                     String strAttendeeId = userData.get(0).getAttendee_id();
@@ -669,10 +674,14 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     @Override
-    protected void onDestroy () {
+    protected void onDestroy() {
         super.onDestroy();
-        passcodeDialog.dismiss();
-        progressdialog.dismiss();
+        if(passcodeDialog!=null){
+            passcodeDialog.dismiss();
+        }
+        if(progressdialog!=null) {
+            progressdialog.dismiss();
+        }
     }
 
 

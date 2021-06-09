@@ -305,8 +305,17 @@ public void shareLink() {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Pest Expert");
-        intent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+url.toString() +
-                ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
+        /*intent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+url.toString() +
+                ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");*/
+
+        /*intent.putExtra(Intent.EXTRA_TEXT, "Check out Bayer "+pest_item.getProduct_name()+" on Pest Expert 360° app. " +
+                "You can also explore details like product USP, pests to control, dosage and application rate, etc. " +
+                "Click on the link to view product or download the app: "+url.toString()
+        );*/
+        intent.putExtra(Intent.EXTRA_TEXT, "Check out  "+pest_item.getProduct_name()+" on Pest Expert 360° app. You can learn about its behaviour, associated risks,  " +
+                "where to find, Bayer solutions to control it, and lots more. Click on the link now to view pest or download the app. " + url.toString()
+        );
+
         startActivity(intent);
     } catch (Exception e) {
         Log.i(TAG, "Could not decode Uri: " + e.getLocalizedMessage());

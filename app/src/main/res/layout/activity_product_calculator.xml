@@ -322,11 +322,11 @@
                 android:background="@drawable/cell_border"
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
-                android:paddingRight="5dp"
+                android:paddingRight="2dp"
                 android:paddingBottom="5dp"
-                android:layout_height="55dp"
+                android:layout_height="65dp"
                 android:layout_weight="7"
-                android:lines="2"
+                android:lines="3"
 
                 android:layout_gravity="center"
                 android:text="Quantity of diluted solution to be applied on infested area"
@@ -342,8 +342,8 @@
                 android:textColor="@color/black"
                 android:gravity="center"
 
-                android:lines="2"
-                android:layout_height="55dp"
+                android:lines="3"
+                android:layout_height="65dp"
                 >
 
             </TextView>

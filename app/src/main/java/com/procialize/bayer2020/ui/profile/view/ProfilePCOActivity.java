@@ -1286,11 +1286,11 @@ public class ProfilePCOActivity extends AppCompatActivity implements View.OnClic
             } else if (!Patterns.EMAIL_ADDRESS.matcher(et_emailid.getText().toString().trim()).matches()) {
                 Toast.makeText(this, "Please enter valid emailId for proceed", Toast.LENGTH_SHORT).show();
 
-            }else if(!(iscomplete.equalsIgnoreCase("true"))) {
+            }/*else if(!(iscomplete.equalsIgnoreCase("true"))) {
                 Toast.makeText(this, "Please save form to continue", Toast.LENGTH_SHORT).show();
 
 
-            }
+            }*/
             else{
                 startActivity(new Intent(ProfilePCOActivity.this, MainActivity.class));
                 finish();

@@ -20,6 +20,7 @@
             android:layout_gravity="center"
             android:layout_weight="3"
             android:gravity="center"
+            android:textSize="11sp"
             android:textColor="@color/black" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
@@ -30,6 +31,8 @@
             android:layout_marginLeft="2dp"
             android:layout_weight="3.5"
             android:gravity="center"
+            android:textSize="11sp"
+
             android:textColor="@color/black" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
@@ -40,6 +43,7 @@
             android:layout_marginLeft="2dp"
             android:layout_weight="1.5"
             android:gravity="center"
+            android:textSize="11sp"
             android:textColor="@color/black" />
 
         <com.procialize.bayer2020.fonts.RobotoTextview
@@ -50,6 +54,7 @@
             android:layout_marginLeft="2dp"
             android:layout_weight="2"
             android:gravity="center"
+            android:textSize="11sp"
             android:textColor="@color/black"
             android:inputType="number"
             android:maxLength="10"/>
@@ -61,6 +66,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="2dp"
             android:layout_weight="3"
+            android:textSize="11sp"
             android:gravity="center"
             android:textColor="@color/activetab" />
 

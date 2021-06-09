@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
@@ -107,6 +108,7 @@ import com.procialize.bayer2020.ui.qa.view.QnADirectActivity;
 import com.procialize.bayer2020.ui.quiz.view.QuizListingActivity;
 import com.procialize.bayer2020.ui.speaker.view.SpeakerFragment;
 import com.procialize.bayer2020.ui.storelocator.view.StoreLocatorActivity;
+import com.procialize.bayer2020.ui.storelocator.view.StorelocatorMoveActivity;
 import com.procialize.bayer2020.ui.survey.view.SurveyActivity;
 import com.procialize.bayer2020.ui.upskill.view.UpskillFragment;
 import com.yanzhenjie.album.mvp.BaseFragment;
@@ -469,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.navigation_logout:
                         //Logout from app
-                        LogoutFun();
+                       // LogoutFun();
                         /*JzvdStd.releaseAllVideos();
                         EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
                         EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
@@ -720,7 +722,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                // Utility.createShortSnackBar(mDrawerLayout, "Coming soon");
 
-                startActivity(new Intent(MainActivity.this, StoreLocatorActivity.class));
+                startActivity(new Intent(MainActivity.this, StorelocatorMoveActivity.class));
                 break;
             case R.id.iv_notification:
                 JzvdStd.releaseAllVideos();
@@ -1072,32 +1074,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponse(Call<LoginOrganizer> call, Response<LoginOrganizer> response) {
                 if (response.isSuccessful()) {
                     JzvdStd.releaseAllVideos();
+                    SharedPreference.clearAllPref(getApplicationContext());
                     EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
                     EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
                     EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finishAffinity();
 
-                } else {
-                    JzvdStd.releaseAllVideos();
-                    EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
-                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
-                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    finishAffinity();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginOrganizer> call, Throwable t) {
                 try {
-                    JzvdStd.releaseAllVideos();
-                    EventAppDB.getDatabase(MainActivity.this).profileUpdateDao().deleteData();
-                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeed();
-                    EventAppDB.getDatabase(MainActivity.this).newsFeedDao().deleteNewsFeedMedia();
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    finishAffinity();
-                    //  Toast.makeText(getContext(), "Failure", Toast.LENGTH_SHORT).show();
+
+                      Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                 }
             }

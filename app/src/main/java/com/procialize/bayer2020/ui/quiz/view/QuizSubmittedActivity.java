@@ -187,7 +187,7 @@ public class QuizSubmittedActivity extends AppCompatActivity implements View.OnC
             public void onClick(View v) {
 
                 int option = adapter.getSelectedOption();
-                String correctOption = quizList.get(llm.findLastVisibleItemPosition()).getTotal_correct();
+              //  String correctOption = quizList.get(llm.findLastVisibleItemPosition()).getTotal_correct();
                 int i = adapter.getItemCount();
 //                adapter.getItemViewType(llm.findLastVisibleItemPosition());
                 if (i != count) {

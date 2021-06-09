@@ -160,6 +160,7 @@ public class ProductListDetailActivity extends AppCompatActivity {
         //----------------------------------------------------------------------------------
 
         productTitle.setText("Catalogue - "+ product_type + " - " + product_item.getProduct_name());
+
         Glide.with(ProductListDetailActivity.this)
                 .load(Imageurl+product_item.getProduct_image())
                 .listener(new RequestListener<Drawable>() {
@@ -390,8 +391,13 @@ public class ProductListDetailActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, "Pest Expert");
-            intent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+url.toString() +
-            ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");
+            /*intent.putExtra(Intent.EXTRA_TEXT, "See Bayer Premise on Pest Expert 360° App.  "+url.toString() +
+            ". You will be able to check more details like product USP, pests to control, dosage and application rate, etc. Check it out now. Download free Pest Expert 360° App.");*/
+            intent.putExtra(Intent.EXTRA_TEXT, "Check out Bayer "+product_item.getProduct_name()+" on Pest Expert 360° app. " +
+                            "You can also explore details like product USP, pests to control, dosage and application rate, etc. " +
+                            "Click on the link to view product or download the app: "+url.toString()
+                    );
+
             startActivity(intent);
         } catch (Exception e) {
             Log.i(TAG, "Could not decode Uri: " + e.getLocalizedMessage());

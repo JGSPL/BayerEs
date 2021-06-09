@@ -237,7 +237,7 @@ public class NewsFeedViewModel extends ViewModel {
                             sharingIntent.putExtra(Intent.EXTRA_TEXT, "Pest Management Professionals are discussing this post on Pest Expert 360° app! \n" +
                                     "Join them to learn & discuss pest management tips and best practices. \n" +
                                     "\n" +
-                                    "Click on the link to see it now or to download the app."+"https://bayer2020.page.link/newsfeed");
+                                    "Click on the link to see it now or to download the app. "+"https://bayer2020.page.link/newsfeed");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                             activity.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert 360"));
 
@@ -872,7 +872,7 @@ public class NewsFeedViewModel extends ViewModel {
                             sharingIntent.putExtra(Intent.EXTRA_TEXT, "Pest Management Professionals are discussing this post on Pest Expert 360° app! \n" +
                                     "Join them to learn & discuss pest management tips and best practices. \n" +
                                     "\n" +
-                                    "Click on the link to see it now or to download the app."+"https://bayer2020.page.link/newsfeed");
+                                    "Click on the link to see it now or to download the app. "+"https://bayer2020.page.link/newsfeed");
                             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
                             context.startActivity(Intent.createChooser(sharingIntent, "Shared via Pest Expert 360"));
                             dialogShare.dismiss();
